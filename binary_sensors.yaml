@@ -1,0 +1,88 @@
+- platform: template
+  sensors:
+    in_bed:
+      friendly_name: In Bed?
+      device_class: occupancy
+      value_template: >-
+        {{ not (is_state('binary_sensor.withings_in_bed_homassistant', 'off') or is_state('binary_sensor.withings_in_bed_homassistant', 'unavailable')) }}
+      icon_template: "{{ iif(is_state('binary_sensor.in_bed', 'on'), 'mdi:bed', 'mdi:bed-outline') }}"
+
+    hall_motion:
+      friendly_name: Hall Motion
+      device_class: motion
+      value_template: >-
+        {{ is_state('binary_sensor.hall_camera_motion', 'on') or is_state('binary_sensor.hall_camera_2_motion', 'on') }}
+
+    den_motion:
+      friendly_name: Den Motion
+      device_class: motion
+      value_template: >-
+        {{ is_state('binary_sensor.den_motion_1', 'on') or is_state('binary_sensor.den_motion_2', 'on') }}
+
+    hall_camera_sound:
+      friendly_name: "Hall Camera Sound"
+      value_template: >-
+        {{ states.camera.hall_camera_hd.attributes.noise_detected != 'off' }}
+      icon_template: >-
+        {% if (states.camera.hall_camera_hd.attributes.noise_detected == 'off') %}
+          mdi:volume-off
+        {% elif (states.camera.hall_camera_hd.attributes.noise_detected == 'on') %}
+          mdi:volume-high
+        {% endif %}
+
+    hall_camera_2_sound:
+      friendly_name: "Hall Camera 2 Sound"
+      value_template: >-
+        {{ states.camera.hall_camera_2_hd.attributes.noise_detected != 'off' }}
+      icon_template: >-
+        {% if (states.camera.hall_camera_2_hd.attributes.noise_detected == 'off') %}
+          mdi:volume-off
+        {% elif (states.camera.hall_camera_2_hd.attributes.noise_detected == 'on') %}
+          mdi:volume-high
+        {% endif %}
+
+    chair_occupancy:
+      friendly_name: "Chair Occupancy"
+      device_class: occupancy
+      value_template: "{{ is_state('binary_sensor.chair', 'off') or is_state('binary_sensor.vibration', 'on') }}"
+      icon_template: "{{ iif(is_state('binary_sensor.chair_occupancy', 'on'), 'mdi:table-chair', 'mdi:account-off') }}"
+
+    downstairs_power_failed:
+      friendly_name: "Downstairs Power"
+      value_template: >-
+        {{ not  ( (is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable') ) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('media_player.akashavani', 'unavailable') ) ) }}
+      icon_template: "{{ iif(is_state('binary_sensor.downstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
+
+    upstairs_power_failed:
+      friendly_name: "Upstairs Power"
+      value_template: >-
+        {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.ricelight_l', 'unavailable') and is_state('switch.ricelight_r', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
+      icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
+
+    homeassistant_update:
+      friendly_name: "HomeAssistant Update"
+      device_class: update
+      value_template: "{{ (states('sensor.docker_hub_beta') != 'unavailable') and (states('sensor.docker_hub_beta') > states('sensor.current_version')) }}"
+
+    # True if there's an update available for supervisor
+    updater_supervisor:
+      friendly_name: "Updater Supervisor"
+      device_class: problem
+      value_template: "{{ state_attr('sensor.supervisor_updates', 'update_available') }}"
+      availability_template: "{{ states('sensor.supervisor_updates') | int(-1) > -1 }}"
+
+# True if there's updates available for any HACS components or Addons
+- platform: threshold
+  name: Updater HACS
+  entity_id: sensor.hacs
+  upper: 0.5
+
+- platform: threshold
+  name: Updater Addons
+  entity_id: sensor.supervisor_updates
+  upper: 0.5
+
+- platform: hikvision
+  host: 192.168.0.184
+  username: homeassistant
+  password: !secret hikvision_password

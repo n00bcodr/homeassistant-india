@@ -1,0 +1,70 @@
+substitutions:
+  name: multisensor-2
+  friendly_name: Multisensor 2
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${name} Fallback Hotspot"
+    password: "123456789"
+
+captive_portal:
+
+esphome:
+  name: $name
+  platform: ESP8266
+  board: nodemcuv2
+
+api:
+
+ota:
+
+logger:
+
+sensor:
+  - platform: dht
+    pin: D7
+    model: dht22
+    update_interval: 30s
+    temperature:
+      name: "${friendly_name} Temperature"
+    humidity:
+      name: "${friendly_name} Humidity"
+
+  - platform: adc
+    pin: A0
+    name: "${friendly_name} Light"
+    device_class: illuminance
+    update_interval: 2s
+    unit_of_measurement: lx
+    filters:
+      - lambda: |-
+          return (x / 10000.0) * 2000000.0;
+      
+binary_sensor:
+  - platform: gpio
+    pin: D6
+    name: "${friendly_name} Motion"
+    device_class: motion
+    
+
+  - platform: status
+    name: "${friendly_name} Status"
+    entity_category: diagnostic
+
+
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: "${friendly_name} ESPHome Version"
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP Address"
+      icon: mdi:ip
+      entity_category: diagnostic
+    ssid:
+      name: "${friendly_name} Connected SSID"
+      icon: mdi:wifi
+      entity_category: diagnostic

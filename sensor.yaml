@@ -1,0 +1,145 @@
+- platform: time_date
+  display_options:
+    - "time"
+    - "date"
+    - "date_time"
+    - "time_date"
+
+- platform: template
+  sensors:
+    magic_cube_active_face:
+      friendly_name: "Magic Cube Active Face"
+      value_template: "{{states.sensor.magic_cube_action.attributes.side}}"
+
+    formula_1: !include formula1.yaml
+
+    motor_state:
+      friendly_name: "Motor State"
+      value_template: >
+        {% if is_state('switch.downstairs_motor', 'on') %}
+          Downstairs
+        {% elif is_state('switch.upstairs_motor', 'on') %}
+          Upstairs
+        {% elif is_state('switch.sonoff_1000f38ea4', 'on') %}
+          TankFull
+        {% else %}
+          MotorsOff
+        {% endif %}
+
+    count_automations:
+      value_template: "{{ states.automation | count }}"
+    count_scripts:
+      value_template: "{{ states.script | count }}"
+    count_device_trackers:
+      value_template: "{{ states.device_tracker | count }}"
+    count_binary_sensors:
+      value_template: "{{ states.binary_sensor | count }}"
+    count_sensors:
+      value_template: "{{ states.sensor | count }}"
+    count_switches:
+      value_template: "{{ states.switch | count }}"
+    count_lights:
+      value_template: "{{ states.light | count }}"
+    count_fans:
+      value_template: "{{ states.fan | count }}"
+    count_zones:
+      value_template: "{{ states.zone | count }}"
+    count_scenes:
+      value_template: "{{ states.scene | count }}"
+    count_media_players:
+      value_template: "{{ states.media_player | count }}"
+    count_input_booleans:
+      value_template: "{{ states.input_boolean | count }}"
+
+    #----- Speedtest Download
+    download_speed:
+      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_download') | float) ) + 50 }}"
+      friendly_name: "Download Speed"
+      unit_of_measurement: "Mbps"
+      icon_template: "mdi:download"
+
+    #----- Speedtest Upload
+    upload_speed:
+      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_upload') | float) ) + 50 }}"
+      friendly_name: "Upload Speed"
+      unit_of_measurement: "Mbps"
+      icon_template: "mdi:upload"
+
+    phone_position:
+      friendly_name: "Phone Position"
+      value_template: >-
+        {% 
+          set bssids = {
+            "10:27:f5:e5:ec:b3":	"Office 5",
+            "10:27:f5:e5:ec:b2":	"Office 2.4",
+            "60:32:b1:e4:75:bf":	"Study 5",
+            "60:32:b1:e4:75:be":	"Study 2.4",
+            "50:d4:f7:f5:13:4f":	"Hallway 5",
+            "50:d4:f7:f5:13:4e":	"Hallway 2.4",
+            "60:32:b1:e4:75:bf":	"Study 5",
+            "60:32:b1:e4:76:53":	"Living Room 5",
+            "60:32:b1:e4:76:52":	"Living Room 2.4",
+            "10:27:f5:e5:ec:c7":	"Bedroom 5",
+            "10:27:f5:e5:ec:c6":	"Bedroom 2.4",
+            "e6:c2:2a:dc:a8:4c":	"Kitchen 5",
+            "e6:c2:2a:dc:a8:4b":	"Kitchen 2.4"
+                        }
+        %}
+        {{ bssids[states('sensor.10pro_wifi_bssid')]|default("Not Connected") }}
+
+    moon_phase:
+      friendly_name: "Moon Phase"
+      value_template: "{{ states.sensor.moon.state }}"
+      entity_picture_template: /local/moon_phases/{{ states.sensor.moon.state }}.png
+
+    chair_occupancy:
+      friendly_name: "Chair Occupancy"
+      value_template: "{{ iif(is_state('binary_sensor.chair', 'on'), 'Away', 'At Desk') }}"
+      icon_template: "{{ iif(is_state('binary_sensor.chair', 'on'), 'mdi:account-off', 'mdi:table-chair') }}"
+
+    server_last_boot:
+      value_template: >
+        {%- set time = (as_timestamp(now()) - as_timestamp(states.sensor.last_boot.state)) | int  %}
+        {%- set days = (time // 86400) %}
+        {%- set numerical_days = int(days) %}
+        {%- set days = '{} Days '.format(days) if days > 0 else '' %}
+        {%- set hours = ((time % 86400) // 3600) %}
+        {%- set hours = '{} Hours '.format(hours) if numerical_days <= 0 else '' %}
+        {%- set minutes = ((time % 3600) // 60) %}
+        {%- set minutes = ' {} Minutes'.format(minutes) if hours == 0 else '' %}
+        {{ 'Less than 1 minute' if time < 60 else days + hours + minutes }}ago
+
+- platform: command_line
+  name: Supervisor Updates
+  command: 'curl -sS -X GET http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"update_available":.data.update_available,"addons":[.data.addons[] | select(.update_available)]}'''
+  value_template: "{{ value_json.addons | length }}"
+  unit_of_measurement: "pending update(s)"
+  json_attributes:
+    - update_available
+    - newest_version
+    - current_version
+    - addons
+
+- platform: command_line
+  name: shopping_list
+  command: python3 /config/tools/shopping_list.py
+
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /
+    - type: disk_use
+      arg: /
+    - type: memory_free
+    - type: memory_use
+    - type: memory_use_percent
+    - type: processor_temperature
+    - type: processor_use
+    - type: last_boot
+
+- platform: ics
+  name: Formula1
+  url: https://f1calendar.com/download/f1-calendar_q_gp_alarm-30.ics?t=1645890313291
+  id: 1
+  timeformat: "%A, %-d.%b.%y"
+  icon: mdi:keyboard-f1

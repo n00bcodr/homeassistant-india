@@ -1,0 +1,41 @@
+youtube_music_player_source:
+  name: Source
+  icon: mdi:music-box-multiple
+  options: # don't change
+    - "Playlist Radio"
+    - "Playlist"
+
+youtube_music_player_speakers:
+  name: Speakers
+  icon: mdi:speaker
+  options: # don't change
+    - "loading"
+
+youtube_music_player_playlist:
+  name: Playlist
+  icon: mdi:playlist-music
+  options: # don't change
+    - "loading"
+
+speakers_spotify:
+  name: Spotify Output
+  icon: mdi:spotify
+  options:
+    - "pavanthanuj"
+    - "Friday"
+    - "Chotu"
+    - "Motu"
+    - "Clock"
+    - "Priyadarshini"
+    - "Family Room Mini"
+
+room_select:
+  name: "Room Select"
+  options:
+    - FrontYard
+    - Hall
+    - Bedroom
+    - LivingRoom
+    - Den
+  initial: LivingRoom
+  icon: mdi:home

@@ -1,0 +1,132 @@
+default_config:
+
+homeassistant:
+  allowlist_external_dirs:
+    - /config/.storage
+    - /config/
+
+logger:
+  default: error
+  logs:
+    custom_components.localtuya: critical
+    custom_components.monitor_docker: critical
+
+ffmpeg:
+
+# Example LL-HLS configuration.yaml entry.
+stream:
+  ll_hls: true
+  part_duration: 0.5
+  segment_duration: 3
+
+media_extractor:
+
+folder_watcher:
+  - folder: /config/.storage
+
+tts:
+  - platform: google_translate
+
+wake_on_lan:
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+binary_sensor: !include binary_sensors.yaml
+input_select: !include input_select.yaml
+sensor: !include sensor.yaml
+notify: !include notify.yaml
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+monitor_docker:
+  - name: Docker
+    url: tcp://192.168.0.168:2375
+    switchname: "Docker {name}"
+    containers:
+      - plex
+      - my_special_tower
+      - Tautulli
+      - broadlinkmanager
+      - portainer
+      - addon_core_samba
+    rename:
+      plex: Plex
+      my_special_tower: WatchTower
+      broadlinkmanager: Broadlink Manager
+      portainer: Portainer
+      addon_core_samba: Samba
+    monitored_conditions:
+      - version
+      - containers_running
+      - containers_total
+      - state
+      - status
+      - image
+      - memory
+
+#mariadb config
+recorder:
+  db_url: !secret recorder_db_url
+  purge_keep_days: 10
+  exclude:
+    entity_globs:
+      - sensor.browser_*
+      - sensor.weather_*
+      - sensor.time_date
+
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key
+
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+  # "Project ID" in the Device Access Console
+  project_id: !secret nest_project_id
+  # # Provide the full path exactly as shown under "Subscription name" in Google Cloud Console
+  subscriber_id: !secret nest_subscriber_id
+
+browser_mod:
+  devices:
+    windowschrome:
+      disable:
+        - light
+        - media_player
+    tablet:
+      camera: true
+  prefix: "browser_mod_"
+
+panel_iframe:
+  portainer:
+    title: Portainer
+    icon: mdi:docker
+    url: http://homeassistant.local:9000/
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_api
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+shell_command:
+  lovelace_default_convert: python /config/tools/lovelace_default_convert.py
+  lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
+
+withings:
+  client_id: !secret withings_client_id
+  client_secret: !secret withings_client_secret
+  use_webhook: true
+
+smartir:
+
+climate:
+  - platform: smartir
+    name: Den AC
+    unique_id: den_ac
+    device_code: 99999
+    controller_data: remote.broadlink_rm4_remote
+    temperature_sensor: sensor.rm4_temperature
+    humidity_sensor: sensor.rm4_humidity

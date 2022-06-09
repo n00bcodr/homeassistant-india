@@ -1,0 +1,13 @@
+den:
+  name: Den
+  entities:
+    - light.den_lights_group
+    - switch.laser
+    - light.led_strip
+    - switch.den_fan
+    - switch.den_wall_fan
+    - switch.workstation
+    - switch.monitor
+    - switch.front_down_light
+    - switch.rear_down_light
+  icon: mdi:castle

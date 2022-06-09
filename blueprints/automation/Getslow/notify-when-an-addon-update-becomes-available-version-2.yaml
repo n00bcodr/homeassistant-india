@@ -1,0 +1,42 @@
+blueprint:
+  name: Addon update notifications
+  description: Sends an update to a selected notifier when an update of an addon is
+    available.
+  domain: automation
+  input:
+    addon_sensor:
+      name: Addon sensor
+      description: This sensor contains the version information of the addon and should
+        include the attributes 'version', 'version latest', 'slug' and 'name'.
+      selector:
+        entity:
+          domain: sensor
+    notify_device:
+      name: Notify device
+      description: The device where the notification should be sent to.
+      selector:
+        device:
+          integration: mobile_app
+  source_url: https://community.home-assistant.io/t/notify-when-an-addon-update-becomes-available-version-2/290896
+variables:
+  sensor_input: !input 'addon_sensor'
+  version: '{{ state_attr( sensor_input, ''version'' ) }}'
+  version_latest: '{{ state_attr( sensor_input, ''version_latest'' ) }}'
+  slug: '{{ state_attr( sensor_input, ''slug'' ) }}'
+  addon_name: '{{ state_attr( sensor_input, ''name'' ) }}'
+trigger:
+  platform: event
+  event_type: state_changed
+  event_data:
+    entity_id: !input 'addon_sensor'
+condition:
+  condition: template
+  value_template: '{{ version != version_latest }}'
+action:
+  domain: mobile_app
+  type: notify
+  device_id: !input 'notify_device'
+  message: ({{ version }} > {{ version_latest }})
+  title: '{{ addon_name }} update available'
+  data:
+    url: /hassio/addon/{{slug}}/info

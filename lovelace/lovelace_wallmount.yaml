@@ -1,0 +1,2843 @@
+button_card_templates:
+  animate:
+    extra_styles: "[[[\n  if (entity) {\n    let hs = entity.attributes.hs_color ==\
+      \ undefined,\n      h = hs || entity.attributes.hs_color[0],\n      s = hs ||\
+      \ entity.attributes.hs_color[1],\n      l_min = 28,\n      l_max = 48,\n   \
+      \   l_calc = \n        entity.attributes.brightness / 2.54 * (l_max - l_min)\
+      \ / 100 + l_min;\n    var light_color = \n      entity.attributes.color_mode\
+      \ === 'color_temp'\n        ? `hsl(204, 58%, ${l_calc}%);`\n        : `hsl(${h},\
+      \ ${s}%, ${l_calc}%);`;\n  }\n  return `\n    svg {\n      --light-color:\n\
+      \      ${ variables.state === 'on' && entity.attributes.brightness != undefined\n\
+      \          ? light_color\n          : variables.state === 'on' && entity.attributes.brightness\
+      \ == undefined\n          ? 'var(--state-icon-active-color);'\n          : 'var(--state-icon-color);'\n\
+      \      }\n    }\n    #container {\n      text-align: left !important;\n    }\n\
+      \    #name, #state {\n      font-size: 1.34vw;\n      letter-spacing: 0.05vw;\n\
+      \    }\n    /* portrait */\n    @media screen and (max-width: 1200px) {\n  \
+      \    #name, #state {\n        font-size: 2vw;\n        letter-spacing: 0.05vw;\n\
+      \      }\n    }\n    /* phone */\n    @media screen and (max-width: 800px) {\n\
+      \      #name, #state {\n        font-size: 3.1vw;\n        letter-spacing: 0.12vw;\n\
+      \      }\n    }\n    @keyframes card_bounce {\n      0% {\n        transform:\
+      \ scale(1);\n      }\n      15% {\n        transform: scale(0.9);\n      }\n\
+      \      25% {\n        transform: scale(1);\n      }\n      30% {\n        transform:\
+      \ scale(0.98);\n      }\n      100% {\n        transform: scale(1);\n      }\n\
+      \    }\n  `\n]]]\n"
+    tap_action:
+      animation_card: "[[[\n  let time = 900;\n  this.shadowRoot.getElementById('card').style.animation\
+        \ =\n    `card_bounce ${time}ms cubic-bezier(0.22, 1, 0.36, 1)`,\n    window.setTimeout(()\
+        \ => {\n      this.shadowRoot.getElementById('card').style.animation = 'none'\n\
+        \    }, time);\n]]]\n"
+    variables:
+      consider_on: '[[[ return [''on'', ''home'', ''cool'', ''fan_only'', ''playing''].indexOf(entity
+        === undefined || entity.state) !== -1; ]]]
+
+        '
+      state: '[[[ return entity === undefined || entity.state; ]]]
+
+        '
+      timeout: '[[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed);
+        ]]]
+
+        '
+  base:
+    aspect_ratio: 1/1
+    custom_fields:
+      bright: "[[[\n  var b = entity.attributes.brightness;\n  return parseInt(b ?\
+        \ b/2.55 : '0') + '%';\n]]]\t\t\n"
+      cl:
+        card:
+          icon: mdi:palette
+          name: false
+          show_entity_picture: true
+          show_name: false
+          styles:
+            card:
+            - background-color: '#242e42'
+            - height: 25px
+            - width: 25px
+            - margin: 0px -5px
+            icon:
+            - width: 25px
+          type: custom:button-card
+    show_icon: true
+    show_state: true
+    state:
+    - styles:
+        card:
+        - background-color: '#2a5629'
+        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
+      value: 'on'
+    - styles:
+        card:
+        - background-color: transparent
+        custom_fields:
+          bright:
+          - opacity: 0
+          cl:
+          - opacity: 0
+        icon:
+        - opacity: 0.2
+        name:
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: 'off'
+    - styles:
+        card:
+        - background-color: grey
+        custom_fields:
+          bright:
+          - opacity: 0
+          cl:
+          - opacity: 0
+        icon:
+        - opacity: 0.2
+        name:
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: unavailable
+    styles:
+      card:
+      - border-radius: 10%
+      - padding: 12%
+      - color: ivory
+      - font-size: 10px
+      - text-shadow: 0px 0px 5px black
+      - text-transform: capitalize
+      custom_fields:
+        bright:
+        - align-self: start
+        - justify-self: end
+        - border-radius: 20px
+        - border-style: solid
+        - border-width: 1px
+        - font-size: 10px
+        - font-weight: 300
+        - box-shadow: 2px 2px rgba(0,0,0,0.7)
+        - border-color: '#67727e'
+        - padding: 15%
+        cl:
+        - align-self: start
+        - justify-self: end
+      grid:
+      - grid-template-areas: '"i bright" "n cl" "s cl"'
+      - grid-template-columns: 1fr min-content
+      - grid-template-rows: 1fr min-content min-content
+      icon:
+      - width: 60%
+      - color: white
+      img_cell:
+      - justify-content: start
+      - align-items: start
+      - margin: none
+      name:
+      - font-weight: 300
+      - font-size: 10px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+      state:
+      - font-weight: bold
+      - font-size: 9px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+  blank_button:
+    aspect_ratio: 4/3
+    color_type: icon
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 0px
+      - border: solid 0px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 28px
+      name:
+      - justify-self: middle
+      - align-self: end
+      - font-size: 14px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: none
+  fan_button:
+    aspect_ratio: 1/1
+    show_icon: false
+    show_state: true
+    state:
+    - styles:
+        card:
+        - background-color: grey
+        - color: grey
+        - opacity: 0.5
+        name:
+        - font-weight: 300
+        - font-size: 10px
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: unavailable
+    - styles:
+        card:
+        - background-color: transparent
+        - opacity: 0.5
+        name:
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: 'off'
+    - styles:
+        card:
+        - background-color: '#2a5629'
+        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
+      value: 'on'
+    state_display: '[[[ if (variables.state === true) return ''null''; ]]]
+
+      '
+    styles:
+      card:
+      - border-radius: 10%
+      - padding: 12%
+      - color: ivory
+      - font-size: 10px
+      - text-shadow: 0px 0px 5px black
+      - text-transform: capitalize
+      grid:
+      - grid-template-areas: '"icon  icon"
+
+          "n     n"
+
+          "s     s"
+
+          '
+      - grid-template-columns: repeat(2, 1fr)
+      - grid-template-rows: auto repeat(2, min-content)
+      - gap: 2%
+      - align-items: start
+      name:
+      - font-weight: 400
+      - font-size: 11px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+      state:
+      - font-weight: bold
+      - font-size: 9px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+    tap_action:
+      action: toggle
+    template:
+    - tap_audio
+    - animate
+    - icon_fan
+    - loader
+  icon_button:
+    aspect_ratio: 4/3
+    color_type: card
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 10px
+      - border: solid 1px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 28px
+      name:
+      - justify-self: middle
+      - align-self: end
+      - font-size: 14px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  icon_fan:
+    custom_fields:
+      icon: "[[[\n  let path = `\n    <circle cx=\"25\" cy=\"25\" r=\"6.6\"/>\n  \
+        \  <path d=\"M31.9 30.4c-.5.6-1.1 1.1-1.7 1.5-1.4 1.1-3.2 1.7-5.2 1.7-2.3\
+        \ 0-4.5-.9-6-2.4-.9 1.1-1.6 2.3-2.3 3.2l-4.9 5.4c-1.8 2.7.3 5.6 2.5 7 3.9\
+        \ 2.4 9.8 3.1 14.1 1.9 4.6-1.3 7.9-4.7 7.4-9.7-.2-3.4-1.9-6-3.9-8.6zM17 28.3c-.4-1-.6-2.1-.6-3.3a8.7\
+        \ 8.7 0 0 1 6.4-8.4l-1.6-3.5L19 6.2c-1.5-2.8-5-2.5-7.3-1.2-4 2.2-7.5 6.9-8.7\
+        \ 11.3-1.2 4.6.2 9.2 4.7 11.3 3.1 1.3 6.1 1.2 9.3.7zm26.9-17.6c-3.3-3.4-8-4.6-12.1-1.8-2.8\
+        \ 1.8-4.2 4.6-5.5 7.5 4.2.6 7.4 4.2 7.4 8.6 0 .9-.1 1.7-.4 2.5 1.3.2 2.8.3\
+        \ 3.8.4 2.3.4 4.7 1.3 7.1 1.7 3.2.3 4.7-3 4.8-5.6.3-4.6-1.9-10.1-5.1-13.3z\"\
+        />\n  `,\n  style = `\n    <svg viewBox=\"0 0 50 50\">\n      <style>\n  \
+        \      @keyframes rotate {\n          0% {\n            visibility: visible;\n\
+        \            transform: rotate(0deg) translateZ(0);\n          }\n       \
+        \   100% {\n            transform: rotate(1080deg) translateZ(0);\n      \
+        \    }\n        }\n        .start {\n          animation: rotate 2.8s ease-in;\n\
+        \          transform-origin: center;\n          fill: #72b6e8;\n         \
+        \ visibility: hidden;\n          will-change: transform;\n        }\n    \
+        \    .on {\n          animation: rotate 1.8s linear infinite;\n          transform-origin:\
+        \ center;\n          fill: #e4e9ed;\n          animation-delay: 2.8s;\n  \
+        \        visibility: hidden;\n          will-change: transform;\n        }\n\
+        \        .end {\n          animation: rotate 2.8s;\n          transform-origin:\
+        \ center;\n          fill: #737678;\n          animation-timing-function:\
+        \ cubic-bezier(0.61, 1, 0.88, 1);\n          will-change: transform;\n   \
+        \     }\n        .start_timeout {\n          animation: rotate 1.8s linear\
+        \ infinite;\n          transform-origin: center;\n          fill: #e4e9ed;\n\
+        \          visibility: hidden;\n          will-change: transform;\n      \
+        \  }\n        .end_timeout {\n          fill: #4f5254;\n        }\n      </style>\n\
+        \  `;\n  if (variables.state === 'on' && variables.timeout < 2000) {\n   \
+        \ return `${style}<g class=\"start\">${path}</g><g class=\"on\">${path}</g></svg>`;\n\
+        \  }\n  if (variables.state === 'off' && variables.timeout < 2000) {\n   \
+        \ return `${style}<g class=\"end\">${path}</g></svg>`;\n  }\n  if (variables.state\
+        \ === 'on' && variables.timeout > 2000) {\n    return `${style}<g class=\"\
+        start_timeout\">${path}</g></svg>`;\n  } else {\n    return `${style}<g class=\"\
+        end_timeout\">${path}</g></svg>`;\n  }\n]]]\n"
+    styles:
+      custom_fields:
+        icon:
+        - width: 65%
+        - margin-left: -3%
+  icon_name:
+    color: '#9da0a2'
+    size: 1.4em
+    styles:
+      card:
+      - color: '#9da0a2'
+      - border-radius: 0.6em
+      - padding: 1em 1.4em 1em 1.2em
+      - width: max-content
+      - font-size: 1.06em
+      - font-weight: 500
+      - letter-spacing: 0.015em
+      - background: '#FFFFFF10'
+      grid:
+      - grid-template-areas: '"i n"'
+      - grid-column-gap: 0.3em
+      name:
+      - font-size: 1.06em
+      - letter-spacing: 0.015em
+  icon_tv:
+    custom_fields:
+      icon: "[[[\n  let style = `\n    <style>\n      @keyframes on {\n        from\
+        \ {\n          transform: scaleY(0);\n        }\n        to {\n          transform:\
+        \ scaleY(1);\n        }\n      }\n      .on {\n        animation: on 1s;\n\
+        \        transform-origin: -100% 46%;\n        animation-fill-mode: forwards;\n\
+        \      }\n      @keyframes off {\n        from {\n          transform: scaleY(1);\n\
+        \        }\n        to {\n          transform: scaleY(0);\n        }\n   \
+        \   }\n      .off {\n        animation: off 1s;\n        transform-origin:\
+        \ -100% 46%;\n        animation-fill-mode: forwards;\n      }\n    </style>\n\
+        \  `,\n    path = `\n      <path d=\"M46 9.2v27.5H4.1V9.2H46m2.4-2.4H1.6v32.3h46.7c.1\
+        \ 0 .1-32.3.1-32.3zM11.9 43.2h26.3c.6 0 1.1-.4 1.1-1v-.3c0-.6-.4-1.1-1-1.1H11.9c-.6\
+        \ 0-1.1.4-1.1 1v.3a1.11 1.11 0 0 0 1.1 1.1z\"/>\n    `,\n    gradient = `\n\
+        \      <linearGradient id=\"A\" gradientUnits=\"userSpaceOnUse\" x1=\"5.401\"\
+        \ y1=\"34.714\" x2=\"43.817\" y2=\"11.74\">\n        <stop offset=\"0\" stop-color=\"\
+        #64acb7\"/>\n        <stop offset=\"1\" stop-color=\"#7fdbe9\"/>\n      </linearGradient>\n\
+        \    `;\n  if (variables.state === 'on' && variables.timeout < 2000 || variables.state\
+        \ === 'playing' && variables.timeout < 2000) {\n    return `\n      <svg viewBox=\"\
+        0 0 50 50\"> ${style} ${gradient} \n        <path d=\"M2.9,8h44.3v29.9H2.9V8z\"\
+        \ fill=\"#20262890\"/>\n        <path class=\"on\" d=\"M2.9,8h44.3v29.9H2.9V8z\"\
+        \ fill=\"url(#A)\"/> ${path} \n      </svg>\n    `;\n  }\n  if (variables.state\
+        \ === 'on' && variables.timeout > 2000 || variables.state === 'playing' &&\
+        \ variables.timeout > 2000) {\n    return `\n      <svg viewBox=\"0 0 50 50\"\
+        > ${gradient} \n        <path d=\"M2.9,8h44.3v29.9H2.9V8z\" fill=\"#20262890\"\
+        />\n        <path class=\"on\" d=\"M2.9,8h44.3v29.9H2.9V8z\" fill=\"url(#A)\"\
+        /> ${path} \n      </svg>\n    `;\n  }\n  if (variables.state === 'off' &&\
+        \ variables.timeout < 2000) {\n    return `\n      <svg viewBox=\"0 0 50 50\"\
+        > ${style} ${gradient} \n        <path class=\"off\" d=\"M2.9,8h44.3v29.9H2.9V8z\"\
+        \ fill=\"url(#A)\"/> ${path} \n      </svg>\n    `;\n  } else {\n    return\
+        \ `\n      <svg viewBox=\"0 0 50 50\"> ${style} \n        ${path}\n      </svg>\n\
+        \    `;\n  }\n]]]\n"
+    styles:
+      custom_fields:
+        icon:
+        - width: 80%
+        - margin-top: -7%
+        - margin-left: 1%
+        - fill: "[[[\n  return variables.state === 'on' || variables.state === 'playing'\
+            \ ? '#616161' : '#9da0a2';\n]]]\n"
+  light_button_no_brightness:
+    aspect_ratio: 1/1
+    hold_action:
+      action: more-info
+    show_icon: true
+    show_state: true
+    state:
+    - styles:
+        card:
+        - background-color: grey
+        - border-radius: 10%
+        - padding: 12%
+        - color: grey
+        - opacity: 0.5
+        - font-size: 10px
+        - text-shadow: 0px 0px 5px black
+        - text-transform: capitalize
+        grid:
+        - grid-template-areas: '"i i" "n n" "s s"'
+        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: 1fr min-content min-content
+        icon:
+        - width: 100%
+        - opacity: 0.2
+        - color: white
+        img_cell:
+        - justify-content: start
+        - align-items: start
+        - margin: none
+        name:
+        - font-weight: 300
+        - font-size: 10px
+        - opacity: 0.5
+        - color: white
+        - align-self: middle
+        - justify-self: start
+        state:
+        - font-weight: bold
+        - opacity: 0.5
+        - font-size: 9px
+        - color: white
+        - align-self: middle
+        - justify-self: start
+      value: unavailable
+    - styles:
+        card:
+        - background-color: transparent
+        - border-radius: 10%
+        - padding: 12%
+        - color: ivory
+        - opacity: 0.5
+        - font-size: 10px
+        - text-shadow: 0px 0px 5px black
+        - text-transform: capitalize
+        grid:
+        - grid-template-areas: '"i i" "n n" "s s"'
+        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: 1fr min-content min-content
+        icon:
+        - width: 100%
+        - color: white
+        - opacity: 0.2
+        img_cell:
+        - justify-content: start
+        - align-items: start
+        - margin: none
+        name:
+        - font-weight: 300
+        - font-size: 10px
+        - color: white
+        - opacity: 0.5
+        - align-self: middle
+        - justify-self: start
+        state:
+        - font-weight: bold
+        - font-size: 9px
+        - opacity: 0.5
+        - color: white
+        - align-self: middle
+        - justify-self: start
+      value: 'off'
+    - styles:
+        card:
+        - background-color: '#2a5629'
+        - border-radius: 10%
+        - padding: 12%
+        - color: ivory
+        - font-size: 10px
+        - text-shadow: 0px 0px 5px black
+        - text-transform: capitalize
+        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
+        grid:
+        - grid-template-areas: '"i i" "n n" "s s"'
+        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: 1fr min-content min-content
+        icon:
+        - width: 100%
+        - color: white
+        img_cell:
+        - justify-content: start
+        - align-items: start
+        - margin: none
+        name:
+        - font-weight: 300
+        - font-size: 10px
+        - color: white
+        - align-self: middle
+        - justify-self: start
+        state:
+        - font-weight: bold
+        - font-size: 9px
+        - color: white
+        - align-self: middle
+        - justify-self: start
+      value: 'on'
+    template:
+    - tap_audio
+    - animate
+  list_button:
+    aspect_ratio: 5/1
+    color_type: icon
+    layout: vertical
+    show_entity_picture: true
+    show_name: true
+    show_state: false
+    styles:
+      card:
+      - border-radius: 15px
+      - border: solid 0.1px var(--primary-color)
+      - box-shadow: none
+      - padding: 0px 0px
+      - margin: 0px 0px
+      - background-size: cover
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      name:
+      - justify-self: middle
+      - align-self: middle
+      - font-size: 20px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  loader:
+    custom_fields:
+      loader: '<img src="/local/icons/loader.svg" width="100%">
+
+        '
+    styles:
+      custom_fields:
+        loader:
+        - display: none
+        - top: 3%
+        - left: 60%
+        - width: 37%
+        - position: absolute
+        - opacity: 0.5
+        - filter: '[[[ return variables.state === ''off'' ? ''invert(1)'' : ''none'';
+            ]]]
+
+            '
+    tap_action:
+      loader: "[[[\n  if (entity) {\n    let elt = this.shadowRoot,\n      loader\
+        \ = (id, style, timeout) => {\n        elt.getElementById(id) && (elt.getElementById(id).style.display\
+        \ = style,\n          window.setTimeout(() => {\n            elt.getElementById(id).style.display\
+        \ = timeout\n          }, 20000))\n      };\n    loader('circle', 'none',\
+        \ 'initial'),\n    loader('loader', 'initial', 'none');\n  }\n]]]\n"
+  logo_button:
+    aspect_ratio: 21/9
+    color: rgb(255,255,255)
+    color_type: card
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 5px
+      - border: solid 0.5px var(--primary-color)
+      - box-shadow: none
+      - padding: 0px 0px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 50px
+      name:
+      - justify-self: middle
+      - align-self: end
+      - font-size: 14px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  menu_button:
+    aspect_ratio: 4/3
+    color_type: icon
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 10px
+      - border: solid 1px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 28px
+      name:
+      - justify-self: middle
+      - align-self: end
+      - font-size: 14px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  rgb_light_button:
+    custom_fields:
+      cl:
+        card:
+          entity_picture: /local/icons/multic.png
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        card:
+          brightness_icon: brightness-7
+          entity: '[[[ return entity.entity_id ]]]
+
+            '
+          hide_header: false
+          show_slider_percent: true
+          type: custom:light-entity-card
+        command: popup
+        hide_header: true
+    template:
+    - base
+    - tap_audio
+    - animate
+  tap_audio:
+    tap_action:
+      action: toggle
+      ui_sound_tablet: "[[[\n  let screensaver = states['sensor.lenovo_tab_m10_hd_foreground_app']\
+        \ === undefined || \n    states['sensor.lenovo_tab_m10_hd_foreground_app'].state;\n\
+        \  if (variables.state === 'off' && screensaver != 'com.tblenovo.launcher')\
+        \ {\n    hass.callService('media_player', 'play_media', {\n      entity_id:\
+        \ 'media_player.browser_mod_tablet',\n      media_content_id: '/local/sound/on.m4a',\n\
+        \      media_content_type: 'music'\n    });\n  }\n  if (variables.state ===\
+        \ 'on' && screensaver != 'com.tblenovo.launcher') {\n    hass.callService('media_player',\
+        \ 'play_media', {\n      entity_id: 'media_player.browser_mod_tablet',\n \
+        \     media_content_id: '/local/sound/off.m4a',\n      media_content_type:\
+        \ 'music'\n    });\n  }\n]]]\n"
+  tv_button:
+    aspect_ratio: 1/1
+    show_icon: false
+    show_state: true
+    state:
+    - styles:
+        card:
+        - background-color: grey
+        - color: grey
+        - opacity: 0.5
+        name:
+        - font-weight: 300
+        - font-size: 10px
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: unavailable
+    - styles:
+        card:
+        - background-color: transparent
+        - opacity: 0.5
+        name:
+        - opacity: 0.5
+        state:
+        - opacity: 0.5
+      value: 'off'
+    - styles:
+        card:
+        - background-color: '#2a5629'
+        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
+      value: 'on'
+    state_display: '[[[ if (variables.state === true) return ''null''; ]]]
+
+      '
+    styles:
+      card:
+      - border-radius: 10%
+      - padding: 12%
+      - color: ivory
+      - font-size: 10px
+      - text-shadow: 0px 0px 5px black
+      - text-transform: capitalize
+      grid:
+      - grid-template-areas: '"icon  icon"
+
+          "n     n"
+
+          "s     s"
+
+          '
+      - grid-template-columns: repeat(2, 1fr)
+      - grid-template-rows: auto repeat(2, min-content)
+      - gap: 2%
+      - align-items: start
+      name:
+      - font-weight: 400
+      - font-size: 11px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+      state:
+      - font-weight: bold
+      - font-size: 9px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+    tap_action:
+      action: toggle
+    template:
+    - tap_audio
+    - animate
+    - icon_tv
+    - loader
+  ww_light_button:
+    custom_fields:
+      cl:
+        card:
+          entity_picture: /local/icons/ww.png
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        card:
+          brightness_icon: brightness-7
+          consolidate_entities: true
+          entity: '[[[ return entity.entity_id ]]]
+
+            '
+          hide_header: false
+          show_slider_percent: true
+          type: custom:light-entity-card
+        command: popup
+        hide_header: true
+    template:
+    - base
+    - tap_audio
+    - animate
+kiosk_mode:
+  non_admin_settings:
+    hide_menubutton: true
+    hide_overflow: true
+views:
+- badges: []
+  cards:
+  - backdrop: true
+    entity: weather.home
+    name: ' '
+    primary_info:
+    - humidity
+    - precipitation_probability
+    secondary_info: null
+    type: custom:simple-weather-card
+  - cards:
+    - aspect_ratio: 1/1
+      camera_view: live
+      entity: device_tracker.life360_murthy_upadrasta
+      image: /local/images/murthy.jpg
+      name: Murthy
+      show_name: false
+      show_state: true
+      state_filter:
+        not_home: brightness(60%) grayscale(80%) blur(1px)
+      tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            cards:
+            - card_mod:
+                class: content
+              entities:
+              - entity: person.murthy
+                secondary_info: last-changed
+              type: entities
+            - entities:
+              - entity: person.murthy
+              type: history-graph
+            - entities:
+              - entity: sensor.murthy_nord2_battery_level
+                name: Battery
+              - entity: binary_sensor.murthy_nord2_is_charging
+                name: Charging?
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.murthy_nord2_wifi_state
+                name: Wi-Fi
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.murthy_nord2_bluetooth_state
+                name: Bluetooth
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.murthy_nord2_mobile_data
+                name: Data
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              show_state: true
+              type: glance
+            - icon: mdi:volume-high
+              name: Find Phone
+              tap_action:
+                action: call-service
+                service: notify.mobile_app_murthy_nord2
+                service_data:
+                  data:
+                    channel: alarm_stream
+                    priority: high
+                    ttl: 0
+                  message: ''
+                  title: Find My Phone
+              template: icon_name
+              type: custom:button-card
+            - dark_mode: true
+              default_zoom: 15
+              entities:
+              - entity: device_tracker.murthy_nord2
+              - entity: device_tracker.life360_murthy_upadrasta
+              hours_to_show: 24
+              type: map
+            type: vertical-stack
+          command: popup
+          style:
+            hui-vertical-stack-card:
+              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
+                }\n"
+              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
+                \ 1.7em !important;\n}\n"
+              $hui-map-card:
+                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
+                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
+                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
+                  \  }\n}\n"
+                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
+                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
+                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
+                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
+                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+                  }\n"
+          title: Murthy
+      theme: Google Light Theme
+      type: picture-entity
+    - aspect_ratio: 1/1
+      entity: person.kameswari
+      hold_action:
+        action: none
+      image: /local/images/kameswari.jpg
+      show_name: false
+      state_filter:
+        not_home: brightness(60%) grayscale(80%) blur(1px)
+      tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            cards:
+            - card_mod:
+                class: content
+              entities:
+              - entity: person.kameswari
+                secondary_info: last-changed
+              type: entities
+            - entities:
+              - entity: person.kameswari
+              type: history-graph
+            - entities:
+              - entity: sensor.kameswari_nord_battery_level
+                name: Battery
+              - entity: binary_sensor.kameswari_nord_is_charging
+                name: Charging?
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.kameswari_nord_wifi_state
+                name: Wi-Fi
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.kameswari_nord_bluetooth_state
+                name: Bluetooth
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.kameswari_nord_mobile_data
+                name: Data
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              show_state: true
+              type: glance
+            - icon: mdi:volume-high
+              name: Find Phone
+              tap_action:
+                action: call-service
+                service: notify.mobile_app_kameswari_nord
+                service_data:
+                  data:
+                    channel: alarm_stream
+                    priority: high
+                    ttl: 0
+                  message: ''
+                  title: Find My Phone
+              template: icon_name
+              type: custom:button-card
+            - dark_mode: true
+              default_zoom: 16
+              entities:
+              - entity: device_tracker.kameswari_nord_2
+              - entity: device_tracker.life360_kameswari_upadrasta
+              hours_to_show: 24
+              type: map
+            type: vertical-stack
+          command: popup
+          style:
+            hui-vertical-stack-card:
+              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
+                }\n"
+              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
+                \ 1.7em !important;\n}\n"
+              $hui-map-card:
+                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
+                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
+                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
+                  \  }\n}\n"
+                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
+                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
+                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
+                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
+                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+                  }\n"
+          title: Kameswari
+      theme: Google Light Theme
+      type: picture-entity
+    - aspect_ratio: 1/1
+      entity: person.pavanthanuj
+      hold_action:
+        action: none
+      image: /local/images/thanuj.jpg
+      show_name: false
+      state_filter:
+        not_home: brightness(60%) grayscale(80%) blur(1px)
+      tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            cards:
+            - card_mod:
+                class: content
+              entities:
+              - entity: person.pavanthanuj
+                secondary_info: last-changed
+              type: entities
+            - entities:
+              - entity: person.pavanthanuj
+              type: history-graph
+            - entities:
+              - entity: sensor.10pro_battery_level
+                name: Battery
+              - entity: binary_sensor.10pro_is_charging
+                name: Charging?
+                style: "state-badge {\n  color: {{ '#bfab28' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.10pro_wifi_state
+                name: Wi-Fi
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.10pro_bluetooth_state
+                name: Bluetooth
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              - entity: binary_sensor.10pro_mobile_data
+                name: Data
+                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
+                  \ else '#3c3f3f' }};\n}\n"
+              show_state: true
+              type: glance
+            - icon: mdi:volume-high
+              name: Find Phone
+              tap_action:
+                action: call-service
+                service: notify.mobile_app_10pro
+                service_data:
+                  data:
+                    channel: alarm_stream
+                    priority: high
+                    ttl: 0
+                  message: ''
+                  title: Find My Phone
+              template: icon_name
+              type: custom:button-card
+            type: vertical-stack
+          command: popup
+          style:
+            hui-vertical-stack-card:
+              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
+                }\n"
+              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
+                \ 1.7em !important;\n}\n"
+              $hui-map-card:
+                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
+                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
+                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
+                  \  }\n}\n"
+                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
+                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
+                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
+                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
+                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+                  }\n"
+          title: Thanuj
+      theme: Google Light Theme
+      type: picture-entity
+    type: horizontal-stack
+  - cards:
+    - aspect_ratio: 1/1
+      double_tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            cards:
+            - cards:
+              - entity: camera.hall_camera
+                name: Hall Camera 1
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              - entity: camera.hall_camera_2_hd
+                name: Hall Camera 2
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              type: horizontal-stack
+            - cards:
+              - aspect_ratio: 3/4
+                entity: camera.firstfloor
+                name: First Floor
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              - aspect_ratio: 3/4
+                entity: camera.secondfloor
+                name: Second Floor
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              type: horizontal-stack
+            - cards:
+              - aspect_ratio: 3/4
+                entity: camera.entrance
+                name: Entrance
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              - aspect_ratio: 3/4
+                entity: camera.driveway
+                name: Driveway
+                show_live_stream: true
+                size: 100%
+                type: custom:button-card
+              type: horizontal-stack
+            type: vertical-stack
+          command: popup
+          deviceID: this
+          large: true
+          title: Cameras
+      hold_action:
+        action: navigate
+        navigation_path: /lovelace-wallmount/cameras
+      icon: mdi:cctv
+      size: 70%
+      styles:
+        card:
+        - border-radius: 25px
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace-wallmount/cameras
+      tooltip: Tap to open Cameras
+      type: custom:button-card
+    - aspect_ratio: 1/1
+      color_type: icon
+      entity: sensor.motor_state
+      entity_picture: true
+      extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
+
+        '
+      hold_action:
+        action: navigate
+        navigation_path: /lovelace-wallmount/motors
+      icon: mdi:water-pump
+      show_label: false
+      show_name: false
+      size: 70%
+      state:
+      - color: blue
+        value: Upstairs
+      - color: blue
+        value: Downstairs
+      - color: lightgrey
+        icon: mdi:water-pump-off
+        value: MotorsOff
+      - color: var(--disabled-text-color)
+        icon: mdi:water-pump
+        value: TankFull
+      styles:
+        card:
+        - animation: '[[[ if (entity.state == "TankFull") return "bgswap 1000s linear
+            infinite"; else return " " ]]]'
+        - background-size: cover
+        - border-radius: 25px
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace-wallmount/motors
+      type: custom:button-card
+    - aspect_ratio: 1/1
+      color: auto
+      entity: switch.downstairs_geyser
+      entity_picture: /local/icons/geyser.png
+      hold_action:
+        action: more-info
+      show_entity_picture: true
+      show_name: false
+      size: 120px
+      state:
+      - styles:
+          icon:
+          - filter: grayscale(50%) opacity(40%)
+        value: 'off'
+      - styles:
+          icon:
+          - filter: grayscale(100%) opacity(10%)
+        value: unavailable
+      styles:
+        card:
+        - border-radius: 25px
+      type: custom:button-card
+    type: horizontal-stack
+  - cards:
+    - entity: sensor.moon_phase
+      show_entity_picture: true
+      show_name: false
+      size: 100%
+      styles:
+        card:
+        - height: 100px
+        - width: 100px
+        - margin: 0px 180px
+        - padding: 0px 0px
+        - color: ivory
+        - border-radius: 100px
+      type: custom:button-card
+    - card:
+        entity: device_tracker.phone_prasad_redmi9i
+        entity_picture: /local/images/prasad.jpg
+        show_entity_picture: true
+        show_name: false
+        size: 200%
+        styles:
+          card:
+          - height: 100px
+          - width: 100px
+          - padding: 0px 0px
+          - margin: 0px -100px
+        type: custom:button-card
+      conditions:
+      - entity: device_tracker.phone_prasad_redmi9i
+        state: home
+      type: conditional
+    type: horizontal-stack
+  - background: true
+    cards:
+    - content: <center><img height="50" src="/local/f1/F1.png"></center>
+      type: markdown
+    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
+        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
+        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
+        0) %} race_day {% endif %}'
+      states:
+        race_day:
+          content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n\n<h2><center><img\n\
+            \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
+            > {{ states.sensor.ics_1.attributes.description}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
+            \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
+          type: markdown
+        race_weekend:
+          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
+            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
+            | replace ("Qualifying ", "")}} <br>
+          type: markdown
+        wait:
+          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
+            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
+            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
+            days to go </center> '
+          type: markdown
+      type: custom:state-switch
+    type: custom:stack-in-card
+  - type: custom:layout-break
+  - cards:
+    - cards:
+      - cards:
+        - color_type: blank-card
+          styles:
+            card:
+            - width: 10px
+          type: custom:button-card
+        - color: transparent
+          color_type: label-card
+          entity: input_select.room_select
+          name: Living Room
+          show_name: true
+          state:
+          - icon: mdi:television
+            styles:
+              icon:
+              - color: white
+              - width: 50px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+            value: LivingRoom
+          - icon: mdi:television
+            operator: default
+            styles:
+              icon:
+              - color: white
+              - opacity: 0.2
+              - width: 45px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.room_select
+              option: LivingRoom
+          type: custom:button-card
+        - color: transparent
+          color_type: label-card
+          entity: input_select.room_select
+          name: Front Yard
+          show_name: true
+          state:
+          - icon: mdi:lightbulb-group
+            styles:
+              icon:
+              - color: white
+              - width: 50px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+            value: FrontYard
+          - icon: mdi:lightbulb-group-outline
+            operator: default
+            styles:
+              icon:
+              - color: white
+              - opacity: 0.2
+              - width: 45px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+          styles:
+            icon: null
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.room_select
+              option: FrontYard
+          type: custom:button-card
+        - color: transparent
+          color_type: label-card
+          entity: input_select.room_select
+          name: Hall
+          show_name: true
+          state:
+          - icon: mdi:sofa
+            styles:
+              icon:
+              - color: white
+              - width: 50px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+            value: Hall
+          - icon: mdi:sofa-outline
+            operator: default
+            styles:
+              icon:
+              - color: white
+              - opacity: 0.2
+              - width: 45px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.room_select
+              option: Hall
+          type: custom:button-card
+        - color: transparent
+          color_type: label-card
+          entity: input_select.room_select
+          name: Bedroom
+          show_name: true
+          state:
+          - icon: mdi:bed-double
+            styles:
+              icon:
+              - color: white
+              - width: 50px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+            value: Bedroom
+          - icon: mdi:bed-double-outline
+            operator: default
+            styles:
+              icon:
+              - color: white
+              - opacity: 0.2
+              - width: 45px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.room_select
+              option: Bedroom
+          type: custom:button-card
+        - color: transparent
+          color_type: label-card
+          entity: input_select.room_select
+          name: Den
+          show_name: true
+          state:
+          - icon: mdi:castle
+            styles:
+              icon:
+              - color: white
+              - width: 50px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+            value: Den
+          - icon: mdi:castle
+            operator: default
+            styles:
+              icon:
+              - color: white
+              - opacity: 0.2
+              - width: 45px
+              name:
+              - color: white
+              - font-size: 12px
+              - padding-top: 5px
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.room_select
+              option: Den
+          type: custom:button-card
+        - color_type: blank-card
+          styles:
+            card:
+            - width: 10px
+          type: custom:button-card
+        type: horizontal-stack
+      type: horizontal-stack
+    - entity: input_select.room_select
+      states:
+        Bedroom:
+          cards:
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+              type: custom:button-card
+            - entity: switch.bedroom_light
+              icon: mdi:lightbulb-fluorescent-tube-outline
+              name: Tube Light
+              template: light_button_no_brightness
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+              type: custom:button-card
+            type: horizontal-stack
+          type: vertical-stack
+        Den:
+          cards:
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 90px
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          consolidate_entities: true
+                          entity: light.den_lights_group
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.den_lights_group
+              icon: mdi:lightbulb-group-outline
+              template: rgb_light_button
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 90px
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.wipro_tube_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.wipro_tube_light
+              template: rgb_light_button
+              type: custom:button-card
+            - entity: switch.den_fan
+              name: Fan
+              template: fan_button
+              type: custom:button-card
+            - entity: switch.den_wall_fan
+              hold_action: more-info
+              name: Wall Fan
+              template: fan_button
+              type: custom:button-card
+            - entity: switch.workstation
+              template: tv_button
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.led_strip
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.led_strip
+              template: rgb_light_button
+              type: custom:button-card
+            - entity: switch.geyser
+              template: light_button_no_brightness
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.shelf_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.shelf_light
+              template: rgb_light_button
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.top_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.top_light
+              template: rgb_light_button
+              type: custom:button-card
+            type: horizontal-stack
+          type: vertical-stack
+        FrontYard:
+          cards:
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 90px
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          consolidate_entities: true
+                          entity: light.front_yard_lights_group
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.front_yard_lights_group
+              icon: mdi:lightbulb-group-outline
+              template: ww_light_button
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 90px
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 50px
+              type: custom:button-card
+            - entity: switch.rice_string_1
+              template: light_button_no_brightness
+              type: custom:button-card
+            - entity: switch.rice_string_2
+              template: light_button_no_brightness
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 50px
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.first_floor_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.first_floor_light
+              icon: mdi:lightbulb-outline
+              template: ww_light_button
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.first_floor_stairway
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.first_floor_stairway
+              icon: mdi:lightbulb-outline
+              template: ww_light_button
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.first_floor_corner
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.first_floor_corner
+              icon: mdi:lightbulb-outline
+              name: First Floor Corner
+              template: ww_light_button
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.second_floor_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.second_floor_light
+              icon: mdi:lightbulb-outline
+              template: ww_light_button
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.second_floor_stairway
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.second_floor_stairway
+              icon: mdi:lightbulb-outline
+              template: ww_light_button
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.second_floor_corner
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.second_floor_corner
+              icon: mdi:lightbulb-outline
+              template: ww_light_button
+              type: custom:button-card
+            type: horizontal-stack
+          type: vertical-stack
+        Hall:
+          cards:
+          - cards:
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.hall_tube_light
+                          hide_header: false
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.hall_tube_light
+              icon: mdi:lightbulb-fluorescent-tube-outline
+              template: ww_light_button
+              type: custom:button-card
+            - entity: switch.hall_fan
+              template: fan_button
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - entity: switch.ricelight_l
+              template: light_button_no_brightness
+              type: custom:button-card
+            - entity: switch.ricelight_r
+              template: light_button_no_brightness
+              type: custom:button-card
+            type: horizontal-stack
+          type: vertical-stack
+        LivingRoom:
+          cards:
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+                - height: 100px
+              type: custom:button-card
+            - custom_fields:
+                cl:
+                  card:
+                    tap_action:
+                      action: fire-dom-event
+                      browser_mod:
+                        card:
+                          brightness_icon: brightness-7
+                          entity: light.living_room_light
+                          hide_header: true
+                          show_slider_percent: true
+                          type: custom:light-entity-card
+                        command: popup
+                        deviceID: this
+                        hide_header: true
+              entity: light.living_room_light
+              icon: mdi:lightbulb-fluorescent-tube-outline
+              template: ww_light_button
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 30px
+                - height: 10px
+              type: custom:button-card
+            - entity: fan.fan
+              hold_action:
+                action: fire-dom-event
+                browser_mod:
+                  card:
+                    action_button:
+                      icon: mdi:power
+                      mode: toggle
+                      show: false
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    compact: false
+                    entity: fan.fan
+                    icon:
+                      icon: ''
+                      show: false
+                      tap_action:
+                        action: none
+                      use_state_color: false
+                    name: Speed
+                    show_name: true
+                    show_state: true
+                    slider:
+                      background: gradient
+                      direction: left-right
+                      force_square: false
+                      show_track: true
+                      toggle_on_click: false
+                      use_percentage_bg_opacity: false
+                      use_state_color: false
+                    type: custom:slider-button-card
+                  command: popup
+                  hide_header: true
+              template: fan_button
+              type: custom:button-card
+            - entity: switch.wall_fan
+              template: fan_button
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 30px
+                - height: 10px
+              type: custom:button-card
+            type: horizontal-stack
+          type: vertical-stack
+      type: custom:state-switch
+    type: vertical-stack
+  - type: custom:layout-break
+  - cards:
+    - color_type: card
+      entity: input_select.remote
+      icon: "[[[\n  if (states['input_select.remote'].state == 'TV')\n    return \"\
+        mdi:television\";\n  else\n    return \"mdi:set-top-box\";\n]]]\n"
+      label: "[[[\n  return states['input_select.remote'].state + ' Remote';\n]]]\n"
+      layout: icon_label
+      show_label: true
+      show_name: false
+      styles:
+        card:
+        - height: 60px
+        - --mdc-ripple-color: green
+        label:
+        - color: black
+        - font-size: 20px
+        - font-weight: bold
+        - justify-self: start
+        - padding: 10px 0px
+      tap_action:
+        action: call-service
+        service: input_select.select_next
+        service_data:
+          entity_id: input_select.remote
+      type: custom:button-card
+    - entity: input_select.remote
+      states:
+        Set-Top Box:
+          entities:
+          - card_type: horizontal-stack
+            cards:
+            - color: red
+              entity: remote.sony_bravia_tv
+              icon: mdi:power
+              name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+              styles:
+                icon:
+                - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                    "green"]]]
+
+                    '
+              tap_action:
+                service: script.set_top_box_power
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:video-input-component
+              name: Input
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Input
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:chevron-up-circle-outline
+              name: Channel Up
+              tap_action:
+                service: script.set_top_box_program_up
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-minus
+              name: Volume Down
+              tap_action:
+                service: script.set_top_box_volume_down
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-off
+              name: Mute
+              styles:
+                card:
+                - background: var(--secondary-background-color-alpha)
+              tap_action:
+                service: script.set_top_box_mute
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-plus
+              name: Volume Up
+              tap_action:
+                service: script.set_top_box_volume_up
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:chevron-down-circle-outline
+              name: Program Down
+              tap_action:
+                service: script.set_top_box_program_down
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-1-box
+              name: 1
+              tap_action:
+                service: script.set_top_box_one
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-2-box
+              name: 2
+              tap_action:
+                service: script.set_top_box_two
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-3-box
+              name: 3
+              tap_action:
+                service: script.set_top_box_three
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-4-box
+              name: 4
+              tap_action:
+                service: script.set_top_box_four
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-5-box
+              name: 5
+              tap_action:
+                service: script.set_top_box_five
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-6-box
+              name: 6
+              tap_action:
+                service: script.set_top_box_six
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-7-box
+              name: 7
+              tap_action:
+                service: script.set_top_box_seven
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-8-box
+              name: 8
+              tap_action:
+                service: script.set_top_box_eight
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-9-box
+              name: 9
+              tap_action:
+                service: script.set_top_box_nine
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-0-box
+              name: 0
+              tap_action:
+                service: script.set_top_box_zero
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          show_header_toggle: false
+          type: entities
+        TV:
+          entities:
+          - card_type: horizontal-stack
+            cards:
+            - color: red
+              entity: remote.sony_bravia_tv
+              icon: mdi:power
+              name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+              styles:
+                icon:
+                - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                    "green"]]]
+
+                    '
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: TvPower
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:video-input-component
+              name: Input
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Input
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/netflix.png
+              show_entity_picture: true
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Netflix
+                  entity_id: remote.sony_bravia_tv
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/prime.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: Prime Video
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/youtube.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: YouTube
+              template: logo_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/disney.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: Hotstar
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/aha.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: aha
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/zee5.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: ZEE5
+              template: logo_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - buttons:
+              - align_icons: left
+                icon: mdi:volume-minus
+                name: false
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  service_data:
+                    command: VolumeDown
+                    entity_id: remote.sony_bravia_tv
+              - align_icons: left
+                icon: mdi:volume-plus
+                name: false
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  service_data:
+                    command: VolumeUp
+                    entity_id: remote.sony_bravia_tv
+              type: custom:paper-buttons-row
+            - entity: media_player.sony_bravia_tv
+              full_row: true
+              grow: true
+              step: 1
+              toggle: false
+              type: custom:slider-entity-row
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:subtitles-outline
+              name: SubTitle
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Info
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-up-bold
+              name: Up
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Up
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:cog
+              name: Settings
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Options
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:volume-off
+              name: Mute
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Mute
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-left-bold
+              name: Left
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Left
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:circle
+              name: Ok
+              styles:
+                card:
+                - background: var(--secondary-background-color-alpha)
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: DpadCenter
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-right-bold
+              name: Right
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Right
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:keyboard-return
+              name: Return
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Return
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-down-bold
+              name: Down
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Down
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:home
+              name: Home
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Home
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:rewind
+              name: Rewind
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Rewind
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:play-pause
+              name: Play/Pause
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Pause
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:fast-forward
+              name: Forward
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Forward
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            type: custom:hui-element
+          show_header_toggle: false
+          type: entities
+      type: custom:state-switch
+    type: vertical-stack
+  icon: mdi:home-assistant
+  layout:
+    max_cols: 4
+  title: Home
+  type: custom:vertical-layout
+- badges: []
+  cards:
+  - camera_image: camera.front_yard_camera
+    camera_view: live
+    entities:
+    - entity: camera.front_yard_camera_person
+    tap_action:
+      action: more-info
+    type: picture-glance
+  icon: mdi:cctv
+  title: ''
+  type: panel
+- badges: []
+  cards:
+  - cards:
+    - color_type: card
+      entity: switch.upstairs_motor
+      show_state: true
+      size: 70%
+      state:
+      - color: dodgerblue
+        icon: mdi:water-pump
+        styles:
+          state:
+          - opacity: 0.8
+        value: 'on'
+      - color: var(--disabled-text-color)
+        icon: mdi:water-pump-off
+        styles:
+          state:
+          - opacity: 0.2
+        value: 'off'
+      styles:
+        card:
+        - border-radius: 40px
+        - width: 350px
+        - height: 350px
+        name:
+        - justify-self: middle
+        - font-size: 25px
+        - color: var(--secondary-text-color)
+        state:
+        - font-weight: bold
+        - font-size: 20px
+        - color: white
+      template:
+      - tap_audio
+      - animate
+      type: custom:button-card
+    - color_type: card
+      entity: switch.downstairs_motor
+      show_state: true
+      size: 70%
+      state:
+      - color: dodgerblue
+        icon: mdi:water-pump
+        styles:
+          state:
+          - opacity: 0.8
+        value: 'on'
+      - color: var(--disabled-text-color)
+        icon: mdi:water-pump-off
+        styles:
+          state:
+          - opacity: 0.2
+        value: 'off'
+      styles:
+        card:
+        - border-radius: 40px
+        - width: 350px
+        - height: 350px
+        name:
+        - justify-self: middle
+        - font-size: 25px
+        - color: var(--secondary-text-color)
+        state:
+        - font-weight: bold
+        - font-size: 20px
+        - color: white
+      template:
+      - tap_audio
+      - animate
+      type: custom:button-card
+    type: vertical-stack
+  - type: custom:layout-break
+  - card:
+      color_type: card
+      icon: mdi:water
+      name: Tank Full
+      show_label: true
+      show_state: false
+      styles:
+        card:
+        - height: 80px
+        grid:
+        - grid-template-areas: '"i n" "i n" "i l"'
+        - grid-template-columns: 0.3fr 1fr
+        - grid-template-rows: min-content min-content min-content
+        icon:
+        - width: 50px
+        - align-self: start
+        - text-align: start
+        img_cell:
+        - align-self: start
+        - text-align: start
+        label:
+        - justify-self: start
+        - font-size: 16px
+        - font-weight: 300
+        name:
+        - justify-self: start
+        - font-size: 30px
+        - font-weight: 300
+      type: custom:button-card
+    conditions:
+    - entity: switch.sonoff_1000f38ea4
+      state: 'on'
+    type: conditional
+  - entities:
+    - entity: switch.upstairs_motor
+    - entity: switch.downstairs_motor
+    hours_to_show: 6
+    refresh_interval: 1
+    title: History
+    type: history-graph
+  - entities:
+    - switch.downstairs_motor
+    - switch.upstairs_motor
+    hours_to_show: 24
+    type: logbook
+  - type: custom:layout-break
+  icon: mdi:water-pump
+  layout:
+    max_cols: 2
+  path: motors
+  title: Motors
+  type: custom:vertical-layout
+- badges: []
+  cards:
+  - camera_image: camera.front_yard_camera
+    camera_view: live
+    entities:
+    - entity: binary_sensor.firstfloor_motion
+    tap_action:
+      action: more-info
+    title: First Floor Camera
+    type: picture-glance
+  - camera_image: camera.entrance
+    camera_view: live
+    entities:
+    - entity: binary_sensor.entrance_motion
+    title: Entrance Camera
+    type: picture-glance
+  - camera_image: camera.hall_camera
+    camera_view: live
+    entities:
+    - entity: binary_sensor.hall_camera_motion
+    - entity: camera.hall_camera
+      icon: mdi:arrow-left
+      name: Pan Left
+      show_icon: true
+      show_state: false
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          pan: LEFT
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-up
+      name: Tilt Up
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          tilt: UP
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-down
+      name: Tilt Down
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          tilt: DOWN
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-right
+      name: Pan Right
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          pan: RIGHT
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:numeric-1-box
+      name: Preset 1
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          preset: '1'
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:numeric-2-box
+      name: Preset 2
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          preset: '2'
+        target:
+          entity_id: camera.hall_camera_hd
+    title: Hall Camera 1
+    type: picture-glance
+  - camera_image: camera.secondfloor
+    camera_view: live
+    entities:
+    - entity: binary_sensor.secondfloor_motion
+    title: Second Floor Camera
+    type: picture-glance
+  - camera_image: camera.hall_camera_2_hd
+    camera_view: live
+    entities:
+    - entity: binary_sensor.hall_camera_2_motion
+    - entity: binary_sensor.hall_camera_2_sound
+    tap_action:
+      action: more-info
+    title: Hall Camera 2
+    type: picture-glance
+  - camera_image: camera.driveway
+    camera_view: live
+    entities:
+    - entity: binary_sensor.driveway_motion
+    title: Driveway Camera
+    type: picture-glance
+  icon: mdi:camera-iris
+  layout:
+    width: 450
+  path: cameras
+  title: Camera Dashboard
+  type: custom:masonry-layout
+- badges: []
+  cards:
+  - cards:
+    - cards:
+      - cards:
+        - icon: mdi:mail
+          tap_action:
+            action: call-service
+            service: notify.banthi
+            service_data:
+              message: '{{states("sensor.shopping_list")}}'
+              title: 'Shopping List:'
+          type: custom:button-card
+        - icon: mdi:check-all
+          tap_action:
+            action: call-service
+            service: script.check_shopping_list
+          type: custom:button-card
+        - icon: mdi:notification-clear-all
+          tap_action:
+            action: call-service
+            service: script.clear_shopping_list
+          type: custom:button-card
+        type: horizontal-stack
+      - type: shopping-list
+      type: vertical-stack
+    - cards:
+      - card_type: grid
+        cards:
+        - name: Coffee
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Coffee
+          template: list_button
+          type: custom:button-card
+        - name: Tea
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Tea
+          template: list_button
+          type: custom:button-card
+        - name: Sugar
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Sugar
+          template: list_button
+          type: custom:button-card
+        - name: Salt
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Salt
+          template: list_button
+          type: custom:button-card
+        - name: Surf
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Surf
+          template: list_button
+          type: custom:button-card
+        - name: Comfort
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: Comfort
+          template: list_button
+          type: custom:button-card
+        square: false
+        type: custom:hui-element
+      - card_type: grid
+        cards:
+        - name: "\u0C2C\u0C3F\u0C2F\u0C4D\u0C2F\u0C02"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2C\u0C3F\u0C2F\u0C4D\u0C2F\u0C02"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C2A\u0C32\u0C4D\u0C32\u0C3F\u0C32\u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2A\u0C32\u0C4D\u0C32\u0C3F\u0C32\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C36\u0C28\u0C17\u0C2A\u0C2A\u0C4D\u0C2A\u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C36\u0C28\u0C17\u0C2A\u0C2A\u0C4D\u0C2A\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C15\u0C02\u0C26\u0C3F\u0C2A\u0C2A\u0C4D\u0C2A\u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C15\u0C02\u0C26\u0C3F\u0C2A\u0C2A\u0C4D\u0C2A\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C2C\u0C02\u0C17\u0C3E\u0C33\u0C26\u0C41\u0C02\u0C2A"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2C\u0C02\u0C17\u0C3E\u0C33\u0C26\u0C41\u0C02\u0C2A"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C1F\u0C2E\u0C3E\u0C1F\u0C4B"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C1F\u0C2E\u0C3E\u0C1F\u0C4B"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C15\u0C3E\u0C30\u0C46\u0C1F\u0C4D"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C15\u0C3E\u0C30\u0C46\u0C1F\u0C4D"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C2C\u0C02\u0C21\u0C15\u0C3E\u0C2F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2C\u0C02\u0C21\u0C15\u0C3E\u0C2F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C26\u0C4A\u0C02\u0C21\u0C15\u0C3E\u0C2F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C26\u0C4A\u0C02\u0C21\u0C15\u0C3E\u0C2F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C35\u0C02\u0C15\u0C3E\u0C2F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C35\u0C02\u0C15\u0C3E\u0C2F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C15\u0C4D\u0C2F\u0C3E\u0C2C\u0C47\u0C1C\u0C40"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C15\u0C4D\u0C2F\u0C3E\u0C2C\u0C47\u0C1C\u0C40"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C15\u0C3E\u0C32\u0C40\u0C2B\u0C4D\u0C32\u0C35\u0C30\u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C15\u0C3E\u0C32\u0C40\u0C2B\u0C4D\u0C32\u0C35\u0C30\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C17\u0C4B\u0C30\u0C41 \u0C1A\u0C3F\u0C15\u0C4D\u0C15\u0C41\u0C21\
+            \u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C17\u0C4B\u0C30\u0C41 \u0C1A\u0C3F\u0C15\u0C4D\u0C15\u0C41\
+                \u0C21\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C2C\u0C4A\u0C2C\u0C4D\u0C2C\u0C30 \u0C1A\u0C3F\u0C15\u0C4D\u0C15\
+            \u0C41\u0C21\u0C41"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2C\u0C4A\u0C2C\u0C4D\u0C2C\u0C30 \u0C1A\u0C3F\u0C15\u0C4D\
+                \u0C15\u0C41\u0C21\u0C41"
+          template: list_button
+          type: custom:button-card
+        - name: null
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: null
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C35\u0C46\u0C32\u0C4D\u0C32\u0C41\u0C32\u0C4D\u0C32\u0C3F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C35\u0C46\u0C32\u0C4D\u0C32\u0C41\u0C32\u0C4D\u0C32\u0C3F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C09\u0C32\u0C4D\u0C32\u0C3F\u0C2A\u0C3E\u0C2F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C09\u0C32\u0C4D\u0C32\u0C3F\u0C2A\u0C3E\u0C2F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C2A\u0C1A\u0C4D\u0C1A\u0C3F \u0C2E\u0C3F\u0C30\u0C2A\u0C15\u0C3E\
+            \u0C2F"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C2A\u0C1A\u0C4D\u0C1A\u0C3F \u0C2E\u0C3F\u0C30\u0C2A\u0C15\
+                \u0C3E\u0C2F"
+          template: list_button
+          type: custom:button-card
+        - name: "\u0C05\u0C32\u0C4D\u0C32\u0C02"
+          tap_action:
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.shopping_list
+              value: "\u0C05\u0C32\u0C4D\u0C32\u0C02"
+          template: list_button
+          type: custom:button-card
+        square: false
+        type: custom:hui-element
+      type: vertical-stack
+    type: horizontal-stack
+  icon: mdi:cart
+  path: shopping
+  theme: Backend-selected
+  title: Shopping
+  type: panel
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea

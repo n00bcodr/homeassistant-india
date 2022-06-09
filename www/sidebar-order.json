@@ -1,0 +1,69 @@
+{
+  "order": [
+    { "item": "Overview" },
+    { "item": "Wall Mount" },
+    { "item": "YAML" },
+    { "item": "HACS" },
+    { "item": "Frigate" },
+    { "item": "Portainer" },
+    { "item": "Studio Code Server" },
+    { "item": "Node-RED" },
+    { "item": "Media" },
+    { "item": "Zigbee2mqtt" },
+    {
+      "new_item": true,
+      "item": "Automations",
+      "href": "/config/automation/dashboard",
+      "icon": "mdi:robot-confused-outline"
+    },
+    {
+      "new_item": true,
+      "item": "Integrations",
+      "href": "/config/integrations",
+      "icon": "fas:cogs",
+      "bottom": true
+    },
+    {
+      "new_item": true,
+      "item": "Server Controls",
+      "href": "/developer-tools/yaml",
+      "icon": "mdi:server-network",
+      "bottom": true
+    },
+    {
+      "new_item": true,
+      "item": "Supervisor",
+      "href": "/hassio/dashboard",
+      "icon": "mdi:home-assistant",
+      "bottom": true
+    },
+    {
+      "new_item": true,
+      "item": "Tools",
+      "href": "/developer-tools/state",
+      "icon": "mdi:hammer",
+      "bottom": true
+    },
+
+    {
+      "item": "Settings",
+      "bottom": true
+    },
+    {
+      "item": "snapshots",
+      "bottom": true
+    },
+    {
+      "item": "backups",
+      "bottom": true
+    },
+    {
+      "item": "map",
+      "hide": true
+    },
+    {
+      "item": "energy",
+      "hide": true
+    }
+  ]
+ }

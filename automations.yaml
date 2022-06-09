@@ -1,0 +1,1956 @@
+- id: den_off
+  alias: 🏰Den Off
+  description: Turns off all things in DEN when I exit.
+  trigger:
+  - platform: tag
+    tag_id: 8635138d-5c2c-4032-a62d-c2297f98855f
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: Den_OFF
+  - platform: device
+    domain: mqtt
+    device_id: 3fd72c6a517024c03b9531259c2d55d9
+    type: action
+    subtype: long
+    discovery_id: 0x00124b001eaa8251 action_long
+    id: hold
+  condition: []
+  action:
+  - service: scene.create
+    data:
+      scene_id: den_as_it_was
+      snapshot_entities:
+      - light.led_strip
+      - light.wipro_tube_light
+      - light.top_light
+      - light.shelf_light
+      - switch.den_fan
+      - switch.den_wall_fan
+      - switch.workstation
+      - media_player.spotify
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.led_strip
+      - light.wipro_tube_light
+      - light.top_light
+      - light.shelf_light
+      - switch.workstation
+      - switch.den_fan
+      - switch.den_wall_fan
+      - input_boolean.den_state
+  - service: media_player.media_pause
+    data: {}
+    target:
+      entity_id:
+      - media_player.chotu
+      - media_player.motu
+      - media_player.den_group
+      - media_player.clock
+      - media_player.spotify
+  - service: script.ac_off
+    data: {}
+  mode: single
+- id: sunset
+  alias: 💡Sunset
+  description: Turns on various lights at sunset.
+  trigger:
+  - platform: sun
+    event: sunset
+  condition: []
+  action:
+  - repeat:
+      count: '5'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id:
+          - light.hall_tube_light
+          - switch.ricelight_r
+          - switch.ricelight_l
+          - switch.laser
+          - light.first_floor_stairway
+          - light.first_floor_light
+          - light.first_floor_corner
+          - light.second_floor_stairway
+          - light.second_floor_light
+          - light.second_floor_corner
+          - light.first_floor_stairway_2
+          - light.first_floor_light_2
+          - light.first_floor_corner_2
+          - light.second_floor_stairway_2
+          - light.second_floor_light_2
+          - light.second_floor_corner_2
+          - light.front_yard_lights_group
+          - light.front_yard_lights_group_2
+        data: {}
+  - service: notify.sony_tv
+    data:
+      message: Turning on front yard lights 💡
+      title: Good Evening 🌇
+      data:
+        transparency: 20%
+        position: top-right
+        fontsize: medium
+  - service: notify.mobile_app_10pro
+    data:
+      message: Turning on the front yard lights.
+      title: Good Evening 🌇
+      data:
+        tag: sunset
+        notification_icon: mdi:weather-sunset
+        color: '#f5c905'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - repeat:
+      count: '5'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id:
+          - light.hall_tube_light
+          - switch.ricelight_r
+          - switch.ricelight_l
+          - light.front_yard_lights_group
+          - light.front_yard_lights_group_2
+        data: {}
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
+    - service: notify.mobile_app_10pro
+      data:
+        message: clear_notification
+        data:
+          tag: sunset
+    - service: notify.mobile_app_10pro
+      data:
+        title: Not all lights are turned on
+        message: 🔄 Retrying....
+        data:
+          tag: sunset
+    - repeat:
+        count: '5'
+        sequence:
+        - service: homeassistant.turn_on
+          target:
+            entity_id:
+            - light.front_yard_lights_group
+            - light.front_yard_lights_group_2
+          data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
+    - service: script.reload_local_tuya
+      data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
+    - repeat:
+        count: '5'
+        sequence:
+        - service: homeassistant.turn_on
+          target:
+            entity_id:
+            - light.front_yard_lights_group
+            - light.front_yard_lights_group_2
+          data: {}
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
+    - service: notify.mobile_app_10pro
+      data:
+        message: clear_notification
+        data:
+          tag: sunset
+    - service: notify.mobile_app_10pro
+      data:
+        title: ⚠️ Retry Failed ⚠️
+        message: Supervision Needed!
+        data:
+          notification_icon: mdi:alert
+          persistent: true
+          actions:
+          - action: URI
+            title: Open Lights
+            uri: /lovelace-admin/front-yard
+          - action: URI
+            title: Open Tuya
+            uri: app://com.tuya.smart
+  mode: single
+- id: den_as_it_was
+  alias: 🏰Den as it was
+  description: Returns Den State to back what it was when Den OFF was triggered.
+  trigger:
+  - platform: tag
+    tag_id: green
+  - platform: tag
+    tag_id: 93-F9-17-03
+  - platform: tag
+    tag_id: EF-99-90-CF
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    target:
+      entity_id: input_boolean.den_state
+  - service: scene.turn_on
+    data: {}
+    entity_id: scene.den_as_it_was
+  - service: light.turn_on
+    data: {}
+    entity_id: light.led_strip
+  mode: single
+- id: bed_den
+  alias: 🏰Good Night - Tag
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: c1934c2e-5f4f-4abc-aef3-9ded1c33f910
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: time
+        after: '20:00:00'
+        before: 06:00:00
+      sequence:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.wipro_tube_light
+          - light.led_strip
+          - switch.workstation
+          - switch.upstairs_tv
+          - switch.ricelight_l
+          - switch.ricelight_r
+          - switch.den_wall_fan
+          - light.hall_tube_light
+          - light.front_yard_lights_group
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id:
+          - switch.den_fan
+          - switch.plasma_ball
+      - service: light.turn_on
+        data:
+          effect: Party
+        target:
+          entity_id:
+          - light.shelf_light
+      - service: light.turn_on
+        data:
+          effect: Beautiful
+        target:
+          entity_id:
+          - light.top_light
+    - conditions:
+      - condition: time
+        after: 06:00:00
+        before: '20:00:00'
+      sequence:
+      - service: homeassistant.turn_off
+        target:
+          entity_id:
+          - switch.den_fan
+          - switch.den_wall_fan
+          - switch.plasma_ball
+          - light.wipro_tube_light
+          - light.shelf_light
+          - light.top_light
+        data: {}
+      - service: script.den_tubelight_white
+        data: {}
+    default: []
+  mode: single
+- id: wash_cycle
+  alias: 🧺Wash Cycle
+  description: Start Washing Machine Cycle when I scan the tag
+  trigger:
+  - platform: tag
+    tag_id: 9b36ba3c-2409-44f2-8b08-aff1f687258f
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.washing_machine
+  mode: single
+- id: power_outage_lights_restore_downstairs
+  alias: 💡Restore Lights after a power outage
+  description: turns off lights when the power is back on and if it not between 6
+    PM to 10 PM
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.downstairs_power_failed
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    from: 'off'
+    id: downstairs
+  - platform: state
+    entity_id: binary_sensor.upstairs_power_failed
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    from: 'off'
+    id: upstairs
+  - platform: state
+    entity_id: media_player.friday
+    from: unavailable
+    to: 'off'
+    id: downstairs
+  condition:
+  - condition: time
+    after: '22:00:00'
+    before: '17:30:00'
+  action:
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.hall_tube_light
+      - light.rgb1
+      - light.rgb2
+      - light.first_floor_stairway
+      - light.first_floor_stairway_2
+      - light.second_floor_corner
+      - light.second_floor_corner_2
+      - light.first_floor_corner
+      - light.first_floor_corner_2
+      - light.second_floor_stairway_2
+      - light.second_floor_stairway
+      - light.rgb_1
+      - light.rgb_2
+      - light.rgb_3
+      - light.rgb_3_2
+  mode: single
+- id: tankfull_notification
+  alias: 💧Tank Full - Notification
+  description: Sends a notification on the TV when the tank is full
+  trigger:
+  - platform: state
+    to: 'on'
+    entity_id: switch.sonoff_1000f38ea4
+    from: 'off'
+  condition: []
+  action:
+  - service: notify.sony_tv
+    data:
+      title: 💧 Tank Full
+      message: Turning off Motor
+      data:
+        fontsize: small
+        duration: 5
+        color: blue
+        transparency: 50%
+        interrupt: 1
+  - service: notify.mobile_app_10pro
+    data:
+      message: Turning off Motor
+      title: 💧 Tank Full
+      data:
+        notification_icon: mdi:water-pump
+        color: blue
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.family_room_mini
+      message: ట్యాంక్ నిండింది
+      language: te
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.akashavani
+      message: ట్యాంక్ నిండింది
+      language: te
+  mode: restart
+  max: 10
+- id: tankfull_motoroff
+  alias: 💧Turn Motor Off when tank full
+  description: Tuns of both motors when tank is full.
+  trigger:
+  - platform: state
+    entity_id: switch.downstairs_motor
+    to: 'on'
+  - platform: state
+    entity_id: switch.upstairs_motor
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.sonoff_1000f38ea4
+    state: 'on'
+  action:
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.downstairs_motor
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.upstairs_motor
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.family_room_mini
+      message: ట్యాంక్ నిండుగ ఉంది
+      language: te
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.akashavani
+      message: ట్యాంక్ నిండుగ ఉంది
+      language: te
+  mode: single
+- id: frontyard_off
+  alias: 💡Front Yard lights - Turn off at 9:30 PM
+  description: Turns off the front yard lights at 9:30 PM and turns on the rice lights
+  trigger:
+  - platform: time
+    at: '21:30:00'
+  condition: []
+  action:
+  - service: notify.sony_tv
+    data:
+      message: Turning off front yard lights.
+      title: Good Night 💤
+      data:
+        transparency: 20%
+        position: top-right
+        fontsize: medium
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.front_yard_lights_group
+      - light.hall_tube_light
+      - switch.ricelight_l
+      - switch.ricelight_r
+      - light.front_yard_lights_group_2
+    data: {}
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.rice_string_1
+      - switch.rice_string_2
+  - service: notify.mobile_app_10pro
+    data:
+      message: Turning off front yard lights.
+      title: Good Night 💤
+  mode: single
+- id: frontyard_ricelights
+  alias: 💡Front Yard Rice Lights - Turn off at Sunrise
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: -01:00:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.rice_string_2
+      - switch.rice_string_1
+  mode: single
+- id: hall_lights_motion
+  alias: 💡Hall Lights on when Motion detected
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hall_motion
+    to: 'on'
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: switch.ricelight_r
+      state: 'on'
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: switch.ricelight_l
+      state: 'on'
+  - condition: time
+    after: '18:30:00'
+    before: 05:30:00
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.ricelight_l
+      - switch.ricelight_r
+  - service: light.turn_on
+    target:
+      entity_id: light.hall_tube_light
+    data:
+      brightness_pct: 39
+      color_temp: 370
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 5
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - switch.ricelight_r
+      - switch.ricelight_l
+      - light.hall_tube_light
+    data: {}
+  mode: single
+- id: daytime_frontyard_off
+  alias: 💡Turn off Front yard lights during the day
+  description: Does not turn on front yard lights during the day time.
+  trigger:
+  - platform: state
+    entity_id: light.front_yard_lights_group
+    to: 'on'
+  - platform: state
+    entity_id: light.front_yard_lights_group_2
+    to: 'on'
+  condition:
+  - condition: time
+    before: '16:00:00'
+    after: 05:00:00
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.front_yard_lights_group
+      - light.front_yard_lights_group_2
+  mode: single
+- id: washing_machine_off
+  alias: 🧺Washing Machine - Cycle Complete
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.washing_machine_power
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+    below: '1'
+  condition:
+  - condition: state
+    entity_id: switch.washing_machine
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      message: Turning off the Washing Machine.
+      title: Wash Cycle Complete
+      data:
+        notification_icon: mdi:washing-machine
+  - service: notify.mobile_app_pavanthanuj
+    data:
+      message: Turning off the Washing Machine.
+      title: Wash Cycle Complete
+  - service: tts.cloud_say
+    data:
+      entity_id: media_player.motu
+      message: Wash Cycle Complete
+      language: en-GB
+      cache: true
+  - service: switch.turn_off
+    target:
+      entity_id: switch.washing_machine
+  mode: single
+  max: 10
+- id: homeassistant_update_notification
+  alias: ⚙️HomeAssistant Update notification
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.homeassistant_update
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.docker_hub_beta
+      state: unavailable
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      message: Home Assistant {{ states('sensor.docker_hub_beta') }} is available.
+      title: 🆕 Update Available!
+      data:
+        notification_icon: mdi:package-up
+        subject: You are running {{states('sensor.current_version') }}, the latest
+          version is {{ states('sensor.docker_hub_beta') }}.
+        clickAction: /config/dashboard
+  mode: single
+- id: fill_the_tank
+  alias: 💧Fill the tank
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.upstairs_motor
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: switch.sonoff_1000f38ea4
+    state: 'off'
+  - condition: time
+    after: 05:00:00
+    before: 09:00:00
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.downstairs_motor
+  mode: single
+- id: no_motion_notification_den
+  alias: 🏰Send notification if no motion in Den.
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.den_motion
+    to: 'off'
+    for: 00:04:00
+    from: 'on'
+  condition:
+  - condition: and
+    conditions:
+    - condition: time
+      after: 09:00:00
+      before: '21:00:00'
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: switch.workstation
+        state: 'on'
+      - condition: state
+        entity_id: switch.den_wall_fan
+        state: 'on'
+      - condition: state
+        entity_id: switch.den_fan
+        state: 'on'
+    - condition: state
+      entity_id: binary_sensor.chair_occupancy
+      state: 'off'
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      title: Are you there?
+      message: No motion detected in Den in the last 5 minutes.
+      data:
+        actions:
+        - action: Den_OFF
+          title: 'NO'
+        notification_icon: mdi:motion-sensor-off
+        tag: den_off
+  mode: single
+- id: spotify_playback
+  alias: 🎵Spotify Selected Device Force playback
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.speakers_spotify
+  condition: []
+  action:
+  - service: script.spotify_start
+  mode: single
+- id: movies_on_plex
+  alias: 🎬Movies
+  trigger:
+  - platform: event
+    event_type: tag_scanned
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.tag_id in tags }}'
+  action:
+  - variables:
+      media_content_id: '{{ tags[trigger.event.data.tag_id].media_content_id }}'
+      media_content_type: '{{ tags[trigger.event.data.tag_id].media_content_type }}'
+      announce_name: '{{ tags[trigger.event.data.tag_id].announce_name }}'
+  - service: script.hdmi_one
+    data: {}
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.workstation
+    data: {}
+  - choose:
+    - conditions:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: media_player.google_tv
+          state: Plex
+          attribute: source
+      sequence:
+      - service: media_player.select_source
+        target:
+          entity_id: media_player.google_tv
+        data:
+          source: Plex
+      - wait_template: '{{ not is_state(''media_player.plex_plex_for_android_tv_google_tv'',
+          ''unavailable'') }}'
+        timeout: 00:00:10
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.plex_plex_for_android_tv_google_tv
+        data:
+          media_content_id: '{{ media_content_id }}'
+          media_content_type: '{{ media_content_type }}'
+    - conditions:
+      - condition: state
+        entity_id: media_player.google_tv
+        state: Plex
+        attribute: source
+      sequence:
+      - service: androidtv.adb_command
+        data:
+          entity_id: media_player.google_tv
+          command: BACK
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.plex_plex_for_android_tv_google_tv
+        data: {}
+      - service: media_player.select_source
+        target:
+          entity_id: media_player.google_tv
+        data:
+          source: Plex
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.plex_plex_for_android_tv_google_tv
+        data:
+          media_content_id: '{{ media_content_id }}'
+          media_content_type: '{{ media_content_type }}'
+    default: []
+  - service: notify.alexa_media
+    data:
+      message: '{{ announce_name }}'
+      target: media_player.echo_dot_2nd_gen
+      data:
+        type: tts
+  mode: parallel
+  max_exceeded: silent
+  variables:
+    media_players:
+      device_id: media_player.plex_plex_for_android_tv_google_tv
+    tags:
+      D7-02-2C-7B:
+        media_content_id: '{ "library_name": "Movies", "title": "sontham"}'
+        media_content_type: movie
+        announce_name: Playing Sonthham
+      87-1A-2D-7B:
+        media_content_id: '{ "library_name": "Movies", "title": "tamasha"}'
+        media_content_type: movie
+        announce_name: Playing Tamasha
+      37-A5-38-7B:
+        media_content_id: '{"library_name": "Movies", "title": "Raanjhanaa"}'
+        media_content_type: movie
+        announce_name: Playing Raanjhanaa
+      87-D2-29-7B:
+        media_content_id: '{"library_name": "Movies", "title": "rudraveena"}'
+        media_content_type: movie
+        announce_name: Playing Rudraveena
+      17-EA-2F-7B:
+        media_content_id: '{"library_name": "Movies", "title": "vedam"}'
+        media_content_type: movie
+        announce_name: PLaying Vedam
+      37-FA-2A-7B:
+        media_content_id: '{ "library_name": "Movies", "title": "96"}'
+        media_content_type: movie
+        announce_name: Playing 96
+      F7-57-2B-7B:
+        media_content_id: '{ "playlist_name": "Mayabazar", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing Mayabazaar
+      07-5F-2B-7B:
+        media_content_id: '{ "playlist_name": "Friends", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing a Friends Episode
+      E7-2B-3A-7B:
+        media_content_id: '{ "playlist_name": "Batman Trilogy", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing a movie from the Batman Trilogy
+      07-CE-2C-7B:
+        media_content_id: '{ "playlist_name": "MCU", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing A movie from MCU
+      77-FD-37-7B:
+        media_content_id: '{ "playlist_name": "DC", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing A movie from DC EU
+      17-58-39-7B:
+        media_content_id: '{ "playlist_name": "K Vishwanath Movies", "shuffle": "1"}'
+        media_content_type: playlist
+        announce_name: Playing a movie by K Vishwanath
+      47-26-28-7B:
+        media_content_id: '{ "playlist_name": "Doctor Who", "shuffle": "1"}'
+        media_content_type: playlist
+        announce_name: Playing a Doctor Who Episode
+      47-F6-36-7B:
+        media_content_id: '{ "playlist_name": "John Wick", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing a John Wick Movie
+      17-9A-2C-7B:
+        media_content_id: '{ "playlist_name": "Star Wars", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing A Star Wars Movie
+      27-58-30-7B:
+        media_content_id: '{ "playlist_name": "Tarantino", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing a Quentin Tarantino Movie
+      77-EA-31-7B:
+        media_content_id: '{ "playlist_name": "Agam", "shuffle": "1" }'
+        media_content_type: playlist
+      37-60-2D-7B:
+        media_content_id: '{ "playlist_name": "Matrix", "shuffle": "1" }'
+        media_content_type: playlist
+        announce_name: Playing a Matrix Movie
+      87-F4-2F-7B:
+        media_content_id: '{ "library_name": "Movies", "title": "The Pursuit of Happyness"}'
+        media_content_type: movie
+        announce_name: Playing The Pursuit of Happyness
+      F7-85-31-7B:
+        media_content_id: '{ "library_name": "Movies", "title": "The Terminal"}'
+        media_content_type: movie
+        announce_name: Playing The Terminal
+  max: 10
+- id: music_spotify
+  alias: 🎵Music Jukebox
+  trigger:
+  - platform: event
+    event_type: tag_scanned
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.tag_id in tags }}'
+  action:
+  - service: scene.create
+    data:
+      scene_id: led_nfc_scan
+      snapshot_entities: light.led_strip
+  - service: light.turn_on
+    data:
+      color_name: green
+    target:
+      entity_id: light.led_strip
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: scene.turn_on
+    target:
+      entity_id: scene.led_nfc_scan
+    data: {}
+  - variables:
+      uri: '{{ tags[trigger.event.data.tag_id].uri }}'
+  - service: spotcast.start
+    data:
+      device_name: '{% if is_state(''media_player.spotify'', ''playing'') %} {{state_attr("media_player.spotify",
+        "source")}} {%else%}{{ states(''input_select.speakers_spotify'') }}{%endif%}'
+      uri: '{{ uri }}'
+      random_song: true
+      force_playback: true
+      shuffle: true
+  mode: restart
+  variables:
+    tags:
+      04-BD-F1-F2-03-68-80:
+        uri: spotify:playlist:2OTjSlEoXXnrv6L5ryw3sV?si=a00c6c678ef446c5
+      04-C5-F1-F2-03-68-80:
+        uri: spotify:playlist:5QTClPorWVvK650livXyEr?si=69a587c913554a73
+      04-60-50-0A-22-6F-81:
+        uri: spotify:playlist:37i9dQZF1DXaTIN6XNquoW?si=214e0d9999164539
+      04-5C-51-0A-22-6F-81:
+        uri: spotify:artist:4DHXXUP4qza7DacDKVT23G?si=k7eCA-BRRsaXNTzN0ulD5w
+      04-6A-50-0A-22-6F-81:
+        uri: spotify:playlist:7zozfVwEIRnlZVhWAjCvh4?si=ef9e4f4789d24d93
+      04-73-50-0A-22-6F-81:
+        uri: spotify:playlist:4McZ2miIU3GteSwmAAxCrJ?si=F0Vg19zkRTi3g3Y4DyQeMA
+      04-77-51-0A-22-6F-81:
+        uri: spotify:playlist:2DsO6uDqyONHtelhjUbYix?si=mFYPVbLaTnGI-IAQQiAYa
+      04-53-51-0A-22-6F-81:
+        uri: spotify:playlist:37i9dQZF1DZ06evO0KEAbC?si=be9f74962433475f
+      04-4B-51-0A-22-6F-81:
+        uri: spotify:playlist:10N88juIQN9zO7a2FdPpAr?si=puXar2w3QmS-byDzvCr5Mw
+      04-3B-51-0A-22-6F-81:
+        uri: spotify:playlist:42WlES4C0cTGvjO4aquO7f?si=IlBYKTckTnGxSz7chv6GpQ
+      04-43-51-0A-22-6F-81:
+        uri: spotify:playlist:113zomdc3VfahCRJ0vuVML?si=434e184ad0914c94
+      04-10-51-0A-22-6F-81:
+        uri: spotify:playlist:1DRN46YWHKyrZ6CmF1ykJw?si=pKimy_gJQJiBQeVzVXeoCA
+      04-18-51-0A-22-6F-81:
+        uri: spotify:playlist:7kWWQq0gZHaGmy4NfjnOj5?si=KDeC7IiATtSp3Qsro5njeg
+      04-20-51-0A-22-6F-81:
+        uri: spotify:playlist:37i9dQZF1DZ06evO1MVYmm?si=ZQxQ1t9zTzKq7lRgvfMP2Q
+      04-33-51-0A-22-6F-81:
+        uri: spotify:playlist:37i9dQZEVXcWjFlf2abaJx?si=c4588564cf784c02
+      04-28-51-0A-22-6F-81:
+        uri: spotify:artist:6XyY86QOPPrYVGvF9ch6wz?si=ANPiWS39QSGCWHBBMMW1Ow
+      04-50-50-0A-22-6F-81:
+        uri: spotify:album:4m2880jivSbbyEGAKfITCa?si=pacROChHSFSDEs5XIYtzTQ
+      04-D5-F1-F2-03-68-80:
+        uri: spotify:playlist:37i9dQZF1EJMBmrEbDk6wO?si=577fdf28736140e5
+      04-CD-F1-F2-03-68-80:
+        uri: spotify:playlist:37i9dQZF1EJBSlh2ABgMAk?si=7f1ec20760fc407d
+      04-DD-F1-F2-03-68-80:
+        uri: spotify:playlist:2XPCqkfm5o7HHjLZ4b4ntS?si=45d4f05eeaf04eff
+- id: player_controls
+  alias: 🎵Player Controls
+  description: ''
+  trigger:
+  - platform: event
+    event_type: tag_scanned
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.tag_id in tags }}'
+  action:
+  - variables:
+      service: '{{ tags[trigger.event.data.tag_id].service }}'
+  - service: '{{ service }}'
+    target:
+      entity_id: media_player.spotify
+  mode: restart
+  variables:
+    tags:
+      previous:
+        service: media_player.media_previous_track
+      play/pause:
+        service: media_player.media_play_pause
+      next:
+        service: media_player.media_next_track
+- id: '1627058027727'
+  alias: 🏰Turn on Geyser every morning
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:00:00
+  condition: []
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.geyser
+      - switch.downstairs_geyser
+    data: {}
+  mode: single
+- id: '1627737528865'
+  alias: 🏰Desk Presence Detection
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.chair_occupancy
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.vibration
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: time
+      after: 08:00:00
+      before: '10:00:00'
+    - condition: state
+      entity_id: switch.workstation
+      state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.den_state
+        state: 'off'
+      sequence:
+      - service: automation.trigger
+        target:
+          entity_id: automation.den_as_it_was
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.den_state
+        state: 'on'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id:
+          - switch.workstation
+          - light.led_strip
+          - switch.den_wall_fan
+        data: {}
+    default: []
+  mode: single
+- id: '1628434519261'
+  alias: 🏰Button
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 3fd72c6a517024c03b9531259c2d55d9
+    type: action
+    subtype: single
+    discovery_id: 0x00124b001eaa8251 action_single
+    id: click
+  - platform: device
+    domain: mqtt
+    device_id: 3fd72c6a517024c03b9531259c2d55d9
+    type: action
+    subtype: double
+    discovery_id: 0x00124b001eaa8251 action_double
+    id: doubleclick
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: click
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'on'
+          sequence:
+          - service: light.turn_off
+            target:
+              entity_id: light.wipro_tube_light
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'off'
+          sequence:
+          - service: script.den_tubelight_white
+            data: {}
+        default: []
+    - conditions:
+      - condition: trigger
+        id: doubleclick
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: switch.den_fan
+            state: 'off'
+          sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: switch.den_fan
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: switch.den_fan
+            state: 'on'
+          sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: switch.den_fan
+            data: {}
+        default: []
+    default: []
+  mode: single
+- id: '1629347165961'
+  alias: ⚙️Reload Local Tuya
+  description: If localtuya devices are offline, this reloads all the tuya devices.
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition:
+  - condition: template
+    value_template: '{{is_state(''light.first_floor_light'', ''unavailable'') and
+
+      is_state(''light.first_floor_stairway'', ''unavailable'') and
+
+      is_state(''light.second_floor_light'', ''unavailable'') and
+
+      is_state(''light.second_floor_stairway'', ''unavailable'') and
+
+      is_state(''light.shelf_light'', ''unavailable'') and
+
+      is_state(''light.hall_tube_light'', ''unavailable'') and
+
+      is_state(''light.top_light'', ''unavailable'') and
+
+      is_state(''light.wipro_tube_light'', ''unavailable'') and
+
+      is_state(''light.living_room_light'', ''unavailable'')}}'
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      data:
+        sticky: true
+        timeout: 60
+        notification_icon: mdi:reload
+      message: ⚠️ Tuya Reloaded ⚠️
+  - service: script.reload_local_tuya
+  mode: restart
+- id: '1629625852138'
+  alias: 🏰Motion in hall, change LED color
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hall_camera_motion
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: switch.workstation
+      state: 'on'
+    - condition: state
+      entity_id: switch.den_wall_fan
+      state: 'on'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: light.led_strip
+        state: 'on'
+      sequence:
+      - service: scene.create
+        data:
+          scene_id: led_strip_state
+          snapshot_entities: light.led_strip
+      - service: light.turn_on
+        data:
+          color_name: red
+          effect: solid
+        target:
+          entity_id: light.led_strip
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: scene.turn_on
+        target:
+          entity_id: scene.led_strip_state
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: light.led_strip
+        state: 'off'
+      sequence:
+      - service: light.turn_on
+        data:
+          color_name: peru
+          effect: solid
+        target:
+          entity_id: light.led_strip
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - service: light.turn_off
+        target:
+          entity_id: light.led_strip
+        data: {}
+    default: []
+  mode: single
+- id: '1631243477111'
+  alias: 🏰Start music on Chotu
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: ac5a0b47-4af9-41c4-b1d8-d9a78c381720
+  condition: []
+  action:
+  - service: automation.trigger
+    target:
+      entity_id:
+      - automation.den_off
+    data: {}
+  - service: spotcast.start
+    data:
+      force_playback: true
+      random_song: true
+      device_name: Chotu
+  mode: single
+- id: '1634446057008'
+  alias: Front Door Motion Notification on TV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.front_yard_camera_person_occupancy
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.steps_person_occupancy
+    state: 'on'
+  action:
+  - service: camera.snapshot
+    data:
+      filename: /config/www/cam_captures/frontyard.jpg
+    target:
+      entity_id: camera.front_yard_camera_person
+  - service: notify.sony_tv
+    data:
+      title: Person Detected
+      message: at Front Door
+      data:
+        fontsize: small
+        duration: 8
+        color: black
+        transparency: 50%
+        image:
+          path: /config/www/cam_captures/frontyard.jpg
+  mode: single
+- id: '1635179073792'
+  alias: ⚙️Camera Motion - Send Notification Snapshot - Frigate
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  action:
+  - service: notify.mobile_app_10pro
+    data_template:
+      message: A {{trigger.payload_json["after"]["label"]}} was detected at {{trigger.payload_json["after"]["camera"]}}.
+      data:
+        image: http://192.168.0.168:8123/api/frigate/notifications/{{trigger.payload_json["after"]["id"]}}/thumbnail.jpg?format=android
+        tag: '{{trigger.payload_json["after"]["id"]}}'
+        when: '{{trigger.payload_json["after"]["start_time"]|int}}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+- id: '1636123727125'
+  alias: ⚙️Shopping list update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_text.shopping_list
+  condition: []
+  action:
+  - service: script.add_shopping_list
+    data: {}
+  mode: single
+- id: hacs_sensor_refresh
+  alias: ⚙️HACS Sensor Refresh
+  description: Refreshes the HACS sensor once an update is installed.
+  trigger:
+  - platform: event
+    event_type: hacs/repository
+    event_data:
+      action: install
+  action:
+  - delay:
+      seconds: 4
+  - service: homeassistant.update_entity
+    target:
+      entity_id: sensor.hacs
+  initial_state: true
+- id: '1636974013216'
+  alias: ⚙️Lovelace Reload
+  description: ''
+  trigger:
+  - platform: event
+    event_type: lovelace_updated
+    event_data:
+      url_path: lovelace-wallmount
+    id: wallmount
+  - platform: event
+    event_type: lovelace_updated
+    event_data:
+      url_path:
+    id: lovelace
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: wallmount
+      sequence:
+      - service: browser_mod.window_reload
+        data:
+          deviceID: tablet
+    - conditions:
+      - condition: trigger
+        id: lovelace
+      sequence:
+      - service: browser_mod.window_reload
+        data:
+          deviceID: nexus?kiosk
+    default: []
+  mode: queued
+- id: '1638974963835'
+  alias: ⚙️Lock Tablet when HomeAssistant is restarting
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: shutdown
+    id: shutdown
+  - platform: homeassistant
+    event: start
+    id: start
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: shutdown
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: start
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
+        data: {}
+    default: []
+  mode: single
+- id: '1641880664712'
+  alias: 🏰Clear Notification when motion is detected
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.den_motion
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      data:
+        tag: den_off
+      message: clear_notification
+  mode: single
+- id: '1642584769169'
+  alias: 🏰Morning Routine
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.in_bed
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: time
+    after: 05:30:00
+    before: 09:00:00
+  - condition: state
+    entity_id: switch.workstation
+    state: 'off'
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - switch.den_fan
+      - switch.den_wall_fan
+      - switch.plasma_ball
+      - light.wipro_tube_light
+      - light.shelf_light
+      - light.top_light
+    data: {}
+  - service: script.den_tubelight_white
+    data: {}
+  mode: single
+- id: '1642654396519'
+  alias: ⚙️Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      actions:
+      - service: notify.mobile_app_10pro
+        data:
+          message: '{{sensors}}'
+          data:
+            notification_icon: mdi:battery-alert
+            color: red
+      threshold: 15
+      exclude:
+        entity_id:
+        - sensor.kameswari_nord_battery_level
+        - sensor.lenovo_tab_battery_level
+        - sensor.lenovo_tab_m10_hd_battery_level
+        - sensor.murthy_nord2_battery_level
+        - sensor.nexus_7_battery_level
+        - sensor.pavanthanuj_internal_battery_level
+- id: '1643198275646'
+  alias: ⚙️Turn off Downstairs Geyser
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: switch.downstairs_geyser
+    below: '5'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    attribute: power
+  condition:
+  - condition: state
+    entity_id: switch.downstairs_geyser
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  action:
+  - service: notify.mobile_app_kameswari_nord
+    data:
+      message: clear_notification
+      data:
+        tag: hot_water
+  - service: switch.turn_off
+    target:
+      entity_id: switch.downstairs_geyser
+    data: {}
+  - service: notify.mobile_app_10pro
+    data:
+      message: ' '
+      title: Hot Water Ready!
+      data:
+        notification_icon: mdi:water-boiler
+        color: '#ad0320'
+  - service: notify.mobile_app_kameswari_nord
+    data:
+      title: Hot Water Ready!
+      message: ' '
+      data:
+        tag: hot_water
+  - service: media_player.play_media
+    data:
+      media_content_id: /local/hot_water_ready.mp4
+      media_content_type: video
+    target:
+      entity_id: media_player.priyadarshini
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: media_player.priyadarshini
+  mode: single
+- id: '1646484182721'
+  alias: LED Strip follows TV
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: remote.sony_bravia_tv
+    id: 'Off'
+    to: 'off'
+  - platform: state
+    entity_id: remote.sony_bravia_tv
+    id: 'On'
+    to: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'Off'
+      sequence:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.led_strip_tv
+    - conditions:
+      - condition: trigger
+        id: 'On'
+      sequence:
+      - service: homeassistant.turn_on
+        data: {}
+        target:
+          entity_id:
+          - light.led_strip_tv
+    default: []
+  mode: single
+- id: '1646759334384'
+  alias: 🏰Replicate Monitor State
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.workstation
+    id: 'on'
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id: switch.workstation
+    id: 'off'
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.monitor
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.monitor
+    default: []
+  mode: single
+- id: '1647515420274'
+  alias: 🏰Aqara Magic Cube Z2M
+  description: ''
+  use_blueprint:
+    path: SirGoodenough/Zigbee2MQTT - Xiaomi Cube Controller.yaml
+    input:
+      remote: sensor.magic_cube_action
+      fall:
+      - service: media_player.media_stop
+        data: {}
+        target:
+          entity_id: media_player.spotify
+      doubletap_face_2:
+      - {}
+      doubletap_face_5:
+      - service: media_player.media_play_pause
+        target:
+          entity_id: media_player.google_tv
+        data: {}
+      doubletap_face_1:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'on'
+          sequence:
+          - service: light.turn_off
+            target:
+              entity_id: light.wipro_tube_light
+            data:
+              transition: 4
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'off'
+          sequence:
+          - service: script.den_tubelight_white
+            data: {}
+        default: []
+      slide_face_2:
+      - service: homeassistant.toggle
+        target:
+          entity_id: switch.den_wall_fan
+        data: {}
+      slide_face_4:
+      - service: media_player.media_next_track
+        target:
+          entity_id: media_player.spotify
+        data: {}
+      shake:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: playing
+          sequence:
+          - service: media_player.media_pause
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: paused
+          sequence:
+          - service: media_player.media_play
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: idle
+          sequence:
+          - service: spotcast.start
+            data:
+              device_name: '{% if is_state(''media_player.spotify'', ''playing'')
+                %} {{state_attr("media_player.spotify", "source")}} {%else%}{{ states(''input_select.speakers_spotify'')
+                }}{%endif%}'
+              force_playback: true
+              random_song: true
+              shuffle: true
+        default: []
+      rotate_ccw_face_1:
+      - service: light.turn_on
+        target:
+          entity_id: light.den_lights_group
+        data_template:
+          brightness_step: '{{ relative_degrees | float }}'
+- id: '1647516973995'
+  alias: 🏰Aqara Magic Cube Z2M
+  description: ''
+  use_blueprint:
+    path: SirGoodenough/Zigbee2MQTT - Xiaomi Cube Controller.yaml
+    input:
+      remote: sensor.magic_cube_action
+      shake:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: playing
+          sequence:
+          - service: media_player.media_pause
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: paused
+          sequence:
+          - service: media_player.media_play
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: idle
+          sequence:
+          - service: spotcast.start
+            data:
+              device_name: '{% if is_state(''media_player.spotify'', ''playing'')
+                %} {{state_attr("media_player.spotify", "source")}} {%else%}{{ states(''input_select.speakers_spotify'')
+                }}{%endif%}'
+              force_playback: true
+              random_song: true
+              shuffle: true
+        default: []
+      slide_face_2:
+      - service: homeassistant.toggle
+        target:
+          entity_id: switch.den_wall_fan
+        data: {}
+      rotate_cw_face_2:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: switch.den_fan
+        data: {}
+      rotate_cw_face_1:
+      - service: light.turn_on
+        target:
+          entity_id: light.den_lights_group
+        data_template:
+          brightness_step: '{{ angle | float }}'
+      rotate_ccw_face_2:
+      - service: homeassistant.turn_off
+        target:
+          entity_id: switch.den_fan
+        data: {}
+      doubletap_face_1:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'on'
+          sequence:
+          - service: light.turn_off
+            target:
+              entity_id: light.wipro_tube_light
+            data:
+              transition: 4
+        - conditions:
+          - condition: state
+            entity_id: light.wipro_tube_light
+            state: 'off'
+          sequence:
+          - service: script.den_tubelight_white
+            data: {}
+        default: []
+      doubletap_face_5:
+      - service: media_player.media_play_pause
+        target:
+          entity_id: media_player.google_tv
+        data: {}
+      slide_face_4:
+      - service: media_player.media_next_track
+        target:
+          entity_id: media_player.spotify
+        data: {}
+      fall:
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.spotify
+        data: {}
+      rotate_cw_face_4:
+      - service: media_player.volume_up
+        target:
+          entity_id: media_player.spotify
+        data: {}
+      rotate_ccw_face_4:
+      - service: media_player.volume_down
+        target:
+          entity_id: media_player.spotify
+        data: {}
+      rotate_ccw_face_5:
+      - service: media_player.volume_down
+        target:
+          entity_id: media_player.google_tv
+        data: {}
+      rotate_cw_face_5:
+      - service: media_player.volume_up
+        target:
+          entity_id: media_player.google_tv
+        data: {}
+      rotate_ccw_face_1:
+      - service: light.turn_on
+        target:
+          entity_id: light.den_lights_group
+        data_template:
+          brightness_step: '{{ states.sensor.magic_cube_action_angle | float }}'
+- id: '1647521121730'
+  alias: 🏰Geyser Switch
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 2b20c2dcd73f02e2c283f6786b16a489
+    type: action
+    subtype: 'on'
+    discovery_id: 0xb4e3f9fffe8c1f22 action_on
+    id: 'on'
+  - platform: device
+    domain: mqtt
+    device_id: 2b20c2dcd73f02e2c283f6786b16a489
+    type: action
+    subtype: 'off'
+    discovery_id: 0xb4e3f9fffe8c1f22 action_off
+    id: 'off'
+  - platform: device
+    domain: mqtt
+    device_id: 2b20c2dcd73f02e2c283f6786b16a489
+    type: click
+    subtype: 'off'
+    discovery_id: 0xb4e3f9fffe8c1f22 click_off
+    id: 'off'
+  - platform: device
+    domain: mqtt
+    device_id: 2b20c2dcd73f02e2c283f6786b16a489
+    type: click
+    subtype: 'on'
+    discovery_id: 0xb4e3f9fffe8c1f22 click_on
+    id: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: homeassistant.turn_on
+        data: {}
+        target:
+          entity_id: switch.geyser
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id: switch.geyser
+    default: []
+  mode: single
+- id: '1648617256575'
+  alias: 🏰Controller - TRÅDFRI Wireless 5-Button Remote
+  description: ''
+  use_blueprint:
+    path: EPMatt/ikea_e1524_e1810.yaml
+    input:
+      integration: Zigbee2MQTT
+      controller_device: 97ca075758792ef9bbde00dd0db2f808
+      controller_entity: sensor.ikea_multi_button_action
+      helper_last_controller_event: input_text.multibutton_last_state
+      action_button_left_short: []
+      action_button_center_short: []
+      action_button_up_short: []
+      action_button_down_release: []
+      action_button_down_short: []
+      action_button_right_double: []
+      action_button_left_double: []
+      action_button_center_long:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: playing
+          sequence:
+          - service: media_player.media_pause
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: paused
+          sequence:
+          - service: media_player.media_play
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: idle
+          sequence:
+          - service: spotcast.start
+            data:
+              device_name: '{% if is_state(''media_player.spotify'', ''playing'')
+                %} {{state_attr("media_player.spotify", "source")}} {%else%}{{ states(''input_select.speakers_spotify'')
+                }}{%endif%}'
+              force_playback: true
+              random_song: true
+              shuffle: true
+        default: []
+      action_button_center_double:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: playing
+          sequence:
+          - service: media_player.media_pause
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: paused
+          sequence:
+          - service: media_player.media_play
+            target:
+              entity_id: media_player.spotify
+            data: {}
+        - conditions:
+          - condition: state
+            entity_id: media_player.spotify
+            state: idle
+          sequence:
+          - service: spotcast.start
+            data:
+              device_name: '{% if is_state(''media_player.spotify'', ''playing'')
+                %} {{state_attr("media_player.spotify", "source")}} {%else%}{{ states(''input_select.speakers_spotify'')
+                }}{%endif%}'
+              force_playback: true
+              random_song: true
+              shuffle: true
+        default: []
+- id: '1648618154279'
+  alias: 🏰Hook - Media Player
+  description: ''
+  use_blueprint:
+    path: EPMatt/media_player.yaml
+    input:
+      controller_device: 97ca075758792ef9bbde00dd0db2f808
+      controller_entity: sensor.ikea_multi_button_action
+      controller_model: IKEA E1524/E1810 TRÅDFRI Wireless 5-Button Remote
+      media_player: media_player.spotify
+      volume_steps_short: 10
+      volume_steps_long: 20
+- id: '1649818387496'
+  alias: Blast the Airpurifier
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.den_motion
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+  condition:
+  - condition: device
+    device_id: d7eacbdde3cd41b7feacd35c37686567
+    domain: fan
+    entity_id: fan.mi_air_purifier
+    type: is_on
+  action:
+  - service: fan.turn_on
+    data:
+      percentage: 100
+    target:
+      entity_id: fan.mi_air_purifier
+  mode: single
+- id: '1650769032380'
+  alias: ⚡Full charge notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.10pro_is_charging
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sensor.10pro_battery_level
+    state: '100'
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      message: ⚡Charging Complete⚡
+      data:
+        notification_icon: mdi:battery-charging-high
+        color: red
+  mode: single

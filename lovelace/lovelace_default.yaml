@@ -1,0 +1,3333 @@
+button_card_templates:
+  ac_button:
+    aspect_ratio: 1/1
+    color_type: icon
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: true
+    show_state: false
+    styles:
+      card:
+      - border-radius: 10px
+      - border: solid 1px var(--primary-color)
+      - box-shadow: none
+      - padding: 0px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 5px
+      name:
+      - justify-self: middle
+      - align-self: middle
+      - font-size: 14px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  blank_button:
+    aspect_ratio: 4/3
+    color_type: icon
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 0px
+      - border: solid 0px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+    tap_action:
+      action: none
+  icon_button:
+    aspect_ratio: 4/3
+    color_type: card
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 10px
+      - border: solid 1px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 28px
+    tap_action:
+      action: call-service
+  list_button:
+    aspect_ratio: 5/1
+    color_type: icon
+    layout: vertical
+    show_entity_picture: true
+    show_name: true
+    show_state: false
+    styles:
+      card:
+      - border-radius: 15px
+      - border: solid 0.1px var(--primary-color)
+      - box-shadow: none
+      - padding: 0px 0px
+      - margin: 0px 0px
+      - background-size: cover
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      name:
+      - justify-self: middle
+      - align-self: middle
+      - font-size: 20px
+      - padding: 0px 0px
+      - color: var(--secondary-text-color)
+    tap_action:
+      action: call-service
+  logo_button:
+    aspect_ratio: 21/9
+    color: rgb(255,255,255)
+    color_type: card
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 5px
+      - border: solid 0.5px var(--primary-color)
+      - box-shadow: none
+      - padding: 0px 0px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 50px
+    tap_action:
+      action: call-service
+  menu_button:
+    aspect_ratio: 4/3
+    color_type: icon
+    hold_action:
+      action: none
+    layout: vertical
+    show_label: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+      - border-radius: 10px
+      - border: solid 1px var(--primary-color)
+      - box-shadow: none
+      - padding: 6px 6px
+      - margin: 0px 0px
+      - --paper-card-background-color: rgba(0, 0, 0, 0)
+      icon:
+      - width: 28px
+    tap_action:
+      action: call-service
+preload_cards:
+- markdown
+- gauge
+- picture-glance
+preload_rows:
+- divider
+title: ''
+views:
+- badges: []
+  cards:
+  - entity: weather.weather
+    type: custom:weather-card
+  - badges:
+    - entity: sun.sun
+      style: ":host {\n  --label-badge-red: #F28C38;\n}           \n"
+      tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            type: custom:sun-card
+          command: popup
+          deviceID: this
+          hide_header: true
+    - entity: sensor.moon_phase
+      style:
+        ha-state-label-badge:
+          $:
+            ha-label-badge:
+              $: ".label-badge {\n    border-style: none !important;   \n  }    \n\
+                \      \n"
+    - entity: sensor.download_speed
+      hold_action:
+        action: more-info
+      name: Internet Speed
+      style: ':host {
+
+        --label-badge-red: teal;
+
+        }
+
+        '
+      tap_action:
+        action: call-service
+        service: speedtestdotnet.speedtest
+      unit_of_measurement: Mbps
+    - entity: binary_sensor.den_motion
+      name: Den Motion
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion','on')\
+        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+    - entity: binary_sensor.hall_motion
+      name: Hall Motion
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
+        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+      tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            entities:
+            - automation.motion_in_hall_change_led_color
+            - automation.hall_lights_on_when_motion_detected
+            type: entities
+          command: popup
+          deviceID: this
+          hide_header: true
+    - entity: binary_sensor.chair_occupancy
+      name: Occupancy
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
+        \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
+    - entity: binary_sensor.in_bed
+      name: Bed
+      style:
+        ha-state-label-badge:
+          $:
+            ha-label-badge:
+              $: ".label-badge {\n  {% if is_state('binary_sensor.in_bed','off') %}\n\
+                \    border-style: dashed dotted !important;\n    border-color: grey\
+                \ !important;\n  {% else %}\n    border-style: double !important;\n\
+                \    border-color: blue !important;\n  {% endif %}\n"
+    - entities:
+      - entity: binary_sensor.upstairs_power_failed
+        style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.upstairs_power_failed','off')\
+          \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n"
+      state_filter:
+      - 'off'
+      type: entity-filter
+    - entities:
+      - entity: binary_sensor.downstairs_power_failed
+        style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.downstairs_power_failed','off')\
+          \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n\
+          } \n"
+      state_filter:
+      - 'off'
+      type: entity-filter
+    - entities:
+      - entity: sensor.hacs
+        style:
+          ha-state-label-badge:
+            $:
+              ha-label-badge:
+                $: ".label-badge {\n border-style: dashed !important;\n}      \n"
+        tap_action:
+          action: navigate
+          navigation_path: /config/dashboard
+      state_filter:
+      - 'on'
+      - operator: '>'
+        value: 0
+      type: entity-filter
+    - entities:
+      - entity: sensor.supervisor_updates
+        style:
+          ha-state-label-badge:
+            $:
+              ha-label-badge:
+                $: ".label-badge {\n border-style: dashed !important;\n border-color:\
+                  \ yellow !important;\n}     \n"
+        tap_action:
+          action: navigate
+          navigation_path: /config/dashboard
+      state_filter:
+      - 'on'
+      - operator: '>'
+        value: 0
+      type: entity-filter
+    - entities:
+      - entity: binary_sensor.homeassistant_update
+        hold_action:
+          action: navigate
+          navigation_path: /config/dashboard
+        name: Update Available
+        style:
+          ha-state-label-badge:
+            $:
+              ha-label-badge:
+                $: ".label-badge {\n border-style: dashed !important;\n}   \n"
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            card:
+              entities:
+              - sensor.docker_hub_beta
+              - sensor.current_version
+              type: entities
+            command: popup
+            deviceID: this
+            hide_header: true
+      state_filter:
+      - 'on'
+      - name: updates
+      type: entity-filter
+    - entities:
+      - entity: binary_sensor.backups_stale
+      state_filter:
+      - 'on'
+      style:
+        ha-state-label-badge:
+          $:
+            ha-label-badge:
+              $: ".label-badge {\n border-style: dashed solid !important;\n"
+      type: entity-filter
+    type: custom:badge-card
+    view_layout:
+      column: 2
+  - background: true
+    cards:
+    - content: <center><img height="50" src="/local/f1/F1.png"></center>
+      type: markdown
+    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
+        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
+        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
+        0) %} race_day {% endif %}'
+      states:
+        race_day:
+          cards:
+          - content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n<h2><em><center><img\n\
+              \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
+              >{{(states.sensor.formula_1.attributes.grand_prix) |\nreplace (\"FORMULA\
+              \ 1\", \"\") }}</em></h2>\n<h2><center> {{ states.sensor.ics_1.attributes.description\
+              \  | replace (\"Grand Prix \",\"\")}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
+              \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
+            type: markdown
+          - cards:
+            - content: " <img src=\"{{(states.sensor.formula_1.attributes.circuit_image)}}\"\
+                \n  alt=\"{{(states.sensor.ics_1.attributes.description) | replace\
+                \ (\"Qualifying \",\n  \"\")}} Circuit\">"
+              theme: Google Light Theme
+              type: markdown
+            - content: "<p><a href=\"{{(states.sensor.formula_1.attributes.circuit_link)}}\"\
+                >\n<img src=\"/local/f1/circuit_stats/{{(states.sensor.ics_1.attributes.location)}}.png\"\
+                \n              alt=\"{{(states.sensor.ics_1.attributes.description)\
+                \ | replace (\"Qualifying \",\n              \"\")}} Circuit\"> </a></p>"
+              type: markdown
+            type: custom:swipe-card
+          type: vertical-stack
+        race_weekend:
+          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
+            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
+            | replace ("Qualifying ", "")}} <br>
+          type: markdown
+        wait:
+          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
+            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
+            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
+            days to go </center> '
+          type: markdown
+      type: custom:state-switch
+    type: custom:stack-in-card
+    view_layout:
+      column: 1
+  - entity: mediaquery
+    states:
+      '(min-width: 1000px)':
+        cards:
+        - entity: sensor.10pro_charger_type
+          layout: vertical
+          name: ' '
+          secondary_info: state
+          type: custom:mushroom-entity-card
+        - entity: sensor.10pro_battery_level
+          layout: vertical
+          name: ' '
+          type: custom:mushroom-entity-card
+        - entity: binary_sensor.10pro_is_charging
+          layout: vertical
+          name: ' '
+          type: custom:mushroom-entity-card
+        - entity: sensor.galaxy_watch4_classic_battery_level
+          icon: mdi:watch
+          layout: vertical
+          name: ' '
+          type: custom:mushroom-entity-card
+        margin: false
+        mode: horizontal
+        type: custom:stack-in-card
+    type: custom:state-switch
+    view_layout:
+      column: 1
+  - entities:
+    - conditions:
+      - entity: group.den
+        state: 'on'
+      row:
+        action_name: 'OFF'
+        icon: mdi:castle
+        name: Den
+        tap_action:
+          action: call-service
+          service: automation.trigger
+          service_data:
+            entity_id: automation.den_off
+        type: button
+      type: conditional
+    - entity: light.den_lights_group
+      name: Den Lights
+    - entities:
+      - icon: mdi:lightbulb-fluorescent-tube
+        state_color: true
+        tap_action:
+          action: call-service
+          service: script.den_tubelight_white
+      entity: light.wipro_tube_light
+      toggle: true
+      type: custom:multiple-entity-row
+    - buttons:
+      - entity: switch.front_down_light
+        name: Front
+      - entity: switch.rear_down_light
+        name: Rear
+      type: custom:paper-buttons-row
+    - entities:
+      - entity: light.led_strip_monitors
+        icon: mdi:television-ambient-light
+        name: false
+        state_color: true
+      - entity: light.led_strip_table
+        icon: hue:gradient-lightstrip-wrap
+        name: false
+        state_color: true
+      entity: light.led_strip
+      toggle: true
+      type: custom:multiple-entity-row
+    - entity: light.top_light
+    - entity: light.shelf_light
+    - buttons:
+      - entity: switch.den_fan
+        name: Fan
+      - entity: switch.den_wall_fan
+        name: Wall Fan
+      type: custom:paper-buttons-row
+    - entities:
+      - entity: sensor.air_purifier_temperature
+        name: ' '
+      - entity: sensor.air_purifier_humidity
+        name: ' '
+      - entity: sensor.air_purifier_pm2_5
+        name: ' '
+      entity: fan.mi_air_purifier
+      state_color: true
+      toggle: true
+      type: custom:multiple-entity-row
+    - entity: switch.plasma_ball
+      name: Plasma Ball
+    - entity: switch.laser
+    - entities:
+      - icon: fab:windows
+        state_color: true
+        tap_action:
+          action: call-service
+          service: script.hdmi_three
+      - icon: fab:apple
+        state_color: true
+        tap_action:
+          action: call-service
+          service: script.hdmi_two
+      - icon: fab:google
+        state_color: true
+        tap_action:
+          action: call-service
+          service: script.hdmi_one
+      entity: switch.workstation
+      state_color: true
+      toggle: true
+      type: custom:multiple-entity-row
+    - entity: switch.monitor
+    - entities:
+      - icon: mdi:coffee
+        state_color: true
+        tap_action:
+          action: call-service
+          service: script.make_some_coffee
+      entity: switch.coffee_machine
+      toggle: true
+      type: custom:multiple-entity-row
+    - entity: switch.geyser
+      secondary_info: last-updated
+    - type: section
+    - buttons:
+      - icon: mdi:thermometer-off
+        style:
+          button:
+            background-color: var(--table-row-background-color)
+            border-radius: 10px
+            margin-left: 10px
+            padding: 8px
+          icon:
+            color: "{% if is_state('climate.den_ac', 'off') %}\n  grey\n{% else%}\n\
+              \  red\n{% endif %}"
+        tap_action:
+          action: call-service
+          data: {}
+          service: climate.turn_off
+          target:
+            entity_id: climate.den_ac
+      - double_tap_action:
+          action: fire-dom-event
+          browser_mod:
+            card:
+              entity: climate.den_ac
+              type: thermostat
+            command: popup
+            deviceID: this
+            title: Thermostat
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            card:
+              entity: climate.den_ac
+              type: thermostat
+            command: popup
+            deviceID: this
+            title: Thermostat
+        icon: mdi:recycle
+        style:
+          button:
+            background-color: var(--table-row-background-color)
+            border-radius: 10px
+            margin-left: 100px
+            padding: 8px
+          icon:
+            color: "{% if is_state('climate.den_ac', 'off') %}\n  green\n{% else%}\n\
+              \  blue\n{% endif %}"
+        tap_action:
+          action: call-service
+          data: {}
+          service: climate.turn_on
+          target:
+            entity_id: climate.den_ac
+      type: custom:paper-buttons-row
+    state_color: true
+    type: entities
+    view_layout:
+      column: 2
+  - cards:
+    - artwork: full-cover
+      entity: media_player.spotify
+      group: false
+      hide:
+        icon_state: true
+        power: true
+        shuffle: false
+      info: scroll
+      sound_mode: full
+      source: full
+      toggle_power: true
+      type: custom:mini-media-player
+      volume_stateless: false
+    - account: default
+      always_play_random_song: true
+      device: Motu
+      display_style: list
+      filter_devices:
+      - Priyadarshini
+      - Downstairs Group
+      - Family Room Mini
+      - TV
+      - Bedroom TV
+      - Akashavani
+      - Friday
+      - Home Group
+      - Bedroom Mini
+      - Hall TV
+      - Upstairs Group
+      grid_center_covers: true
+      height: 350
+      hide_currently_playing: true
+      hide_top_header: true
+      hide_warning: true
+      limit: 40
+      playlist_type: default
+      spotify_entity: media_player.spotify
+      type: custom:spotify-card
+    parameters:
+      autoHeight: true
+      effect: fade
+    type: custom:swipe-card
+    view_layout:
+      column: 3
+  - icon: mdi:cellphone-cog
+    icon_color: blue
+    multiline_secondary: true
+    primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}} {{ states.device_tracker.oneplus_10pro.attributes.connection_type
+      | replace("band","") | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
+    type: custom:mushroom-template-card
+  - cards:
+    - buttonStyle: 'font-size: 14px;'
+      cards:
+      - artwork: material
+        entity: media_player.den_group
+        group: true
+        type: custom:mini-media-player
+      - entity: media_player.motu
+        group: true
+        type: custom:mini-media-player
+      - entity: media_player.chotu
+        group: true
+        toggle_power: false
+        type: custom:mini-media-player
+      - entity: media_player.clock
+        group: true
+        type: custom:mini-media-player
+      title: Players
+      type: custom:collapsable-cards
+    - artwork: full-cover
+      entity: media_player.google_tv
+      group: true
+      icon: mdi:google
+      info: short
+      name: Google TV
+      sound_mode: full
+      source: full
+      toggle_power: false
+      type: custom:mini-media-player
+      volume_stateless: false
+    - buttonStyle: 'font-size: 14px;'
+      cards:
+      - buttons:
+          back:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 4
+              entity_id: media_player.google_tv
+          bottom:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 20
+              entity_id: media_player.google_tv
+          clickleft:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 21
+              entity_id: media_player.google_tv
+          clickright:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 22
+              entity_id: media_player.google_tv
+          home:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 3
+              entity_id: media_player.google_tv
+          mute:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 164
+              entity_id: media_player.google_tv
+          netflix:
+            call: androidtv.adb_command
+            data:
+              command: am start -a android.intent.action.VIEW -d -n *com.netflix.ninja/.MainActivity
+              entity_id: media_player.google_tv
+          ok:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 66
+              entity_id: media_player.google_tv
+          power:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 26
+              entity_id: media_player.google_tv
+          top:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 19
+              entity_id: media_player.google_tv
+          volumedown:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 25
+              entity_id: media_player.google_tv
+          volumeup:
+            call: androidtv.adb_command
+            data:
+              command: input keyevent 24
+              entity_id: media_player.google_tv
+          youtube:
+            call: androidtv.adb_command
+            data:
+              command: am start -a android.intent.action.VIEW -d -n com.google.android.youtube.tvunplugged/com.google.android.apps.youtube.tvunplugged.activity.MainActivity
+              entity_id: media_player.google_tv
+        name: ' '
+        remote_template: ccwgtv
+        type: custom:generic-remote-control-card
+      title: Remote
+      type: custom:collapsable-cards
+    type: vertical-stack
+    view_layout:
+      column: 3
+  icon: mdi:castle
+  layout:
+    max_cols: 3
+  path: den
+  title: Den
+  type: custom:vertical-layout
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
+  - user: 5e94cdd892054937b560071ed6662cb8
+- badges:
+  - entity: device_tracker.life360_murthy_upadrasta
+  - entity: device_tracker.life360_kameswari_upadrasta
+  - entities:
+    - entity: binary_sensor.upstairs_power_failed
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.upstairs_power_failed','off')\
+        \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n"
+    state_filter:
+    - 'off'
+    type: entity-filter
+  - entities:
+    - entity: binary_sensor.downstairs_power_failed
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.downstairs_power_failed','off')\
+        \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n}\
+        \ \n"
+    state_filter:
+    - 'off'
+    type: entity-filter
+  - entity: script.cctv
+    icon: mdi:cctv
+    name: CCTV
+    style: ":host {\n  --label-badge-red: yellow }\n"
+    tap_action:
+      action: call-service
+      service: script.cctv
+  - entity: script.good_night
+    icon: mdi:sleep
+    name: Good Night
+    style: ":host {\n  --label-badge-red: grey }\n"
+    tap_action:
+      action: call-service
+      service: script.good_night
+  cards:
+  - card:
+      buttons:
+      - align_icon: bottom
+        entity: switch.downstairs_motor
+        state_icons:
+          'off': mdi:water-pump-off
+          'on': mdi:water-pump
+        state_styles:
+          'off':
+            button:
+              color: grey
+          'on':
+            button:
+              color: dodgerblue
+            ripple:
+              color: orange
+        state_text:
+          'off': Downstairs Motor OFF
+          'on': Downstairs Motor ON
+        style:
+          button:
+            background-color: var(--table-row-alternative-background-color)
+            border-radius: 20px
+            font-size: 25px
+          icon:
+            --mdc-icon-size: 300px
+      type: custom:paper-buttons-row
+    conditions:
+    - entity: switch.downstairs_motor
+      state: 'on'
+    type: conditional
+  - card:
+      buttons:
+      - align_icon: bottom
+        entity: switch.upstairs_motor
+        state_icons:
+          'off': mdi:water-pump-off
+          'on': mdi:water-pump
+        state_styles:
+          'off':
+            button:
+              color: grey
+          'on':
+            button:
+              color: dodgerblue
+            ripple:
+              color: orange
+        state_text:
+          'off': Upstairs Motor OFF
+          'on': Upstairs Motor ON
+        style:
+          button:
+            background-color: var(--table-row-alternative-background-color)
+            border-radius: 20px
+            font-size: 25px
+          icon:
+            --mdc-icon-size: 300px
+      type: custom:paper-buttons-row
+    conditions:
+    - entity: switch.upstairs_motor
+      state: 'on'
+    type: conditional
+  - entity: weather.weather
+    type: custom:weather-card
+  - cards:
+    - entity: fan.fan
+      icon_animation: true
+      layout: horizontal
+      show_percentage_control: true
+      styles:
+        card:
+        - --keep-background: 'true'
+      type: custom:mushroom-fan-card
+    - entities:
+      - entity: light.living_room_light
+      - entity: light.led_strip_tv
+      - entity: switch.wall_fan
+      - entities:
+        - entity: sensor.downstairs_geyser_power
+          name: Power
+        entity: switch.downstairs_geyser
+        secondary_info: last-changed
+        state_color: true
+        toggle: true
+        type: custom:multiple-entity-row
+      state_color: true
+      styles:
+        card:
+        - --keep-background: 'true'
+      type: entities
+    mode: vertical
+    type: custom:stack-in-card
+  - cards:
+    - artwork: full-cover
+      entity: media_player.sony_tv
+      group: false
+      hide:
+        power: true
+        power_state: false
+        source: false
+      info: scroll
+      sound_mode: full
+      source: full
+      toggle_power: false
+      type: custom:mini-media-player
+      volume_stateless: false
+    - artwork: cover
+      entity: media_player.priyadarshini
+      group: true
+      hide:
+        power: true
+      icon: mdi:television
+      idle_view:
+        when_idle: true
+      type: custom:mini-media-player
+    - entity: media_player.family_room_mini
+      group: true
+      hide:
+        power: true
+      icon: mdi:google-assistant
+      idle_view:
+        when_idle: true
+      type: custom:mini-media-player
+    - entity: media_player.akashavani
+      group: true
+      hide:
+        power: true
+      icon: mdi:google-assistant
+      idle_view:
+        when_idle: true
+      type: custom:mini-media-player
+    - entity: media_player.bedroom_mini
+      group: true
+      hide:
+        power: true
+      icon: mdi:google-assistant
+      idle_view:
+        when_idle: true
+      type: custom:mini-media-player
+    - artwork: full-cover
+      entity: media_player.android_tv
+      icon: si:oneplus
+      sound_mode: full
+      source: full
+      type: custom:mini-media-player
+      volume_stateless: false
+    - cards:
+      - entities:
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.android_tv
+            icon: mdi:power
+            name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+            styles:
+              icon:
+              - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                  "green"]]]
+
+                  '
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: POWER
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:video-input-component
+            name: Input
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: INPUT
+                entity_id: media_player.android_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.android_tv
+            entity_picture: /local/icons/netflix.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.android_tv
+                source: Netflix
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            entity_picture: /local/icons/prime.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.android_tv
+                source: Prime
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            entity_picture: /local/icons/youtube.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.android_tv
+                source: YouTube
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.android_tv
+            full_row: true
+            grow: true
+            step: 1
+            toggle: false
+            type: custom:slider-entity-row
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.android_tv
+            icon: mdi:volume-off
+            name: Mute
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: MUTE
+                entity_id: media_player.android_tv
+            template: menu_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:arrow-up-bold
+            name: Up
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: UP
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:cog
+            name: Settings
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: SETTINGS
+                entity_id: media_player.android_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:arrow-left-bold
+            name: Left
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: LEFT
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:circle
+            name: Ok
+            styles:
+              card:
+              - background: var(--secondary-background-color-alpha)
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: CENTER
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:arrow-right-bold
+            name: Right
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: RIGHT
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.android_tv
+            icon: mdi:keyboard-return
+            name: Return
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: BACK
+                entity_id: media_player.android_tv
+            template: menu_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:arrow-down-bold
+            name: Down
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: DOWN
+                entity_id: media_player.android_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.android_tv
+            icon: mdi:home
+            name: Home
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: HOME
+                entity_id: media_player.android_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        show_header_toggle: false
+        type: entities
+      title: Remote
+      type: custom:collapsable-cards
+    type: custom:stack-in-card
+  - cards:
+    - color: rgb(255,255,255)
+      color_type: card
+      entity: input_select.remote
+      icon: "[[[\n  if (states['input_select.remote'].state == 'TV')\n    return \"\
+        mdi:television\";\n  else\n    return \"mdi:set-top-box\";\n]]]\n"
+      label: "[[[\n  return states['input_select.remote'].state + ' Remote';\n]]]\n"
+      layout: icon_label
+      show_label: true
+      show_name: false
+      styles:
+        card:
+        - height: 60px
+        - --mdc-ripple-color: green
+        label:
+        - color: black
+        - font-size: 20px
+        - font-weight: bold
+        - justify-self: start
+        - padding: 10px 0px
+      tap_action:
+        action: call-service
+        service: input_select.select_next
+        service_data:
+          entity_id: input_select.remote
+      type: custom:button-card
+    - entity: input_select.remote
+      states:
+        Set-Top Box:
+          entities:
+          - card_type: horizontal-stack
+            cards:
+            - color: red
+              entity: remote.sony_bravia_tv
+              icon: mdi:power
+              name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+              styles:
+                icon:
+                - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                    "green"]]]
+
+                    '
+              tap_action:
+                service: script.set_top_box_power
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:video-input-component
+              name: Input
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Input
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:chevron-up-circle-outline
+              name: Channel Up
+              tap_action:
+                service: script.set_top_box_program_up
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-minus
+              name: Volume Down
+              tap_action:
+                service: script.set_top_box_volume_down
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-off
+              name: Mute
+              styles:
+                card:
+                - background: var(--secondary-background-color-alpha)
+              tap_action:
+                service: script.set_top_box_mute
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:volume-plus
+              name: Volume Up
+              tap_action:
+                service: script.set_top_box_volume_up
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              entity: remote.sony_bravia_tv
+              icon: mdi:chevron-down-circle-outline
+              name: Program Down
+              tap_action:
+                service: script.set_top_box_program_down
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 3/2
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-1-box
+              name: 1
+              tap_action:
+                service: script.set_top_box_one
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-2-box
+              name: 2
+              tap_action:
+                service: script.set_top_box_two
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-3-box
+              name: 3
+              tap_action:
+                service: script.set_top_box_three
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-4-box
+              name: 4
+              tap_action:
+                service: script.set_top_box_four
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-5-box
+              name: 5
+              tap_action:
+                service: script.set_top_box_five
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-6-box
+              name: 6
+              tap_action:
+                service: script.set_top_box_six
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-7-box
+              name: 7
+              tap_action:
+                service: script.set_top_box_seven
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-8-box
+              name: 8
+              tap_action:
+                service: script.set_top_box_eight
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-9-box
+              name: 9
+              tap_action:
+                service: script.set_top_box_nine
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              template: blank_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:numeric-0-box
+              name: 0
+              tap_action:
+                service: script.set_top_box_zero
+              template: menu_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          show_header_toggle: false
+          type: entities
+        TV:
+          entities:
+          - card_type: horizontal-stack
+            cards:
+            - color: red
+              entity: remote.sony_bravia_tv
+              icon: mdi:power
+              name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+              styles:
+                icon:
+                - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                    "green"]]]
+
+                    '
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: TvPower
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:video-input-component
+              name: Input
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Input
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/netflix.png
+              show_entity_picture: true
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Netflix
+                  entity_id: remote.sony_bravia_tv
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/prime.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: Prime Video
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/youtube.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: YouTube
+              template: logo_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/disney.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: Hotstar
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/aha.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: aha
+              template: logo_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              entity_picture: /local/icons/zee5.png
+              show_entity_picture: true
+              tap_action:
+                service: media_player.select_source
+                service_data:
+                  entity_id: media_player.sony_bravia_tv
+                  source: ZEE5
+              template: logo_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - buttons:
+              - align_icons: left
+                icon: mdi:volume-minus
+                name: false
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  service_data:
+                    command: VolumeDown
+                    entity_id: remote.sony_bravia_tv
+              - align_icons: left
+                icon: mdi:volume-plus
+                name: false
+                tap_action:
+                  action: call-service
+                  service: remote.send_command
+                  service_data:
+                    command: VolumeUp
+                    entity_id: remote.sony_bravia_tv
+              type: custom:paper-buttons-row
+            - entity: media_player.sony_bravia_tv
+              full_row: true
+              grow: true
+              step: 1
+              toggle: false
+              type: custom:slider-entity-row
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:subtitles-outline
+              name: SubTitle
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Info
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-up-bold
+              name: Up
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Up
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:cog
+              name: Settings
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Options
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:volume-off
+              name: Mute
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Mute
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-left-bold
+              name: Left
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Left
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:circle
+              name: Ok
+              styles:
+                card:
+                - background: var(--secondary-background-color-alpha)
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: DpadCenter
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              hold_action:
+                service: remote.send_command
+                service_data:
+                  command: Right
+                  entity_id: remote.sony_bravia_tv
+              icon: mdi:arrow-right-bold
+              name: Right
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Right
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - entity: remote.sony_bravia_tv
+              icon: mdi:keyboard-return
+              name: Return
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Return
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:arrow-down-bold
+              name: Down
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Down
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - template: blank_button
+              type: custom:button-card
+            - entity: remote.sony_bravia_tv
+              icon: mdi:home
+              name: Home
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Home
+                  entity_id: remote.sony_bravia_tv
+              template: menu_button
+              type: custom:button-card
+            type: custom:hui-element
+          - row_type: section
+            type: custom:hui-element
+          - card_type: horizontal-stack
+            cards:
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:rewind
+              name: Rewind
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Rewind
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:play-pause
+              name: Play/Pause
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Pause
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            - aspect_ratio: 21/9
+              entity: remote.sony_bravia_tv
+              icon: mdi:fast-forward
+              name: Forward
+              tap_action:
+                service: remote.send_command
+                service_data:
+                  command: Forward
+                  entity_id: remote.sony_bravia_tv
+              template: icon_button
+              type: custom:button-card
+            type: custom:hui-element
+          show_header_toggle: false
+          type: entities
+      type: custom:state-switch
+    type: vertical-stack
+  - color: auto
+    entity: switch.plants
+    entity_picture: /local/icons/plant.png
+    hold_action:
+      action: more-info
+    show_entity_picture: true
+    show_state: true
+    size: 100px
+    state:
+    - entity_picture: /local/icons/plant.png
+      value: 'on'
+    - entity_picture: /local/icons/plant.png
+      styles:
+        card:
+        - filter: opacity(70%)
+        icon:
+        - filter: grayscale(100%)
+      value: 'off'
+    - entity_picture: /local/icons/plant.png
+      styles:
+        card:
+        - filter: opacity(70%)
+        icon:
+        - filter: grayscale(100%)
+      value: unavailable
+    styles:
+      card:
+      - border-radius: 25px
+    type: custom:button-card
+  icon: mdi:sofa
+  path: living-room
+  title: Living Room
+- badges:
+  - entity: binary_sensor.hall_camera_motion
+    name: Hall Motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_motion','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: sensor.multisensor_1_light_2
+  - entity: sensor.multisensor_1_temperature
+  - entity: sensor.multisensor_1_humidity
+  cards:
+  - cards:
+    - entities:
+      - entity: switch.upstairs_tv
+        name: TV
+      - entities:
+        - icon: mdi:lightbulb-fluorescent-tube
+          state_color: true
+          tap_action:
+            action: call-service
+            service: script.hall_tubelight_white
+        entity: light.hall_tube_light
+        name: Tube Light
+        toggle: true
+        type: custom:multiple-entity-row
+      - entity: switch.ricelight_l
+      - entity: switch.ricelight_r
+      - entity: light.rgb1
+      - entity: light.rgb2
+      - entity: light.rgb_3
+      - entity: binary_sensor.pavanthanuj
+      - entity: automation.hall_lights_on_when_motion_detected
+      state_color: true
+      type: entities
+    - artwork: full-cover
+      entity: media_player.friday
+      group: true
+      type: custom:mini-media-player
+    - entity: media_player.hall_tv
+      group: true
+      type: custom:mini-media-player
+    type: vertical-stack
+  - cards:
+    - entity: media_player.lg_tv
+      group: true
+      type: custom:mini-media-player
+    - cards:
+      - colors:
+          background: black
+          buttons: '#b2beb5'
+          texts: black
+        dimensions:
+          border_width: 1px
+          scale: 0.95
+        entity: media_player.lg_tv
+        mac: C4-36-6C-A7-2D-16
+        sources:
+        - icon: mdi:netflix
+          name: Netflix
+        - icon: fab:amazon
+          name: Amazon Prime Video
+        - icon: mdi:youtube-tv
+          name: YouTube
+        - icon: mdi:plex
+          name: Plex
+        - name: null
+        - icon: mdi:google-chrome
+          name: Chromecast
+        - icon: mdi:microsoft-xbox
+          name: Xbox
+        - name: null
+        type: custom:lg-remote-control
+      title: Remote
+      type: custom:collapsable-cards
+    type: custom:stack-in-card
+  - cards:
+    - entities:
+      - switch.washing_machine
+      show_header_toggle: false
+      state_color: true
+      type: entities
+    - aggregate_func: min
+      entities:
+      - color: green
+        entity: sensor.washing_machine_power
+        name: Power
+      - color: magenta
+        entity: sensor.washing_machine_current
+        name: Current
+      - color: Black
+        entity: sensor.washing_machine_voltage
+        name: Voltage
+      hours_to_show: 6
+      icon: mdi:washing-machine
+      line_width: 2
+      name: Washing Machine
+      points_per_hour: 10
+      smoothing: false
+      type: custom:mini-graph-card
+      update_interval: 1
+    type: custom:stack-in-card
+  icon: ''
+  path: hall
+  theme: Backend-selected
+  title: Hall
+- badges: []
+  cards:
+  - entities:
+    - entities:
+      - entity: light.front_yard_lights_group_2
+        icon: mdi:lightbulb-group-outline
+        name: false
+        state_color: true
+      entity: light.front_yard_lights_group
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.first_floor_light_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.first_floor_light
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.first_floor_stairway_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.first_floor_stairway
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.first_floor_corner_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.first_floor_corner
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.second_floor_light_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.second_floor_light
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.second_floor_stairway_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.second_floor_stairway
+      toggle: true
+      type: custom:multiple-entity-row
+    - entities:
+      - entity: light.second_floor_corner_2
+        icon: mdi:lightbulb-outline
+        name: false
+        state_color: true
+      entity: light.second_floor_corner
+      toggle: true
+      type: custom:multiple-entity-row
+    - entity: switch.rice_string_1
+    - entity: switch.rice_string_2
+    - entity: automation.turn_off_front_yard_lights_day_time
+    show_header_toggle: false
+    state_color: true
+    title: Front Yard Lights
+    type: entities
+  - cards:
+    - camera_image: camera.front_yard_camera
+      camera_view: live
+      entities: []
+      tap_action:
+        action: more-info
+      title: First Floor
+      type: picture-glance
+    - camera_image: camera.secondfloor
+      camera_view: live
+      entities: []
+      tap_action:
+        action: more-info
+      title: Second Floor
+      type: picture-glance
+    mode: vertical
+    type: custom:stack-in-card
+  icon: mdi:stairs
+  path: front-yard
+  title: Front Yard
+- badges: []
+  cards:
+  - default: default
+    entity: user
+    states:
+      Pavan Thanuj Upadrasta:
+        camera_image: camera.priyadarshini
+        camera_view: live
+        entities: []
+        tap_action:
+          action: more-info
+        title: Family Room
+        type: picture-glance
+    type: custom:state-switch
+  - camera_image: camera.hall_camera
+    camera_view: live
+    entities:
+    - entity: binary_sensor.hall_camera_motion
+    - entity: camera.hall_camera
+      icon: mdi:arrow-left
+      name: Pan Left
+      show_icon: true
+      show_state: false
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          pan: LEFT
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-up
+      name: Tilt Up
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          tilt: UP
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-down
+      name: Tilt Down
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          tilt: DOWN
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:arrow-right
+      name: Pan Right
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          pan: RIGHT
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:numeric-1-box
+      name: Preset 1
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          preset: '1'
+        target:
+          entity_id: camera.hall_camera_hd
+    - entity: camera.hall_camera_hd
+      icon: mdi:numeric-2-box
+      name: Preset 2
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: tapo_control.ptz
+        service_data:
+          preset: '2'
+        target:
+          entity_id: camera.hall_camera_hd
+    title: Hall Camera 1
+    type: picture-glance
+  - camera_image: camera.hall_camera_2_hd
+    camera_view: live
+    entities:
+    - entity: binary_sensor.hall_camera_2_sound
+    - entity: binary_sensor.hall_camera_2_motion
+    tap_action:
+      action: more-info
+    title: Hall Camera 2
+    type: picture-glance
+    view_layout:
+      column: 1
+  - type: custom:layout-break
+  - camera_image: camera.firstfloor
+    camera_view: live
+    entities:
+    - entity: binary_sensor.firstfloor_motion
+    tap_action:
+      action: more-info
+    title: First Floor Camera
+    type: picture-glance
+  - camera_image: camera.secondfloor
+    camera_view: live
+    entities:
+    - entity: binary_sensor.secondfloor_motion
+    title: Second Floor Camera
+    type: picture-glance
+  - type: custom:layout-break
+  - camera_image: camera.entrance
+    camera_view: live
+    entities:
+    - entity: binary_sensor.entrance_motion
+    tap_action:
+      action: more-info
+    title: Entrance Camera
+    type: picture-glance
+  - camera_image: camera.driveway
+    camera_view: live
+    entities:
+    - entity: binary_sensor.driveway_motion
+    tap_action:
+      action: more-info
+    title: Driveway Camera
+    type: picture-glance
+  icon: hass:cctv
+  layout:
+    max_cols: 6
+  path: cameras
+  title: cameras
+  type: custom:masonry-layout
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
+  - user: e65a531353084e85a209ede74d956b4b
+  - user: e8d92e50b52649e28db11954533aca74
+  - user: 250f4a4058df41a2b14309b64bf348cb
+  - user: b1ee17e2f2da4a1f87c4636ac8668e50
+- badges: []
+  cards:
+  - cards:
+    - color_type: card
+      entity: switch.upstairs_motor
+      show_state: true
+      size: 60%
+      state:
+      - color: dodgerblue
+        icon: mdi:water-pump
+        styles:
+          state:
+          - opacity: 0.8
+        value: 'on'
+      - color: var(--disabled-text-color)
+        icon: mdi:water-pump-off
+        styles:
+          state:
+          - opacity: 0.2
+        value: 'off'
+      styles:
+        card:
+        - border-radius: 40px
+        name:
+        - justify-self: middle
+        - font-size: 25px
+        - color: var(--secondary-text-color)
+        state:
+        - font-weight: bold
+        - font-size: 20px
+        - color: white
+      type: custom:button-card
+    - color_type: card
+      entity: switch.downstairs_motor
+      show_state: true
+      size: 60%
+      state:
+      - color: dodgerblue
+        icon: mdi:water-pump
+        styles:
+          state:
+          - opacity: 0.8
+        value: 'on'
+      - color: var(--disabled-text-color)
+        icon: mdi:water-pump-off
+        styles:
+          state:
+          - opacity: 0.2
+        value: 'off'
+      styles:
+        card:
+        - border-radius: 40px
+        name:
+        - justify-self: middle
+        - font-size: 25px
+        - color: var(--secondary-text-color)
+        state:
+        - font-weight: bold
+        - font-size: 20px
+        - color: white
+      type: custom:button-card
+    type: vertical-stack
+  - type: custom:layout-break
+  - card:
+      color_type: card
+      icon: mdi:water
+      name: Tank Full
+      show_label: true
+      show_state: false
+      styles:
+        card:
+        - height: 80px
+        grid:
+        - grid-template-areas: '"i n" "i n" "i l"'
+        - grid-template-columns: 0.3fr 1fr
+        - grid-template-rows: min-content min-content min-content
+        icon:
+        - width: 50px
+        - align-self: start
+        - text-align: start
+        img_cell:
+        - align-self: start
+        - text-align: start
+        label:
+        - justify-self: start
+        - font-size: 16px
+        - font-weight: 300
+        name:
+        - justify-self: start
+        - font-size: 30px
+        - font-weight: 300
+      type: custom:button-card
+    conditions:
+    - entity: switch.sonoff_1000f38ea4
+      state: 'on'
+    type: conditional
+  - entities:
+    - entity: switch.upstairs_motor
+    - entity: switch.downstairs_motor
+    hours_to_show: 6
+    refresh_interval: 1
+    title: History
+    type: history-graph
+  - entities:
+    - switch.downstairs_motor
+    - switch.upstairs_motor
+    - switch.sonoff_1000f38ea4
+    hours_to_show: 24
+    type: logbook
+  icon: mdi:water-pump
+  layout:
+    max_cols: 2
+  path: motors
+  title: Motors
+  type: custom:vertical-layout
+- badges: []
+  cards:
+  - cards:
+    - entities:
+      - entity: input_select.speakers_spotify
+      theme: AMOLED Blue
+      type: entities
+    - cards:
+      - aspect_ratio: 5/2
+        entity: input_select.speakers_spotify
+        show_name: false
+        show_state: true
+        type: custom:button-card
+      - aspect_ratio: 5/2
+        icon: mdi:play-outline
+        tap_action:
+          action: call-service
+          service: script.spotify_start
+        type: custom:button-card
+      mode: horizontal
+      type: custom:stack-in-card
+    type: vertical-stack
+  - card:
+      show_header_toggle: false
+      state_color: true
+      type: entities
+    filter:
+      exclude:
+      - state: unavailable
+      - state: 'off'
+      - state: standby
+      - state: unknown
+      - entity_id: '*browser*'
+      - entity_id: '*plex*'
+      include:
+      - domain: media_player
+    show_empty: false
+    sort:
+      method: last_changed
+      reverse: true
+    type: custom:auto-entities
+  - cards:
+    - aspect_ratio: 21/2
+      name: Refresh Libraries
+      type: custom:button-card
+    - cards:
+      - aspect_ratio: 1/1
+        entity_picture: /local/icons/movie.png
+        show_entity_picture: true
+        size: 60%
+        tap_action:
+          action: call-service
+          service: plex.refresh_library
+          service_data:
+            library_name: Movies
+            server_name: Plex Server
+        type: custom:button-card
+      - aspect_ratio: 1/1
+        entity_picture: /local/icons/music.png
+        show_entity_picture: true
+        size: 60%
+        tap_action:
+          action: call-service
+          service: plex.refresh_library
+          service_data:
+            library_name: Music
+            server_name: Plex Server
+        type: custom:button-card
+      - aspect_ratio: 1/1
+        entity_picture: /local/icons/tvshow.png
+        show_entity_picture: true
+        size: 60%
+        tap_action:
+          action: call-service
+          service: plex.refresh_library
+          service_data:
+            library_name: TV Shows
+            server_name: Plex Server
+        type: custom:button-card
+      - aspect_ratio: 1/1
+        confirmation:
+          text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?`
+            ]]]'
+        entity: switch.docker_plex
+        icon: fab:docker
+        name: Docker
+        show_state: false
+        size: 60%
+        tap_action:
+          action: toggle
+        type: custom:button-card
+      type: horizontal-stack
+    - card:
+        type: entities
+      filter:
+        exclude:
+        - state: unavailable
+        include:
+        - name: /[Pp]lex/
+      show_empty: false
+      sort:
+        method: last_changed
+        reverse: true
+      type: custom:auto-entities
+    type: vertical-stack
+  - cards:
+    - artwork: material
+      entity: media_player.youtube_music
+      hide:
+        icon_state: false
+        shuffle: false
+      name: YouTube Music
+      type: custom:mini-media-player
+    - entities:
+      - entity: input_select.youtube_music_player_playlist
+      - entity: input_select.youtube_music_player_source
+      - entity: input_select.youtube_music_player_speakers
+      title: YouTube Music
+      type: entities
+    type: custom:stack-in-card
+  - entity: media_player.youtube_music
+    states:
+      playing:
+        content: '{% if is_state(''media_player.youtube_music'',''playing'') %}{{
+          state_attr("sensor.youtube_music_extra", "lyrics") }}{% else %}Player off{%
+          endif %}'
+        title: Lyrics
+        type: markdown
+    type: custom:state-switch
+  - entity: media_player.youtube_music
+    states:
+      playing:
+        cards:
+        - content: "\n**Media Type**: {{state_attr(\"media_player.youtube_music\"\
+            ,\"_media_type\")}} \n**Media ID**: {{state_attr(\"media_player.youtube_music\"\
+            , \"_media_id\")}}\n\n## **Current Track Info:**  \n**Artist:** {{state_attr(\"\
+            media_player.youtube_music\",\"media_artist\")}} \n**Track:** {{state_attr(\"\
+            media_player.youtube_music\",\"media_title\")}}\n**Video Link:** [{{state_attr(\"\
+            media_player.youtube_music\", \"videoId\")}}](https://www.youtube.com/watch?v={{state_attr(\"\
+            media_player.youtube_music\", \"videoId\")}})\n**Rating:** {{state_attr(\"\
+            media_player.youtube_music\",\"likeStatus\")}}\n**Playing on:** {{state_attr(\"\
+            media_player.youtube_music\",\"remote_player_id\")}}"
+          type: markdown
+        - cards:
+          - state:
+            - icon: mdi:thumb-up
+              operator: template
+              value: '[[[ return states[''media_player.youtube_music''].attributes.likeStatus
+                == "LIKE"]]]
+
+                '
+            - icon: mdi:thumb-up-outline
+              operator: template
+              value: '[[[ return states[''media_player.youtube_music''].attributes.likeStatus
+                == "INDIFFERENT"]]]
+
+                '
+            - icon: mdi:power-off
+              operator: default
+              value: false
+            tap_action:
+              action: call-service
+              service: ytube_music_player.call_method
+              service_data:
+                command: rate_track
+                entity_id: media_player.youtube_music
+                parameters: thumb_toggle_up_middle
+            type: custom:button-card
+          - content: '{% if is_state(''media_player.youtube_music'',''playing'') %}Currently
+              playing track {{ state_attr("media_player.youtube_music", "current_track")+1
+              }} of {{ state_attr("sensor.youtube_music_extra", "total_tracks") }}{%
+              else %}Player off{% endif %}     '
+            type: markdown
+          type: horizontal-stack
+        - content: "{% if is_state('media_player.youtube_music','playing') %}{% for\
+            \ i in range(0,state_attr(\"sensor.youtube_music_extra\", \"total_tracks\"\
+            )) %}\n {% if i == state_attr(\"sensor.youtube_music_extra\",\n\"current_track\"\
+            ) %}**{% endif %}\\[{{i+1}}] {{ state_attr(\"sensor.youtube_music_extra\"\
+            , \"tracks\")[i] }}{% if i == state_attr(\"media_player.youtube_music\"\
+            , \"current_track\") %} **{% endif %}\n{%- endfor %}{% else %}Player off{%\
+            \ endif %}\n    "
+          type: markdown
+        type: vertical-stack
+    type: custom:state-switch
+  icon: mdi:play-network
+  path: media
+  title: Media
+  type: custom:masonry-layout
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
+- badges: []
+  cards:
+  - aspect_ratio: 4/3
+    custom_fields:
+      cpu: "[[[\n  return `<ha-icon\n    icon=\"mdi:server\"\n    style=\"width: 20px;\
+        \ height: 20px; color: deepskyblue;\">\n    </ha-icon><span> CPU: <span style=\"\
+        color: var(--text-color-sensor);\">${states['sensor.processor_use_percent'].state}%</span></span>`\n\
+        ]]]\n"
+      disk: "[[[\n  return `<ha-icon\n    icon=\"mdi:harddisk\"\n    style=\"width:\
+        \ 20px; height: 20px; color: deepskyblue;\">\n    </ha-icon><span> Disk: <span\
+        \ style=\"color: var(--text-color-sensor);\">${states['sensor.disk_use_percent'].state}%</span></span>`\n\
+        ]]]\n"
+      lastboot: "[[[\n  return `<ha-icon\n    icon=\"mdi:clock\"\n    style=\"width:\
+        \ 20px; height: 20px; color: yellow;\">\n    </ha-icon><span> Last Boot: <span\
+        \ style=\"color: var(--text-color-sensor);\">${states['sensor.server_last_boot'].state}</span></span>`\n\
+        ]]]\n"
+      ram: "[[[\n  return `<ha-icon\n    icon=\"mdi:memory\"\n    style=\"width: 20px;\
+        \ height: 20px; color: deepskyblue;\">\n    </ha-icon><span> RAM: <span style=\"\
+        color: var(--text-color-sensor);\">${states['sensor.memory_use_percent'].state}%</span></span>`\n\
+        ]]]\n"
+      temp: "[[[\n  return `<ha-icon\n    icon=\"mdi:thermometer\"\n    style=\"width:\
+        \ 20px; height: 20px; color: var(--text-color-sensor);\">\n    </ha-icon><span\
+        \ style=\"color: var(--text-color-sensor);\">${entity.state} \xB0C</span>`\n\
+        ]]]\n"
+    entity: sensor.processor_temperature
+    icon: mdi:server
+    name: Debian
+    styles:
+      card:
+      - background-color: '#000000'
+      - border-radius: 10%
+      - padding: 10%
+      - color: ivory
+      - font-size: 18px
+      - text-shadow: 0px 0px 5px black
+      - text-transform: capitalize
+      custom_fields:
+        cpu:
+        - padding-bottom: 2px
+        - align-self: middle
+        - justify-self: start
+        - --text-color-sensor: '[[[ if (states["sensor.processor_use_percent"].state
+            > 80) return "red"; ]]]'
+        disk:
+        - align-self: middle
+        - justify-self: start
+        - --text-color-sensor: '[[[ if (states["sensor.disk_use_percent"].state >
+            80) return "red"; ]]]'
+        lastboot:
+        - align-self: start
+        - justify-self: end
+        - font_size: 25px
+        ram:
+        - padding-bottom: 2px
+        - align-self: middle
+        - justify-self: start
+        - --text-color-sensor: '[[[ if (states["sensor.memory_use_percent"].state
+            > 80) return "red"; ]]]'
+        temp:
+        - align-self: start
+        - justify-self: end
+        - font_size: 25px
+        - --text-color-sensor: '[[[ if (states["sensor.processor_temperature"].state
+            > 80) return "red"; ]]]'
+      grid:
+      - grid-template-areas: '"i temp" "i lastboot" "n n" "cpu cpu" "ram ram" "disk
+          disk"'
+      - grid-template-columns: 1fr 1fr
+      - grid-template-rows: 1fr 5fr min-content min-content min-content
+      icon:
+      - color: "[[[\n  if (entity.state < 60) return 'lime';\n  if (entity.state >=\
+          \ 60 && entity.state < 80) return 'orange';\n  else return 'red';\n]]]\n"
+      - width: 60%
+      - margin-top: -10%
+      img_cell:
+      - justify-content: start
+      - align-items: start
+      - margin: none
+      name:
+      - font-weight: bold
+      - font-size: 18px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+      - padding-bottom: 4px
+    type: custom:button-card
+  - entities:
+    - entity: sensor.count_automations
+      icon: mdi:robot
+      name: '# Automations'
+    - entity: sensor.count_scripts
+      icon: mdi:script
+      name: '# Scripts'
+    - entity: sensor.count_scenes
+      icon: mdi:palette-outline
+      name: '# Scenes'
+    - entity: sensor.count_sensors
+      icon: ''
+      name: '# Sensors'
+    - entity: sensor.count_binary_sensors
+      name: '# Binary Sensors'
+    - entity: sensor.count_device_trackers
+      icon: mdi:lan-connect
+      name: '# Device Trackers'
+    - entity: sensor.count_input_booleans
+      name: '# Input Booleans'
+    - entity: sensor.count_switches
+      icon: mdi:light-switch
+      name: '# Switches'
+    - entity: sensor.count_lights
+      icon: mdi:lightbulb
+      name: '# Lights'
+    - entity: sensor.count_fans
+      icon: mdi:fan
+      name: '# Fans'
+    - entity: sensor.count_media_players
+      icon: mdi:cast
+      name: '# Media Players'
+    - entity: sensor.count_zones
+      icon: mdi:map-clock
+      name: '# Zones'
+    type: entities
+  - cards:
+    - entity: sensor.download_speed
+      max: 300
+      min: 0
+      needle: true
+      severity:
+        green: 250
+        red: 0
+        yellow: 150
+      type: gauge
+    - entity: sensor.upload_speed
+      max: 300
+      min: 0
+      needle: true
+      severity:
+        green: 250
+        red: 0
+        yellow: 150
+      type: gauge
+    mode: horizontal
+    title: SpeedTest
+    type: custom:stack-in-card
+  - card:
+      content: Snapshots are stale! Please visit the "Home Assistant Google Drive
+        Backup" add-on status page for details.
+      title: Stale Snapshots!
+      type: markdown
+    conditions:
+    - entity: binary_sensor.backups_stale
+      state: 'on'
+    type: conditional
+  - cards:
+    - entity: sensor.database_size
+      icon_color: blue-grey
+      primary_info: state
+      secondary_info: name
+      type: custom:mushroom-entity-card
+    - entity: sensor.home_assistant_log_size
+      icon: mdi:math-log
+      icon_color: deep-orange
+      name: Homeassistant Log Size
+      primary_info: state
+      secondary_info: name
+      type: custom:mushroom-entity-card
+    - entity: sensor.backup_state
+      fill_container: false
+      icon: mdi:google-drive
+      icon_color: yellow
+      multiline_secondary: false
+      primary: '{{states.sensor.backup_state.attributes.size_in_google_drive}}'
+      secondary: Google Drive Backup Size
+      type: custom:mushroom-template-card
+    - entity: sensor.backup_state
+      fill_container: false
+      icon: si:homeassistant
+      icon_color: blue
+      multiline_secondary: false
+      primary: '{{states.sensor.backup_state.attributes.size_in_home_assistant}}'
+      secondary: Homeassistant Local Backup Size
+      type: custom:mushroom-template-card
+    - entity: sensor.disk_use_percent
+      icon_color: green
+      name: Disk use %
+      primary_info: state
+      secondary_info: name
+      type: custom:mushroom-entity-card
+    type: vertical-stack
+  - chart_type: line
+    days_to_show: 30
+    entities:
+    - sensor.memory_use
+    period: day
+    stat_types:
+    - mean
+    - min
+    - max
+    title: Memory Use
+    type: statistics-graph
+  - cards:
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.memory_use
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 2
+        name: Memory
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      type: horizontal-stack
+    mode: vertical
+    type: custom:stack-in-card
+  icon: mdi:server-network
+  path: system_monitor
+  theme: Backend-selected
+  title: System Monitor
+- badges: []
+  cards:
+  - cards:
+    - cards:
+      - camera_view: live
+        entity: camera.front_yard_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.hall_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    - cards:
+      - camera_view: live
+        entity: camera.entrance_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.second_floor_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    mode: vertical
+    type: custom:stack-in-card
+  - cards:
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.rm4_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 28
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.rm4_temperature
+        font_size: 70
+        hours_to_show: 6
+        line_color: '#e74c3c'
+        line_width: 5
+        name: Temperature
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Den
+      type: horizontal-stack
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.temperature_and_humidity_humidity
+        font_size: 70
+        hours_to_show: 8
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 100
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#ff6703'
+          value: 28
+        - color: '#ff1800'
+          value: 33
+        decimals: 1
+        entities:
+        - sensor.temperature_and_humidity_temperature
+        font_size: 70
+        hours_to_show: 8
+        line_width: 5
+        name: Temperature
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Hall
+      type: horizontal-stack
+    - cards:
+      - entity: sensor.download_speed
+        max: 300
+        min: 0
+        needle: true
+        severity:
+          green: 250
+          red: 0
+          yellow: 150
+        type: gauge
+      - entity: sensor.upload_speed
+        max: 300
+        min: 0
+        needle: true
+        severity:
+          green: 250
+          red: 0
+          yellow: 150
+        type: gauge
+      mode: horizontal
+      title: SpeedTest
+      type: custom:stack-in-card
+    mode: vertical
+    type: custom:stack-in-card
+  - bulk_rename:
+    - from: -Battery
+      to: ''
+    - from: ' Battery'
+      to: ''
+    - from: Sensor
+      to: ''
+    - from: e/
+      to: 'e and '
+    color_gradient:
+    - '#ff0000'
+    - '#ffff00'
+    - '#00ff00'
+    entities:
+    - sensor.den_motion_1_battery
+    - sensor.den_motion_2_battery
+    - sensor.den_door_battery
+    - sensor.temperature_and_humidity_battery
+    - sensor.chair_battery
+    - sensor.button_battery
+    - sensor.magic_cube_battery
+    - sensor.vibration_battery
+    title: Zigbee Battery Status
+    type: custom:battery-state-card
+  - background: true
+    cards:
+    - content: <center><img height="50" src="/local/f1/F1.png"></center>
+      type: markdown
+    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
+        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
+        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
+        0) %} race_day {% endif %}'
+      states:
+        race_day:
+          cards:
+          - content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n<h2><em><center><img\n\
+              \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
+              >{{(states.sensor.formula_1.attributes.grand_prix) |\nreplace (\"FORMULA\
+              \ 1\", \"\") }}</em></h2>\n<h2><center> {{ states.sensor.ics_1.attributes.description\
+              \  | replace (\"Grand Prix \",\"\")}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
+              \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
+            type: markdown
+          - cards:
+            - content: " <img src=\"{{(states.sensor.formula_1.attributes.circuit_image)}}\"\
+                \n  alt=\"{{(states.sensor.ics_1.attributes.description) | replace\
+                \ (\"Qualifying \",\n  \"\")}} Circuit\">"
+              theme: Google Light Theme
+              type: markdown
+            - content: "<p><a href=\"{{(states.sensor.formula_1.attributes.circuit_link)}}\"\
+                >\n<img src=\"/local/f1/circuit_stats/{{(states.sensor.ics_1.attributes.location)}}.png\"\
+                \n              alt=\"{{(states.sensor.ics_1.attributes.description)\
+                \ | replace (\"Qualifying \",\n              \"\")}} Circuit\"> </a></p>"
+              theme: amoled
+              type: markdown
+            type: custom:swipe-card
+          type: vertical-stack
+        race_weekend:
+          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
+            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
+            | replace ("Qualifying ", "")}} <br>
+          type: markdown
+        wait:
+          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
+            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
+            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
+            days to go </center> '
+          type: markdown
+      type: custom:state-switch
+    type: custom:stack-in-card
+    view_layout:
+      column: 1
+  icon: mdi:tablet-dashboard
+  path: kiosk
+  theme: Backend-selected
+  title: kiosk
+  type: custom:horizontal-layout
+  visible: []
+- badges:
+  - entity: device_tracker.life360_murthy_upadrasta
+  - entity: device_tracker.life360_kameswari_upadrasta
+  - entity: person.pavanthanuj
+  - entity: binary_sensor.den_motion_1
+    name: Den Motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_1','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.den_motion_2
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_2','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.hall_camera_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_motion','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.hall_camera_2_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_2_motion','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.hall_camera_sound
+  - entity: binary_sensor.hall_camera_2_sound
+  - entity: binary_sensor.firstfloor_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.firstfloor_motion','off')\
+      \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.secondfloor_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.secondfloor_motion','off')\
+      \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.entrance_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.entrance_motion','off')\
+      \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.driveway_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.driveway_motion','off')\
+      \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.den_door
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_door','off')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.chair_occupancy
+    name: Occupancy
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
+      \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
+  - entity: input_boolean.den_state
+  - entity: sensor.chair_occupancy
+  - entity: binary_sensor.vibration
+  - entity: script.update_all_phone_sensors
+    hold_action:
+      action: more-info
+    tap_action:
+      action: call-service
+      service: script.update_all_phone_sensors
+  cards:
+  - cards:
+    - entity: script.reload_local_tuya
+      icon_height: 88px
+      name: Tuya Reload
+      show_icon: true
+      show_name: true
+      show_state: false
+      tap_action:
+        action: toggle
+      type: button
+    type: horizontal-stack
+  - cards:
+    - cards:
+      - camera_view: live
+        entity: camera.front_yard_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.hall_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    - cards:
+      - camera_view: live
+        entity: camera.entrance_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.second_floor_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    mode: vertical
+    type: custom:stack-in-card
+  - cards:
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.rm4_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 28
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.rm4_temperature
+        font_size: 70
+        hours_to_show: 6
+        line_color: '#e74c3c'
+        line_width: 5
+        name: Temperature
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Den
+      type: horizontal-stack
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.temperature_and_humidity_humidity
+        font_size: 70
+        hours_to_show: 8
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 100
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#ff6703'
+          value: 28
+        - color: '#ff1800'
+          value: 33
+        decimals: 1
+        entities:
+        - sensor.temperature_and_humidity_temperature
+        font_size: 70
+        hours_to_show: 8
+        line_width: 5
+        name: Temperature
+        points_per_hour: 60
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Hall
+      type: horizontal-stack
+    mode: vertical
+    type: custom:stack-in-card
+  - aggregate_func: max
+    entities:
+    - color: magenta
+      entity: binary_sensor.den_motion_1
+      name: Den
+    - color: green
+      entity: binary_sensor.den_motion_2
+      name: Den 2
+    - color: red
+      entity: binary_sensor.hall_camera_motion
+      name: Hall
+    - color: yellow
+      entity: binary_sensor.hall_camera_2_motion
+      name: Hall 2
+    - color: cyan
+      entity: binary_sensor.front_yard_camera_person_occupancy
+      name: Front Yard
+    - color: black
+      entity: binary_sensor.chair_occupancy
+      name: Chair
+    hours_to_show: 1
+    line_width: 2
+    name: Motion Last Hour
+    points_per_hour: 60
+    smoothing: false
+    state_map:
+    - label: Clear
+      value: 'off'
+    - label: Detected
+      value: 'on'
+    type: custom:mini-graph-card
+    update_interval: 10
+  - bulk_rename:
+    - from: -Battery
+      to: ''
+    - from: ' Battery'
+      to: ''
+    - from: Sensor
+      to: ''
+    - from: e/
+      to: 'e and '
+    collapse:
+    - entities:
+      - sensor.den_motion_1_battery
+      - sensor.den_motion_2_battery
+      - sensor.den_door_battery
+      - sensor.temperature_and_humidity_battery
+      - sensor.chair_battery
+      - sensor.button_battery
+      - sensor.magic_cube_battery
+      - sensor.vibration_battery
+      - sensor.ikea_multi_button_battery
+      - sensor.ikea_on_off_battery
+      icon: mdi:zigbee
+      name: 'Zigbee Sensors (min: {min}%, count: {count})'
+      secondary_info: Battery levels {range}%
+    color_gradient:
+    - '#ff0000'
+    - '#ffff00'
+    - '#00ff00'
+    entities:
+    - charging_state:
+        entity_id: binary_sensor.10pro_is_charging
+        state: 'on'
+      entity: sensor.10pro_battery_level
+      name: 10 Pro
+      tap_action: more-info
+    - charging_state:
+        entity_id: binary_sensor.kameswari_nord_is_charging
+        state: 'on'
+      entity: sensor.kameswari_nord_battery_level
+      name: Amma Phone
+      tap_action: more-info
+    - charging_state:
+        entity_id: binary_sensor.murthy_nord2_is_charging
+        state: 'on'
+      entity: sensor.murthy_nord2_battery_level
+      name: Dad Phone
+      tap_action: more-info
+    - charging_state:
+        entity_id: binary_sensor.lenovo_tab_is_charging
+        state: 'on'
+      entity: sensor.lenovo_tab_m10_hd_battery_level
+      name: Lenovo Tab
+      tap_action: more-info
+    - charging_state:
+        entity_id: binary_sensor.nexus_7_is_charging
+        state: 'on'
+      entity: sensor.nexus_7_battery_level
+      name: Nexus 7
+      tap_action: more-info
+    title: Battery Status
+    type: custom:battery-state-card
+  - cards:
+    - card_mod:
+        style:
+          ha-markdown:
+            $: "ha-markdown-element:first-of-type hr{\n  border-color: #303030;\n\
+              }\n"
+      content: '<h2> <ha-icon icon=''mdi:shield-half-full''></ha-icon> Watchman report<h2>
+        <h3>Missing Entities: {{ states.sensor.watchman_missing_entities.state }}
+        </h3> {%- for item in state_attr("sensor.watchman_missing_entities", "entities")
+        %} <hr> <table><tr> <td> <ha-icon icon=''mdi: {%- if item.state=="missing"-%}cloud-alert''
+        {%- elif item.state=="unavail" -%}cloud-off-outline'' {%- else-%}cloud-question''
+        {%- endif -%} ></ha-icon> {{ item.id }} [{{item.state}}] <a title="{{item.occurrences}}">
+        {{item.occurrences.split(''/'')[-1].split('':'')[0]}}</a> </td></tr></table>
+        {%- endfor %}'
+      type: markdown
+    - card_mod:
+        style:
+          ha-markdown:
+            $: "ha-markdown-element:first-of-type hr{\n  border-color: #303030;\n\
+              }\n"
+      content: '<h2 class="some"> <ha-icon icon=''mdi:shield-half-full''></ha-icon>
+        Watchman report<h2> <h3> Missing Services: {{ states.sensor.watchman_missing_services.state
+        }} </h3> {%- for item in state_attr("sensor.watchman_missing_services", "services")
+        %} <hr><table><tr> <td>  <ha-icon icon=''mdi:cloud-alert''></ha-icon> {{ item.id
+        }} <a title="{{item.occurrences}}">{{item.occurrences.split(''/'')[-1].split('':'')[0]}}</a>
+        </td></tr></table> {%- endfor %}'
+      type: markdown
+    - alignment: center
+      chips:
+      - double_tap_action:
+          action: call-service
+          service: watchman.report
+          service_data:
+            data:
+              data:
+                parse_mode: html
+              parse_config: true
+          target: {}
+        entity: sensor.watchman_last_updated
+        hold_action:
+          action: none
+        icon: mdi:camera-timer
+        name: 'Watchman Last Updated :'
+        tap_action:
+          action: none
+        type: entity
+      type: custom:mushroom-chips-card
+    type: custom:stack-in-card
+  - entities:
+    - sensor.multisensor_2_humidity
+    - sensor.multisensor_2_light
+    - binary_sensor.multisensor_2_motion
+    - sensor.multisensor_2_temperature
+    state_color: true
+    title: Living Room
+    type: entities
+  - entities:
+    - sensor.multisensor_1_humidity
+    - sensor.multisensor_1_light_2
+    - binary_sensor.multisensor_1_motion
+    - sensor.multisensor_1_temperature
+    state_color: true
+    title: Hall
+    type: entities
+  - cards:
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Den Automations
+        type: entities
+      filter:
+        exclude: []
+        include:
+        - name: "/\U0001F3F0/"
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: last_triggered
+      type: custom:auto-entities
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Light Automations
+        type: entities
+      filter:
+        exclude: []
+        include:
+        - name: "/\U0001F4A1/"
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: last_triggered
+      type: custom:auto-entities
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Tools
+        type: entities
+      filter:
+        exclude: []
+        include:
+        - name: "/\u2699\uFE0F/"
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: last_triggered
+      type: custom:auto-entities
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Washing Machine & Motor Automations
+        type: entities
+      filter:
+        exclude: []
+        include:
+        - name: "/\U0001F4A7/"
+        - name: "/\U0001F9FA/"
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: friendly_name
+      type: custom:auto-entities
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Media Automations
+        type: entities
+      filter:
+        exclude: []
+        include:
+        - name: "/\U0001F3B5/"
+        - name: "/\U0001F3AC/"
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: last_triggered
+      type: custom:auto-entities
+    - card:
+        show_header_toggle: false
+        state_color: false
+        title: Other Automations
+        type: entities
+      filter:
+        exclude:
+        - name: "*\U0001F3B5*"
+        - name: "*\U0001F9FA*"
+        - name: "*\U0001F4A1*"
+        - name: "*\U0001F4A7*"
+        - name: "*\U0001F3AC*"
+        - name: "*\U0001F3F0*"
+        - name: "*\u2699\uFE0F*"
+        include:
+        - domain: automation
+      show_empty: true
+      sort:
+        ignore_case: false
+        method: last_triggered
+      type: custom:auto-entities
+    parameters:
+      autoHeight: true
+      effect: flow
+      freeModeSticky: true
+      loop: true
+      preventClicks: false
+      shortSwipes: true
+      simulateTouch: true
+    type: custom:swipe-card
+  - cards:
+    - icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
+
+        mdi:cellphone-wireless
+
+        {% else %}
+
+        mdi:cellphone-off
+
+        {% endif %}
+
+        '
+      icon_color: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
+
+        blue
+
+        {% else %}
+
+        white
+
+        {% endif %}
+
+        '
+      primary: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
+        \ | replace(\"living_room\",\" Living Room\") }} - {{ states.device_tracker.oneplus_10pro.attributes.connection_type\
+        \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\",\"\
+        2.4 GHz\")}} \n{% else %}\n  Not Connected\n{% endif %}\n"
+      secondary: OnePlus 10Pro
+      type: custom:mushroom-template-card
+    - icon: "{% if is_state('device_tracker.phone_kameswari', 'home') %}\nmdi:cellphone-wireless\n\
+        {% else %}\n  mdi:cellphone-off\n{% endif %}\n"
+      icon_color: "{% if is_state('device_tracker.phone_kameswari', 'home') %}\nred\n\
+        {% else %}\n  grey\n{% endif %}\n"
+      primary: "\n\n{% if is_state('device_tracker.phone_kameswari', 'home') %}\n\
+        {{ states.device_tracker.phone_kameswari.attributes.deco_device | replace(\"\
+        living_room\",\" Living Room\")  | replace(\"bedroom\",\" Bedroom\") }} -\
+        \ {{ states.device_tracker.phone_kameswari.attributes.connection_type | replace(\"\
+        band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\",\"2.4 GHz\") }}\n\
+        {% else %}\n  Not Connected\n{% endif %}\n"
+      secondary: Amma
+      type: custom:mushroom-template-card
+    - icon: "{% if is_state('device_tracker.phone_murthy_nord2_5g', 'home') %}\nmdi:cellphone-wireless\n\
+        {% else %}\n  mdi:cellphone-off\n{% endif %}\n"
+      icon_color: "{% if is_state('device_tracker.phone_murthy_nord2_5g', 'home')\
+        \ %}\nyellow\n{% else %}\n  grey\n{% endif %}\n"
+      primary: "{% if is_state('device_tracker.phone_murthy_nord2_5g', 'home') %}\n\
+        {{ states.device_tracker.phone_murthy_nord2_5g.attributes.deco_device | replace(\"\
+        living_room\",\" Living Room\")  | replace(\"bedroom\",\" Bedroom\") }} -\
+        \ {{ states.device_tracker.phone_murthy_nord2_5g.attributes.connection_type\
+        \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\",\"\
+        2.4 GHz\") }}\n{% else %}\n  Not Connected\n{% endif %}\n"
+      secondary: Dad
+      type: custom:mushroom-template-card
+    - icon: "{% if is_state('device_tracker.phone_prasad_redmi9i', 'home') %}\nmdi:cellphone-wireless\n\
+        {% else %}\n  mdi:cellphone-off\n{% endif %}\n"
+      icon_color: '{% if is_state(''device_tracker.phone_prasad_redmi9i'', ''home'')
+        %}
+
+        pink
+
+        {% else %}
+
+        grey
+
+        {% endif %}
+
+        '
+      primary: "{% if is_state('device_tracker.phone_prasad_redmi9i', 'home') %}\n\
+        {{ states.device_tracker.phone_prasad_redmi9i.attributes.deco_device | replace(\"\
+        living_room\",\" Living Room\")  | replace(\"bedroom\",\" Bedroom\") }} -\
+        \ {{ states.device_tracker.phone_prasad_redmi9i.attributes.connection_type\
+        \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\",\"\
+        2.4 GHz\") }}\n{% else %}\n  Not Connected\n{% endif %}\n"
+      secondary: Prasad
+      type: custom:mushroom-template-card
+    type: vertical-stack
+  - cards:
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.multisensor_2_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 30
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 28
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.multisensor_2_temperature
+        font_size: 70
+        hours_to_show: 6
+        line_color: '#e74c3c'
+        line_width: 5
+        name: Temperature
+        points_per_hour: 30
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Upstairs Hall
+      type: horizontal-stack
+    - cards:
+      - align_icon: left
+        align_state: center
+        animate: true
+        decimals: 1
+        entities:
+        - sensor.multisensor_1_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        name: Humidity
+        points_per_hour: 30
+        type: custom:mini-graph-card
+        update_interval: 1
+      - align_icon: left
+        align_state: center
+        animate: true
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 28
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.multisensor_1_temperature
+        font_size: 70
+        hours_to_show: 6
+        line_color: '#e74c3c'
+        line_width: 5
+        name: Temperature
+        points_per_hour: 30
+        type: custom:mini-graph-card
+        update_interval: 1
+      title: Living Room
+      type: horizontal-stack
+    mode: vertical
+    type: custom:stack-in-card
+  - cards:
+    - entities:
+      - entity: button.lenovo_tab_m10_hd_bring_to_foreground
+        name: Bring to Foreground
+      - entity: switch.lenovo_tab_m10_hd_kiosk_lock
+        name: Kiosk Lock
+      - entity: button.lenovo_tab_m10_hd_load_start_url
+        name: Load Start URL
+      - entity: switch.lenovo_tab_m10_hd_maintenance_mode
+        name: Maintenance Mode
+      - entity: switch.lenovo_tab_m10_hd_motion_detection
+        name: Motion Detection
+      - entity: button.lenovo_tab_m10_hd_reboot_device
+        name: Reboot Device
+      - entity: button.lenovo_tab_m10_hd_restart_browser
+        name: Restart Browser
+      - entity: light.lenovo_tab_m10_hd_screen
+        name: Screen
+      - entity: switch.lenovo_tab_m10_hd_screensaver
+        name: Screensaver
+      - entity: button.lenovo_tab_m10_hd_send_to_background
+        name: Send to Background
+      title: Lenovo Tab M10 HD
+      type: entities
+    - entity: media_player.lenovo_tab_m10_hd_media_player
+      type: media-control
+    columns: 1
+    square: false
+    type: grid
+  icon: mdi:home-analytics
+  path: network
+  theme: ''
+  title: Network and Devices
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
+- badges: []
+  cards:
+  - entity: climate.den_ac
+    type: thermostat
+  - entity: climate.den_ac
+    type: custom:more-info-card
+  - entity: climate.den_ac
+    temperature:
+      round: 1
+      source:
+        entity: sensor.rm4_temperature
+      unit: "\xB0C"
+    type: custom:mini-climate
+  path: test
+  theme: Backend-selected
+  title: test
+  visible: []
