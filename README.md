@@ -1,5 +1,7 @@
 [![HA Version](https://img.shields.io/badge/Home%20Assistant%20Version-2022.6.4%20-blue)](https://github.com/home-assistant/home-assistant/releases/latest)
 [![Years Badge](https://badges.pufler.dev/years/n00bcodr)](https://badges.pufler.dev)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=red)
+![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant?color=purple)
 # Home Assistant Configuraton
 
 I started my Home Assistant Journey with a Raspberry Pi 3, from which I have switched to an old Dell Laptop that I had lying around, for a year. I recently migrated my setup to a renewed [HP Mini PC](https://www.amazon.in/gp/product/B09RTMLB15) with Core i7, 16GB RAM and a few hard disks connected with my Movie and TV Show collections.
