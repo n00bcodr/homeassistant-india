@@ -6,7 +6,7 @@ cd /config
 git add .
 
 # Commit changes with message with current date stamp
-git commit -m "files on `date +'%d-%m-%Y %H:%M:%S'`"
+git commit -m "$@"
 
 # Push changes towards GitHub
 git push -u origin master

@@ -511,3 +511,10 @@ nexus_disable_km:
       entity_id: media_player.nexus_7_media_player
       url: http://192.168.0.168:8123/lovelace/8?deviceID=nexus?kiosk?disable_km
   mode: single
+git_push:
+  alias: Git Push
+  sequence:
+  - service: shell_command.gitcommit
+    data: {}
+  mode: single
+  icon: si:gitgitcommit
