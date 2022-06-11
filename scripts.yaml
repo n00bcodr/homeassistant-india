@@ -517,4 +517,4 @@ git_push:
   - service: shell_command.gitcommit
     data: {}
   mode: single
-  icon: si:gitgitcommit
+  icon: si:git
