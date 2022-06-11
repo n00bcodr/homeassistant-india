@@ -682,6 +682,16 @@ views:
     type: vertical-stack
     view_layout:
       column: 3
+  - icon: mdi:home
+    layout: vertical
+    primary: 'type: markdown
+
+      content: files on date {{states.sensor.date_time.state}}
+
+
+      '
+    secondary: How are you?
+    type: custom:mushroom-template-card
   icon: mdi:castle
   layout:
     max_cols: 3
@@ -2494,20 +2504,27 @@ views:
       type: horizontal-stack
     mode: vertical
     type: custom:stack-in-card
-  - entities:
-    - icon: mdi:github
-      name: /n00bcodr/homeassistant
-      type: weblink
-      url: https://github.com/n00bcodr/homeassistant
-    - entity: sensor.n00bcodr_homeassistant_latest_commit
-      icon: mdi:source-commit-end
-      name: Last Commit
-    - entity: input_text.git_commit_message
-      name: Commit Message
-    - action_name: push!
-      entity: script.git_push
-      icon: mdi:git
-    type: entities
+  - cards:
+    - entities:
+      - icon: mdi:github
+        name: /n00bcodr/homeassistant
+        type: weblink
+        url: https://github.com/n00bcodr/homeassistant
+      - entity: sensor.n00bcodr_homeassistant_latest_commit
+        icon: mdi:source-commit-end
+        name: Last Commit
+      type: entities
+    - content: Suggested Commit - files on date {{states.sensor.date_time.state}}
+      type: markdown
+    - entities:
+      - entity: input_text.git_commit_message
+        name: Commit Message
+      - action_name: push!
+        entity: script.git_push
+        icon: mdi:git
+      type: entities
+    mode: vertical
+    type: custom:stack-in-card
   icon: mdi:server-network
   path: system_monitor
   theme: Backend-selected

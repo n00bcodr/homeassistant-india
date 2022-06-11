@@ -10,3 +10,5 @@ git commit -m "$@"
 
 # Push changes towards GitHub
 git push -u origin master
+
+exit
