@@ -29,6 +29,10 @@
       - switch.den_wall_fan
       - switch.workstation
       - media_player.spotify
+      - media_player.chotu
+      - media_player.motu
+      - media_player.clock
+      - media_player.den_group
   - service: homeassistant.turn_off
     data: {}
     target:
@@ -1953,4 +1957,151 @@
       data:
         notification_icon: mdi:battery-charging-high
         color: red
+  mode: single
+- id: '1654855270389'
+  alias: Send Notification to Stop Playing if Hall TV is off
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 3d3447354eb07d88beda257602592f78
+    domain: media_player
+    entity_id: media_player.hall_tv
+    type: playing
+  condition:
+  - condition: device
+    type: is_off
+    device_id: 126b01689a8955c9ef0ba3f6df29837b
+    entity_id: switch.10a_smart_plug_3_socket_1
+    domain: switch
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      title: Stop Playing?
+      message: Chromecast is Playing but TV is off
+      data:
+        actions:
+        - action: stop_playing
+          title: Stop
+        - action: play
+          title: 'No'
+        notification_icon: mdi:play-outline
+  - wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: stop_playing
+    continue_on_timeout: false
+  - service: media_player.turn_off
+    target:
+      entity_id: media_player.hall_tv
+    data: {}
+- id: '1654855758393'
+  alias: hacs_sensor_refresh
+  trigger:
+  - platform: event
+    event_type: hacs/repository
+    event_data:
+      action: install
+  action:
+  - delay:
+      seconds: 5
+  - service: homeassistant.update_entity
+    target:
+      entity_id: sensor.hacs
+  initial_state: true
+- id: '1654855874344'
+  alias: Convert Lovelace configuration to yaml
+  description: ''
+  trigger:
+  - platform: event
+    event_type: lovelace_updated
+    event_data: {}
+  condition: []
+  action:
+  - service: shell_command.lovelace_default_convert
+  - service: shell_command.lovelace_wallmount_convert
+  mode: single
+- id: '1654857861013'
+  alias: Move music from Chotu
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.den_door
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: device
+    device_id: dcc310cbd4cea6f5eb25ec4a5cba6a8a
+    domain: media_player
+    entity_id: media_player.chotu
+    type: is_playing
+  action:
+  - choose:
+    - conditions:
+      - condition: device
+        device_id: e292f812d3de4a532e59bd5185ff9ba5
+        domain: media_player
+        entity_id: media_player.motu
+        type: is_off
+      sequence:
+      - service: media_player.media_stop
+        data: {}
+        target:
+          entity_id: media_player.chotu
+      - service: input_select.select_option
+        data:
+          option: Motu
+        target:
+          entity_id: input_select.speakers_spotify
+      - service: script.spotify_start
+        data: {}
+    default: []
+  - if:
+    - condition: state
+      entity_id: light.wipro_tube_light
+      state: 'off'
+    then:
+    - service: script.den_tubelight_white
+      data: {}
+  mode: single
+- id: '1654860387187'
+  alias: den_tubelight_laser
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.wipro_tube_light
+    from: 'off'
+    to: 'on'
+    id: 'on'
+  - platform: state
+    entity_id:
+    - light.wipro_tube_light
+    from: 'on'
+    to: 'off'
+    id: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.laser
+          - switch.plasma_ball
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - service: homeassistant.turn_on
+        data: {}
+        target:
+          entity_id:
+          - switch.plasma_ball
+    default: []
   mode: single
