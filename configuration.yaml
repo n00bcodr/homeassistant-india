@@ -111,10 +111,6 @@ telegram_bot:
     allowed_chat_ids:
       - !secret telegram_chat_id
 
-shell_command:
-  lovelace_default_convert: python /config/tools/lovelace_default_convert.py
-  lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
-
 withings:
   client_id: !secret withings_client_id
   client_secret: !secret withings_client_secret
@@ -130,3 +126,8 @@ climate:
     controller_data: remote.broadlink_rm4_remote
     temperature_sensor: sensor.rm4_temperature
     humidity_sensor: sensor.rm4_humidity
+
+shell_command:
+  lovelace_default_convert: python /config/tools/lovelace_default_convert.py
+  lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
+  git_version_update_push: bash /config/tools/git_version_update.sh "Core Version Update to {{states.sensor.current_version.state}}"
