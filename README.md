@@ -1,4 +1,4 @@
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/home-assistant/home-assistant?include_prereleases&label=Latest%20HA%20Version&logo=home-assistant)](https://github.com/home-assistant/home-assistant/releases/latest)
+[![Latest HA Release](https://img.shields.io/github/v/release/home-assistant/home-assistant?include_prereleases&label=Latest%20HA%20Version&logo=home-assistant)](https://github.com/home-assistant/home-assistant/releases/latest)
 [![Years Badge](https://badges.pufler.dev/years/n00bcodr)](https://badges.pufler.dev)
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=red)
 ![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant?color=purple)
