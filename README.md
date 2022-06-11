@@ -1,7 +1,9 @@
 [![Latest HA Release](https://img.shields.io/github/v/release/home-assistant/home-assistant?include_prereleases&label=Latest%20HA%20Version&logo=home-assistant)](https://github.com/home-assistant/home-assistant/releases/latest)
-[![Years Badge](https://badges.pufler.dev/years/n00bcodr)](https://badges.pufler.dev)
+[![Years Badge](https://badges.pufler.dev/years/n00bcodr?color=darkgreen)](https://github.com/n00bcodr)
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=red)
 ![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant?color=purple)
+
+
 
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/pavanthanuj/)
 [![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)](https://open.spotify.com/user/21eb7srfkhj4oefepym2q5cpq)
