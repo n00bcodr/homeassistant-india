@@ -131,4 +131,4 @@ shell_command:
   lovelace_default_convert: python /config/tools/lovelace_default_convert.py
   lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
   git_version_update_push: bash /config/tools/git_version_update.sh "Core Version Update to {{states.sensor.current_version.state}}"
-  gitcommit: bash /config/tools/ha_gitpush.sh "{{ states("input_text.git_commit_message") }}"
+  gitcommit: bash /config/tools/ha_gitpush.sh "{{states("input_text.git_commit_message")}}"
