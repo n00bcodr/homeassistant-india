@@ -2,7 +2,7 @@
 cd /config
 git add .
 git commit -m "$@"
-sleep 5s
+sleep 2s
+git status
 git push -u origin master
-
-exit
+sleep 7s

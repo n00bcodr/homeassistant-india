@@ -518,3 +518,11 @@ git_push:
     data: {}
   mode: single
   icon: mdi:git
+git_push_ha_version:
+  alias: Git Push - Code Update
+  sequence:
+  - service: shell_command.git_version_update_push
+    data: {}
+  mode: single
+  icon: mdi:git
+
