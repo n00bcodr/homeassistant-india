@@ -8,6 +8,10 @@
 
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/pavanthanuj/)
 [![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)](https://open.spotify.com/user/21eb7srfkhj4oefepym2q5cpq)
+
+
+TO DO: Add Screenshots
+
 # Home Assistant Configuraton
 
 I started my Home Assistant Journey with a Raspberry Pi 3, from which I have switched to an old Dell Laptop that I had lying around, for a year. I recently migrated my setup to a renewed [HP Mini PC](https://www.amazon.in/gp/product/B09RTMLB15) with Core i7, 16GB RAM and a few hard disks connected with my Movie and TV Show collections.
@@ -28,7 +32,7 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 ## Devices I use
 
 ## <a name="menu">Menu</a>
- | [Lights](#lights) | [Fans](#fans) | [Outlets & Switches](#outlets) | [Voice Assistants & Displays](#smartspeakers) | [Media](#media) | [Sensors](#sensors) | [Cameras](#cameras) | [Appliances](#appliances) | [Network](#network) | [IR Blasters](#ir) | [Hubs](#hubs) | [Climate](#climate) | [Other Hardware](#other) | [Graveyard☠️](#graveyard) |
+ | [Lights](#lights) | [Fans](#fans) | [Outlets & Switches](#outlets) | [Voice Assistants & Displays](#smartspeakers) | [Media](#media) | [Sensors](#sensors) | [Cameras](#cameras) | [Appliances](#appliances) | [Network](#network) | [IR Blasters](#ir) | [Hubs](#hubs) | [Climate](#climate) | [Other Hardware](#other) | [Screenshots](#screenshots) | [Graveyard☠️](#graveyard) |
 
 ---
 
@@ -130,7 +134,8 @@ No specific climate devices but two IR Blasters used to control ACs  using [Smar
 - [HP Ink Tank Wireless 410 series](https://support.hp.com/in-en/product/hp-ink-tank-wireless-410-series/16180953)
 - [Tagreader](https://github.com/adonno/tagreader) x 1
 - [Multisensor](https://esphome.io/cookbook/bruh.html) x 2
-
+---
+### <a name="screenshots">Screenshots</a> | [Go to Menu](#menu) |
 ---
 ### <a name="graveyard">Graveyard☠️</a> | [Go to Menu](#menu) |
 - [Wipro 10A Smart Plugs](https://www.amazon.in/gp/product/B08HNB2FSH) x 1
