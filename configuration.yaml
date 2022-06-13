@@ -80,10 +80,6 @@ spotcast:
   sp_dc: !secret sp_dc
   sp_key: !secret sp_key
 
-google:
-  client_id: 241799864686-9natm56b1vhkeemp2aqot90o0q2fep4j.apps.googleusercontent.com
-  client_secret: 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
-
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
