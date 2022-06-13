@@ -6,10 +6,9 @@ homeassistant:
     - /config/
 
 logger:
-  default: error
+  default: critical
   logs:
-    custom_components.localtuya: critical
-    custom_components.monitor_docker: critical
+    homeassistant.components.shell_command: debug
 
 ffmpeg:
 
@@ -81,6 +80,10 @@ spotcast:
   sp_dc: !secret sp_dc
   sp_key: !secret sp_key
 
+google:
+  client_id: 241799864686-9natm56b1vhkeemp2aqot90o0q2fep4j.apps.googleusercontent.com
+  client_secret: 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
+
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
@@ -130,5 +133,5 @@ climate:
 shell_command:
   lovelace_default_convert: python /config/tools/lovelace_default_convert.py
   lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
-  git_version_update_push: bash /config/tools/git_version_update.sh "Core Version Update to {{states.sensor.current_version.state}}"
-  gitcommit: bash /config/tools/ha_gitpush.sh "{{states("input_text.git_commit_message")}}"
+  git_core_update_push: bash /config/tools/git_core_update_push.sh "Core Version Update to {{states.sensor.current_version.state}}"
+  git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"

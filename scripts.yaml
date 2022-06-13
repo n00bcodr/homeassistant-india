@@ -1,528 +1,527 @@
 good_night:
   alias: Good Night
   sequence:
-  - service: automation.trigger
-    target:
-      entity_id: automation.front_yard_lights_turn_off_at_9_30_pm
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 8
-      milliseconds: 0
-  - service: switch.turn_off
-    data: {}
-    target:
-      entity_id:
-      - light.living_room_light
+    - service: automation.trigger
+      target:
+        entity_id: automation.front_yard_lights_turn_off_at_9_30_pm
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 8
+        milliseconds: 0
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id:
+          - light.living_room_light
   mode: single
   icon: mdi:sleep
 cctv:
   alias: Switch to CCTV
   sequence:
-  - service: media_player.select_source
-    data:
-      source: HDMI 1
-    target:
-      entity_id: media_player.sony_bravia_tv
+    - service: media_player.select_source
+      data:
+        source: HDMI 1
+      target:
+        entity_id: media_player.sony_bravia_tv
   mode: single
   icon: mdi:cctv
 set_top_box_volume_up:
   alias: Set Top Box Volume +
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBQAAABI5QSOBITERQRFBITEhMSExITEjgSExI4EjgSOBE5ETkROBI4EhMSExMSExMRFBE4EjkSEhM3EjgSOBI4EjgTEhITEgAFFwABJ0sSAA0FAAAAAAAAAAA=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBQAAABI5QSOBITERQRFBITEhMSExITEjgSExI4EjgSOBE5ETkROBI4EhMSExMSExMRFBE4EjkSEhM3EjgSOBI4EjgTEhITEgAFFwABJ0sSAA0FAAAAAAAAAAA=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 10
 set_top_box_volume_down:
   alias: Set Top Box Volume -
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBQAAABIpUROREUERQRFBEUERQSExITETkRFBI4ETkTNxE4EjgSOhA5ERMSExI4EjgRFBEUEjgRFBE5ETkRFBEUETkROREUEQAFFwABJ0sSAA0FAAAAAAAAAAA=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBQAAABIpUROREUERQRFBEUERQSExITETkRFBI4ETkTNxE4EjgSOhA5ERMSExI4EjgRFBEUEjgRFBE5ETkRFBEUETkROREUEQAFFwABJ0sSAA0FAAAAAAAAAAA=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 10
 set_top_box_program_up:
   alias: Set Top Box Program Up
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBQAAABJJIVNRUQFREUERQRFBEUERQRFDYUERQ2FDYUNRU1FTUVNBUREzcUERM3FBEUERY0FDYUNhMSFDYUERM3EzYUEhQRFAAFFAABKUkTAA0FAAAAAAAAAAA=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBQAAABJJIVNRUQFREUERQRFBEUERQRFDYUERQ2FDYUNRU1FTUVNBUREzcUERM3FBEUERY0FDYUNhMSFDYUERM3EzYUEhQRFAAFFAABKUkTAA0FAAAAAAAAAAA=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 10
 set_top_box_program_down:
   alias: Set Top Box Program Down
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABIpUSOBITExITEhITEhMSExIUETgSExI4EzcTNxI4EjgROREUETkRFBEUETkRFBE5EzYSNxMTEjgSOBITEjgSExITEgAFGQABJUsRAAxVAAEjSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABIpUSOBITExITEhITEhMSExIUETgSExI4EzcTNxI4EjgROREUETkRFBEUETkRFBE5EzYSNxMTEjgSOBITEjgSExITEgAFGQABJUsRAAxVAAEjSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 10
 set_top_box_power:
   alias: Set Top Box Power
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABI5QSOBITEhMSExITEhMTExETEjgSExI4EjgSOBI4EjgSOBITEhMSOBI3EzcTEhM3EzcTNxM3EhMSExITEzcSExITEwAFFgABKEoSAAxSAAEmSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABI5QSOBITEhMSExITEhMTExETEjgSExI4EjgSOBI4EjgSOBITEhMSOBI3EzcTEhM3EzcTNxM3EhMSExITEzcSExITEwAFFgABKEoSAAxSAAEmSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: single
 tv_power:
   alias: TV Power
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBIAAABIJUTEhAVEjcSExIUDxQSExEUEjcRORAVEzYRORA5EDkTNxMSEBURExE5EhIRFRETERQSOBA5EDkRFBE4ETkQORI4EwANBQ==
-    target:
-      entity_id:
-      - remote.broadlink_rm4_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBIAAABIJUTEhAVEjcSExIUDxQSExEUEjcRORAVEzYRORA5EDkTNxMSEBURExE5EhIRFRETERQSOBA5EDkRFBE4ETkQORI4EwANBQ==
+      target:
+        entity_id:
+          - remote.broadlink_rm4_remote
   mode: queued
   max: 10
 set_top_box_one:
   alias: Set Top Box 1
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABIZQTNxAVExISFBIUEBQSExEUEjgSExE5ETgTNxI4EzcSOBITEjgSExEUETkSExEUEjgSOBITEjgSNxIUEjcSOBITEwAFFwABJksSAAxRAAEmSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABIZQTNxAVExISFBIUEBQSExEUEjgSExE5ETgTNxI4EzcSOBITEjgSExEUETkSExEUEjgSOBITEjgSNxIUEjcSOBITEwAFFwABJksSAAxRAAEmSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_two:
   alias: Set Top Box 2
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABJZIUNhQRExITEhMSExITEhQRFDYUERM3EzcUNRQ2FTUUNhQ2EzcTEhMSFDYTEhMSEzcTEhMSEzcTNxMSEzcTNxMSEwAFFQABKUkUAAxPAAEpSBUADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABJZIUNhQRExITEhMSExITEhQRFDYUERM3EzcUNRQ2FTUUNhQ2EzcTEhMSFDYTEhMSEzcTEhMSEzcTNxMSEzcTNxMSEwAFFQABKUkUAAxPAAEpSBUADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_three:
   alias: Set Top Box 3
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABJJMTNxMSEhMTEhITEhMTEhITEjgSExM3EjgSOBI3EzcTNxMSExITNxM3EhMSExM3EjgSOBI4EhMSExI4EjcTEhMTEgAFFwABKEkSAAxRAAEnShMADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABJJMTNxMSEhMTEhITEhMTEhITEjgSExM3EjgSOBI3EzcTNxMSExITNxM3EhMSExM3EjgSOBI4EhMSExI4EjcTEhMTEgAFFwABKEkSAAxRAAEnShMADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_four:
   alias: Set Top Box 4
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABJJMTNxMSExITEhITEhMSExMSEzcSExM3EzcTNxM3EzcTNhQSEzYUNhU1ExITEhMSEzcUNhMSExITEhQ2EzcTNxITEwAFFgABKEkUAAxRAAEnSBQADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABJJMTNxMSExITEhITEhMSExMSEzcSExM3EzcTNxM3EzcTNhQSEzYUNhU1ExITEhMSEzcUNhMSExITEhQ2EzcTNxITEwAFFgABKEkUAAxRAAEnSBQADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_five:
   alias: Set Top Box 5
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABIpQSOBITEhMSExITEhMTEhMSEzcTEhM3EjgSOBI4EjgSNxM3EzcTNxI4EhMSExITEjgSExITEhMSExM3EjgSOBITEgAFFwABJ0oTAAxRAAEoSRQADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABIpQSOBITEhMSExITEhMTEhMSEzcTEhM3EjgSOBI4EjgSNxM3EzcTNxI4EhMSExITEjgSExITEhMSExM3EjgSOBITEgAFFwABJ0oTAAxRAAEoSRQADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_six:
   alias: Set Top Box 6
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABI5QSOBITEhMSExITEhMSExITEjgSExI4EjcTNxM3EzcSOBITEhMSExI4EhMSExI4EjgSOBI3EzcTEhM3EzcSExITEgAFGgABJEoTAAxQAAEmSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABI5QSOBITEhMSExITEhMSExITEjgSExI4EjcTNxM3EzcSOBITEhMSExI4EhMSExI4EjgSOBI3EzcTEhM3EzcSExITEgAFGgABJEoTAAxQAAEmSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_seven:
   alias: Set Top Box 7
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABI5QTNxITEhMTEhMSExITEhMSEzcTEhM3EjgSOBI4EjgSNxMTEjcTEhM3ExITEhMSEzcTNxMSEzcSExI4EjgSOBITEgAFFgABJ0sSAAxSAAEkSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABI5QTNxITEhMTEhMSExITEhMSEzcTEhM3EjgSOBI4EjgSNxMTEjcTEhM3ExITEhMSEzcTNxMSEzcSExI4EjgSOBITEgAFFgABJ0sSAAxSAAEkSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_eight:
   alias: Set Top Box 8
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABJJMTNxITEhMTEhITEhMSExITEjgSExI4EjgSNxM3EzcTNxI4EjgSExI4EhMSExITEjgSExITEjgSExI4EjcTNxMSEwAFFwABJksSAAxRAAEmSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABJJMTNxITEhMTEhITEhMSExITEjgSExI4EjgSNxM3EzcTNxI4EjgSExI4EhMSExITEjgSExITEjgSExI4EjcTNxMSEwAFFwABJksSAAxRAAEmSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_nine:
   alias: Set Top Box 9
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABJJMTNxMSFBETEhQRFBETEhMSEzcTEhM3EzYUNhQ2FDYUNhMSFBEUNhMSExITEhQ2EzcTNxM2FBEUNhQ2EzcTEhMSFAAFFQABJ0oTAAxPAAEoSRMADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABJJMTNxMSFBETEhQRFBETEhMSEzcTEhM3EzYUNhQ2FDYUNhMSFBEUNhMSExITEhQ2EzcTNxM2FBEUNhQ2EzcTEhMSFAAFFQABJ0oTAAxPAAEoSRMADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_zero:
   alias: Set Top Box 0
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABI5QSOBITEhMSExITEhMTEhITEjgSExI4EjgSOBI3EzcTNxM3EjgSOBITEhMSExITEjgSExITEhMSOBI4EjgSOBITEgAFFgABKEoTAAxRAAEmSxIADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABI5QSOBITEhMSExITEhMTEhITEjgSExI4EjgSOBI3EzcTNxM3EjgSOBITEhMSExITEjgSExITEhMSOBI4EjgSOBITEgAFFgABKEoTAAxRAAEmSxIADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 set_top_box_mute:
   alias: Set Top Box Mute
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABIZUTNxMSExITEhMSExITEhMSFDYTEhQ2EzcTNxM3EzcTNhQRFBITNhQ2FDYTEhMSEzcTNxM3ExITEhMSEzcTNxMSEwAFFwABJ0kUAAxQAAEnSRQADQU=
-    entity_id: remote.broadlink_rm3_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABIZUTNxMSExITEhMSExITEhMSFDYTEhQ2EzcTNxM3EzcTNhQRFBITNhQ2FDYTEhMSEzcTNxM3ExITEhMSEzcTNxMSEwAFFwABJ0kUAAxQAAEnSRQADQU=
+      entity_id: remote.broadlink_rm3_remote
   mode: queued
   max: 3
 hdmi_one:
   alias: HDMI 1
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBQAAABH5QSFBMTExMUEhIUEhQSExMTEzgTOBM4EjkSOBM4EzgTOBM4EhQSFBI4EhQTExIUEhQSFBI5EjgUEhM4EzgROhM3EgAFCgABJEsRAA0FAAAAAAAAAAA=
-    target:
-      entity_id: remote.broadlink_rm4_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBQAAABH5QSFBMTExMUEhIUEhQSExMTEzgTOBM4EjkSOBM4EzgTOBM4EhQSFBI4EhQTExIUEhQSFBI5EjgUEhM4EzgROhM3EgAFCgABJEsRAA0FAAAAAAAAAAA=
+      target:
+        entity_id: remote.broadlink_rm4_remote
   mode: queued
   max: 3
 hdmi_two:
   alias: HDMI 2
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBQAAABIJUTExEVERQSFBMTEhQSFBMSFDcTOBM4ETkTOBM4EjgSORIUEjkSExM4ExMSFBEVEhMSORMTEjkSExM4EzgSORI4EgAFCwABJkoQAA0FAAAAAAAAAAA=
-    target:
-      entity_id: remote.broadlink_rm4_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBQAAABIJUTExEVERQSFBMTEhQSFBMSFDcTOBM4ETkTOBM4EjgSORIUEjkSExM4ExMSFBEVEhMSORMTEjkSExM4EzgSORI4EgAFCwABJkoQAA0FAAAAAAAAAAA=
+      target:
+        entity_id: remote.broadlink_rm4_remote
   mode: queued
   max: 3
 hdmi_three:
   alias: HDMI 3
   sequence:
-  - service: remote.send_command
-    data:
-      command: b64:JgBYAAABIpQSFBMSFBIUEhQSExMTExMSFDcUNxM4EzcUNxQ3EzgTNxI5EzgTExM3FBIUEhMTExMTEhQSFDcTExM3FDcUNxM4EwAFCQABJUkRAAxNAAEkSxMADQU=
-    target:
-      entity_id: remote.broadlink_rm4_remote
+    - service: remote.send_command
+      data:
+        command: b64:JgBYAAABIpQSFBMSFBIUEhQSExMTExMSFDcUNxM4EzcUNxQ3EzgTNxI5EzgTExM3FBIUEhMTExMTEhQSFDcTExM3FDcUNxM4EwAFCQABJUkRAAxNAAEkSxMADQU=
+      target:
+        entity_id: remote.broadlink_rm4_remote
   mode: queued
   max: 3
 set_top_box:
   alias: Set Top Box
   sequence:
-  - service: media_player.select_source
-    data:
-      source: Set-top Box
-    entity_id: media_player.lg_tv
+    - service: media_player.select_source
+      data:
+        source: Set-top Box
+      entity_id: media_player.lg_tv
   mode: single
 chromecast:
   alias: Chromecast
   sequence:
-  - service: media_player.select_source
-    data:
-      source: Chromecast
-    target:
-      entity_id: media_player.lg_tv
+    - service: media_player.select_source
+      data:
+        source: Chromecast
+      target:
+        entity_id: media_player.lg_tv
   mode: single
 make_some_coffee:
   alias: Make some Coffee
   sequence:
-  - service: switch.turn_on
-    target:
-      entity_id:
-      - switch.coffee_machine
-  - delay:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
-  - service: switch.turn_off
-    target:
-      entity_id:
-      - switch.coffee_machine
-  - service: notify.mobile_app_10pro
-    data:
-      message: Your Coffee is ready
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.coffee_machine
+    - delay:
+        hours: 0
+        minutes: 5
+        seconds: 0
+        milliseconds: 0
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.coffee_machine
+    - service: notify.mobile_app_10pro
       data:
-        notification_icon: mdi:coffee
-  - service: tts.cloud_say
-    data:
-      entity_id: media_player.motu
-      message: Your Coffee is Ready
-      language: en-GB
+        message: Your Coffee is ready
+        data:
+          notification_icon: mdi:coffee
+    - service: tts.cloud_say
+      data:
+        entity_id: media_player.motu
+        message: Your Coffee is Ready
+        language: en-GB
   mode: single
   icon: mdi:coffee
 den_tubelight_white:
   alias: Den Tubelight White
   sequence:
-  - service: light.turn_on
-    data:
-      white_value: 255
-      brightness_pct: 100
-      color_temp: 125
-    target:
-      entity_id:
-      - light.wipro_tube_light
+    - service: light.turn_on
+      data:
+        white_value: 255
+        brightness_pct: 100
+        color_temp: 125
+      target:
+        entity_id:
+          - light.wipro_tube_light
 spotify_start:
-  alias: 'Spotify: Start Playback'
+  alias: "Spotify: Start Playback"
   sequence:
-  - service: spotcast.start
-    data:
-      device_name: '{{ states(''input_select.speakers_spotify'') }}'
-      force_playback: true
+    - service: spotcast.start
+      data:
+        device_name: "{{ states('input_select.speakers_spotify') }}"
+        force_playback: true
   mode: single
   icon: mdi:spotify
 led_strip_random:
   alias: LED Strip RANDOM
   sequence:
-  - service: light.turn_on
-    target:
-      entity_id: light.led_strip_tv
-    data:
-      effect: random
-  - service: light.turn_on
-    target:
-      entity_id: light.led_strip_tv
-    data:
-      brightness: 255
-  - service: light.turn_on
-    target:
-      entity_id: light.led_strip_tv
-    data:
-      rgbw_color:
-      - '{{ state_attr(''light.led_strip_tv'',''rgbw_color'')[0] }}'
-      - '{{ state_attr(''light.led_strip_tv'',''rgbw_color'')[1] }}'
-      - '{{ state_attr(''light.led_strip_tv'',''rgbw_color'')[2] }}'
-      - 0
+    - service: light.turn_on
+      target:
+        entity_id: light.led_strip_tv
+      data:
+        effect: random
+    - service: light.turn_on
+      target:
+        entity_id: light.led_strip_tv
+      data:
+        brightness: 255
+    - service: light.turn_on
+      target:
+        entity_id: light.led_strip_tv
+      data:
+        rgbw_color:
+          - "{{ state_attr('light.led_strip_tv','rgbw_color')[0] }}"
+          - "{{ state_attr('light.led_strip_tv','rgbw_color')[1] }}"
+          - "{{ state_attr('light.led_strip_tv','rgbw_color')[2] }}"
+          - 0
   mode: single
 add_shopping_list:
   alias: Add Shopping Item
   sequence:
-  - service: shopping_list.add_item
-    data:
-      name: '{{ states(''input_text.shopping_list'') }}'
-  - service: browser_mod.lovelace_reload
+    - service: shopping_list.add_item
+      data:
+        name: "{{ states('input_text.shopping_list') }}"
+    - service: browser_mod.lovelace_reload
   mode: single
 check_shopping_list:
   alias: Check all Shopping Item
   sequence:
-  - service: shopping_list.complete_all
-  - service: browser_mod.lovelace_reload
+    - service: shopping_list.complete_all
+    - service: browser_mod.lovelace_reload
   mode: single
 clear_shopping_list:
   alias: Clear all Shopping Item
   sequence:
-  - service: shopping_list.clear_completed_items
-  - service: browser_mod.lovelace_reload
+    - service: shopping_list.clear_completed_items
+    - service: browser_mod.lovelace_reload
   mode: single
 ac_off:
   alias: AC OFF
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIRIxEkUiNSJBEjESNSJFIjUiQRIxEjESNSJBEjESMRJBEiEiMRIxEkUiZPJFIjUyISIhIjESNTJFEjEiMRI1IkESMRJFIjUiRSJBAkUSRSJBAkECVRJFElUSYOJFElUSQQJRAkUSVRJFEkECRSJFAmECQQJBAlUSQQJBAkECVRJBAkECUQJBAkECUPJRAkECMRJFIkECRRJVEkECVRJBAlAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIRIxEkUiNSJBEjESNSJFIjUiQRIxEjESNSJBEjESMRJBEiEiMRIxEkUiZPJFIjUyISIhIjESNTJFEjEiMRI1IkESMRJFIjUiRSJBAkUSRSJBAkECVRJFElUSYOJFElUSQQJRAkUSVRJFEkECRSJFAmECQQJBAlUSQQJBAkECVRJBAkECUQJBAkECUPJRAkECMRJFIkECRRJVEkECVRJBAlAA0FAAA=
   mode: single
 ac_eco:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACESIhEiUyJSIxEiEiJTIlIjESJSIxEiEiJSIxEiEiISIlIjESISIhEjESJTIlIjUiISIlIjESFTJVAiEiIRIxEiEiISIlIjUiJSIxEiUiNSIhIkECFTI1IiUiMRIlIjUiISIhIhUyJTIlIiEiJSI1IiEiESIxEhVCIRIhIiEiFTIxEiEiETIhEiEiISIhIiESJTIlIjUiISIhIhEiRRIlIkAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACESIhEiUyJSIxEiEiJTIlIjESJSIxEiEiJSIxEiEiISIlIjESISIhEjESJTIlIjUiISIlIjESFTJVAiEiIRIxEiEiISIlIjUiJSIxEiUiNSIhIkECFTI1IiUiMRIlIjUiISIhIhUyJTIlIiEiJSI1IiEiESIxEhVCIRIhIiEiFTIxEiEiETIhEiEiISIhIiESJTIlIjUiISIhIhEiRRIlIkAA0FAAA=
   mode: single
 ac_16:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACMPIhIiUiNSIhIiESJTJFAjESISIlMiESNSIhIiESUPIVQiESISIhIiEiJSI1IiUiUPIhIiEiFTIxEhEyIRIxEiEiETIlIkUSRQIxEiUyJSIxEiEiJSI1IkUCISIlMiUiMRIhIiUiNSJFAiEiJTIlIjESETIhIhUyISIhIhEiJTIhIiESISIhIiEiIRIhIhEyISIVMiEiISIlEjEiJSI1IkAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACMPIhIiUiNSIhIiESJTJFAjESISIlMiESNSIhIiESUPIVQiESISIhIiEiJSI1IiUiUPIhIiEiFTIxEhEyIRIxEiEiETIlIkUSRQIxEiUyJSIxEiEiJSI1IkUCISIlMiUiMRIhIiUiNSJFAiEiJTIlIjESETIhIhUyISIhIhEiJTIhIiESISIhIiEiIRIhIhEyISIVMiEiISIlEjEiJSI1IkAA0FAAA=
   mode: single
 ac_17:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCoACASIhIiUiNSIhIiESNSIlIjESISIlIjESJTIhEjESMRIlIjESQQIhIiESJTIlIjUiISIRIjESJRJBIiESMRIlIjESMRIlIjUiRQJQ8jUiJSIhIkECJSI1UfUiMRIlMiUiISIhIiUiNSIlIjESFSJFIjESQQIhEiUyISIhEkECNSIhEjESISIRMiESMRIhIiEiIRJFEkECIRI1IiEiJRJBEhAALaCAANBQAAAAAAAAAAAAAAAAAA
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCoACASIhIiUiNSIhIiESNSIlIjESISIlIjESJTIhEjESMRIlIjESQQIhIiESJTIlIjUiISIRIjESJRJBIiESMRIlIjESMRIlIjUiRQJQ8jUiJSIhIkECJSI1UfUiMRIlMiUiISIhIiUiNSIlIjESFSJFIjESQQIhEiUyISIhEkECNSIhEjESISIRMiESMRIhIiEiIRJFEkECIRI1IiEiJRJBEhAALaCAANBQAAAAAAAAAAAAAAAAAA
   mode: single
 ac_18:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACISIRIjUiJSJQ8jESJTIlEkESISIlIjESRQJQ8hEyISIVMjESISIhEjESJTIlIjUiISIhEiEiFUIhEiEiRRJA8jESETIlIkUSJSIxEjUiJSIxEiEiJSI1IiUSYPIVQiUiMRIhIhUyNRI1IiEiJSI1IiEiISIRIkUSISIhEjESJSIxEiEiISIhIiESMRIhIiEiESI1IiEiESIlMiEiIRI1IiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACISIRIjUiJSJQ8jESJTIlEkESISIlIjESRQJQ8hEyISIVMjESISIhEjESJTIlIjUiISIhEiEiFUIhEiEiRRJA8jESETIlIkUSJSIxEjUiJSIxEiEiJSI1IiUSYPIVQiUiMRIhIhUyNRI1IiEiJSI1IiEiISIRIkUSISIhEjESJSIxEiEiISIhIiESMRIhIiEiESI1IiEiESIlMiEiIRI1IiAA0FAAA=
   mode: single
 ac_19:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIQJA8jUiJSIxEiEiJSI1IiEiISIlIiEiJSIxEjESISJFAjESISIhEjESJTIlIjUiISIhEjESJTIhEjESJTIlIjESISIlIjUiJSIxEiUyJSIxEiEiJSIlMiUiMRIlMiUiMRIhIiUSRSIlIjESJTIlIiEiISIhIiUiISIhIiESNSIhIiESMRIhIiEiIRIhIiEiIRIlMiEiIRJk8kECIRIxEiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIQJA8jUiJSIxEiEiJSI1IiEiISIlIiEiJSIxEjESISJFAjESISIhEjESJTIlIjUiISIhEjESJTIhEjESJTIlIjESISIlIjUiJSIxEiUyJSIxEiEiJSIlMiUiMRIlMiUiMRIhIiUSRSIlIjESJTIlIiEiISIhIiUiISIhIiESNSIhIiESMRIhIiEiIRIhIiEiIRIlMiEiIRJk8kECIRIxEiAA0FAAA=
   mode: single
 ac_20:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIRIxEiUiNSIhIiESNSIlIjESQQIlIjESRRIhIiESMRIlIjESISIRMiEiJSIlIjUiISIhIiESNSIhIhUyISIhIhEiMRJE8kUiJSIxEjUiJSIxEiEiJRJFIiUiMRIVQhUyISIhIiUiJSI1IjESJSI1IiEiIRIxEiUSQRIhIiEiJSIxEiEiISIRIjESETIRIjESMRIlIjESMRIhIiUiNSIlIjAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIRIxEiUiNSIhIiESNSIlIjESQQIlIjESRRIhIiESMRIlIjESISIRMiEiJSIlIjUiISIhIiESNSIhIhUyISIhIhEiMRJE8kUiJSIxEjUiJSIxEiEiJRJFIiUiMRIVQhUyISIhIiUiJSI1IjESJSI1IiEiIRIxEiUSQRIhIiEiJSIxEiEiISIRIjESETIRIjESMRIlIjESMRIhIiUiNSIlIjAA0FAAA=
   mode: single
 ac_21:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIRIxEiUyRQIxEiEiJSJVAiEiIRI1IkECRQIhIiEiESIVQkECQPIxEiEiRQI1IiUSQRIhIiEiFTJBAnTSMRIlMkDyISIlIjUiNSJA8iUiVQIxEiEiJSI1IiUiUPIlMiUiQQIRMhUyNSIlIjESFTI1AkEiESIxEhVCIRIxEiEiFTIxEiEiISIRIiEiISIhIiESITI1EkDyUPIRMiUiVQIhIiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIRIxEiUyRQIxEiEiJSJVAiEiIRI1IkECRQIhIiEiESIVQkECQPIxEiEiRQI1IiUSQRIhIiEiFTJBAnTSMRIlMkDyISIlIjUiNSJA8iUiVQIxEiEiJSI1IiUiUPIlMiUiQQIRMhUyNSIlIjESFTI1AkEiESIxEhVCIRIxEiEiFTIxEiEiISIRIiEiISIhIiESITI1EkDyUPIRMiUiVQIhIiAA0FAAA=
   mode: single
 ac_22:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIQIxEiUSVRIxEjECRRIlEkESISI1EjESJTIhIiESISIVMkECQQIhIiESRRI1IiUiISIRMjECFUIRMiUiNSIxAkECETIlElUSJSIxEjUiNRIxEiEiNRJFEiUyIRIlMkUCQQJBAjUSNSIlIjESFUIlIkECMRIxAjUiISIhEjESNSIhIhEiETIRMhEyIRIxEiEiIRIlMiEiISIRIhUyMSIlIiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIQIxEiUSVRIxEjECRRIlEkESISI1EjESJTIhIiESISIVMkECQQIhIiESRRI1IiUiISIRMjECFUIRMiUiNSIxAkECETIlElUSJSIxEjUiNRIxEiEiNRJFEiUyIRIlMkUCQQJBAjUSNSIlIjESFUIlIkECMRIxAjUiISIhEjESNSIhIhEiETIRMhEyIRIxEiEiIRIlMiEiISIRIhUyMSIlIiAA0FAAA=
   mode: single
 ac_23:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACESIhEjUiJSIhIkECJSI1IiEiISIVMiEiJRJBEiEiISIlIiEiISIhEjESJSI1IiUyIRIxEiEiJSIxEiUyJQJVIiEiIRI1EjUiNSIhIiUiNSIhIiESNQJVIiUiISIk8mUiISIhEjUiJSI1IiEiJSIlMiEiESIxEjUiIRIxEjESJSIxEiEiISIhIiESISIhIiESMRI1IiESMRIxEiUiMRIRMhAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACESIhEjUiJSIhIkECJSI1IiEiISIVMiEiJRJBEiEiISIlIiEiISIhEjESJSI1IiUyIRIxEiEiJSIxEiUyJQJVIiEiIRI1EjUiNSIhIiUiNSIhIiESNQJVIiUiISIk8mUiISIhEjUiJSI1IiEiJSIlMiEiESIxEjUiIRIxEjESJSIxEiEiISIhIiESISIhIiESMRI1IiESMRIxEiUiMRIRMhAA0FAAA=
   mode: single
 ac_24:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACISIRIiUiNSIxEiEiJSI1IiEiESIlMiEiJSIxEiEiQQIVMiEiISIhEiEiJSI1IhVCIRIhIiEiJSI1IiEiISIRIjESETIlIiUyJSIxEiUyJSIxEiEiJSI1IiUiMRIlIjUiMRIhIiUiJTIlIiEiJSI1IhEyISIhEiUyISIhEjESJSIxEiEiETIhIhEiMRIRMiESMRI1IiEiIRIhIiEiJSI1IiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACISIRIiUiNSIxEiEiJSI1IiEiESIlMiEiJSIxEiEiQQIVMiEiISIhEiEiJSI1IhVCIRIhIiEiJSI1IiEiISIRIjESETIlIiUyJSIxEiUyJSIxEiEiJSI1IiUiMRIlIjUiMRIhIiUiJTIlIiEiJSI1IhEyISIhEiUyISIhEjESJSIxEiEiETIhIhEiMRIRMiESMRI1IiEiIRIhIiEiJSI1IiAA0FAAA=
   mode: single
 ac_25:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACESIhEjUiJSIxEiEiJTIlIhEyISIlIiEiJSIxEjESISIVMiEiISIhEjESJTIlIiUyISIhEiEiNSIlIiEiISIlIiEiISIVMiUyJSIxEhVCJSIRMiEiJSIlMiUiMRIlIjUiISIhIiUiJTIlIhEyJSI1IiEiISIhEiUyISIhEjESJSIxEjESISIhIhEiMRIhIiEiIRI1IiEiIRIxEiEiJRJBEiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACESIhEjUiJSIxEiEiJTIlIhEyISIlIiEiJSIxEjESISIVMiEiISIhEjESJTIlIiUyISIhEiEiNSIlIiEiISIlIiEiISIVMiUyJSIxEhVCJSIRMiEiJSIlMiUiMRIlIjUiISIhIiUiJTIlIhEyJSI1IiEiISIhEiUyISIhEjESJSIxEjESISIhIhEiMRIhIiEiIRI1IiEiIRIxEiEiJRJBEiAA0FAAA=
   mode: single
 ac_26:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACERIhIhUiRSJBAhEiRRIlIjESISIVMjESJTJA8jESMRIlIlDyISIhIkDyJTIlIjUiISIhIhEiRRIlIjESJTIhEiEiISIlIiUyJSJQ8hVCJSIxEiEiFTI1IiUiQQJFAlUCISIRMiUiJRJlAiEiJRJFIiEiIRIhIiUyIRIxEiEiFTIxEhEyISIRIiEiMRIhIiESMRIlIjESISIhIiESMRIlMiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACERIhIhUiRSJBAhEiRRIlIjESISIVMjESJTJA8jESMRIlIlDyISIhIkDyJTIlIjUiISIhIhEiRRIlIjESJTIhEiEiISIlIiUyJSJQ8hVCJSIxEiEiFTI1IiUiQQJFAlUCISIRMiUiJRJlAiEiJRJFIiEiIRIhIiUyIRIxEiEiFTIxEhEyISIRIiEiMRIhIiESMRIlIjESISIhIiESMRIlMiAA0FAAA=
   mode: single
 ac_27:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACIRIhIiUiNSIhIiEiJSIlMiESISIlMiESJTIhIiESISIlMiESISIhIiEiJSI1IiUiMRIhIiESJTIlIjESJTIlEkESISIlIjUiJSIxEiUyJSIxEiEiJSI1IiUiMRIlMiUiMRIhIiUiNSIlIjESJTIlIjESISIhIiUiISIhIiESJTIhIhEiISIhIiESISIRMiEiIRI1AkEiESIxEiEiISIhEiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACIRIhIiUiNSIhIiEiJSIlMiESISIlMiESJTIhIiESISIlMiESISIhIiEiJSI1IiUiMRIhIiESJTIlIjESJTIlEkESISIlIjUiJSIxEiUyJSIxEiEiJSI1IiUiMRIlMiUiMRIhIiUiNSIlIjESJTIlIjESISIhIiUiISIhIiESJTIhIhEiISIhIiESISIRMiEiIRI1AkEiESIxEiEiISIhEiAA0FAAA=
   mode: single
 ac_28:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkAB8TIhIiUiJTIhEjESNSIlIjESISIlEjEiJSIxEiEiETIlIiEiIRIxEjESJSI1IiUiMRIhIiEiJSIlEkUiMRIhIiESMRIlMiUiNRIxEiUyJSIxEiEiJSI1IiUiMRIlMiUiMRIhIiUSNTIlIjESJSI1IhEyIRIhIjUiIRIxEiEiJSIxEiEiISIhEjESISIhIhEiMRIhIiUiNSIVMjUiJSI1IiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkAB8TIhIiUiJTIhEjESNSIlIjESISIlEjEiJSIxEiEiETIlIiEiIRIxEjESJSI1IiUiMRIhIiEiJSIlEkUiMRIhIiESMRIlMiUiNRIxEiUyJSIxEiEiJSI1IiUiMRIlMiUiMRIhIiUSNTIlIjESJSI1IhEyIRIhIjUiIRIxEiEiJSIxEiEiISIhEjESISIhIhEiMRIhIiUiNSIVMjUiJSI1IiAA0FAAA=
   mode: single
 ac_29:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACERIhIiUiNSIhIiESNSIlIjESISIlIjESFUJBAiESISIVMjESISIhIiEiRQJFAjUiMRIhIiESJTIlIiUSYQIVIlECETIVMkUSRQIxEhUyNQJBIiEiJSI1IiUiQQIlIjUiISJA8jUiJSI1IiEiRQI1IiEiIRJBAiUyIRIxEkECJSIxEhEyISIhEjESETIhIiESISIhIiUiRRIlIjUiJSIxEjAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACERIhIiUiNSIhIiESNSIlIjESISIlIjESFUJBAiESISIVMjESISIhIiEiRQJFAjUiMRIhIiESJTIlIiUSYQIVIlECETIVMkUSRQIxEhUyNQJBIiEiJSI1IiUiQQIlIjUiISJA8jUiJSI1IiEiRQI1IiEiIRJBAiUyIRIxEkECJSIxEhEyISIhEjESETIhIiESISIhIiUiRRIlIjUiJSIxEjAA0FAAA=
   mode: single
 ac_fan:
   sequence:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_rm4_remote
-    data:
-      command: b64:JgCkACASIhEjUiJSIxEjESJTIlIiEiISIlIjESISIhIiESJTIlIjESMRIhIiUiISIhIiEiIRIxEiEiJTIhEjUiJSI1IhEyISIlIiUyJSIhIiUyJSIhIiEiFTI1IiUiMRI1IiUiMRIRMiUiNSIlIjESNSIlIjESISIhIiUiMRIRMiEiJSIhIiEiETIhEjESISIhIiESMRIlMiESMRIlMiEiJSIhIiAA0FAAA=
+    - service: remote.send_command
+      target:
+        entity_id: remote.broadlink_rm4_remote
+      data:
+        command: b64:JgCkACASIhEjUiJSIxEjESJTIlIiEiISIlIjESISIhIiESJTIlIjESMRIhIiUiISIhIiEiIRIxEiEiJTIhEjUiJSI1IhEyISIlIiUyJSIhIiUyJSIhIiEiFTI1IiUiMRI1IiUiMRIRMiUiNSIlIjESNSIlIjESISIhIiUiMRIRMiEiJSIhIiEiETIhEjESISIhIiESMRIlMiESMRIlMiEiJSIhIiAA0FAAA=
   mode: single
 reload_local_tuya:
   alias: Reload Local Tuya
   sequence:
-  - service: homeassistant.reload_config_entry
-    data: {}
-    target:
-      entity_id:
-      - fan.fan
-      - light.fan_led
-      - light.first_floor_corner
-      - light.first_floor_light
-      - light.first_floor_stairway
-      - light.second_floor_corner
-      - light.second_floor_light
-      - light.second_floor_stairway
-      - light.hall_tube_light
-      - light.living_room_light
-      - light.shelf_light
-      - light.top_light
-      - light.wipro_tube_light
-      - switch.rice_string_1
-      - switch.rice_string_2
-      - switch.monitor
-      - switch.washing_machine
-      - switch.workstation
-      - switch.ricelight_l
-      - switch.ricelight_r
+    - service: homeassistant.reload_config_entry
+      data: {}
+      target:
+        entity_id:
+          - fan.fan
+          - light.fan_led
+          - light.first_floor_corner
+          - light.first_floor_light
+          - light.first_floor_stairway
+          - light.second_floor_corner
+          - light.second_floor_light
+          - light.second_floor_stairway
+          - light.hall_tube_light
+          - light.living_room_light
+          - light.shelf_light
+          - light.top_light
+          - light.wipro_tube_light
+          - switch.rice_string_1
+          - switch.rice_string_2
+          - switch.monitor
+          - switch.washing_machine
+          - switch.workstation
+          - switch.ricelight_l
+          - switch.ricelight_r
   mode: single
   icon: mdi:reload-alert
 hall_tubelight_white:
   alias: Hall Tubelight White
   sequence:
-  - service: light.turn_on
-    data:
-      color_temp: 153
-      brightness: 255
-      transition: 4
-    target:
-      entity_id: light.hall_tube_light
+    - service: light.turn_on
+      data:
+        color_temp: 153
+        brightness: 255
+        transition: 4
+      target:
+        entity_id: light.hall_tube_light
   mode: single
 update_all_phone_sensors:
   alias: Update all phone sensors
   sequence:
-  - service: notify.all_phones
-    data:
-      message: command_update_sensors
+    - service: notify.all_phones
+      data:
+        message: command_update_sensors
   mode: single
   icon: mdi:cellphone-arrow-down
 nexus_disable_km:
   alias: Nexus Disable KM
   sequence:
-  - service: fullykiosk.load_url
-    data:
-      entity_id: media_player.nexus_7_media_player
-      url: http://192.168.0.168:8123/lovelace/8?deviceID=nexus?kiosk?disable_km
+    - service: fullykiosk.load_url
+      data:
+        entity_id: media_player.nexus_7_media_player
+        url: http://192.168.0.168:8123/lovelace/8?deviceID=nexus?kiosk?disable_km
   mode: single
 git_push:
   alias: Git Push
   sequence:
-  - service: shell_command.gitcommit
-    data: {}
+    - service: shell_command.git_commit_push
+      data: {}
   mode: single
   icon: mdi:git
 git_push_ha_version:
-  alias: Git Push - Code Update
+  alias: Git Push - Core Update
   sequence:
-  - service: shell_command.git_version_update_push
-    data: {}
+    - service: shell_command.git_core_update_push
+      data: {}
   mode: single
   icon: mdi:git
-

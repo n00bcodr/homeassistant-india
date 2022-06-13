@@ -50,7 +50,7 @@
     downstairs_power_failed:
       friendly_name: "Downstairs Power"
       value_template: >-
-        {{ not  ( (is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable') ) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('media_player.akashavani', 'unavailable') ) ) }}
+        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('switch.wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
       icon_template: "{{ iif(is_state('binary_sensor.downstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     upstairs_power_failed:
