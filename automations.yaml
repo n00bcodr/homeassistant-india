@@ -106,6 +106,7 @@
         tag: sunset
         notification_icon: mdi:weather-sunset
         color: '#f5c905'
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sunset_1f307.png
   - delay:
       hours: 0
       minutes: 0
@@ -207,6 +208,7 @@
           - action: URI
             title: Open Tuya
             uri: app://com.tuya.smart
+          icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/warning_26a0-fe0f.png
   mode: single
 - id: den_as_it_was
   alias: 🏰Den as it was
@@ -391,6 +393,7 @@
       data:
         notification_icon: mdi:water-pump
         color: blue
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/droplet_1f4a7.png
   - service: tts.google_translate_say
     data:
       entity_id: media_player.family_room_mini
@@ -470,6 +473,7 @@
     data:
       message: Turning off front yard lights.
       title: Good Night 💤
+      icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sleeping-face_1f634.png
   mode: single
 - id: frontyard_ricelights
   alias: 💡Front Yard Rice Lights - Turn off at Sunrise
@@ -582,6 +586,7 @@
       title: Wash Cycle Complete
       data:
         notification_icon: mdi:washing-machine
+        icon_url: https://www.flaticon.com/free-icon/washing-machine_3003984
   - service: notify.mobile_app_pavanthanuj
     data:
       message: Turning off the Washing Machine.
@@ -624,6 +629,7 @@
         subject: You are running {{states('sensor.current_version') }}, the latest
           version is {{ states('sensor.docker_hub_beta') }}.
         clickAction: /config/dashboard
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/partying-face_1f973.png
   mode: single
 - id: fill_the_tank
   alias: 💧Fill the tank
@@ -685,6 +691,7 @@
           title: 'NO'
         notification_icon: mdi:motion-sensor-off
         tag: den_off
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/ninja_light-skin-tone_1f977-1f3fb_1f3fb.png
   mode: single
 - id: spotify_playback
   alias: 🎵Spotify Selected Device Force playback
@@ -1985,6 +1992,7 @@
         - action: play
           title: 'No'
         notification_icon: mdi:play-outline
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/television_1f4fa.png
   - wait_for_trigger:
     - platform: event
       event_type: mobile_app_notification_action
@@ -2104,4 +2112,40 @@
           entity_id:
           - switch.plasma_ball
     default: []
+  mode: single
+- id: '1655137751596'
+  alias: ⚙️Tag Github with version when core updated
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.current_version
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition: []
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      message: Update tag in GitHub?
+      title: Home Assistant Updated!
+      data:
+        notification_icon: mdi:git
+        icon_url: https://github.com/home-assistant/assets/blob/master/logo/logo-small.png?raw=true
+        color: red
+        actions:
+        - action: tag_update
+          title: Let's do it!
+        - action: URI
+          title: Open Repo
+          uri: https://github.com/n00bcodr/homeassistant
+  - wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: tag_update
+    continue_on_timeout: false
+  - service: shell_command.git_core_update_push
+    data: {}
   mode: single

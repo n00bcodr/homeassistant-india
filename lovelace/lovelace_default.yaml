@@ -570,11 +570,18 @@ views:
     type: custom:swipe-card
     view_layout:
       column: 3
-  - icon: mdi:cellphone-cog
+  - double_tap_action:
+      action: none
+    hold_action:
+      action: none
+    icon: mdi:cellphone-cog
     icon_color: blue
     multiline_secondary: true
-    primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}} {{ states.device_tracker.oneplus_10pro.attributes.connection_type
-      | replace("band","") | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
+    primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}} - {{
+      states.device_tracker.oneplus_10pro.attributes.connection_type | replace("band","")
+      | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
+    tap_action:
+      action: none
     type: custom:mushroom-template-card
   - cards:
     - buttonStyle: 'font-size: 14px;'
