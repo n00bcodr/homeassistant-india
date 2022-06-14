@@ -1,7 +1,7 @@
 {
     "manufacturer": "Voltas",
     "supportedModels": [
-      ""
+      "VOLTAS INV/AC 1.5T 183V MZJ3 3SVOLTAS"
     ],
     "supportedController": "Broadlink",
     "commandsEncoding": "Base64",
