@@ -265,7 +265,7 @@ den_tubelight_white:
         color_temp: 125
       target:
         entity_id:
-          - light.wipro_tube_light
+          - light.den_tube_light
 spotify_start:
   alias: "Spotify: Start Playback"
   sequence:
@@ -474,14 +474,14 @@ reload_local_tuya:
           - light.living_room_light
           - light.shelf_light
           - light.top_light
-          - light.wipro_tube_light
+          - light.den_tube_light
           - switch.rice_string_1
           - switch.rice_string_2
           - switch.monitor
           - switch.washing_machine
           - switch.workstation
-          - switch.ricelight_l
-          - switch.ricelight_r
+          - switch.rice_lights_l
+          - switch.rice_lights_r
   mode: single
   icon: mdi:reload-alert
 hall_tubelight_white:

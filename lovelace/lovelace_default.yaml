@@ -393,7 +393,7 @@ views:
         tap_action:
           action: call-service
           service: script.den_tubelight_white
-      entity: light.wipro_tube_light
+      entity: light.den_tube_light
       toggle: true
       type: custom:multiple-entity-row
     - buttons:
@@ -467,6 +467,7 @@ views:
       toggle: true
       type: custom:multiple-entity-row
     - entity: switch.geyser
+      name: Geyser
       secondary_info: last-updated
     - type: section
     - buttons:
@@ -1799,8 +1800,8 @@ views:
         name: Tube Light
         toggle: true
         type: custom:multiple-entity-row
-      - entity: switch.ricelight_l
-      - entity: switch.ricelight_r
+      - entity: switch.rice_lights_l
+      - entity: switch.rice_lights_r
       - entity: light.rgb1
       - entity: light.rgb2
       - entity: binary_sensor.pavanthanuj

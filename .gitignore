@@ -10,7 +10,6 @@
 *.DS_Store*
 *pickle
 *tools/
-*.HA_VERSION
 # Ignore folders.
 .storage
 .cloud

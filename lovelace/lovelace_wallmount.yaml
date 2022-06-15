@@ -1423,14 +1423,14 @@ views:
                       browser_mod:
                         card:
                           brightness_icon: brightness-7
-                          entity: light.wipro_tube_light
+                          entity: light.den_tube_light
                           hide_header: true
                           show_slider_percent: true
                           type: custom:light-entity-card
                         command: popup
                         deviceID: this
                         hide_header: true
-              entity: light.wipro_tube_light
+              entity: light.den_tube_light
               template: rgb_light_button
               type: custom:button-card
             - entity: switch.den_fan
@@ -1681,6 +1681,12 @@ views:
         Hall:
           cards:
           - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+                - height: 100px
+              type: custom:button-card
             - custom_fields:
                 cl:
                   card:
@@ -1700,15 +1706,18 @@ views:
               icon: mdi:lightbulb-fluorescent-tube-outline
               template: ww_light_button
               type: custom:button-card
-            - entity: switch.hall_fan
-              template: fan_button
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+                - height: 100px
               type: custom:button-card
             type: horizontal-stack
           - cards:
-            - entity: switch.ricelight_l
+            - entity: switch.rice_lights_l
               template: light_button_no_brightness
               type: custom:button-card
-            - entity: switch.ricelight_r
+            - entity: switch.rice_lights_r
               template: light_button_no_brightness
               type: custom:button-card
             type: horizontal-stack

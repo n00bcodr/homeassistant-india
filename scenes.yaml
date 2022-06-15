@@ -1,7 +1,7 @@
 - id: "1613729241622"
   name: Den Tube Light White
   entities:
-    light.wipro_tube_light:
+    light.den_tube_light:
       min_mireds: 153
       max_mireds: 370
       brightness: 255
