@@ -53,16 +53,16 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 
 ### <a name="fans">Fans</a> | [Go to Menu](#menu) |
 - [Atomberg Renesa Smart+](https://atomberg.com/shop/ceiling-fans/atomberg-renesa-smart-plus-bldc-motor-with-remote-3-blade-ceiling-fan/) x 1
-- [Halonix Smart IOT ceiling fan kit](https://www.amazon.in/gp/product/B07NBW5TT6/) x 1
+- [Halonix Smart IOT ceiling fan kit](https://amzn.to/3tIxjMC) x 1
 ---
 
 ### <a name="outlets">Outlets & Switches</a> | [Go to Menu](#menu) |
-- [Wipro 16A Smart Plugs](https://www.amazon.in/Wipro-Monitoring-Appliances-Microwave-Conditioners/dp/B08HN9Q2SZ) x 2
-- [Wipro 10A Smart Plugs](https://www.amazon.in/gp/product/B08HNB2FSH) x 5
-- [Sonoff POW R2](https://sonoff.tech/product/diy-smart-switch/powr2/) x 1
-- [Sonoff Dual R2](https://sonoff.tech/product/diy-smart-switch/dualr2/) x 3
-- [Sonoff Basic R2](https://sonoff.tech/product/diy-smart-switch/basicr2/) x 4
-- [Sonoff Mini R2](https://sonoff.tech/product/diy-smart-switch/minir2/) x 2
+- [Wipro 16A Smart Plugs](https://amzn.to/39uMfY7) x 2
+- [Wipro 10A Smart Plugs](https://amzn.to/3xTLrnR) x 5
+- [Sonoff POW R2](https://amzn.to/3xCmD3d) x 1
+- [Sonoff Dual R2](https://amzn.to/3OmUK62) x 3
+- [Sonoff Basic R2](https://amzn.to/3tGrDTo) x 4
+- [Sonoff Mini R2](https://amzn.to/3aVsvwT) x 2
 
 
 ---
@@ -73,12 +73,12 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 - [Google Home](https://www.flipkart.com/google-home-assistant-smart-speaker/p/itm003b8619d4670) x 1
 - [Google Nest Hub Max](https://store.google.com/us/product/google_nest_hub_max?hl=en-US) x 1
 - [Lenovo Smart Clock](https://www.flipkart.com/lenovo-smart-clock-google-assistant-speaker/p/itm39f6a1348e45e) x 1
-- [Amazon Echo Dot 3rd Gen](https://www.amazon.in/Echo-Dot-3rd-Gen/dp/B07PFFMP9P) x 1
+- [Amazon Echo Dot 3rd Gen](https://amzn.to/3QtkPCf) x 1
 - [Amazon Echo Dot 2nd Gen](https://www.amazon.in/Amazon-RS03QR-Echo-Dot-Black/dp/B072DR5HYL) x 1
 ---
 ### <a name="media">Media</a> | [Go to Menu](#menu) |
 - [Sony Bravia KD-65X85J](https://www.sony.co.in/electronics/televisions/x85j-series) x 1
-- [OnePlus Y Series](https://www.amazon.in/OnePlus-inches-Ready-Android-32Y1/dp/B08B42LWKN) x 1
+- [OnePlus Y Series](https://amzn.to/3Hzm7aN) x 1
 - [LG webOS TV 49UF690T](https://www.lg.com/in/support/product/lg-49UF690T.ATR) x 1
 - [Chromecast with Google TV](https://store.google.com/us/product/chromecast_google_tv?hl=en-US) x 1
 - [Google Chromecast](https://store.google.com/us/product/chromecast?hl=en-GB) x 1
@@ -98,27 +98,27 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 
 ---
 ### <a name="cameras">Cameras</a> | [Go to Menu](#menu) |
-- [HIKVISION DS-7A04HGHI-F1](https://www.amazon.in/Hikvision-Upgraded-4Channel-DS-7A04HGHI-F1-Turbo/dp/B017WNRG5E) with 4 cameras
-- [TP-LINK Tapo C200](https://www.amazon.in/gp/product/B07XLML2YS) x 1
-- [TP-LINK Tapo C100](https://www.amazon.in/gp/product/B083V41T6M) x 1
+- [HIKVISION DS-7A04HGHI-F1](https://amzn.to/3b7ZHRP) with 4 cameras
+- [TP-LINK Tapo C200](https://amzn.to/39Ac0WS) x 1
+- [TP-LINK Tapo C100](https://amzn.to/3N0Qecn) x 1
 
 ---
 ### <a name="appliances">Appliances</a> | [Go to Menu](#menu) |
-- [Mi Air Purifier 3](https://www.amazon.in/Mi-Purifier-Filter-Smart-Connectivity/dp/B0811VCGL5) x 1
+- [Mi Air Purifier 3](https://amzn.to/3QnPfGl) x 1
 - LG Refrigerator
 - [Xbox One](https://en.wikipedia.org/wiki/Xbox_One) x 1
 ---
 ### <a name="network">Network</a> | [Go to Menu](#menu) |
-- [TP-LINK Deco X60](https://www.amazon.in/gp/product/B08DYQLVPL) x 2
-- [TP-LINK Deco M5](https://www.amazon.in/gp/product/B072BZ62QS) x 3
-- [TP-LINK Deco M3W](https://www.amazon.in/gp/product/B07TT5752B) x 1
-- [TP-Link AC1200 Archer A6](https://www.amazon.in/gp/product/B07W9KYT62) x 1 (not being used)
+- [TP-LINK Deco X60](https://amzn.to/3xZRA2V) x 2
+- [TP-LINK Deco M5](https://amzn.to/3b4ETLa) x 3
+- [TP-LINK Deco M3W](https://amzn.to/3xY0Iox) x 1
+- [TP-Link AC1200 Archer A6](https://amzn.to/3Hwrs2F) x 1 (not being used)
 ---
 
 ### <a name="ir">IR Blasters</a> | [Go to Menu](#menu) |
-- [Broadlink RM4 Mini](https://www.amazon.in/gp/product/B0824486ZR) with temperature and humidity sensor
+- [Broadlink RM4 Mini](https://amzn.to/3N2an1P) with temperature and humidity sensor
 - [Broadlink RM MINI-3](https://www.amazon.in/gp/product/B076NRKR4B)
-- [Oakremote](https://www.amazon.in/OAKTER-Oakremote-Universal-Compatibility-Conditioner/dp/B07T65KSLC)
+- [Oakremote](https://amzn.to/3HwrKqh)
 ---
 
 ### <a name="hubs">Hubs</a> | [Go to Menu](#menu) |
@@ -133,7 +133,7 @@ No specific climate devices but two IR Blasters used to control ACs  using [Smar
 
 ---
 ### <a name="other">Other Hardware</a> | [Go to Menu](#menu) |
-- [Lenovo Tab M10 HD 2nd Gen](https://www.amazon.in/gp/product/B08ZYT3MGD) - main dashboard
+- [Lenovo Tab M10 HD 2nd Gen](https://amzn.to/3QrldBm) - main dashboard
 - [Asus Nexus 7 Tablet](https://www.gsmarena.com/asus_google_nexus_7-4850.php) - personal dashboard
 - [Canon imageCLASS MF244dw](https://in.canon/en/support/imageCLASS%20MF244dw/model)
 - [HP Ink Tank Wireless 410 series](https://support.hp.com/in-en/product/hp-ink-tank-wireless-410-series/16180953)
