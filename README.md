@@ -42,17 +42,18 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 ---
 
 ### <a name="lights">Lights</a> | [Go to Menu](#menu) |
-- [Wipro Smart Batons](https://www.amazon.in/Batten-Compatible-Amazon-Google-Assistant/dp/B07P7JNQ56) x 2
-- [Wipro RGB Baton](https://www.amazon.in/wipro-Million-Compatible-Assistant-DS22000/dp/B08D19X3LS) x 1
-- [Wipro 9W WW Bulbs](https://www.amazon.in/gp/product/B07WZNNYDM) x 6
-- [Wipro 9W RGB Bulbs](https://www.amazon.in/gp/product/B08C83HKJS) x 5
-- [Philips Wiz 9W RGB Bulb](https://www.amazon.in/Philips-Connected-Dimmable-Compatible-Assistant/dp/B07XD8G2HR) x 1
+- [Wipro Smart Batons](https://amzn.to/3QuzgpS) x 1
+- [Crompton Immensa Smart Batten](https://amzn.to/3HAG7dl) x 1
+- [Wipro RGB Baton](https://amzn.to/3MZ1zcZ) x 1
+- [Wipro 9W WW Bulbs](https://amzn.to/3xyKFMJ) x 6
+- [Wipro 9W RGB Bulbs](https://amzn.to/3N3Es19) x 5
+- [Philips Wiz 9W RGB Bulb](https://amzn.to/3O5V1KZ) x 1
 - [WS2812B ARGB](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf) strip controlled by [ESP8266](https://www.espressif.com/en/products/socs/esp8266) running [WLED](https://github.com/Aircoookie/WLED) x 1
-- [Protium WiFi RGBW Light Strip](https://www.amazon.in/gp/product/B081Z7L2V3) x 1
+- [Protium WiFi RGBW Light Strip](https://amzn.to/3bbb1Ni) x 1
 ---
 
 ### <a name="fans">Fans</a> | [Go to Menu](#menu) |
-- [Atomberg Renesa Smart+](https://atomberg.com/shop/ceiling-fans/atomberg-renesa-smart-plus-bldc-motor-with-remote-3-blade-ceiling-fan/) x 1
+- [Atomberg Renesa Smart+](https://amzn.to/3N4rPCG) x 1
 - [Halonix Smart IOT ceiling fan kit](https://amzn.to/3tIxjMC) x 1
 ---
 
@@ -86,9 +87,9 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 ---
 ### <a name="sensors">Sensors</a> | [Go to Menu](#menu) |
 - [SONOFF SNZB-04 ZigBee Wireless Door/Window Sensor](https://sonoff.tech/product/smart-home-security/snzb-04/) x 2
-- [SONOFF SNZB-03 ZigBee Motion Sensor](https://sonoff.tech/product/smart-home-security/snzb-03/) x 2
-- [SONOFF SNZB-02 ZigBee Temperature & Humidity Sensor](https://sonoff.tech/product/smart-home-security/snzb-02/) x 1
-- [SONOFF SNZB-01 ZigBee Wireless Switch](https://sonoff.tech/product/smart-home-security/snzb-01/) x 1
+- [SONOFF SNZB-03 ZigBee Motion Sensor](https://amzn.to/3xysUgE) x 2
+- [SONOFF SNZB-02 ZigBee Temperature & Humidity Sensor](https://amzn.to/3b31V4Z) x 1
+- [SONOFF SNZB-01 ZigBee Wireless Switch](https://amzn.to/3O5BYQW) x 1
 - [TRÅDFRI Remote Control](https://www.ikea.com/in/en/p/tradfri-remote-control-60443127) x 1
 - [TRÅDFRI Wireless Dimmer](https://www.ikea.com/in/en/p/tradfri-wireless-dimmer-white-90408599) x 1
 - [Aqara Vibration Sensor](https://www.aqara.com/en/vibration_sensor.html) x 1
@@ -105,7 +106,7 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 ---
 ### <a name="appliances">Appliances</a> | [Go to Menu](#menu) |
 - [Mi Air Purifier 3](https://amzn.to/3QnPfGl) x 1
-- LG Refrigerator
+- [LG Smart Refrigerator](https://www.lg.com/in/refrigerators/lg-GL-T432FPZ3)
 - [Xbox One](https://en.wikipedia.org/wiki/Xbox_One) x 1
 ---
 ### <a name="network">Network</a> | [Go to Menu](#menu) |
@@ -124,7 +125,7 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 ### <a name="hubs">Hubs</a> | [Go to Menu](#menu) |
 
 - [ConBee II](https://www.phoscon.de/en/conbee2) x 1
-- [SONOFF ZBBridge – Smart Zigbee Bridge](https://itead.cc/product/sonoff-zbbridge/) x 1
+- [SONOFF ZBBridge – Smart Zigbee Bridge](https://amzn.to/39GRunk) x 1
 
 ---
 ### <a name="climate">Climate</a> | [Go to Menu](#menu) |
@@ -136,15 +137,15 @@ No specific climate devices but two IR Blasters used to control ACs  using [Smar
 - [Lenovo Tab M10 HD 2nd Gen](https://amzn.to/3QrldBm) - main dashboard
 - [Asus Nexus 7 Tablet](https://www.gsmarena.com/asus_google_nexus_7-4850.php) - personal dashboard
 - [Canon imageCLASS MF244dw](https://in.canon/en/support/imageCLASS%20MF244dw/model)
-- [HP Ink Tank Wireless 410 series](https://support.hp.com/in-en/product/hp-ink-tank-wireless-410-series/16180953)
+- [HP Ink Tank Wireless 410 series](https://amzn.to/3mYtYFv)
 - [Tagreader](https://github.com/adonno/tagreader) x 1
 - [Multisensor](https://esphome.io/cookbook/bruh.html) x 2
 ---
 ### <a name="screenshots">Screenshots</a> | [Go to Menu](#menu) |
 ---
 ### <a name="graveyard">Graveyard☠️</a> | [Go to Menu](#menu) |
-- [Wipro 10A Smart Plugs](https://www.amazon.in/gp/product/B08HNB2FSH) x 1
-- [Sonoff Basic R2](https://sonoff.tech/product/diy-smart-switch/basicr2/) x 6
-- [Sonoff Mini R2](https://sonoff.tech/product/diy-smart-switch/minir2/) x 1
-- [Sonoff Basic Zigbee R3](https://sonoff.tech/product/diy-smart-switch/basiczbr3/) x 1
-- [Protium 16A Smart Wireless WIFI Switch](https://www.amazon.in/gp/product/B07W81L1V4) x 1
+- [Wipro 10A Smart Plug](https://amzn.to/3xTLrnR) x 1
+- [Sonoff Basic R2](https://amzn.to/3tGrDTo) x 6
+- [Sonoff Mini R2](https://amzn.to/3aVsvwT) x 1
+- [Sonoff Basic Zigbee R3](https://amzn.to/39BI9NO) x 1
+- [Protium 16A Smart Wireless WIFI Switch](https://amzn.to/3tKHWP0) x 1
