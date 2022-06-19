@@ -606,12 +606,16 @@ views:
     - artwork: full-cover
       entity: media_player.google_tv
       group: true
+      hide:
+        controls: true
+        icon: true
+        name: true
+        power: true
+        volume: true
       icon: mdi:google
-      info: short
       name: Google TV
-      sound_mode: full
-      source: full
-      toggle_power: false
+      source: icon
+      toggle_power: true
       type: custom:mini-media-player
       volume_stateless: false
     - cards:
@@ -638,15 +642,7 @@ views:
             type: custom:button-card
           - template: blank_button
             type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:video-input-component
-            name: Input
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: INPUT
-                entity_id: media_player.google_tv
-            template: menu_button
+          - template: blank_button
             type: custom:button-card
           type: custom:hui-element
         - row_type: section
@@ -681,6 +677,39 @@ views:
               service_data:
                 entity_id: media_player.google_tv
                 source: YouTube
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.google_tv
+            entity_picture: /local/icons/plex.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.google_tv
+                source: Plex
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.google_tv
+            entity_picture: /local/icons/disney.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.google_tv
+                source: Hotstar
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.google_tv
+            entity_picture: /local/icons/spotify.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.google_tv
+                source: Spotify
             template: logo_button
             type: custom:button-card
           type: custom:hui-element
@@ -1782,7 +1811,7 @@ views:
     name: Hall Motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: sensor.multisensor_1_light_2
+  - entity: sensor.multisensor_1_light
   - entity: sensor.multisensor_1_temperature
   - entity: sensor.multisensor_1_humidity
   cards:
@@ -2092,6 +2121,14 @@ views:
     tap_action:
       action: more-info
     title: Driveway Camera
+    type: picture-glance
+  - camera_image: camera.front_yard_camera
+    camera_view: live
+    entities:
+    - entity: binary_sensor.firstfloor_motion
+    tap_action:
+      action: more-info
+    title: First Floor Camera
     type: picture-glance
   icon: hass:cctv
   layout:
@@ -2576,7 +2613,10 @@ views:
       primary_info: state
       secondary_info: name
       type: custom:mushroom-entity-card
-    - entity: sensor.backup_state
+    - double_tap_action:
+        action: url
+        url_path: https://drive.google.com/drive/folders/1iDzbeGS-PLCnsDwG5i3dcOs1g-Ws4BjOhttps://drive.google.com/drive/folders/1iDzbeGS-PLCnsDwG5i3dcOs1g-Ws4BjO
+      entity: sensor.backup_state
       fill_container: false
       icon: mdi:google-drive
       icon_color: yellow
@@ -2584,13 +2624,18 @@ views:
       primary: '{{states.sensor.backup_state.attributes.size_in_google_drive}}'
       secondary: Google Drive Backup Size
       type: custom:mushroom-template-card
-    - entity: sensor.backup_state
+    - double_tap_action:
+        action: url
+        url_path: /hassio/backups
+      entity: sensor.backup_state
       fill_container: false
       icon: si:homeassistant
       icon_color: blue
       multiline_secondary: false
       primary: '{{states.sensor.backup_state.attributes.size_in_home_assistant}}'
       secondary: Homeassistant Local Backup Size
+      tap_action:
+        action: none
       type: custom:mushroom-template-card
     - entity: sensor.disk_use_percent
       icon_color: green
@@ -2599,58 +2644,58 @@ views:
       secondary_info: name
       type: custom:mushroom-entity-card
     type: vertical-stack
-  - chart_type: line
-    days_to_show: 30
-    entities:
-    - sensor.memory_use
-    period: day
-    stat_types:
-    - mean
-    - min
-    - max
-    title: Memory Use
-    type: statistics-graph
-  - cards:
-    - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.memory_use
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 2
-        name: Memory
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
-      type: horizontal-stack
-    mode: vertical
-    type: custom:stack-in-card
   - cards:
     - entities:
-      - icon: mdi:github
+      - icon: fab:git
         name: /n00bcodr/homeassistant
         type: weblink
         url: https://github.com/n00bcodr/homeassistant
       - entity: sensor.n00bcodr_homeassistant_latest_commit
         icon: mdi:source-commit-end
         name: Last Commit
-      type: entities
-    - content: Suggested Commit - files on date {{states.sensor.date_time.state}}
-      type: markdown
-    - entities:
+      - type: section
+      - icon: mdi:text
+        name: Suggested Commit - files on {{ now().timestamp() | timestamp_custom('%b
+          %d, %Y - %-I:%M %p') }}
+        tap_action: none
+        type: custom:template-entity-row
       - entity: input_text.git_commit_message
+        extend_paper_buttons_row:
+          buttons:
+          - icon: mdi:close
+            tap_action:
+              action: call-service
+              service: input_text.set_value
+              service_data:
+                value: "\u200E"
+              target:
+                entity_id: input_text.git_commit_message
+          - icon: fas:paste
+            tap_action:
+              action: call-service
+              service: script.git_commit_copy
+          position: right
         name: Commit Message
-      - ction_name: push!
-        entity: script.git_push
-        icon: mdi:git
-      - ction_name: push!
-        entity: script.git_push_ha_version
-        icon: mdi:git
+      - type: section
+      - buttons:
+        - entity: script.git_push
+          icon: mdi:upload-multiple
+        - entity: script.git_push_ha_version
+          icon: mdi:upload
+        type: custom:paper-buttons-row
+      - buttons:
+        - icon: mdi:git
+          name: Git Status
+          tap_action:
+            action: call-service
+            service: shell_command.git_status
+        type: custom:paper-buttons-row
+      icon: fab:github
+      title: Git
       type: entities
+    - aspect_ratio: 100%
+      type: iframe
+      url: http://homeassistant.local:8123/local/git_status.txt
     type: vertical-stack
   icon: mdi:server-network
   path: system_monitor
@@ -2946,81 +2991,163 @@ views:
     type: custom:stack-in-card
   - cards:
     - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.rm4_humidity
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#d35400'
-          value: 28
-        - color: '#ff1800'
-          value: 30
-        decimals: 1
-        entities:
-        - sensor.rm4_temperature
-        font_size: 70
-        hours_to_show: 6
-        line_color: '#e74c3c'
-        line_width: 5
-        name: Temperature
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
-      title: Den
-      type: horizontal-stack
+      - cards:
+        - align_icon: left
+          align_state: center
+          decimals: 1
+          entities:
+          - sensor.rm4_humidity
+          font_size: 70
+          hours_to_show: 6
+          line_color: skyblue
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        - align_icon: left
+          align_state: center
+          color_thresholds:
+          - color: '#f39c12'
+            value: 25
+          - color: '#d35400'
+            value: 29
+          - color: '#ff1800'
+            value: 30
+          decimals: 1
+          entities:
+          - sensor.rm4_temperature
+          font_size: 70
+          hours_to_show: 6
+          line_color: '#e74c3c'
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        title: Den
+        type: horizontal-stack
+      - cards:
+        - align_icon: left
+          align_state: center
+          decimals: 1
+          entities:
+          - sensor.temperature_and_humidity_humidity
+          font_size: 70
+          hours_to_show: 8
+          line_color: skyblue
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        - align_icon: left
+          align_state: center
+          color_thresholds:
+          - color: '#f39c12'
+            value: 25
+          - color: '#ff6703'
+            value: 28
+          - color: '#ff1800'
+            value: 33
+          decimals: 1
+          entities:
+          - sensor.temperature_and_humidity_temperature
+          font_size: 70
+          hours_to_show: 8
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        title: Hall
+        type: horizontal-stack
+      mode: vertical
+      type: custom:stack-in-card
     - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.temperature_and_humidity_humidity
-        font_size: 70
-        hours_to_show: 8
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 100
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#ff6703'
-          value: 28
-        - color: '#ff1800'
-          value: 33
-        decimals: 1
-        entities:
-        - sensor.temperature_and_humidity_temperature
-        font_size: 70
-        hours_to_show: 8
-        line_width: 5
-        name: Temperature
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
-      title: Hall
-      type: horizontal-stack
-    mode: vertical
+      - cards:
+        - align_icon: left
+          align_state: center
+          decimals: 1
+          entities:
+          - sensor.multisensor_2_humidity
+          font_size: 70
+          hours_to_show: 6
+          line_color: skyblue
+          line_width: 5
+          points_per_hour: 10
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        - align_icon: left
+          align_state: center
+          color_thresholds:
+          - color: '#f39c12'
+            value: 25
+          - color: '#d35400'
+            value: 28
+          - color: '#ff1800'
+            value: 30
+          decimals: 1
+          entities:
+          - sensor.multisensor_2_temperature
+          font_size: 70
+          hours_to_show: 6
+          line_color: '#e74c3c'
+          line_width: 5
+          points_per_hour: 10
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        title: Upstairs Hall
+        type: horizontal-stack
+      - cards:
+        - align_icon: left
+          align_state: center
+          decimals: 1
+          entities:
+          - sensor.multisensor_1_humidity
+          font_size: 70
+          hours_to_show: 6
+          line_color: skyblue
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        - align_icon: left
+          align_state: center
+          color_thresholds:
+          - color: '#f39c12'
+            value: 25
+          - color: '#d35400'
+            value: 28
+          - color: '#ff1800'
+            value: 30
+          decimals: 1
+          entities:
+          - sensor.multisensor_1_temperature
+          font_size: 70
+          hours_to_show: 6
+          line_color: '#e74c3c'
+          line_width: 5
+          points_per_hour: 30
+          show:
+            name: false
+          type: custom:mini-graph-card
+          update_interval: 10
+        title: Living Room
+        type: horizontal-stack
+      mode: vertical
+      type: custom:stack-in-card
+    mode: horizontal
     type: custom:stack-in-card
   - aggregate_func: max
     entities:
@@ -3163,22 +3290,24 @@ views:
         type: entity
       type: custom:mushroom-chips-card
     type: custom:stack-in-card
-  - entities:
-    - sensor.multisensor_2_humidity
-    - sensor.multisensor_2_light
-    - binary_sensor.multisensor_2_motion
-    - sensor.multisensor_2_temperature
-    state_color: true
-    title: Living Room
-    type: entities
-  - entities:
-    - sensor.multisensor_1_humidity
-    - sensor.multisensor_1_light_2
-    - binary_sensor.multisensor_1_motion
-    - sensor.multisensor_1_temperature
-    state_color: true
-    title: Hall
-    type: entities
+  - cards:
+    - entities:
+      - entity: sensor.multisensor_1_humidity
+      - entity: sensor.multisensor_1_light
+      - entity: binary_sensor.multisensor_1_motion
+      - entity: sensor.multisensor_1_temperature
+      state_color: true
+      title: Hall
+      type: entities
+    - entities:
+      - sensor.multisensor_2_humidity
+      - sensor.multisensor_2_light
+      - binary_sensor.multisensor_2_motion
+      - sensor.multisensor_2_temperature
+      state_color: true
+      title: Living Room
+      type: entities
+    type: vertical-stack
   - cards:
     - card:
         show_header_toggle: false
@@ -3358,114 +3487,19 @@ views:
       secondary: Prasad
       type: custom:mushroom-template-card
     type: vertical-stack
-  - cards:
-    - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.multisensor_2_humidity
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 30
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#d35400'
-          value: 28
-        - color: '#ff1800'
-          value: 30
-        decimals: 1
-        entities:
-        - sensor.multisensor_2_temperature
-        font_size: 70
-        hours_to_show: 6
-        line_color: '#e74c3c'
-        line_width: 5
-        name: Temperature
-        points_per_hour: 30
-        type: custom:mini-graph-card
-        update_interval: 1
-      title: Upstairs Hall
-      type: horizontal-stack
-    - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.multisensor_1_humidity
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 30
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#d35400'
-          value: 28
-        - color: '#ff1800'
-          value: 30
-        decimals: 1
-        entities:
-        - sensor.multisensor_1_temperature
-        font_size: 70
-        hours_to_show: 6
-        line_color: '#e74c3c'
-        line_width: 5
-        name: Temperature
-        points_per_hour: 30
-        type: custom:mini-graph-card
-        update_interval: 1
-      title: Living Room
-      type: horizontal-stack
-    mode: vertical
-    type: custom:stack-in-card
-  - cards:
-    - entities:
-      - entity: button.lenovo_tab_m10_hd_bring_to_foreground
-        name: Bring to Foreground
-      - entity: switch.lenovo_tab_m10_hd_kiosk_lock
-        name: Kiosk Lock
-      - entity: button.lenovo_tab_m10_hd_load_start_url
-        name: Load Start URL
-      - entity: switch.lenovo_tab_m10_hd_maintenance_mode
-        name: Maintenance Mode
-      - entity: switch.lenovo_tab_m10_hd_motion_detection
-        name: Motion Detection
-      - entity: button.lenovo_tab_m10_hd_reboot_device
-        name: Reboot Device
-      - entity: button.lenovo_tab_m10_hd_restart_browser
-        name: Restart Browser
-      - entity: light.lenovo_tab_m10_hd_screen
-        name: Screen
-      - entity: switch.lenovo_tab_m10_hd_screensaver
-        name: Screensaver
-      - entity: button.lenovo_tab_m10_hd_send_to_background
-        name: Send to Background
-      title: Lenovo Tab M10 HD
-      type: entities
-    - entity: media_player.lenovo_tab_m10_hd_media_player
-      type: media-control
-    columns: 1
-    square: false
-    type: grid
+  - align_icon: left
+    align_state: center
+    entities:
+    - sensor.multisensor_1_light
+    font_size: 75
+    hours_to_show: 6
+    line_color: '#e74c3c'
+    line_width: 1
+    points_per_hour: 10
+    show:
+      fill: false
+    type: custom:mini-graph-card
+    update_interval: 30
   icon: mdi:home-analytics
   path: network
   theme: ''
@@ -3485,6 +3519,9 @@ views:
         entity: sensor.rm4_temperature
       unit: "\xB0C"
     type: custom:mini-climate
+  - aspect_ratio: 100%
+    type: iframe
+    url: http://homeassistant.local:8123/local/git_status.txt
   path: test
   theme: Backend-selected
   title: test

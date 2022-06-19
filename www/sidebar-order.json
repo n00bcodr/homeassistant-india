@@ -2,14 +2,11 @@
   "order": [
     { "item": "Overview" },
     { "item": "Wall Mount" },
-    { "item": "YAML" },
     { "item": "HACS" },
     { "item": "Frigate" },
-    { "item": "Portainer" },
     { "item": "Studio Code Server" },
-    { "item": "Node-RED" },
     { "item": "Media" },
-    { "item": "Zigbee2mqtt" },
+    { "item": "Calendar" },
     {
       "new_item": true,
       "item": "Automations",

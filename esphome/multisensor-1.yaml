@@ -1,4 +1,4 @@
-substitutions:
+mdi-publishsubstitutions:
   name: multisensor-1
   friendly_name: Multisensor 1
 
@@ -36,7 +36,7 @@ sensor:
     pin: A0
     name: "${friendly_name} Light"
     device_class: illuminance
-    update_interval: 2s
+    update_interval: 30s
     unit_of_measurement: lx
     filters:
       - lambda: |-

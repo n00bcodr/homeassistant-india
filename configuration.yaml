@@ -8,7 +8,8 @@ homeassistant:
 logger:
   default: critical
   logs:
-    custom_components.localtuya: debug
+    homeassistant.components.shell_command: debug
+    homeassistant.components.command_line.sensor: debug
 
 ffmpeg:
 
@@ -80,6 +81,10 @@ spotcast:
   sp_dc: !secret sp_dc
   sp_key: !secret sp_key
 
+google:
+  client_id: !secret googlecalendar_clientid
+  client_secret: !secret googlecalendar_clientsecret
+
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
@@ -131,3 +136,4 @@ shell_command:
   lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
   git_core_update_push: bash /config/tools/git_core_update_push.sh "{{states.sensor.current_version.state}}"
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
+  git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
