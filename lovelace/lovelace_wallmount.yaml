@@ -2149,35 +2149,13 @@ views:
             type: custom:hui-element
           - row_type: section
             type: custom:hui-element
-          - card_type: horizontal-stack
-            cards:
-            - buttons:
-              - align_icons: left
-                icon: mdi:volume-minus
-                name: false
-                tap_action:
-                  action: call-service
-                  service: remote.send_command
-                  service_data:
-                    command: VolumeDown
-                    entity_id: remote.sony_bravia_tv
-              - align_icons: left
-                icon: mdi:volume-plus
-                name: false
-                tap_action:
-                  action: call-service
-                  service: remote.send_command
-                  service_data:
-                    command: VolumeUp
-                    entity_id: remote.sony_bravia_tv
-              type: custom:paper-buttons-row
-            - entity: media_player.sony_bravia_tv
-              full_row: true
-              grow: true
-              step: 1
-              toggle: false
-              type: custom:slider-entity-row
-            type: custom:hui-element
+          - entity: media_player.sony_bravia_tv
+            full_row: true
+            grow: true
+            hide_when_off: true
+            step: 1
+            toggle: false
+            type: custom:slider-entity-row
           - row_type: section
             type: custom:hui-element
           - card_type: horizontal-stack
@@ -2253,6 +2231,11 @@ views:
               template: icon_button
               type: custom:button-card
             - entity: remote.sony_bravia_tv
+              hold_action:
+                service: remote.send_command
+                service_data:
+                  command: Right
+                  entity_id: remote.sony_bravia_tv
               icon: mdi:arrow-right-bold
               name: Right
               tap_action:

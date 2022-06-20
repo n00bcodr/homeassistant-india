@@ -951,8 +951,6 @@ views:
     - entity: switch.upstairs_motor
       state: 'on'
     type: conditional
-  - entity: weather.weather
-    type: custom:weather-card
   - cards:
     - entity: fan.fan
       icon_animation: true
@@ -1574,35 +1572,13 @@ views:
             type: custom:hui-element
           - row_type: section
             type: custom:hui-element
-          - card_type: horizontal-stack
-            cards:
-            - buttons:
-              - align_icons: left
-                icon: mdi:volume-minus
-                name: false
-                tap_action:
-                  action: call-service
-                  service: remote.send_command
-                  service_data:
-                    command: VolumeDown
-                    entity_id: remote.sony_bravia_tv
-              - align_icons: left
-                icon: mdi:volume-plus
-                name: false
-                tap_action:
-                  action: call-service
-                  service: remote.send_command
-                  service_data:
-                    command: VolumeUp
-                    entity_id: remote.sony_bravia_tv
-              type: custom:paper-buttons-row
-            - entity: media_player.sony_bravia_tv
-              full_row: true
-              grow: true
-              step: 1
-              toggle: false
-              type: custom:slider-entity-row
-            type: custom:hui-element
+          - entity: media_player.sony_bravia_tv
+            full_row: true
+            grow: true
+            hide_when_off: true
+            step: 1
+            toggle: false
+            type: custom:slider-entity-row
           - row_type: section
             type: custom:hui-element
           - card_type: horizontal-stack
@@ -1833,6 +1809,7 @@ views:
       - entity: switch.rice_lights_r
       - entity: light.rgb1
       - entity: light.rgb2
+      - entity: light.wipro_bulb
       - entity: binary_sensor.pavanthanuj
       - entity: automation.hall_lights_on_when_motion_detected
       state_color: true
@@ -2355,11 +2332,15 @@ views:
         exclude:
         - state: unavailable
         include:
+        - name: Plex Media Server
+          type: weblink
+          url: http://homeassistant.local:32400/web/index.html#!/
         - name: /[Pp]lex/
       show_empty: false
       sort:
-        method: last_changed
-        reverse: true
+        ignore_case: false
+        method: domain
+        reverse: false
       type: custom:auto-entities
     type: vertical-stack
   - cards:
@@ -3506,23 +3487,3 @@ views:
   title: Network and Devices
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
-- badges: []
-  cards:
-  - entity: climate.den_ac
-    type: thermostat
-  - entity: climate.den_ac
-    type: custom:more-info-card
-  - entity: climate.den_ac
-    temperature:
-      round: 1
-      source:
-        entity: sensor.rm4_temperature
-      unit: "\xB0C"
-    type: custom:mini-climate
-  - aspect_ratio: 100%
-    type: iframe
-    url: http://homeassistant.local:8123/local/git_status.txt
-  path: test
-  theme: Backend-selected
-  title: test
-  visible: []

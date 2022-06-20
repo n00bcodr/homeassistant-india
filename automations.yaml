@@ -1216,7 +1216,7 @@
       device_name: Chotu
   mode: single
 - id: '1634446057008'
-  alias: Front Door Motion Notification on TV
+  alias: ⚙️Front Door Motion Notification on TV
   description: ''
   trigger:
   - platform: state
@@ -1964,7 +1964,7 @@
         color: red
   mode: single
 - id: '1654855270389'
-  alias: Send Notification to Stop Playing if Hall TV is off
+  alias: ⚙️Send Notification to Stop Playing if Hall TV is off
   description: ''
   trigger:
   - platform: device
@@ -2002,7 +2002,7 @@
       entity_id: media_player.hall_tv
     data: {}
 - id: '1654855758393'
-  alias: hacs_sensor_refresh
+  alias: ⚙️hacs_sensor_refresh
   trigger:
   - platform: event
     event_type: hacs/repository
@@ -2014,9 +2014,10 @@
   - service: homeassistant.update_entity
     target:
       entity_id: sensor.hacs
+    data: {}
   initial_state: true
 - id: '1654855874344'
-  alias: Convert Lovelace configuration to yaml
+  alias: ⚙️Convert Lovelace configuration to yaml
   description: ''
   trigger:
   - platform: event
@@ -2025,10 +2026,12 @@
   condition: []
   action:
   - service: shell_command.lovelace_default_convert
+    data: {}
   - service: shell_command.lovelace_wallmount_convert
+    data: {}
   mode: single
 - id: '1654857861013'
-  alias: Move music from Chotu
+  alias: 🏰Move music from Chotu
   description: ''
   trigger:
   - platform: state
@@ -2072,7 +2075,7 @@
       data: {}
   mode: single
 - id: '1654860387187'
-  alias: den_tubelight_laser
+  alias: 🏰den_tubelight_laser
   description: ''
   trigger:
   - platform: state
@@ -2148,7 +2151,7 @@
     data: {}
   mode: single
 - id: '1655643351108'
-  alias: Turn on hall lights if dark
+  alias: 💡Turn on hall lights if dark
   description: ''
   trigger:
   - type: illuminance
@@ -2157,10 +2160,13 @@
     entity_id: sensor.multisensor_1_light
     domain: sensor
     below: 20
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
   condition:
   - condition: sun
     before: sunset
-    before_offset: 00:01:00
   - condition: state
     entity_id: binary_sensor.hall_motion
     state: 'on'
