@@ -8,8 +8,7 @@ homeassistant:
 logger:
   default: critical
   logs:
-    homeassistant.components.shell_command: debug
-    homeassistant.components.command_line.sensor: debug
+    homeassistant.core: fatal
 
 ffmpeg:
 
@@ -134,6 +133,6 @@ climate:
 shell_command:
   lovelace_default_convert: python /config/tools/lovelace_default_convert.py
   lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
-  git_core_update_push: bash /config/tools/git_core_update_push.sh "{{states.sensor.current_version.state}}"
+  git_core_update_push: bash /config/tools/git_core_update_push.sh
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
   git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
