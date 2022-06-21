@@ -15,8 +15,6 @@
 [![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/users/beardbaba#3387)
 ---
 
-**TO DO**: Add Screenshots
-
 # Home Assistant Configuraton
 
 I started my Home Assistant Journey with a Raspberry Pi 3, from which I have switched to an old Dell Laptop that I had lying around, for a year. I recently migrated my setup to a renewed [HP Mini PC](https://www.amazon.in/gp/product/B09RTMLB15) with Core i7, 16GB RAM and a few hard disks connected with my Movie and TV Show collections.
