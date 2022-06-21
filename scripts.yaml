@@ -536,3 +536,53 @@ git_commit_copy:
       entity_id: input_text.git_commit_message
   mode: single
   icon: fas:paste
+load_share_url_googletv:
+  alias: Load Content from Shared URL - Google TV
+  sequence:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ states('input_text.ccgtv_share_url') is
+                match('http.*primevideo', ignorecase=False) }}
+          sequence:
+            - service: androidtv.adb_command
+              data:
+                entity_id: media_player.google_tv
+                command: >-
+                  am start -a android.intent.action.VIEW -n
+                  com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity
+                  -d {{ states('input_text.ccgtv_share_url') }}
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ states('input_text.ccgtv_share_url') is
+                match('http.*netflix.com', ignorecase=False) }}
+          sequence:
+            - service: androidtv.adb_command
+              data:
+                entity_id: media_player.google_tv
+                command: >-
+                  am start -n com.netflix.ninja/.MainActivity -a
+                  android.intent.action.VIEW -d netflix://title/{{
+                  states('input_text.ccgtv_share_url')|regex_findall_index(find='netflix.com(?:.*?)([0-9]+)',
+                  index=0, ignorecase=False) }} -f 0x10000020 -e
+                  "amzn_deeplink_data" "{{
+                  states('input_text.ccgtv_share_url')|regex_findall_index(find='netflix.com(?:.*?)([0-9]+)',
+                  index=0, ignorecase=False) }}"
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ states('input_text.ccgtv_share_url') is match('http.*youtu*',
+                ignorecase=False) }}
+          sequence:
+            - service: androidtv.adb_command
+              data:
+                entity_id: media_player.google_tv
+                command: >-
+                  am start -a android.intent.action.VIEW -d
+                  "{{states('input_text.ccgtv_share_url') }}"
+                  com.google.android.youtube.tv
+      default: []
+  mode: single
+  icon: mdi:monitor-share

@@ -2176,3 +2176,75 @@
     entity_id: light.hall_tube_light
     domain: light
   mode: single
+- alias: Capture Shared URL - Google TV
+  description: Captures the URL shared and updates input_text ccgtv_share_url
+  trigger:
+    - platform: event
+      event_type: mobile_app.share
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ trigger.event.data|regex_search('com.netflix', ignorecase=TRUE)
+                }}
+          sequence:
+            - service: input_text.set_value
+              data:
+                value: >
+                  {{ trigger.event.data.text|regex_findall_index(find='(http.*)',
+                  ignorecase=TRUE) }}
+              target:
+                entity_id: input_text.ccgtv_share_url
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ trigger.event.data|regex_search('com.amazon', ignorecase=TRUE)
+                }}
+          sequence:
+            - service: input_text.set_value
+              data:
+                value: >
+                  {{ trigger.event.data.text|regex_findall_index(find='(http.*)',
+                  ignorecase=true)|replace ("&ref_=atv_dp_share_seas&r=web", "")
+                  }}
+              target:
+                entity_id: input_text.ccgtv_share_url
+        - conditions:
+            - condition: template
+              value_template: >-
+                {{ trigger.event.data|regex_search('startv.hotstar',
+                ignorecase=TRUE) }}
+          sequence:
+            - service: input_text.set_value
+              data:
+                value: >
+                  {{ trigger.event.data.text|regex_findall_index(find='(http.*)',
+                  ignorecase=TRUE) }}
+              target:
+                entity_id: input_text.ccgtv_share_url
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data|regex_search(''youtu.be'', ignorecase=TRUE) }}'
+          sequence:
+            - service: input_text.set_value
+              data:
+                value: >
+                  {{ trigger.event.data.url|regex_findall_index(find='(http.*)',
+                  ignorecase=TRUE) }}
+              target:
+                entity_id: input_text.ccgtv_share_url
+      default:
+        - service: notify.persistent_notification
+          data:
+            message: |
+              {{ states('input_text.ccgtv_share_url') }}
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.google_tv
+        command: HOME
+    - service: script.share_to_ccgtv
+      data: {}
+  mode: single
+
