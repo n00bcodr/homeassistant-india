@@ -342,34 +342,6 @@ views:
     type: custom:stack-in-card
     view_layout:
       column: 1
-  - entity: mediaquery
-    states:
-      '(min-width: 1000px)':
-        cards:
-        - entity: sensor.10pro_charger_type
-          layout: vertical
-          name: ' '
-          secondary_info: state
-          type: custom:mushroom-entity-card
-        - entity: sensor.10pro_battery_level
-          layout: vertical
-          name: ' '
-          type: custom:mushroom-entity-card
-        - entity: binary_sensor.10pro_is_charging
-          layout: vertical
-          name: ' '
-          type: custom:mushroom-entity-card
-        - entity: sensor.galaxy_watch4_classic_battery_level
-          icon: mdi:watch
-          layout: vertical
-          name: ' '
-          type: custom:mushroom-entity-card
-        margin: false
-        mode: horizontal
-        type: custom:stack-in-card
-    type: custom:state-switch
-    view_layout:
-      column: 1
   - entities:
     - conditions:
       - entity: group.den
@@ -571,19 +543,73 @@ views:
     type: custom:swipe-card
     view_layout:
       column: 3
-  - double_tap_action:
-      action: none
-    hold_action:
-      action: none
-    icon: mdi:cellphone-cog
-    icon_color: blue
-    multiline_secondary: true
-    primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}} - {{
-      states.device_tracker.oneplus_10pro.attributes.connection_type | replace("band","")
-      | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
-    tap_action:
-      action: none
-    type: custom:mushroom-template-card
+  - entity: mediaquery
+    states:
+      '(min-width: 1000px)':
+        alignment: center
+        chips:
+        - content: "{{ states.device_tracker.oneplus_10pro.attributes.deco_device}}\
+            \ - {{\n  states.device_tracker.oneplus_10pro.attributes.connection_type\
+            \ |\n  replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\"\
+            ,\"2.4 GHz\") }}"
+          double_tap_action:
+            action: none
+          hold_action:
+            action: none
+          icon: mdi:cellphone-cog
+          icon_color: blue
+          tap_action:
+            action: none
+          type: template
+        - icon: mdi:update
+          icon_color: blue-grey
+          tap_action:
+            action: call-service
+            data: {}
+            service: script.update_all_phone_sensors
+            target: {}
+          type: action
+        - content_info: state
+          entity: sensor.10pro_battery_level
+          icon: mdi:cellphone
+          icon_color: blue
+          type: entity
+          use_entity_picture: false
+        - content_info: none
+          entity: binary_sensor.10pro_is_charging
+          icon_color: yellow
+          type: entity
+        - entity: sensor.galaxy_watch4_classic_battery_level
+          icon: mdi:watch
+          icon_color: deep-orange
+          type: entity
+        - content_info: none
+          entity: binary_sensor.galaxy_watch4_classic_is_charging
+          icon_color: amber
+          type: entity
+        type: custom:mushroom-chips-card
+    type: custom:state-switch
+    view_layout:
+      column: 1
+  - entity: mediaquery
+    states:
+      '(max-width: 1000px)':
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+        icon: mdi:cellphone-cog
+        icon_color: blue
+        multiline_secondary: true
+        primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}}
+          - {{ states.device_tracker.oneplus_10pro.attributes.connection_type | replace("band","")
+          | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
+        tap_action:
+          action: none
+        type: custom:mushroom-template-card
+        view_layout:
+          column: 1
+    type: custom:state-switch
   - cards:
     - buttonStyle: 'font-size: 14px;'
       cards:
@@ -601,6 +627,7 @@ views:
       - entity: media_player.clock
         group: true
         type: custom:mini-media-player
+      defaultOpen: contain-toggled
       title: Players
       type: custom:collapsable-cards
     - artwork: full-cover
@@ -857,8 +884,8 @@ views:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
   - user: 5e94cdd892054937b560071ed6662cb8
 - badges:
-  - entity: device_tracker.life360_murthy_upadrasta
-  - entity: device_tracker.life360_kameswari_upadrasta
+  - entity: person.murthy
+  - entity: person.kameswari
   - entities:
     - entity: binary_sensor.upstairs_power_failed
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.upstairs_power_failed','off')\
@@ -956,27 +983,46 @@ views:
       icon_animation: true
       layout: horizontal
       show_percentage_control: true
-      styles:
-        card:
-        - --keep-background: 'true'
       type: custom:mushroom-fan-card
-    - entities:
-      - entity: light.living_room_light
-      - entity: light.led_strip_tv
-      - entity: switch.wall_fan
+    - collapsible_controls: true
+      entity: light.living_room_light
+      fill_container: true
+      layout: horizontal
+      show_brightness_control: true
+      show_color_temp_control: true
+      tap_action:
+        action: toggle
+      type: custom:mushroom-light-card
+    - collapsible_controls: true
+      entity: light.led_strip_tv
+      layout: horizontal
+      show_brightness_control: true
+      show_color_control: true
+      tap_action:
+        action: toggle
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: switch.wall_fan
+      icon_animation: true
+      icon_color: indigo
+      layout: horizontal
+      show_percentage_control: false
+      type: custom:mushroom-fan-card
+    - cards:
+      - entity: switch.downstairs_geyser
+        fill_container: false
+        icon_color: deep-orange
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
       - entities:
         - entity: sensor.downstairs_geyser_power
-          name: Power
-        entity: switch.downstairs_geyser
-        secondary_info: last-changed
-        state_color: true
-        toggle: true
-        type: custom:multiple-entity-row
-      state_color: true
-      styles:
-        card:
-        - --keep-background: 'true'
-      type: entities
+          icon: hide
+          name: ' '
+          state_color: true
+        type: entities
+      mode: horizontal
+      type: custom:stack-in-card
     mode: vertical
     type: custom:stack-in-card
   - cards:
@@ -993,39 +1039,43 @@ views:
       toggle_power: false
       type: custom:mini-media-player
       volume_stateless: false
-    - artwork: cover
-      entity: media_player.priyadarshini
-      group: true
-      hide:
-        power: true
-      icon: mdi:television
-      idle_view:
-        when_idle: true
-      type: custom:mini-media-player
-    - entity: media_player.family_room_mini
-      group: true
-      hide:
-        power: true
-      icon: mdi:google-assistant
-      idle_view:
-        when_idle: true
-      type: custom:mini-media-player
-    - entity: media_player.akashavani
-      group: true
-      hide:
-        power: true
-      icon: mdi:google-assistant
-      idle_view:
-        when_idle: true
-      type: custom:mini-media-player
-    - entity: media_player.bedroom_mini
-      group: true
-      hide:
-        power: true
-      icon: mdi:google-assistant
-      idle_view:
-        when_idle: true
-      type: custom:mini-media-player
+    - cards:
+      - artwork: cover
+        entity: media_player.priyadarshini
+        group: true
+        hide:
+          power: true
+        icon: mdi:television
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.family_room_mini
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.akashavani
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.bedroom_mini
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      defaultOpen: contain-toggled
+      title: Players
+      type: custom:collapsable-cards
     - artwork: full-cover
       entity: media_player.android_tv
       icon: si:oneplus
@@ -1781,6 +1831,7 @@ views:
     type: custom:button-card
   icon: mdi:sofa
   path: living-room
+  theme: Backend-selected
   title: Living Room
 - badges:
   - entity: binary_sensor.hall_camera_motion
@@ -2682,6 +2733,8 @@ views:
   path: system_monitor
   theme: Backend-selected
   title: System Monitor
+  visible:
+  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
 - badges: []
   cards:
   - cards:
@@ -2887,8 +2940,8 @@ views:
   type: custom:horizontal-layout
   visible: []
 - badges:
-  - entity: device_tracker.life360_murthy_upadrasta
-  - entity: device_tracker.life360_kameswari_upadrasta
+  - entity: person.murthy
+  - entity: person.kameswari
   - entity: person.pavanthanuj
   - entity: binary_sensor.den_motion_1
     name: Den Motion

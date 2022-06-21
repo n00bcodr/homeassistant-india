@@ -156,7 +156,8 @@
     - addons
 
 - platform: command_line
-  name: shopping_list
+  name: Shopping List
+  unique_id: shopping_list
   command: python3 /config/tools/shopping_list.py
 
 - platform: systemmonitor
