@@ -43,7 +43,8 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 
 ---
 
-### <a name="lights">Lights</a> | [Go to Menu](#menu) |
+### <a name="lights">Lights</a> 
+| [Go to Menu](#menu) |
 - [Wipro Smart Batons](https://amzn.to/3QuzgpS) x 1
 - [Crompton Immensa Smart Batten](https://amzn.to/3HAG7dl) x 1
 - [Wipro RGB Baton](https://amzn.to/3MZ1zcZ) x 1
@@ -54,12 +55,14 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 - [Protium WiFi RGBW Light Strip](https://amzn.to/3bbb1Ni) x 1
 ---
 
-### <a name="fans">Fans</a> | [Go to Menu](#menu) |
+### <a name="fans">Fans</a> 
+| [Go to Menu](#menu) |
 - [Atomberg Renesa Smart+](https://amzn.to/3N4rPCG) x 1
 - [Halonix Smart IOT ceiling fan kit](https://amzn.to/3tIxjMC) x 1
 ---
 
-### <a name="outlets">Outlets & Switches</a> | [Go to Menu](#menu) |
+### <a name="outlets">Outlets & Switches</a> 
+| [Go to Menu](#menu) |
 - [Wipro 16A Smart Plugs](https://amzn.to/39uMfY7) x 2
 - [Wipro 10A Smart Plugs](https://amzn.to/3xTLrnR) x 5
 - [Sonoff POW R2](https://amzn.to/3xCmD3d) x 1
@@ -69,7 +72,8 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 
 
 ---
-### <a name="smartspeakers">Voice Assistants & Displays</a> | [Go to Menu](#menu) |
+### <a name="smartspeakers">Voice Assistants & Displays</a> 
+| [Go to Menu](#menu) |
 - [Nest Audio](https://store.google.com/us/product/nest_audio) x 1
 - [Nest Mini](https://store.google.com/us/product/google_nest_mini) x 1
 - [Google Home Mini](https://www.flipkart.com/google-home-mini-assistant-smart-speaker/p/itm960a3af84a20b) x 3
@@ -79,7 +83,8 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 - [Amazon Echo Dot 3rd Gen](https://amzn.to/3QtkPCf) x 1
 - [Amazon Echo Dot 2nd Gen](https://www.amazon.in/Amazon-RS03QR-Echo-Dot-Black/dp/B072DR5HYL) x 1
 ---
-### <a name="media">Media</a> | [Go to Menu](#menu) |
+### <a name="media">Media</a> 
+| [Go to Menu](#menu) |
 - [Sony Bravia KD-65X85J](https://www.sony.co.in/electronics/televisions/x85j-series) x 1
 - [OnePlus Y Series](https://amzn.to/3Hzm7aN) x 1
 - [LG webOS TV 49UF690T](https://www.lg.com/in/support/product/lg-49UF690T.ATR) x 1
@@ -87,7 +92,8 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 - [Google Chromecast](https://store.google.com/us/product/chromecast?hl=en-GB) x 1
 
 ---
-### <a name="sensors">Sensors</a> | [Go to Menu](#menu) |
+### <a name="sensors">Sensors</a> 
+| [Go to Menu](#menu) |
 - [SONOFF SNZB-04 ZigBee Wireless Door/Window Sensor](https://sonoff.tech/product/smart-home-security/snzb-04/) x 2
 - [SONOFF SNZB-03 ZigBee Motion Sensor](https://amzn.to/3xysUgE) x 2
 - [SONOFF SNZB-02 ZigBee Temperature & Humidity Sensor](https://amzn.to/3b31V4Z) x 1
@@ -100,52 +106,72 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 
 
 ---
-### <a name="cameras">Cameras</a> | [Go to Menu](#menu) |
+### <a name="cameras">Cameras</a> 
+| [Go to Menu](#menu) |
 - [HIKVISION DS-7A04HGHI-F1](https://amzn.to/3b7ZHRP) with 4 cameras
 - [TP-LINK Tapo C200](https://amzn.to/39Ac0WS) x 1
 - [TP-LINK Tapo C100](https://amzn.to/3N0Qecn) x 1
 
 ---
-### <a name="appliances">Appliances</a> | [Go to Menu](#menu) |
+### <a name="appliances">Appliances</a> 
+| [Go to Menu](#menu) |
 - [Mi Air Purifier 3](https://amzn.to/3QnPfGl) x 1
 - [LG Smart Refrigerator](https://www.lg.com/in/refrigerators/lg-GL-T432FPZ3)
 - [Xbox One](https://en.wikipedia.org/wiki/Xbox_One) x 1
 ---
-### <a name="network">Network</a> | [Go to Menu](#menu) |
+### <a name="network">Network</a> 
+| [Go to Menu](#menu) |
 - [TP-LINK Deco X60](https://amzn.to/3xZRA2V) x 2
 - [TP-LINK Deco M5](https://amzn.to/3b4ETLa) x 3
 - [TP-LINK Deco M3W](https://amzn.to/3xY0Iox) x 1
 - [TP-Link AC1200 Archer A6](https://amzn.to/3Hwrs2F) x 1 (not being used)
 ---
 
-### <a name="ir">IR Blasters</a> | [Go to Menu](#menu) |
+### <a name="ir">IR Blasters</a> 
+| [Go to Menu](#menu) |
 - [Broadlink RM4 Mini](https://amzn.to/3N2an1P) with temperature and humidity sensor
 - [Broadlink RM MINI-3](https://www.amazon.in/gp/product/B076NRKR4B)
 - [Oakremote](https://amzn.to/3HwrKqh)
 ---
 
-### <a name="hubs">Hubs</a> | [Go to Menu](#menu) |
+### <a name="hubs">Hubs</a> 
+| [Go to Menu](#menu) |
 
 - [ConBee II](https://www.phoscon.de/en/conbee2) x 1
 - [SONOFF ZBBridge – Smart Zigbee Bridge](https://amzn.to/39GRunk) x 1
 
 ---
-### <a name="climate">Climate</a> | [Go to Menu](#menu) |
+### <a name="climate">Climate</a> 
+| [Go to Menu](#menu) |
 
 No specific climate devices but two IR Blasters used to control ACs  using [Smart IR](https://github.com/smartHomeHub/SmartIR)
 
 ---
-### <a name="other">Other Hardware</a> | [Go to Menu](#menu) |
-- [Lenovo Tab M10 HD 2nd Gen](https://amzn.to/3QrldBm) - main dashboard
-- [Asus Nexus 7 Tablet](https://www.gsmarena.com/asus_google_nexus_7-4850.php) - personal dashboard
+### <a name="other">Other Hardware</a> 
+| [Go to Menu](#menu) |
+- [Lenovo Tab M10 HD 2nd Gen](https://amzn.to/3QrldBm) - main dashboard |Screenshots|
+- [Asus Nexus 7 Tablet](https://www.gsmarena.com/asus_google_nexus_7-4850.php) - Personal Dashboard
 - [Canon imageCLASS MF244dw](https://in.canon/en/support/imageCLASS%20MF244dw/model)
 - [HP Ink Tank Wireless 410 series](https://amzn.to/3mYtYFv)
 - [Tagreader](https://github.com/adonno/tagreader) x 1
 - [Multisensor](https://esphome.io/cookbook/bruh.html) x 2
 ---
-### <a name="screenshots">Screenshots</a> | [Go to Menu](#menu) |
+### <a name="screenshots">Screenshots</a> 
+| [Go to Menu](#menu) |
+
+![Personal Dashboard](https://github.com/n00bcodr/homeassistant/blob/b19ff9467a0606576e75de2724cdbb6db5dd7282/Screenshots/PersonalDashboard.jpg?raw=true "Personal Dashboard")
 ---
-### <a name="graveyard">Graveyard☠️</a> | [Go to Menu](#menu) |
+![Main Dashboard 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_1.jpeg?aw=true "Main Dashboard 1")
+![Main Dashboard 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_2.jpeg?aw=true "Main Dashboard 2")
+![Main Dashboard 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_3.jpeg?aw=true "Main Dashboard 3")
+![Main Dashboard 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_4.jpeg?aw=true "Main Dashboard 4")
+---
+
+
+---
+### <a name="graveyard">Graveyard☠️</a> 
+| [Go to Menu](#menu) |
+
 - [Wipro 10A Smart Plug](https://amzn.to/3xTLrnR) x 1
 - [Sonoff Basic R2](https://amzn.to/3tGrDTo) x 6
 - [Sonoff Mini R2](https://amzn.to/3aVsvwT) x 1
