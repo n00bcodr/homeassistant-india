@@ -156,19 +156,39 @@ No specific climate devices but two IR Blasters used to control ACs  using [Smar
 - [Tagreader](https://github.com/adonno/tagreader) x 1
 - [Multisensor](https://esphome.io/cookbook/bruh.html) x 2
 ---
+
 ### <a name="screenshots">Screenshots</a> 
 | [Go to Menu](#menu) |
 
-![Personal Dashboard](https://github.com/n00bcodr/homeassistant/blob/b19ff9467a0606576e75de2724cdbb6db5dd7282/Screenshots/PersonalDashboard.jpg?raw=true "Personal Dashboard")
----
-![Main Dashboard 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_1.jpeg?aw=true "Main Dashboard 1")
-![Main Dashboard 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_2.jpeg?aw=true "Main Dashboard 2")
-![Main Dashboard 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_3.jpeg?aw=true "Main Dashboard 3")
-![Main Dashboard 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_4.jpeg?aw=true "Main Dashboard 4")
 ---
 
+Personal Dashboard
+
+![Personal Dashboard](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/PersonalDashboard.png?raw=true "Personal Dashboard")
 
 ---
+
+Main Dashboard
+
+![Main Dashboard 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_1.jpeg?raw=true "Main Dashboard 1")
+![Main Dashboard 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_2.jpeg?raw=true "Main Dashboard 2")
+![Main Dashboard 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_3.jpeg?raw=true "Main Dashboard 3")
+![Main Dashboard 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_4.jpeg?raw=true "Main Dashboard 4")
+---
+Lovelace
+
+![Lovelace 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_1.png?raw=true "Lovelace 1")
+![Lovelace 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_2.png?raw=true "Lovelace 2")
+![Lovelace 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_3.png?raw=true "Lovelace 3")
+![Lovelace 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_4.png?raw=true "Lovelace 4")
+![Lovelace 5](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_5.png?raw=true "Lovelace 5")
+![Lovelace 6](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_6.png?raw=true "Lovelace 6")
+![Lovelace 7](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_7.png?raw=true "Lovelace 7")
+![Lovelace 8](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_8.png?raw=true "Lovelace 8")
+![Lovelace 9](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_9.png?raw=true "Lovelace 9")
+
+---
+
 ### <a name="graveyard">Graveyard☠️</a> 
 | [Go to Menu](#menu) |
 
