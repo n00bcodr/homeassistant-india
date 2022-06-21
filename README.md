@@ -30,11 +30,13 @@ I started my Home Assistant Journey with a Raspberry Pi 3, from which I have swi
 * [Broadlink Manager](https://hub.docker.com/r/techblog/broadlinkmanager) for reading IR codes
 * [Watchtower](https://github.com/containrrr/watchtower) to have all the containers up-to date. This will cause the homeassistant instance to "unhealthy". Hence I am using a [workaround](https://gist.github.com/HCanber/700b4a5c685b9b97fb4865de6eaff0f3) for the same
 * [Heimdall](https://hub.docker.com/r/linuxserver/heimdall) for browser start page
+* [Transmission](https://transmissionbt.com/) installed as an app in Debian
 
 
 
 
 ## Devices I use
+> ℹ️ I used Amazon Affiliate links below to help me buy more smart stuff 😄💰
 
 ## <a name="menu">Menu</a>
  | [Lights](#lights) | [Fans](#fans) | [Outlets & Switches](#outlets) | [Voice Assistants & Displays](#smartspeakers) | [Media](#media) | [Sensors](#sensors) | [Cameras](#cameras) | [Appliances](#appliances) | [Network](#network) | [IR Blasters](#ir) | [Hubs](#hubs) | [Climate](#climate) | [Other Hardware](#other) | [Screenshots](#screenshots) | [Graveyard☠️](#graveyard) |
