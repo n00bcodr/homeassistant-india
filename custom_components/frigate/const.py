@@ -16,6 +16,7 @@ ICON_IMAGE_MULTIPLE = "mdi:image-multiple"
 ICON_MOTION_SENSOR = "hass:motion-sensor"
 ICON_OTHER = "mdi:shield-alert"
 ICON_PERSON = "mdi:shield-account"
+ICON_SERVER = "mdi:server"
 ICON_SPEEDOMETER = "mdi:speedometer"
 
 # Platforms
@@ -32,10 +33,12 @@ MS = "ms"
 
 # Attributes
 ATTR_CLIENT = "client"
+ATTR_CLIENT_ID = "client_id"
 ATTR_CONFIG = "config"
 ATTR_COORDINATOR = "coordinator"
+ATTR_EVENT_ID = "event_id"
+ATTR_FAVORITE = "favorite"
 ATTR_MQTT = "mqtt"
-ATTR_CLIENT_ID = "client_id"
 
 # Configuration and options
 CONF_CAMERA_STATIC_IMAGE_HEIGHT = "camera_image_height"
@@ -63,3 +66,11 @@ https://github.com/blakeblackshear/frigate-hass-integration/issues
 # States
 STATE_DETECTED = "active"
 STATE_IDLE = "idle"
+
+# Statuses
+STATUS_ERROR = "error"
+STATUS_RUNNING = "running"
+STATUS_STARTING = "starting"
+
+# Frigate Services
+SERVICE_FAVORITE_EVENT = "favorite_event"

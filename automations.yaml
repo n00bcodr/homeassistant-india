@@ -1423,7 +1423,6 @@
         - sensor.lenovo_tab_battery_level
         - sensor.lenovo_tab_m10_hd_battery_level
         - sensor.murthy_nord2_battery_level
-        - sensor.nexus_7_battery_level
         - sensor.pavanthanuj_internal_battery_level
 - id: '1643198275646'
   alias: ⚙️Turn off Downstairs Geyser
@@ -2075,7 +2074,7 @@
       data: {}
   mode: single
 - id: '1654860387187'
-  alias: 🏰den_tubelight_laser
+  alias: 🏰Den Tubelight -- Laser
   description: ''
   trigger:
   - platform: state

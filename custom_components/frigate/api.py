@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import socket
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 import aiohttp
 import async_timeout
@@ -47,7 +47,7 @@ class FrigateApiClient:
     async def async_get_stats(self) -> dict[str, Any]:
         """Get data from the API."""
         return cast(
-            Dict[str, Any],
+            dict[str, Any],
             await self.api_wrapper("get", str(URL(self._host) / "api/stats")),
         )
 
@@ -75,7 +75,7 @@ class FrigateApiClient:
         }
 
         return cast(
-            List[Dict[str, Any]],
+            list[dict[str, Any]],
             await self.api_wrapper(
                 "get",
                 str(
@@ -98,7 +98,7 @@ class FrigateApiClient:
         }
 
         return cast(
-            List[Dict[str, Any]],
+            list[dict[str, Any]],
             await self.api_wrapper(
                 "get",
                 str(
@@ -112,13 +112,60 @@ class FrigateApiClient:
     async def async_get_config(self) -> dict[str, Any]:
         """Get data from the API."""
         return cast(
-            Dict[str, Any],
+            dict[str, Any],
             await self.api_wrapper("get", str(URL(self._host) / "api/config")),
         )
 
     async def async_get_path(self, path: str) -> Any:
         """Get data from the API."""
         return await self.api_wrapper("get", str(URL(self._host) / f"{path}/"))
+
+    async def async_retain(self, event_id: str, retain: bool) -> dict[str, Any]:
+        """Un/Retain an event."""
+        return cast(
+            dict[str, Any],
+            await self.api_wrapper(
+                "post" if retain else "delete",
+                str(URL(self._host) / f"api/events/{event_id}/retain"),
+                decode_json=True,
+            ),
+        )
+
+    async def async_get_recordings_summary(self, camera: str) -> dict[str, Any]:
+        """Get recordings summary."""
+        return cast(
+            dict[str, Any],
+            await self.api_wrapper(
+                "get",
+                str(URL(self._host) / f"api/{camera}/recordings/summary"),
+                decode_json=True,
+            ),
+        )
+
+    async def async_get_recordings(
+        self,
+        camera: str,
+        after: int | None = None,
+        before: int | None = None,
+    ) -> dict[str, Any]:
+        """Get recordings."""
+        params = {
+            "after": after,
+            "before": before,
+        }
+
+        return cast(
+            dict[str, Any],
+            await self.api_wrapper(
+                "get",
+                str(
+                    URL(self._host)
+                    / f"api/{camera}/recordings"
+                    % {k: v for k, v in params.items() if v is not None}
+                ),
+                decode_json=True,
+            ),
+        )
 
     async def api_wrapper(
         self,
@@ -136,22 +183,14 @@ class FrigateApiClient:
 
         try:
             async with async_timeout.timeout(TIMEOUT):
-                if method == "get":
-                    response = await self._session.get(
-                        url, headers=headers, raise_for_status=True
+                func = getattr(self._session, method)
+                if func:
+                    response = await func(
+                        url, headers=headers, raise_for_status=True, json=data
                     )
                     if decode_json:
                         return await response.json()
                     return await response.text()
-
-                if method == "put":
-                    await self._session.put(url, headers=headers, json=data)
-
-                elif method == "patch":
-                    await self._session.patch(url, headers=headers, json=data)
-
-                elif method == "post":
-                    await self._session.post(url, headers=headers, json=data)
 
         except asyncio.TimeoutError as exc:
             _LOGGER.error(

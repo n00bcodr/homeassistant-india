@@ -44,6 +44,9 @@ from .const import (
     NAME,
     PLATFORMS,
     STARTUP_MESSAGE,
+    STATUS_ERROR,
+    STATUS_RUNNING,
+    STATUS_STARTING,
 )
 from .views import (
     JSMPEGProxyView,
@@ -53,6 +56,7 @@ from .views import (
     VodProxyView,
     VodSegmentProxyView,
 )
+from .ws_api import async_setup as ws_api_async_setup
 
 SCAN_INTERVAL = timedelta(seconds=5)
 
@@ -165,6 +169,8 @@ async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     )
 
     hass.data.setdefault(DOMAIN, {})
+
+    ws_api_async_setup(hass)
 
     session = async_get_clientsession(hass)
     hass.http.register_view(JSMPEGProxyView(session))
@@ -292,13 +298,17 @@ class FrigateDataUpdateCoordinator(DataUpdateCoordinator):  # type: ignore[misc]
     def __init__(self, hass: HomeAssistant, client: FrigateApiClient):
         """Initialize."""
         self._api = client
+        self.server_status: str = STATUS_STARTING
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Update data via library."""
         try:
-            return await self._api.async_get_stats()
+            stats = await self._api.async_get_stats()
+            self.server_status = STATUS_RUNNING
+            return stats
         except FrigateApiClientError as exc:
+            self.server_status = STATUS_ERROR
             raise UpdateFailed from exc
 
 
@@ -412,32 +422,27 @@ class FrigateMQTTEntity(FrigateEntity):
         self,
         config_entry: ConfigEntry,
         frigate_config: dict[str, Any],
-        state_topic_config: dict[str, Any],
+        topic_map: dict[str, Any],
     ) -> None:
         """Construct a FrigateMQTTEntity."""
         super().__init__(config_entry)
         self._frigate_config = frigate_config
         self._sub_state = None
         self._available = False
-        self._state_topic_config = {
-            "msg_callback": self._state_message_received,
-            "qos": 0,
-            **state_topic_config,
-        }
+        self._topic_map = topic_map
 
     async def async_added_to_hass(self) -> None:
         """Subscribe mqtt events."""
+        self._topic_map["availability_topic"] = {
+            "topic": f"{self._frigate_config['mqtt']['topic_prefix']}/available",
+            "msg_callback": self._availability_message_received,
+            "qos": 0,
+        }
+
         state = async_prepare_subscribe_topics(
             self.hass,
             self._sub_state,
-            {
-                "state_topic": self._state_topic_config,
-                "availability_topic": {
-                    "topic": f"{self._frigate_config['mqtt']['topic_prefix']}/available",
-                    "msg_callback": self._availability_message_received,
-                    "qos": 0,
-                },
-            },
+            self._topic_map,
         )
         self._sub_state = await async_subscribe_topics(self.hass, state)
 
@@ -445,11 +450,6 @@ class FrigateMQTTEntity(FrigateEntity):
         """Cleanup prior to hass removal."""
         async_unsubscribe_topics(self.hass, self._sub_state)
         self._sub_state = None
-
-    @callback  # type: ignore[misc]
-    def _state_message_received(self, msg: ReceiveMessage) -> None:
-        """State message received."""
-        self.async_write_ha_state()
 
     @callback  # type: ignore[misc]
     def _availability_message_received(self, msg: ReceiveMessage) -> None:

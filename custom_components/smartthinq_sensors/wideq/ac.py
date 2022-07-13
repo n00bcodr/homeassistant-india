@@ -28,6 +28,7 @@ CTRL_MISC = ["Control", "miscCtrl"]
 # CTRL_WIND_MODE = "wModeCtrl"
 
 DUCT_ZONE_V1 = "DuctZone"
+DUCT_ZONE_V1_TYPE = "DuctZoneType"
 STATE_POWER_V1 = "InOutInstantPower"
 
 SUPPORT_OPERATION_MODE = ["SupportOpMode", "support.airState.opMode"]
@@ -48,7 +49,7 @@ STATE_WDIR_HSWING = ["WDirLeftRight", "airState.wDir.leftRight"]
 STATE_WDIR_VSWING = ["WDirUpDown", "airState.wDir.upDown"]
 STATE_POWER = [STATE_POWER_V1, "airState.energy.onCurrent"]
 STATE_HUMIDITY = ["SensorHumidity", "airState.humidity.current"]
-STATE_DUCT_ZONE = ["DuctZoneType", "airState.ductZone.state"]
+STATE_DUCT_ZONE = ["ZoneControl", "airState.ductZone.state"]
 
 CMD_STATE_OPERATION = [CTRL_BASIC, "Set", STATE_OPERATION]
 CMD_STATE_OP_MODE = [CTRL_BASIC, "Set", STATE_OPERATION_MODE]
@@ -381,16 +382,21 @@ class AirConditionerDevice(Device):
         # first check if duct is supported
         if not self._status:
             return {}
-        duct_state = self._status.duct_zones_state
+
+        duct_state = -1
+        # duct zone type is available only for some ThinQ1 devices
+        if not self._status.duct_zones_type:
+            duct_state = self._status.duct_zones_state
         if not duct_state:
             return {}
 
         # get real duct zones states
         """
-        For ThinQ2 we transform the value in the status in binary
-        and than we create the result. We always have 8 duct zone.
+        For device that provide duct_state in payload we transform 
+        the value in the status in binary and than we create the result. 
+        We always have 8 duct zone.
         """
-        if not self._should_poll:
+        if duct_state > 0:
             bin_arr = [x for x in reversed(f"{duct_state:08b}")]
             return {
                 str(v+1): {ZONE_ST_CUR: k} for v, k in enumerate(bin_arr)
@@ -711,9 +717,10 @@ class AirConditionerStatus(DeviceStatus):
     def _get_operation(self):
         if self._operation is None:
             key = self._get_state_key(STATE_OPERATION)
-            self._operation = self.lookup_enum(key, True)
-            if self._operation is None:
+            operation = self.lookup_enum(key, True)
+            if not operation:
                 return None
+            self._operation = operation
         try:
             return ACOp(self._operation)
         except ValueError:
@@ -868,6 +875,12 @@ class AirConditionerStatus(DeviceStatus):
     def duct_zones_state(self):
         key = self._get_state_key(STATE_DUCT_ZONE)
         return self.to_int_or_none(self._data.get(key))
+
+    @property
+    def duct_zones_type(self):
+        if self.is_info_v2:
+            return None
+        return self.to_int_or_none(self._data.get(DUCT_ZONE_V1_TYPE))
 
     def _update_features(self):
         _ = [

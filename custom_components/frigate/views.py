@@ -14,7 +14,9 @@ import jwt
 from multidict import CIMultiDict
 from yarl import URL
 
+from custom_components.frigate.api import FrigateApiClient
 from custom_components.frigate.const import (
+    ATTR_CLIENT,
     ATTR_CLIENT_ID,
     ATTR_CONFIG,
     ATTR_MQTT,
@@ -64,6 +66,20 @@ def get_config_entry_for_frigate_instance_id(
         config = hass.data[DOMAIN].get(config_entry.entry_id, {}).get(ATTR_CONFIG, {})
         if config and get_frigate_instance_id(config) == frigate_instance_id:
             return config_entry
+    return None
+
+
+def get_client_for_frigate_instance_id(
+    hass: HomeAssistant, frigate_instance_id: str
+) -> FrigateApiClient | None:
+    """Get a client for a given frigate_instance_id."""
+
+    config_entry = get_config_entry_for_frigate_instance_id(hass, frigate_instance_id)
+    if config_entry:
+        return cast(
+            FrigateApiClient,
+            hass.data[DOMAIN].get(config_entry.entry_id, {}).get(ATTR_CLIENT),
+        )
     return None
 
 
@@ -185,6 +201,7 @@ class SnapshotsProxyView(ProxyView):
         return f"api/events/{kwargs['eventid']}/snapshot.jpg"
 
 
+# TODO(@dermotduffy): Remove the RecordingsProxyView after the v4.0.0-rc.2 card release.
 class RecordingsProxyView(ProxyView):
     """A proxy for recordings."""
 
@@ -436,6 +453,12 @@ def _response_header(response: aiohttp.ClientResponse) -> dict[str, str]:
             # hdrs.CONTENT_LENGTH,
             hdrs.CONTENT_TYPE,
             hdrs.CONTENT_ENCODING,
+            # Strips inbound CORS response headers since the aiohttp_cors
+            # library will assert that they are not already present for CORS
+            # requests.
+            hdrs.ACCESS_CONTROL_ALLOW_ORIGIN,
+            hdrs.ACCESS_CONTROL_ALLOW_CREDENTIALS,
+            hdrs.ACCESS_CONTROL_EXPOSE_HEADERS,
         ):
             continue
         headers[name] = value

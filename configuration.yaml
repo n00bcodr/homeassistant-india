@@ -102,12 +102,6 @@ browser_mod:
       camera: true
   prefix: "browser_mod_"
 
-panel_iframe:
-  portainer:
-    title: Portainer
-    icon: mdi:docker
-    url: http://homeassistant.local:9000/
-
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_api
@@ -115,8 +109,6 @@ telegram_bot:
       - !secret telegram_chat_id
 
 withings:
-  client_id: !secret withings_client_id
-  client_secret: !secret withings_client_secret
   use_webhook: true
 
 smartir:
