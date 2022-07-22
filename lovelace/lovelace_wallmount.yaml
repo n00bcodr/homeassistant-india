@@ -736,7 +736,7 @@ views:
   - cards:
     - aspect_ratio: 1/1
       camera_view: live
-      entity: device_tracker.life360_murthy_upadrasta
+      entity: device_tracker.murthy_upadrasta
       image: /local/images/murthy.jpg
       name: Murthy
       show_name: false
@@ -1368,8 +1368,7 @@ views:
                 card:
                 - width: 100px
               type: custom:button-card
-            - entity: switch.bedroom_light
-              icon: mdi:lightbulb-fluorescent-tube-outline
+            - icon: mdi:lightbulb-fluorescent-tube-outline
               name: Tube Light
               template: light_button_no_brightness
               type: custom:button-card
