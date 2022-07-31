@@ -80,17 +80,17 @@ spotcast:
   sp_dc: !secret sp_dc
   sp_key: !secret sp_key
 
-google:
-  client_id: !secret googlecalendar_clientid
-  client_secret: !secret googlecalendar_clientsecret
+# google:
+#   client_id: !secret googlecalendar_clientid
+#   client_secret: !secret googlecalendar_clientsecret
 
-nest:
-  client_id: !secret nest_client_id
-  client_secret: !secret nest_client_secret
-  # "Project ID" in the Device Access Console
-  project_id: !secret nest_project_id
-  # # Provide the full path exactly as shown under "Subscription name" in Google Cloud Console
-  subscriber_id: !secret nest_subscriber_id
+# nest:
+#   client_id: !secret nest_client_id
+#   client_secret: !secret nest_client_secret
+#   # "Project ID" in the Device Access Console
+#   project_id: !secret nest_project_id
+#   # # Provide the full path exactly as shown under "Subscription name" in Google Cloud Console
+#   subscriber_id: !secret nest_subscriber_id
 
 browser_mod:
   devices:

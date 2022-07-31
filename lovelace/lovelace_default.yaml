@@ -387,6 +387,7 @@ views:
       type: custom:multiple-entity-row
     - entity: light.top_light
     - entity: light.shelf_light
+      icon: mdi:bookshelf
     - buttons:
       - entity: switch.den_fan
         name: Fan

@@ -2117,16 +2117,11 @@
   alias: ⚙️Tag Github with version when core updated
   description: ''
   trigger:
-  - platform: state
-    entity_id:
-    - sensor.current_version
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
+  - platform: homeassistant
+    event: start
   condition:
   - condition: template
-    value_template: '{{ trigger.to_state.state > trigger.from_state.state }}'
+    value_template: '{{states.sensor.current_version.state > states.sensor.n00bcodr_homeassistant_latest_tag.state}}'
   action:
   - service: notify.mobile_app_10pro
     data:
