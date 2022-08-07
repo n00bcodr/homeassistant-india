@@ -15,6 +15,11 @@
     subtype: long
     discovery_id: 0x00124b001eaa8251 action_long
     id: hold
+  - platform: state
+    entity_id:
+    - input_boolean.den_state_2
+    from: 'on'
+    to: 'off'
   condition: []
   action:
   - service: scene.create
@@ -220,17 +225,20 @@
     tag_id: 93-F9-17-03
   - platform: tag
     tag_id: EF-99-90-CF
+  - platform: state
+    entity_id:
+    - input_boolean.den_state_2
+    from: 'off'
+    to: 'on'
   condition: []
   action:
   - service: homeassistant.turn_on
     target:
       entity_id: input_boolean.den_state
+    data: {}
   - service: scene.turn_on
     data: {}
     entity_id: scene.den_as_it_was
-  - service: light.turn_on
-    data: {}
-    entity_id: light.led_strip
   mode: single
 - id: bed_den
   alias: "\U0001F3F0Good Night - Tag"
@@ -361,8 +369,6 @@
       - light.first_floor_corner_2
       - light.second_floor_stairway_2
       - light.second_floor_stairway
-      - light.rgb_1
-      - light.rgb_2
   mode: single
 - id: tankfull_notification
   alias: "\U0001F4A7Tank Full - Notification"
@@ -421,10 +427,10 @@
   action:
   - service: switch.turn_off
     data: {}
-    entity_id: switch.downstairs_motor
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.upstairs_motor
+    target:
+      entity_id:
+      - switch.downstairs_motor
+      - switch.upstairs_motor
   - service: tts.google_translate_say
     data:
       entity_id: media_player.family_room_mini
@@ -1096,41 +1102,6 @@
         default: []
     default: []
   mode: single
-- id: '1629347165961'
-  alias: ⚙️Reload Local Tuya
-  description: If localtuya devices are offline, this reloads all the tuya devices.
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition:
-  - condition: template
-    value_template: '{{is_state(''light.first_floor_light'', ''unavailable'') and
-
-      is_state(''light.first_floor_stairway'', ''unavailable'') and
-
-      is_state(''light.second_floor_light'', ''unavailable'') and
-
-      is_state(''light.second_floor_stairway'', ''unavailable'') and
-
-      is_state(''light.shelf_light'', ''unavailable'') and
-
-      is_state(''light.hall_tube_light'', ''unavailable'') and
-
-      is_state(''light.top_light'', ''unavailable'') and
-
-      is_state(''light.den_tube_light'', ''unavailable'') and
-
-      is_state(''light.living_room_light'', ''unavailable'')}}'
-  action:
-  - service: notify.mobile_app_10pro
-    data:
-      data:
-        sticky: true
-        timeout: 60
-        notification_icon: mdi:reload
-      message: ⚠️ Tuya Reloaded ⚠️
-  - service: script.reload_local_tuya
-  mode: restart
 - id: '1629625852138'
   alias: "\U0001F3F0Motion in hall, change LED color"
   description: ''
@@ -1972,11 +1943,9 @@
     entity_id: media_player.hall_tv
     type: playing
   condition:
-  - condition: device
-    type: is_off
-    device_id: 126b01689a8955c9ef0ba3f6df29837b
-    entity_id: switch.10a_smart_plug_3_socket_1
-    domain: switch
+  - condition: state
+    entity_id: switch.upstairs_tv
+    state: 'off'
   action:
   - service: notify.mobile_app_10pro
     data:
@@ -2173,7 +2142,7 @@
     domain: light
   mode: single
 - id: '1655814095516'
-  alias: Capture Shared URL - Google TV
+  alias: "\U0001F3AC\U0001F3F0Capture Shared URL - Google TV"
   description: Captures the URL shared and updates input_text ccgtv_share_url
   trigger:
   - platform: event
@@ -2243,6 +2212,6 @@
     data:
       entity_id: media_player.google_tv
       command: HOME
-  - service: script.share_to_ccgtv
+  - service: script.load_share_url_googletv
     data: {}
   mode: single

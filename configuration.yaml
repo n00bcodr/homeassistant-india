@@ -9,6 +9,7 @@ logger:
   default: critical
   logs:
     homeassistant.core: fatal
+    custom_components.localtuya: debug
 
 ffmpeg:
 
@@ -128,3 +129,9 @@ shell_command:
   git_core_update_push: bash /config/tools/git_core_update_push.sh
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
   git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
+
+genius_lyrics:
+  access_token: !secret genius_clientaccesstoken
+  entities:
+    - media_player.spotify
+    - media_player.motu

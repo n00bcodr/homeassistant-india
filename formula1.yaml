@@ -26,7 +26,7 @@ value_template: >
     {{ "🇫🇷 France" }}
   {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
     {{ "🇭🇺 Hungary" }}
-  {% elif (states.sensor.ics_1.attributes.location == "Spa-Francorchamps") %}
+  {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
     {{ "🇧🇪 Belgium" }}
   {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
     {{ "🇳🇱 Netherlands" }}
@@ -73,7 +73,7 @@ attribute_templates:
       {{ "/local/f1/f1_circuits/France_Circuit.png" }}
     {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
       {{ "/local/f1/f1_circuits/Hungary_Circuit.png" }}
-    {% elif (states.sensor.ics_1.attributes.location == "Spa-Francorchamps") %}
+    {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
       {{ "/local/f1/f1_circuits/Belgium_Circuit.png" }}
     {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
       {{ "/local/f1/f1_circuits/Netherlands_Circuit.png" }}
@@ -119,7 +119,7 @@ attribute_templates:
       {{ "/local/f1/f1_flags/france-flag.png" }}
     {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
       {{ "/local/f1/f1_flags/hungary-flag.png" }}
-    {% elif (states.sensor.ics_1.attributes.location == "Spa-Francorchamps") %}
+    {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
       {{ "/local/f1/f1_flags/belgium-flag.png" }}
     {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
       {{ "/local/f1/f1_flags/netherlands-flag.png" }}
@@ -165,7 +165,7 @@ attribute_templates:
       {{ "https://www.formula1.com/en/racing/2022/France/Circuit.html" }}
     {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
       {{ "https://www.formula1.com/en/racing/2022/Hungary/Circuit.html" }}
-    {% elif (states.sensor.ics_1.attributes.location == "Spa-Francorchamps") %}
+    {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
       {{ "https://www.formula1.com/en/racing/2022/Belgium/Circuit.html" }}
     {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
       {{ "https://www.formula1.com/en/racing/2022/Netherlands/Circuit.html" }}
@@ -211,7 +211,7 @@ attribute_templates:
       {{ "FORMULA 1 GRAND PRIX DE FRANCE" }}
     {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
       {{ "FORMULA 1 MAGYAR NAGYDÍJ" }}
-    {% elif (states.sensor.ics_1.attributes.location == "Spa-Francorchamps") %}
+    {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
       {{ "FORMULA 1 ROLEX BELGIAN GRAND PRIX" }}
     {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
       {{ "FORMULA 1 HEINEKEN DUTCH GRAND PRIX" }}
@@ -229,4 +229,50 @@ attribute_templates:
       {{ "FORMULA 1 HEINEKEN GRANDE PRÊMIO DE SÃO PAULO" }}
     {% elif (states.sensor.ics_1.attributes.location == "Yas Marina") %}
       {{ "FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX" }}
+    {% endif %}
+  flag_emoji: >
+    {% if (states.sensor.ics_1.attributes.location == "Sakhir") %}
+      {{ "🇧🇭" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Jeddah") %}
+      {{ "🇸🇦" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Melbourne") %}
+      {{ "🇦🇺" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Imola") %}
+      {{ "🇮🇹" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Miami") %}
+      {{ "🇺🇸" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Catalunya") %}
+      {{ "🇪🇸" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Monte Carlo") %}
+      {{ "🇲🇨" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Baku") %}
+      {{ "🇦🇿" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Montreal") %}
+      {{ "🇨🇦" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Silverstone") %}
+      {{ "🇬🇧" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Spielberg") %}
+      {{ "🇦🇺" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Paul Ricard") %}
+      {{ "🇫🇷" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Budapest") %}
+      {{ "🇭🇺" }}
+    {% elif (states.sensor.ics_1.attributes.location == "SpaFrancorchamps") %}
+      {{ "🇧🇪" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Zandvoort") %}
+      {{ "🇳🇱" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Monza") %}
+      {{ "🇮🇹" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Singapore") %}
+      {{ "🇸🇬" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Suzuka") %}
+      {{ "🇯🇵" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Austin") %}
+      {{ "🇺🇸" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Mexico City") %}
+      {{ "🇲🇽" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Sao Paulo") %}
+      {{ "🇧🇷" }}
+    {% elif (states.sensor.ics_1.attributes.location == "Yas Marina") %}
+      {{ "🇦🇪" }}
     {% endif %}

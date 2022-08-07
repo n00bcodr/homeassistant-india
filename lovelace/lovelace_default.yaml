@@ -512,6 +512,16 @@ views:
       toggle_power: true
       type: custom:mini-media-player
       volume_stateless: false
+    - card:
+        content: '## {{ states.sensor.spotify_lyrics.attributes.media_artist }} -
+          {{ states.sensor.spotify_lyrics.attributes.media_title }}
+
+          {{ states.sensor.spotify_lyrics.attributes.media_lyrics }}'
+        type: markdown
+      conditions:
+      - entity: sensor.spotify_lyrics
+        state: 'on'
+      type: conditional
     - account: default
       always_play_random_song: true
       device: Motu
@@ -1872,6 +1882,7 @@ views:
             action: call-service
             service: script.hall_tubelight_white
         entity: light.hall_tube_light
+        icon: mdi:lightbulb-fluorescent-tube-outline
         name: Tube Light
         toggle: true
         type: custom:multiple-entity-row
@@ -2168,14 +2179,6 @@ views:
     tap_action:
       action: more-info
     title: Driveway Camera
-    type: picture-glance
-  - camera_image: camera.front_yard_camera
-    camera_view: live
-    entities:
-    - entity: binary_sensor.firstfloor_motion
-    tap_action:
-      action: more-info
-    title: First Floor Camera
     type: picture-glance
   icon: hass:cctv
   layout:
