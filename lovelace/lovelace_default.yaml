@@ -297,8 +297,38 @@ views:
     view_layout:
       column: 2
   - cards:
-    - content: <center><img height="50" src="/local/f1/F1.png"></center>
-      type: markdown
+    - double_tap_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            cards:
+            - content: "<h2><center> <ha-icon icon='mdi:podium'></ha-icon> Constructors\
+                \ Standings</h2>  <center><table border= \"1\" style=\"width: 80%;\
+                \ text-align: center;border-collapse: collapse;\"> <tr>\n  <th><b>Position</th>\n\
+                \  <th><b>Constructor</th>\n  <th><b>Wins</th>\n  <th><b>Points</th>\n\
+                </tr> {%- for item in state_attr(\"sensor.f1_constructor_standings\"\
+                , \"standings\") %}  <tr>  <td> {{ item.Position }} </td> <td>\n {{item.Constructor}}\n\
+                </td> <td> {{item.Wins}} </td> <td> {{item.Points}} </td> </tr> {%-\
+                \ endfor %}"
+              type: markdown
+            - content: "<h2> <center><ha-icon icon='mdi:racing-helmet'></ha-icon>\
+                \ Driver Standings</h2> <center><table border= \"1\" style=\"width:\
+                \ 80%; text-align: center;\"> <tr>\n  <th><b>Position</th>\n  <th><b>Driver</th>\n\
+                \  <th><b>Team</th>\n  <th><b>Points</th>\n</tr> {%- for item in state_attr(\"\
+                sensor.f1_driver_standings\", \"standings\") %}  <tr>  <td> {{ item.Position\
+                \ }} </td> <td>\n {{item.Driver}}\n</td> <td> {{item.Team}} </td><td>\
+                \ {{item.Points}} </td> </tr> {%- endfor %}"
+              type: markdown
+            parameters:
+              autoHeight: true
+              effect: fade
+            type: custom:swipe-card
+          command: popup
+          deviceID: this
+          title: Standings
+      entity_picture: /local/f1/F1.png
+      show_entity_picture: true
+      type: custom:button-card
     - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
         (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
         >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
