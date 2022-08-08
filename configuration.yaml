@@ -7,12 +7,11 @@ homeassistant:
 
 logger:
   default: critical
-  logs:
-    homeassistant.core: fatal
-    custom_components.localtuya: debug
+  # logs:
+  #   custom_components.pyscript: debug
 
 ffmpeg:
-
+python_script:
 # Example LL-HLS configuration.yaml entry.
 stream:
   ll_hls: true

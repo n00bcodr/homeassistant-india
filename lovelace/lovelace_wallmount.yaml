@@ -819,7 +819,6 @@ views:
                   \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
                   }\n"
           title: Murthy
-      theme: Google Light Theme
       type: picture-entity
     - aspect_ratio: 1/1
       entity: person.kameswari
@@ -905,7 +904,6 @@ views:
                   \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
                   }\n"
           title: Kameswari
-      theme: Google Light Theme
       type: picture-entity
     - aspect_ratio: 1/1
       entity: person.pavanthanuj
@@ -984,7 +982,6 @@ views:
                   \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
                   }\n"
           title: Thanuj
-      theme: Google Light Theme
       type: picture-entity
     type: horizontal-stack
   - cards:
