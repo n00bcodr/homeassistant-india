@@ -5,7 +5,7 @@ from __future__ import annotations
 import aiohttp
 import asyncio
 import base64
-import chardet
+import cchardet
 import hashlib
 import hmac
 import json
@@ -1286,8 +1286,8 @@ class ClientAsync(object):
 
         content = await self._auth.gateway.core.http_get_bytes(info_url)
 
-        # we use chardet to detect correct encoding and convert to unicode string
-        encoding = chardet.detect(content)['encoding']
+        # we use cchardet to detect correct encoding and convert to unicode string
+        encoding = cchardet.detect(content)['encoding']
         try:
             str_content = str(content, encoding, errors='replace')
         except (LookupError, TypeError):
@@ -1320,7 +1320,7 @@ class ClientAsync(object):
             return {}
         if url not in self._model_url_info:
             if device:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Loading model info for %s. Model: %s, Url: %s",
                     device.name,
                     device.model_name,

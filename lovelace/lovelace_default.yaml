@@ -471,61 +471,35 @@ views:
     - entity: switch.geyser
       name: Geyser
       secondary_info: last-updated
-    - type: section
-    - buttons:
-      - icon: mdi:thermometer-off
-        style:
-          button:
-            background-color: var(--table-row-background-color)
-            border-radius: 10px
-            margin-left: 10px
-            padding: 8px
-          icon:
-            color: "{% if is_state('climate.den_ac', 'off') %}\n  grey\n{% else%}\n\
-              \  red\n{% endif %}"
-        tap_action:
-          action: call-service
-          data: {}
-          service: climate.turn_off
-          target:
-            entity_id: climate.den_ac
-      - double_tap_action:
-          action: fire-dom-event
-          browser_mod:
-            card:
-              entity: climate.den_ac
-              type: thermostat
-            command: popup
-            deviceID: this
-            title: Thermostat
-        hold_action:
-          action: fire-dom-event
-          browser_mod:
-            card:
-              entity: climate.den_ac
-              type: thermostat
-            command: popup
-            deviceID: this
-            title: Thermostat
-        icon: mdi:recycle
-        style:
-          button:
-            background-color: var(--table-row-background-color)
-            border-radius: 10px
-            margin-left: 100px
-            padding: 8px
-          icon:
-            color: "{% if is_state('climate.den_ac', 'off') %}\n  green\n{% else%}\n\
-              \  blue\n{% endif %}"
-        tap_action:
-          action: call-service
-          data: {}
-          service: climate.turn_on
-          target:
-            entity_id: climate.den_ac
-      type: custom:paper-buttons-row
     state_color: true
     type: entities
+    view_layout:
+      column: 2
+  - collapsible_controls: false
+    double_tap_action:
+      action: more-info
+    entity: climate.den_ac
+    fill_container: true
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        card:
+          entity: climate.den_ac
+          type: thermostat
+        command: popup
+        deviceID: this
+        title: Thermostat
+    hvac_modes:
+    - cool
+    - auto
+    - fan_only
+    - 'off'
+    icon: mdi:air-conditioner
+    layout: horizontal
+    primary_info: state
+    secondary_info: last-changed
+    show_temperature_control: true
+    type: custom:mushroom-climate-card
     view_layout:
       column: 2
   - cards:
@@ -542,6 +516,9 @@ views:
       toggle_power: true
       type: custom:mini-media-player
       volume_stateless: false
+    - content: '{{(states.media_player.spotify.attributes.media_content_id) | replace
+        ("spotify:track:", "https://open.spotify.com/track/")}}'
+      type: markdown
     - card:
         content: '## {{ states.sensor.spotify_lyrics.attributes.media_artist }} -
           {{ states.sensor.spotify_lyrics.attributes.media_title }}
@@ -1859,35 +1836,30 @@ views:
           type: entities
       type: custom:state-switch
     type: vertical-stack
-  - color: auto
-    entity: switch.plants
-    entity_picture: /local/icons/plant.png
-    hold_action:
-      action: more-info
-    show_entity_picture: true
-    show_state: true
-    size: 100px
-    state:
-    - entity_picture: /local/icons/plant.png
-      value: 'on'
-    - entity_picture: /local/icons/plant.png
-      styles:
-        card:
-        - filter: opacity(70%)
-        icon:
-        - filter: grayscale(100%)
-      value: 'off'
-    - entity_picture: /local/icons/plant.png
-      styles:
-        card:
-        - filter: opacity(70%)
-        icon:
-        - filter: grayscale(100%)
-      value: unavailable
-    styles:
-      card:
-      - border-radius: 25px
-    type: custom:button-card
+  - cards:
+    - collapsible_controls: false
+      entity: climate.refrigerator_fridge
+      fill_container: true
+      hvac_modes: []
+      layout: horizontal
+      name: Fridge
+      primary_info: name
+      show_temperature_control: true
+      tap_action:
+        action: more-info
+      type: custom:mushroom-climate-card
+    - collapsible_controls: false
+      entity: climate.refrigerator_freezer
+      fill_container: true
+      layout: horizontal
+      name: Freezer
+      primary_info: name
+      secondary_info: state
+      show_temperature_control: true
+      tap_action:
+        action: more-info
+      type: custom:mushroom-climate-card
+    type: vertical-stack
   icon: mdi:sofa
   path: living-room
   theme: Backend-selected
@@ -3125,7 +3097,7 @@ views:
           align_state: center
           decimals: 1
           entities:
-          - sensor.rm4_humidity
+          - sensor.den_humidity
           font_size: 70
           hours_to_show: 6
           line_color: skyblue
@@ -3146,7 +3118,7 @@ views:
             value: 30
           decimals: 1
           entities:
-          - sensor.rm4_temperature
+          - sensor.den_temperature
           font_size: 70
           hours_to_show: 6
           line_color: '#e74c3c'

@@ -1299,8 +1299,8 @@
     default: []
   mode: queued
 - id: '1638974963835'
-  alias: ⚙️Lock Tablet when HomeAssistant is restarting
-  description: ''
+  alias: ⚙️Homeassistant Start/Stop
+  description: Runs various automations based on homeassistant starting or stopping.
   trigger:
   - platform: homeassistant
     event: shutdown
@@ -1326,6 +1326,10 @@
       - service: switch.turn_off
         target:
           entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
+        data: {}
+      - service: pyscript.f1constructorstandings
+        data: {}
+      - service: pyscript.f1driverstandings
         data: {}
     default: []
   mode: single
@@ -2226,12 +2230,14 @@
     - switch.sonoff_1000f38ea4
     to: 'on'
   condition:
-  - condition: state
-    entity_id: switch.upstairs_motor
-    state: 'on'
-  - condition: state
-    entity_id: switch.downstairs_motor
-    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: switch.downstairs_motor
+      state: 'on'
+    - condition: state
+      entity_id: switch.upstairs_motor
+      state: 'on'
   action:
   - service: switch.turn_off
     data: {}
