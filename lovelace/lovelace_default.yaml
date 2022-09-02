@@ -143,8 +143,13 @@ title: ''
 views:
 - badges: []
   cards:
-  - entity: weather.weather
-    type: custom:weather-card
+  - entity: mediaquery
+    states:
+      '(min-width: 1000px)':
+        entity: weather.weather
+        number_of_forecasts: '5'
+        type: custom:weather-card
+    type: custom:state-switch
   - badges:
     - entity: sun.sun
       style: ":host {\n  --label-badge-red: #F28C38;\n}           \n"
@@ -176,7 +181,9 @@ views:
         '
       tap_action:
         action: call-service
-        service: speedtestdotnet.speedtest
+        service: homeassistant.update_entity
+        service_data:
+          entity_id: sensor.speedtest_download
       unit_of_measurement: Mbps
     - entity: binary_sensor.den_motion
       name: Den Motion
@@ -296,6 +303,51 @@ views:
     type: custom:badge-card
     view_layout:
       column: 2
+  - entity: mediaquery
+    states:
+      '(max-width: 1000px)':
+        alignment: justify
+        chips:
+        - entity: weather.home
+          show_conditions: true
+          show_temperature: true
+          type: weather
+        - content: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
+            \ | replace(\"living_room\",\" Living Room\") }} - {{ states.device_tracker.oneplus_10pro.attributes.connection_type\
+            \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\"\
+            ,\"2.4 GHz\")}} \n{% else %}\n  Not Connected\n{% endif %}"
+          double_tap_action:
+            action: none
+          hold_action:
+            action: none
+          icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
+
+            mdi:cellphone-wireless
+
+            {% else %}
+
+            mdi:cellphone-off
+
+            {% endif %}'
+          icon_color: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'')
+            %}
+
+            blue
+
+            {% else %}
+
+            white
+
+            {% endif %}
+
+            '
+          tap_action:
+            action: none
+          type: template
+        type: custom:mushroom-chips-card
+    type: custom:state-switch
+    view_layout:
+      column: 2
   - cards:
     - double_tap_action:
         action: fire-dom-event
@@ -371,135 +423,266 @@ views:
     type: custom:stack-in-card
     view_layout:
       column: 1
-  - entities:
-    - conditions:
-      - entity: group.den
-        state: 'on'
-      row:
-        action_name: 'OFF'
-        icon: mdi:castle
-        name: Den
-        tap_action:
+  - cards:
+    - cards:
+      - double_tap_action:
           action: call-service
+          data: {}
           service: automation.trigger
-          service_data:
+          target:
+            entity_id: automation.den_as_it_was
+        entity: group.den
+        fill_container: false
+        hold_action:
+          action: none
+        icon: mdi:home-account
+        icon_color: '{% if is_state(''group.den'', ''on'') %}
+
+          green
+
+          {% else %}
+
+          grey
+
+          {% endif %}'
+        layout: horizontal
+        primary: Home
+        secondary: ''
+        tap_action:
+          action: none
+        type: custom:mushroom-template-card
+      - double_tap_action:
+          action: call-service
+          data: {}
+          service: automation.trigger
+          target:
             entity_id: automation.den_off
-        type: button
-      type: conditional
-    - entity: light.den_lights_group
-      name: Den Lights
-    - entities:
-      - icon: mdi:lightbulb-fluorescent-tube
-        state_color: true
+        fill_container: false
+        hold_action:
+          action: none
+        icon: mdi:door-open
+        icon_color: '{% if is_state(''group.den'', ''on'') %}
+
+          grey
+
+          {% else %}
+
+          blue
+
+          {% endif %}'
+        layout: horizontal
+        primary: Away
+        secondary: ''
         tap_action:
+          action: none
+        type: custom:mushroom-template-card
+      - double_tap_action:
           action: call-service
-          service: script.den_tubelight_white
-      entity: light.den_tube_light
-      toggle: true
-      type: custom:multiple-entity-row
-    - buttons:
-      - entity: switch.front_down_light
-        name: Front
-      - entity: switch.rear_down_light
-        name: Rear
-      type: custom:paper-buttons-row
-    - entities:
-      - entity: light.led_strip_monitors
-        icon: mdi:television-ambient-light
-        name: false
-        state_color: true
-      - entity: light.led_strip_table
-        icon: hue:gradient-lightstrip-wrap
-        name: false
-        state_color: true
+          data:
+            skip_condition: false
+          service: automation.trigger
+          target:
+            entity_id: automation.bed_tag_den
+        fill_container: false
+        hold_action:
+          action: none
+        icon: mdi:sleep
+        icon_color: yellow
+        layout: horizontal
+        primary: Sleep
+        secondary: ''
+        tap_action:
+          action: none
+        type: custom:mushroom-template-card
+      columns: 3
+      square: false
+      type: grid
+    - cards:
+      - collapsible_controls: true
+        entity: light.den_lights_group
+        show_brightness_control: true
+        show_color_control: true
+        show_color_temp_control: true
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - collapsible_controls: false
+        entity: light.den_tube_light
+        show_brightness_control: true
+        show_color_control: true
+        show_color_temp_control: true
+        type: custom:mushroom-light-card
+        use_light_color: true
+      columns: 2
+      square: false
+      type: grid
+    - collapsible_controls: true
       entity: light.led_strip
-      toggle: true
-      type: custom:multiple-entity-row
-    - entity: light.top_light
-    - entity: light.shelf_light
-      icon: mdi:bookshelf
-    - buttons:
+      fill_container: true
+      show_brightness_control: true
+      show_color_control: true
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - cards:
+      - entity: switch.front_down_light
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - entity: switch.rear_down_light
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - entity: light.top_light
+        icon: mdi:light-flood-up
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - entity: light.shelf_light
+        icon: mdi:bookshelf
+        type: custom:mushroom-light-card
+        use_light_color: true
+      columns: 2
+      square: false
+      type: grid
+    - height: 3
+      type: custom:gap-card
+    - cards:
       - entity: switch.den_fan
-        name: Fan
+        icon: ''
+        icon_animation: false
+        tap_action:
+          action: toggle
+        type: custom:mushroom-fan-card
       - entity: switch.den_wall_fan
-        name: Wall Fan
-      type: custom:paper-buttons-row
-    - entities:
-      - entity: sensor.air_purifier_temperature
-        name: ' '
-      - entity: sensor.air_purifier_humidity
-        name: ' '
-      - entity: sensor.air_purifier_pm2_5
-        name: ' '
-      entity: fan.mi_air_purifier
-      state_color: true
-      toggle: true
-      type: custom:multiple-entity-row
-    - entity: switch.plasma_ball
-      name: Plasma Ball
-    - entity: switch.laser
-    - entities:
-      - icon: fab:windows
-        state_color: true
+        icon_animation: true
+        type: custom:mushroom-fan-card
+      columns: 2
+      square: false
+      type: grid
+    - height: 3
+      type: custom:gap-card
+    - cards:
+      - double_tap_action:
+          action: fire-dom-event
+          browser_mod:
+            card:
+              cards:
+              - fill_container: false
+                icon: fab:windows
+                icon_color: blue
+                layout: vertical
+                primary: ''
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_three
+                type: custom:mushroom-template-card
+              - fill_container: false
+                icon: fab:apple
+                icon_color: grey
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_two
+                type: custom:mushroom-template-card
+              - fill_container: false
+                icon: fab:google
+                icon_color: green
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_one
+                type: custom:mushroom-template-card
+              type: horizontal-stack
+            command: popup
+            deviceID: this
+            hide_header: true
+        entity: switch.workstation
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            card:
+              cards:
+              - fill_container: false
+                icon: fab:windows
+                icon_color: blue
+                layout: vertical
+                primary: ''
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_three
+                type: custom:mushroom-template-card
+              - fill_container: false
+                icon: fab:apple
+                icon_color: grey
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_two
+                type: custom:mushroom-template-card
+              - fill_container: false
+                icon: fab:google
+                icon_color: green
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: script.hdmi_one
+                type: custom:mushroom-template-card
+              type: horizontal-stack
+            command: popup
+            deviceID: this
+            hide_header: true
         tap_action:
-          action: call-service
-          service: script.hdmi_three
-      - icon: fab:apple
-        state_color: true
+          action: toggle
+        type: custom:mushroom-entity-card
+      - entity: switch.monitor
+        icon_color: red
         tap_action:
-          action: call-service
-          service: script.hdmi_two
-      - icon: fab:google
-        state_color: true
+          action: toggle
+        type: custom:mushroom-entity-card
+      columns: 2
+      square: false
+      type: grid
+    - height: 3
+      type: custom:gap-card
+    - cards:
+      - entity: switch.laser
         tap_action:
-          action: call-service
-          service: script.hdmi_one
-      entity: switch.workstation
-      state_color: true
-      toggle: true
-      type: custom:multiple-entity-row
-    - entity: switch.monitor
-    - entities:
-      - icon: mdi:coffee
-        state_color: true
+          action: toggle
+        type: custom:mushroom-entity-card
+      - entity: switch.plasma_ball
+        icon_color: pink
         tap_action:
-          action: call-service
-          service: script.make_some_coffee
-      entity: switch.coffee_machine
-      toggle: true
-      type: custom:multiple-entity-row
-    - entity: switch.geyser
-      name: Geyser
-      secondary_info: last-updated
-    state_color: true
-    type: entities
-    view_layout:
-      column: 2
-  - collapsible_controls: false
-    double_tap_action:
-      action: more-info
-    entity: climate.den_ac
-    fill_container: true
-    hold_action:
-      action: fire-dom-event
-      browser_mod:
-        card:
-          entity: climate.den_ac
-          type: thermostat
-        command: popup
-        deviceID: this
-        title: Thermostat
-    hvac_modes:
-    - cool
-    - auto
-    - fan_only
-    - 'off'
-    icon: mdi:air-conditioner
-    layout: horizontal
-    primary_info: state
-    secondary_info: last-changed
-    show_temperature_control: true
-    type: custom:mushroom-climate-card
+          action: toggle
+        type: custom:mushroom-entity-card
+      columns: 2
+      square: false
+      type: grid
+    - entity: fan.mi_air_purifier
+      layout: horizontal
+      show_percentage_control: true
+      type: custom:mushroom-fan-card
+    - collapsible_controls: true
+      double_tap_action:
+        action: more-info
+      entity: climate.den_ac
+      fill_container: true
+      hold_action:
+        action: fire-dom-event
+        browser_mod:
+          card:
+            entity: climate.den_ac
+            type: thermostat
+          command: popup
+          deviceID: this
+          title: Thermostat
+      hvac_modes:
+      - cool
+      - auto
+      - fan_only
+      - 'off'
+      icon: mdi:air-conditioner
+      layout: horizontal
+      primary_info: state
+      secondary_info: last-changed
+      show_temperature_control: true
+      type: custom:mushroom-climate-card
+    type: vertical-stack
     view_layout:
       column: 2
   - cards:
@@ -560,6 +743,26 @@ views:
     type: custom:swipe-card
     view_layout:
       column: 3
+  - card:
+      content: '{% for package in states.sensor.seventeentrack_packages_in_transit.attributes.packages
+        %}
+
+        >- **{{ package.friendly_name }} ({{ package.tracking_number }}):** {{ package.info_text
+        }}
+
+        {% endfor %}
+
+        '
+      title: Packages
+      type: markdown
+    conditions:
+    - entity: sensor.seventeentrack_packages_in_transit
+      state_not: '0'
+    - entity: sensor.seventeentrack_packages_ready_to_be_picked_up
+      state: '0'
+    type: conditional
+    view_layout:
+      column: 1
   - entity: mediaquery
     states:
       '(min-width: 1000px)':
@@ -627,25 +830,6 @@ views:
     type: custom:state-switch
     view_layout:
       column: 1
-  - entity: mediaquery
-    states:
-      '(max-width: 1000px)':
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
-        icon: mdi:cellphone-cog
-        icon_color: blue
-        multiline_secondary: true
-        primary: '{{ states.device_tracker.oneplus_10pro.attributes.deco_device}}
-          - {{ states.device_tracker.oneplus_10pro.attributes.connection_type | replace("band","")
-          | replace("5","5 GHz")| replace("2_4","2.4 GHz") }}'
-        tap_action:
-          action: none
-        type: custom:mushroom-template-card
-        view_layout:
-          column: 1
-    type: custom:state-switch
   - cards:
     - buttonStyle: 'font-size: 14px;'
       cards:
@@ -1059,6 +1243,11 @@ views:
         type: entities
       mode: horizontal
       type: custom:stack-in-card
+    - entity: switch.sonoff_1000f38ea4
+      icon_color: blue
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     mode: vertical
     type: custom:stack-in-card
   - cards:
@@ -1906,6 +2095,32 @@ views:
       type: custom:mini-media-player
     type: vertical-stack
   - cards:
+    - entities:
+      - switch.washing_machine
+      show_header_toggle: false
+      state_color: true
+      type: entities
+    - aggregate_func: min
+      entities:
+      - color: green
+        entity: sensor.washing_machine_power
+        name: Power
+      - color: magenta
+        entity: sensor.washing_machine_current
+        name: Current
+      - color: Black
+        entity: sensor.washing_machine_voltage
+        name: Voltage
+      hours_to_show: 6
+      icon: mdi:washing-machine
+      line_width: 2
+      name: Washing Machine
+      points_per_hour: 10
+      smoothing: false
+      type: custom:mini-graph-card
+      update_interval: 1
+    type: custom:stack-in-card
+  - cards:
     - entity: media_player.lg_tv
       group: true
       type: custom:mini-media-player
@@ -1937,32 +2152,6 @@ views:
         type: custom:lg-remote-control
       title: Remote
       type: custom:collapsable-cards
-    type: custom:stack-in-card
-  - cards:
-    - entities:
-      - switch.washing_machine
-      show_header_toggle: false
-      state_color: true
-      type: entities
-    - aggregate_func: min
-      entities:
-      - color: green
-        entity: sensor.washing_machine_power
-        name: Power
-      - color: magenta
-        entity: sensor.washing_machine_current
-        name: Current
-      - color: Black
-        entity: sensor.washing_machine_voltage
-        name: Voltage
-      hours_to_show: 6
-      icon: mdi:washing-machine
-      line_width: 2
-      name: Washing Machine
-      points_per_hour: 10
-      smoothing: false
-      type: custom:mini-graph-card
-      update_interval: 1
     type: custom:stack-in-card
   icon: ''
   path: hall
@@ -2307,8 +2496,9 @@ views:
   layout:
     max_cols: 2
   path: motors
+  theme: Backend-selected
   title: Motors
-  type: custom:vertical-layout
+  type: custom:masonry-layout
 - badges: []
   cards:
   - cards:
@@ -2762,200 +2952,175 @@ views:
 - badges: []
   cards:
   - cards:
-    - cards:
-      - camera_view: live
-        entity: camera.front_yard_camera_person
-        show_state: false
-        type: picture-entity
-      - camera_view: live
-        entity: camera.hall_camera_person
-        show_name: true
-        show_state: false
-        type: picture-entity
-      type: horizontal-stack
-    - cards:
-      - camera_view: live
-        entity: camera.entrance_camera_person
-        show_state: false
-        type: picture-entity
-      - camera_view: live
-        entity: camera.second_floor_camera_person
-        show_name: true
-        show_state: false
-        type: picture-entity
-      type: horizontal-stack
-    mode: vertical
-    type: custom:stack-in-card
-  - cards:
-    - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.rm4_humidity
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#d35400'
-          value: 28
-        - color: '#ff1800'
-          value: 30
-        decimals: 1
-        entities:
-        - sensor.rm4_temperature
-        font_size: 70
-        hours_to_show: 6
-        line_color: '#e74c3c'
-        line_width: 5
-        name: Temperature
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
+    - entities:
+      - entity: light.den_tube_light
+        name: Light
+        show_icon: true
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.led_strip
+        icon: mdi:led-strip-variant
+        name: LED Strip
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.shelf_light
+        icon: mdi:bookshelf
+        name: Shelf Light
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.workstation
+        icon: mdi:desk
+        name: Workstation
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.monitor
+        icon: mdi:monitor-shimmer
+        name: Monitor
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.den_wall_fan
+        name: Wall Fan
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.den_fan
+        name: Fan
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: climate.den_ac
+        name: AC
+        state_color: true
+        tap_action:
+          action: toggle
+      entity: group.den
+      icon: mdi:castle
+      info_entities:
+      - sensor.den_temperature
+      - sensor.den_humidity
+      - entity: binary_sensor.den_motion
+        icon:
+          state_off: mdi:motion-sensor-off
+          state_on: mdi:motion-sensor
+        show_icon: true
+        state_color: true
+      - entity: binary_sensor.in_bed
+        icon:
+          state_off: mdi:bed-empty
+          state_on: mdi:bed
+        show_icon: true
+      state_color: true
+      tap_action:
+        action: toggle
       title: Den
-      type: horizontal-stack
-    - cards:
-      - align_icon: left
-        align_state: center
-        animate: true
-        decimals: 1
-        entities:
-        - sensor.temperature_and_humidity_humidity
-        font_size: 70
-        hours_to_show: 8
-        line_color: skyblue
-        line_width: 5
-        name: Humidity
-        points_per_hour: 100
-        type: custom:mini-graph-card
-        update_interval: 1
-      - align_icon: left
-        align_state: center
-        animate: true
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#ff6703'
-          value: 28
-        - color: '#ff1800'
-          value: 33
-        decimals: 1
-        entities:
-        - sensor.temperature_and_humidity_temperature
-        font_size: 70
-        hours_to_show: 8
-        line_width: 5
-        name: Temperature
-        points_per_hour: 60
-        type: custom:mini-graph-card
-        update_interval: 1
+      type: custom:room-card
+    - entities:
+      - entity: light.hall_tube_light
+        name: Light
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.rice_lights_l
+        icon: mdi:string-lights
+        name: Rice Lights L
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.rice_lights_r
+        icon: mdi:string-lights
+        name: Rice Lights R
+        state_color: true
+        tap_action:
+          action: toggle
+      info_entities:
+      - entity: binary_sensor.hall_motion
+        icon:
+          state_off: mdi:motion-sensor-off
+          state_on: mdi:motion-sensor
+        show_icon: true
+        state_color: true
+      - sensor.multisensor_1_light
       title: Hall
-      type: horizontal-stack
+      type: custom:room-card
     - cards:
-      - entity: sensor.download_speed
-        max: 300
-        min: 0
-        needle: false
-        severity:
-          green: 250
-          red: 0
-          yellow: 150
-        type: gauge
-      - entity: sensor.upload_speed
-        max: 300
-        min: 0
-        needle: false
-        severity:
-          green: 250
-          red: 0
-          yellow: 150
-        type: gauge
-      mode: horizontal
-      type: custom:stack-in-card
-    mode: vertical
-    type: custom:stack-in-card
-  - bulk_rename:
-    - from: -Battery
-      to: ''
-    - from: ' Battery'
-      to: ''
-    - from: Sensor
-      to: ''
-    - from: e/
-      to: 'e and '
-    color_gradient:
-    - '#ff0000'
-    - '#ffff00'
-    - '#00ff00'
-    entities:
-    - sensor.den_motion_1_battery
-    - sensor.den_motion_2_battery
-    - sensor.den_door_battery
-    - sensor.temperature_and_humidity_battery
-    - sensor.chair_battery
-    - sensor.button_battery
-    - sensor.magic_cube_battery
-    - sensor.vibration_battery
-    title: Zigbee Battery Status
-    type: custom:battery-state-card
-  - background: true
-    cards:
-    - content: <center><img height="50" src="/local/f1/F1.png"></center>
-      type: markdown
-    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
-        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
-        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
-        0) %} race_day {% endif %}'
-      states:
-        race_day:
-          cards:
-          - content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n<h2><em><center><img\n\
-              \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
-              >{{(states.sensor.formula_1.attributes.grand_prix) |\nreplace (\"FORMULA\
-              \ 1\", \"\") }}</em></h2>\n<h2><center> {{ states.sensor.ics_1.attributes.description\
-              \  | replace (\"Grand Prix \",\"\")}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
-              \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
-            type: markdown
-          - cards:
-            - content: " <img src=\"{{(states.sensor.formula_1.attributes.circuit_image)}}\"\
-                \n  alt=\"{{(states.sensor.ics_1.attributes.description) | replace\
-                \ (\"Qualifying \",\n  \"\")}} Circuit\">"
-              theme: Google Light Theme
-              type: markdown
-            - content: "<p><a href=\"{{(states.sensor.formula_1.attributes.circuit_link)}}\"\
-                >\n<img src=\"/local/f1/circuit_stats/{{(states.sensor.ics_1.attributes.location)}}.png\"\
-                \n              alt=\"{{(states.sensor.ics_1.attributes.description)\
-                \ | replace (\"Qualifying \",\n              \"\")}} Circuit\"> </a></p>"
-              theme: amoled
-              type: markdown
-            type: custom:swipe-card
-          type: vertical-stack
-        race_weekend:
-          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
-            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
-            | replace ("Qualifying ", "")}} <br>
-          type: markdown
-        wait:
-          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
-            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
-            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
-            days to go </center> '
-          type: markdown
-      type: custom:state-switch
-    type: custom:stack-in-card
-    view_layout:
-      column: 1
+      - entities:
+        - entity: switch.rice_string_1
+          state_color: true
+        - entity: switch.rice_string_2
+          state_color: true
+        type: entities
+      entities:
+      - entity: light.first_floor_light
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.first_floor_stairway
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.first_floor_corner
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.second_floor_light
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.second_floor_stairway
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: light.second_floor_corner
+        state_color: true
+        tap_action:
+          action: toggle
+      entity: light.front_yard_lights_group
+      icon: mdi:lightbulb-group
+      info_entities:
+      - entity: binary_sensor.front_yard_camera_person_occupancy
+        icon:
+          state_off: mdi:motion-sensor-off
+          state_on: mdi:motion-sensor
+        show_icon: true
+        state_color: true
+      state_color: true
+      style: "div.entities-row {\n  justify-content: center;\n  flex-wrap: wrap;\n\
+        }\n"
+      tap_action:
+        action: toggle
+      title: Front Yard
+      type: custom:room-card
+    - entities:
+      - entity: light.living_room_light
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: fan.fan
+        state_color: true
+        tap_action:
+          action: toggle
+      - entity: switch.wall_fan
+        state_color: true
+        tap_action:
+          action: toggle
+      info_entities:
+      - entity: binary_sensor.multisensor_2_motion
+        icon:
+          state_off: mdi:motion-sensor-off
+          state_on: mdi:motion-sensor
+        show_icon: true
+        state_color: true
+      - sensor.multisensor_2_humidity
+      - sensor.multisensor_2_temperature
+      - sensor.multisensor_2_light
+      title: Living Room
+      type: custom:room-card
+    type: vertical-stack
   icon: mdi:tablet-dashboard
   path: kiosk
   theme: Backend-selected

@@ -1673,7 +1673,8 @@
         target:
           entity_id: light.den_lights_group
         data_template:
-          brightness_step: '{{ angle | float }}'
+          brightness_step: '{{ states.sensor.magic_cube_action_angle.attributes.angle
+            | float }}'
       rotate_ccw_face_2:
       - service: homeassistant.turn_off
         target:
@@ -1689,8 +1690,7 @@
           - service: light.turn_off
             target:
               entity_id: light.den_tube_light
-            data:
-              transition: 4
+            data: {}
         - conditions:
           - condition: state
             entity_id: light.den_tube_light
@@ -1739,7 +1739,8 @@
         target:
           entity_id: light.den_lights_group
         data_template:
-          brightness_step: '{{ states.sensor.magic_cube_action_angle | float }}'
+          brightness_step: '{{ states.sensor.magic_cube_action_angle.attributes.angle
+            | float }}'
 - id: '1647521121730'
   alias: "\U0001F3F0Geyser Switch"
   description: ''
@@ -2256,8 +2257,8 @@
     entity_id: calendar.formula1_2022
   condition: []
   action:
-  - service: pyscript.getdata_f1driverstandings
+  - service: pyscript.f1driverstandings
     data: {}
-  - service: pyscript.getdata_f1constructorstandings
+  - service: pyscript.f1constructorstandings
     data: {}
   mode: single

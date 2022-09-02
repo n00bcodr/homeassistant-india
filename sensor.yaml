@@ -180,5 +180,6 @@
   timeformat: "%A, %-d.%b.%y"
   icon: mdi:keyboard-f1
 
-- platform: aftership
-  api_key: !secret aftership_api
+- platform: seventeentrack
+  username: !secret email
+  password: !secret 17track

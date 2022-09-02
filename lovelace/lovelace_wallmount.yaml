@@ -1132,7 +1132,7 @@ views:
           - height: 100px
           - width: 100px
           - padding: 0px 0px
-          - margin: 0px -100px
+          - margin: 0px -110px
         type: custom:button-card
       conditions:
       - entity: device_tracker.phone_prasad_redmi9i
