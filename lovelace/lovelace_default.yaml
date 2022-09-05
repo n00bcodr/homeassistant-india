@@ -156,11 +156,11 @@ views:
       tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            type: custom:sun-card
-          command: popup
-          deviceID: this
-          hide_header: true
+          data:
+            browser_id: THIS
+            content:
+              type: custom:sun-card
+          service: browser_mod.popup
     - entity: sensor.moon_phase
       style:
         ha-state-label-badge:
@@ -196,14 +196,14 @@ views:
       tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            entities:
-            - automation.motion_in_hall_change_led_color
-            - automation.hall_lights_on_when_motion_detected
-            type: entities
-          command: popup
-          deviceID: this
-          hide_header: true
+          data:
+            browser_id: THIS
+            content:
+              entities:
+              - automation.motion_in_hall_change_led_color
+              - automation.hall_lights_on_when_motion_detected
+              type: entities
+          service: browser_mod.popup
     - entity: binary_sensor.chair_occupancy
       name: Occupancy
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
@@ -265,7 +265,17 @@ views:
         value: 0
       type: entity-filter
     - entities:
-      - entity: binary_sensor.homeassistant_update
+      - action: fire-dom-event
+        browser_mod:
+          data:
+            browser_id: THIS
+            content:
+              entities:
+              - sensor.docker_hub_beta
+              - sensor.current_version
+              type: entities
+          service: browser_mod.popup
+        entity: binary_sensor.homeassistant_update
         hold_action:
           action: navigate
           navigation_path: /config/dashboard
@@ -275,17 +285,7 @@ views:
             $:
               ha-label-badge:
                 $: ".label-badge {\n border-style: dashed !important;\n}   \n"
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            card:
-              entities:
-              - sensor.docker_hub_beta
-              - sensor.current_version
-              type: entities
-            command: popup
-            deviceID: this
-            hide_header: true
+        tap_action: null
       state_filter:
       - 'on'
       - name: updates
@@ -352,32 +352,34 @@ views:
     - double_tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            cards:
-            - content: "<h2><center> <ha-icon icon='mdi:podium'></ha-icon> Constructors\
-                \ Standings</h2>  <center><table border= \"1\" style=\"width: 80%;\
-                \ text-align: center;border-collapse: collapse;\"> <tr>\n  <th><b>Position</th>\n\
-                \  <th><b>Constructor</th>\n  <th><b>Wins</th>\n  <th><b>Points</th>\n\
-                </tr> {%- for item in state_attr(\"sensor.f1_constructor_standings\"\
-                , \"standings\") %}  <tr>  <td> {{ item.Position }} </td> <td>\n {{item.Constructor}}\n\
-                </td> <td> {{item.Wins}} </td> <td> {{item.Points}} </td> </tr> {%-\
-                \ endfor %}"
-              type: markdown
-            - content: "<h2> <center><ha-icon icon='mdi:racing-helmet'></ha-icon>\
-                \ Driver Standings</h2> <center><table border= \"1\" style=\"width:\
-                \ 80%; text-align: center;\"> <tr>\n  <th><b>Position</th>\n  <th><b>Driver</th>\n\
-                \  <th><b>Team</th>\n  <th><b>Points</th>\n</tr> {%- for item in state_attr(\"\
-                sensor.f1_driver_standings\", \"standings\") %}  <tr>  <td> {{ item.Position\
-                \ }} </td> <td>\n {{item.Driver}}\n</td> <td> {{item.Team}} </td><td>\
-                \ {{item.Points}} </td> </tr> {%- endfor %}"
-              type: markdown
-            parameters:
-              autoHeight: true
-              effect: fade
-            type: custom:swipe-card
-          command: popup
-          deviceID: this
-          title: Standings
+          data:
+            browser_id: THIS
+            content:
+              cards:
+              - content: "<h2><center> <ha-icon icon='mdi:podium'></ha-icon> Constructors\
+                  \ Standings</h2>  <center><table border= \"1\" style=\"width: 80%;\
+                  \ text-align: center;border-collapse: collapse;\"> <tr>\n  <th><b>Position</th>\n\
+                  \  <th><b>Constructor</th>\n  <th><b>Wins</th>\n  <th><b>Points</th>\n\
+                  </tr> {%- for item in state_attr(\"sensor.f1_constructor_standings\"\
+                  , \"standings\") %}  <tr>  <td> {{ item.Position }} </td> <td>\n\
+                  \ {{item.Constructor}}\n</td> <td> {{item.Wins}} </td> <td> {{item.Points}}\
+                  \ </td> </tr> {%- endfor %}"
+                type: markdown
+              - content: "<h2> <center><ha-icon icon='mdi:racing-helmet'></ha-icon>\
+                  \ Driver Standings</h2> <center><table border= \"1\" style=\"width:\
+                  \ 80%; text-align: center;\"> <tr>\n  <th><b>Position</th>\n  <th><b>Driver</th>\n\
+                  \  <th><b>Team</th>\n  <th><b>Points</th>\n</tr> {%- for item in\
+                  \ state_attr(\"sensor.f1_driver_standings\", \"standings\") %} \
+                  \ <tr>  <td> {{ item.Position }} </td> <td>\n {{item.Driver}}\n\
+                  </td> <td> {{item.Team}} </td><td> {{item.Points}} </td> </tr> {%-\
+                  \ endfor %}"
+                type: markdown
+              parameters:
+                autoHeight: true
+                effect: fade
+              type: custom:swipe-card
+            title: Standings
+          service: browser_mod.popup
       entity_picture: /local/f1/F1.png
       show_entity_picture: true
       type: custom:button-card
@@ -561,72 +563,72 @@ views:
       - double_tap_action:
           action: fire-dom-event
           browser_mod:
-            card:
-              cards:
-              - fill_container: false
-                icon: fab:windows
-                icon_color: blue
-                layout: vertical
-                primary: ''
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_three
-                type: custom:mushroom-template-card
-              - fill_container: false
-                icon: fab:apple
-                icon_color: grey
-                layout: vertical
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_two
-                type: custom:mushroom-template-card
-              - fill_container: false
-                icon: fab:google
-                icon_color: green
-                layout: vertical
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_one
-                type: custom:mushroom-template-card
-              type: horizontal-stack
-            command: popup
-            deviceID: this
-            hide_header: true
+            data:
+              browser_id: THIS
+              content:
+                cards:
+                - fill_container: false
+                  icon: fab:windows
+                  icon_color: blue
+                  layout: vertical
+                  primary: ''
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_three
+                  type: custom:mushroom-template-card
+                - fill_container: false
+                  icon: fab:apple
+                  icon_color: grey
+                  layout: vertical
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_two
+                  type: custom:mushroom-template-card
+                - fill_container: false
+                  icon: fab:google
+                  icon_color: green
+                  layout: vertical
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_one
+                  type: custom:mushroom-template-card
+                type: horizontal-stack
+            service: browser_mod.popup
         entity: switch.workstation
         hold_action:
           action: fire-dom-event
           browser_mod:
-            card:
-              cards:
-              - fill_container: false
-                icon: fab:windows
-                icon_color: blue
-                layout: vertical
-                primary: ''
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_three
-                type: custom:mushroom-template-card
-              - fill_container: false
-                icon: fab:apple
-                icon_color: grey
-                layout: vertical
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_two
-                type: custom:mushroom-template-card
-              - fill_container: false
-                icon: fab:google
-                icon_color: green
-                layout: vertical
-                tap_action:
-                  action: call-service
-                  service: script.hdmi_one
-                type: custom:mushroom-template-card
-              type: horizontal-stack
-            command: popup
-            deviceID: this
-            hide_header: true
+            data:
+              browser_id: THIS
+              content:
+                cards:
+                - fill_container: false
+                  icon: fab:windows
+                  icon_color: blue
+                  layout: vertical
+                  primary: ''
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_three
+                  type: custom:mushroom-template-card
+                - fill_container: false
+                  icon: fab:apple
+                  icon_color: grey
+                  layout: vertical
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_two
+                  type: custom:mushroom-template-card
+                - fill_container: false
+                  icon: fab:google
+                  icon_color: green
+                  layout: vertical
+                  tap_action:
+                    action: call-service
+                    service: script.hdmi_one
+                  type: custom:mushroom-template-card
+                type: horizontal-stack
+            service: browser_mod.popup
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
@@ -665,11 +667,12 @@ views:
       hold_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            entity: climate.den_ac
-            type: thermostat
-          command: popup
-          deviceID: this
+          data:
+            browser_id: THIS
+            content:
+              entity: climate.den_ac
+              type: thermostat
+          service: browser_mod.popup
           title: Thermostat
       hvac_modes:
       - cool
@@ -759,7 +762,7 @@ views:
     - entity: sensor.seventeentrack_packages_in_transit
       state_not: '0'
     - entity: sensor.seventeentrack_packages_ready_to_be_picked_up
-      state: '0'
+      state_not: '0'
     type: conditional
     view_layout:
       column: 1
@@ -2081,7 +2084,6 @@ views:
       - entity: switch.rice_lights_r
       - entity: light.rgb1
       - entity: light.rgb2
-      - entity: light.wipro_bulb
       - entity: binary_sensor.pavanthanuj
       - entity: automation.hall_lights_on_when_motion_detected
       state_color: true
@@ -3692,9 +3694,25 @@ views:
       secondary: Prasad
       type: custom:mushroom-template-card
     type: vertical-stack
+  - align_icon: left
+    align_state: center
+    entities:
+    - entity: sensor.petrol_price
+      icon: mdi:fuel
+      name: Petrol
+    font_size: 90
+    icon: mdi:fuel
+    line_width: 1
+    show:
+      fill: fade
+    type: custom:mini-graph-card
+    update_interval: 28800
   icon: mdi:home-analytics
   path: network
   theme: ''
   title: Network and Devices
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
+- badges: []
+  cards: []
+  theme: Backend-selected

@@ -241,7 +241,7 @@
     entity_id: scene.den_as_it_was
   mode: single
 - id: bed_den
-  alias: "\U0001F3F0Good Night - Tag"
+  alias: "\U0001F3F0Good Night - Den Tag"
   description: ''
   trigger:
   - platform: tag
@@ -1286,16 +1286,10 @@
       - condition: trigger
         id: wallmount
       sequence:
-      - service: browser_mod.window_reload
-        data:
-          deviceID: tablet
-    - conditions:
-      - condition: trigger
-        id: lovelace
-      sequence:
-      - service: browser_mod.window_reload
-        data:
-          deviceID: nexus?kiosk
+      - service: browser_mod.refresh
+        data: {}
+        target:
+          device_id: 534f77b165463f8e653c72beaa4d9399
     default: []
   mode: queued
 - id: '1638974963835'

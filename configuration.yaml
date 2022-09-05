@@ -39,6 +39,8 @@ notify: !include notify.yaml
 
 frontend:
   themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /local/card-mod.js
 
 monitor_docker:
   - name: Docker
@@ -72,23 +74,12 @@ recorder:
   purge_keep_days: 10
   exclude:
     entity_globs:
-      - sensor.browser_*
       - sensor.weather_*
       - sensor.time_date
 
 spotcast:
   sp_dc: !secret sp_dc
   sp_key: !secret sp_key
-
-browser_mod:
-  devices:
-    windowschrome:
-      disable:
-        - light
-        - media_player
-    tablet:
-      camera: true
-  prefix: "browser_mod_"
 
 telegram_bot:
   - platform: polling

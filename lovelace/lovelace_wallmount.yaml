@@ -595,16 +595,17 @@ button_card_templates:
     hold_action:
       action: fire-dom-event
       browser_mod:
-        card:
-          brightness_icon: brightness-7
-          entity: '[[[ return entity.entity_id ]]]
+        data:
+          browser_id: THIS
+          content:
+            brightness_icon: brightness-7
+            entity: '[[[ return entity.entity_id ]]]
 
-            '
-          hide_header: false
-          show_slider_percent: true
-          type: custom:light-entity-card
-        command: popup
-        hide_header: true
+              '
+            hide_header: false
+            show_slider_percent: true
+            type: custom:light-entity-card
+        service: browser_mod.popup
     template:
     - base
     - tap_audio
@@ -616,12 +617,12 @@ button_card_templates:
         \ === undefined || \n    states['sensor.lenovo_tab_m10_hd_foreground_app'].state;\n\
         \  if (variables.state === 'off' && screensaver != 'com.tblenovo.launcher')\
         \ {\n    hass.callService('media_player', 'play_media', {\n      entity_id:\
-        \ 'media_player.browser_mod_tablet',\n      media_content_id: '/local/sound/on.m4a',\n\
+        \ 'media_player.lenovo_fk',\n      media_content_id: '/local/sound/on.m4a',\n\
         \      media_content_type: 'music'\n    });\n  }\n  if (variables.state ===\
         \ 'on' && screensaver != 'com.tblenovo.launcher') {\n    hass.callService('media_player',\
-        \ 'play_media', {\n      entity_id: 'media_player.browser_mod_tablet',\n \
-        \     media_content_id: '/local/sound/off.m4a',\n      media_content_type:\
-        \ 'music'\n    });\n  }\n]]]\n"
+        \ 'play_media', {\n      entity_id: 'media_player.lenovo_fk',\n      media_content_id:\
+        \ '/local/sound/off.m4a',\n      media_content_type: 'music'\n    });\n  }\n\
+        ]]]\n"
   tv_button:
     aspect_ratio: 1/1
     show_icon: false
@@ -703,25 +704,22 @@ button_card_templates:
     hold_action:
       action: fire-dom-event
       browser_mod:
-        card:
-          brightness_icon: brightness-7
-          consolidate_entities: true
-          entity: '[[[ return entity.entity_id ]]]
+        data:
+          browser_id: THIS
+          content:
+            brightness_icon: brightness-7
+            consolidate_entities: true
+            entity: '[[[ return entity.entity_id ]]]
 
-            '
-          hide_header: false
-          show_slider_percent: true
-          type: custom:light-entity-card
-        command: popup
-        hide_header: true
+              '
+            hide_header: false
+            show_slider_percent: true
+            type: custom:light-entity-card
+        service: browser_mod.popup
     template:
     - base
     - tap_audio
     - animate
-kiosk_mode:
-  non_admin_settings:
-    hide_menubutton: true
-    hide_overflow: true
 views:
 - badges: []
   cards:
@@ -746,84 +744,89 @@ views:
       tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            cards:
-            - card_mod:
-                class: content
-              entities:
-              - entity: person.murthy
-                secondary_info: last-changed
-              type: entities
-            - entities:
-              - entity: person.murthy
-              type: history-graph
-            - entities:
-              - entity: sensor.murthy_nord2_battery_level
-                name: Battery
-              - entity: binary_sensor.murthy_nord2_is_charging
-                name: Charging?
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.murthy_nord2_wifi_state
-                name: Wi-Fi
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.murthy_nord2_bluetooth_state
-                name: Bluetooth
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.murthy_nord2_mobile_data
-                name: Data
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              show_state: true
-              type: glance
-            - icon: mdi:volume-high
-              name: Find Phone
-              tap_action:
-                action: call-service
-                service: notify.mobile_app_murthy_nord2
-                service_data:
-                  data:
-                    channel: alarm_stream
-                    priority: high
-                    ttl: 0
-                  message: ''
-                  title: Find My Phone
-              template: icon_name
-              type: custom:button-card
-            - dark_mode: true
-              default_zoom: 15
-              entities:
-              - entity: device_tracker.murthy_nord2
-              - entity: device_tracker.life360_murthy_upadrasta
-              hours_to_show: 24
-              type: map
-            type: vertical-stack
-          command: popup
-          style:
-            hui-vertical-stack-card:
-              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
-                }\n"
-              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
-                \ 1.7em !important;\n}\n"
-              $hui-map-card:
-                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
-                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
-                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
-                  \  }\n}\n"
-                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
-                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
-                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
-                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
-                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+          data:
+            browser_id: THIS
+            content:
+              cards:
+              - card_mod:
+                  class: content
+                entities:
+                - entity: person.murthy
+                  secondary_info: last-changed
+                type: entities
+              - entities:
+                - entity: person.murthy
+                type: history-graph
+              - entities:
+                - entity: sensor.murthy_nord2_battery_level
+                  name: Battery
+                - entity: binary_sensor.murthy_nord2_is_charging
+                  name: Charging?
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.murthy_nord2_wifi_state
+                  name: Wi-Fi
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.murthy_nord2_bluetooth_state
+                  name: Bluetooth
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.murthy_nord2_mobile_data
+                  name: Data
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                show_state: true
+                type: glance
+              - icon: mdi:volume-high
+                name: Find Phone
+                styles:
+                  card:
+                  - margin: 0px 180px
+                tap_action:
+                  action: call-service
+                  service: notify.mobile_app_murthy_nord2
+                  service_data:
+                    data:
+                      channel: alarm_stream
+                      priority: high
+                      ttl: 0
+                    message: ''
+                    title: Find My Phone
+                template: icon_name
+                type: custom:button-card
+              - dark_mode: true
+                default_zoom: 15
+                entities:
+                - entity: device_tracker.murthy_nord2
+                - entity: device_tracker.life360_murthy_upadrasta
+                hours_to_show: 24
+                type: map
+              type: vertical-stack
+            style:
+              hui-vertical-stack-card:
+                $: "button-card {\n  align-self: center;\n  padding: .2em 0 2em 0;\n\
+                  }\nhui-history-graph-card {\n  padding: 0 1em 0 1em;\n}\n"
+                $hui-entities-card$: "#states {\n  padding-left: 2em;\n  padding-bottom:\
+                  \ .9em;\n}\n"
+                $hui-glance-card$: ".entities {\n  padding: 12px 29px 4px 26px !important;\n\
                   }\n"
-          title: Murthy
+                $hui-map-card:
+                  $: "#root {\n  height: 25em;\n  padding-bottom: 0 !important;\n\
+                    }\nha-icon-button {\n  color: var(--primary-color);\n  zoom: 140%;\n\
+                    \  margin-left: -0.2em;\n}\nha-card {\n  border-top: 2px solid\
+                    \ #1a1a1a;\n  border-radius: 0;\n  transition: none;\n}\n"
+                  $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n\
+                    .leaflet-control-attribution {\n  display: none;\n}\n.leaflet-bar\
+                    \ a {\n  background-color: rgba(115, 123, 124, 0.2) !important;\n\
+                    \  color: #9da0a2 !important;\n  backdrop-filter: blur(0.25em);\n\
+                    \  zoom: 140%;\n}\na.leaflet-control-zoom-in {\n  border-bottom:\
+                    \ 1px solid #181818 !important;\n}\n.leaflet-pane.leaflet-tile-pane\
+                    \ {\n  filter: invert(0.95) grayscale(0.95) contrast(95%);\n}\n"
+          service: browser_mod.popup
       type: picture-entity
     - aspect_ratio: 1/1
       entity: person.kameswari
-      hold_action:
-        action: none
       image: /local/images/kameswari.jpg
       show_name: false
       state_filter:
@@ -831,84 +834,89 @@ views:
       tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            cards:
-            - card_mod:
-                class: content
-              entities:
-              - entity: person.kameswari
-                secondary_info: last-changed
-              type: entities
-            - entities:
-              - entity: person.kameswari
-              type: history-graph
-            - entities:
-              - entity: sensor.kameswari_nord_battery_level
-                name: Battery
-              - entity: binary_sensor.kameswari_nord_is_charging
-                name: Charging?
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.kameswari_nord_wifi_state
-                name: Wi-Fi
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.kameswari_nord_bluetooth_state
-                name: Bluetooth
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.kameswari_nord_mobile_data
-                name: Data
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              show_state: true
-              type: glance
-            - icon: mdi:volume-high
-              name: Find Phone
-              tap_action:
-                action: call-service
-                service: notify.mobile_app_kameswari_nord
-                service_data:
-                  data:
-                    channel: alarm_stream
-                    priority: high
-                    ttl: 0
-                  message: ''
-                  title: Find My Phone
-              template: icon_name
-              type: custom:button-card
-            - dark_mode: true
-              default_zoom: 16
-              entities:
-              - entity: device_tracker.kameswari_nord_2
-              - entity: device_tracker.life360_kameswari_upadrasta
-              hours_to_show: 24
-              type: map
-            type: vertical-stack
-          command: popup
-          style:
-            hui-vertical-stack-card:
-              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
-                }\n"
-              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
-                \ 1.7em !important;\n}\n"
-              $hui-map-card:
-                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
-                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
-                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
-                  \  }\n}\n"
-                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
-                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
-                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
-                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
-                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+          data:
+            browser_id: THIS
+            content:
+              cards:
+              - card_mod:
+                  class: content
+                entities:
+                - entity: person.kameswari
+                  secondary_info: last-changed
+                type: entities
+              - entities:
+                - entity: person.kameswari
+                type: history-graph
+              - entities:
+                - entity: sensor.kameswari_nord_battery_level
+                  name: Battery
+                - entity: binary_sensor.kameswari_nord_is_charging
+                  name: Charging?
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.kameswari_nord_wifi_state
+                  name: Wi-Fi
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.kameswari_nord_bluetooth_state
+                  name: Bluetooth
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.kameswari_nord_mobile_data
+                  name: Data
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                show_state: true
+                type: glance
+              - icon: mdi:volume-high
+                name: Find Phone
+                styles:
+                  card:
+                  - margin: 0px 180px
+                tap_action:
+                  action: call-service
+                  service: notify.mobile_app_kameswari_nord
+                  service_data:
+                    data:
+                      channel: alarm_stream
+                      priority: high
+                      ttl: 0
+                    message: ''
+                    title: Find My Phone
+                template: icon_name
+                type: custom:button-card
+              - dark_mode: true
+                default_zoom: 16
+                entities:
+                - entity: device_tracker.kameswari_nord_2
+                - entity: device_tracker.life360_kameswari_upadrasta
+                hours_to_show: 24
+                type: map
+              type: vertical-stack
+            style:
+              hui-vertical-stack-card:
+                $: "button-card {\n  align-self: center;\n  padding: .2em 0 2em 0;\n\
+                  }\nhui-history-graph-card {\n  padding: 0 1em 0 1em;\n}\n"
+                $hui-entities-card$: "#states {\n  padding-left: 2em;\n  padding-bottom:\
+                  \ .9em;\n}\n"
+                $hui-glance-card$: ".entities {\n  padding: 12px 29px 4px 26px !important;\n\
                   }\n"
-          title: Kameswari
+                $hui-map-card:
+                  $: "#root {\n  height: 25em;\n  padding-bottom: 0 !important;\n\
+                    }\nha-icon-button {\n  color: var(--primary-color);\n  zoom: 140%;\n\
+                    \  margin-left: -0.2em;\n}\nha-card {\n  border-top: 2px solid\
+                    \ #1a1a1a;\n  border-radius: 0;\n  transition: none;\n}\n"
+                  $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n\
+                    .leaflet-control-attribution {\n  display: none;\n}\n.leaflet-bar\
+                    \ a {\n  background-color: rgba(115, 123, 124, 0.2) !important;\n\
+                    \  color: #9da0a2 !important;\n  backdrop-filter: blur(0.25em);\n\
+                    \  zoom: 140%;\n}\na.leaflet-control-zoom-in {\n  border-bottom:\
+                    \ 1px solid #181818 !important;\n}\n.leaflet-pane.leaflet-tile-pane\
+                    \ {\n  filter: invert(0.95) grayscale(0.95) contrast(95%);\n}\n"
+          service: browser_mod.popup
       type: picture-entity
     - aspect_ratio: 1/1
       entity: person.pavanthanuj
-      hold_action:
-        action: none
       image: /local/images/thanuj.jpg
       show_name: false
       state_filter:
@@ -916,72 +924,79 @@ views:
       tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            cards:
-            - card_mod:
-                class: content
-              entities:
-              - entity: person.pavanthanuj
-                secondary_info: last-changed
-              type: entities
-            - entities:
-              - entity: person.pavanthanuj
-              type: history-graph
-            - entities:
-              - entity: sensor.10pro_battery_level
-                name: Battery
-              - entity: binary_sensor.10pro_is_charging
-                name: Charging?
-                style: "state-badge {\n  color: {{ '#bfab28' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.10pro_wifi_state
-                name: Wi-Fi
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.10pro_bluetooth_state
-                name: Bluetooth
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              - entity: binary_sensor.10pro_mobile_data
-                name: Data
-                style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity, 'off')\
-                  \ else '#3c3f3f' }};\n}\n"
-              show_state: true
-              type: glance
-            - icon: mdi:volume-high
-              name: Find Phone
-              tap_action:
-                action: call-service
-                service: notify.mobile_app_10pro
-                service_data:
-                  data:
-                    channel: alarm_stream
-                    priority: high
-                    ttl: 0
-                  message: ''
-                  title: Find My Phone
-              template: icon_name
-              type: custom:button-card
-            type: vertical-stack
-          command: popup
-          style:
-            hui-vertical-stack-card:
-              $: "button-card {\n  align-self: center;\n  padding: 0.2em 0 0.3em 0;\n\
-                }\n"
-              $hui-history-graph-card$: ".content {\n  padding: 0.2em 1.7em 1.2em\
-                \ 1.7em !important;\n}\n"
-              $hui-map-card:
-                $: "mwc-icon-button {\n  color: var(--primary-color);\n}\nha-card\
-                  \ {\n  border-radius: 0;\n  animation: border 1s forwards;\n}\n\
-                  @keyframes border {\n  0%, 100% {\n    border-top: 2px solid #1a1a1a;\n\
-                  \  }\n}\n"
-                $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n.leaflet-control-attribution\
-                  \ {\n  display: none;\n}\n.leaflet-bar a {\n  background-color:\
-                  \ rgba(47, 51, 51, 0.9) !important;\n  color: #9da0a2 !important;\n\
-                  }\na.leaflet-control-zoom-in {\n  border-bottom: 1px solid #181818\
-                  \ !important;\n}\n.leaflet-pane.leaflet-tile-pane {\n  filter: contrast(85%);\n\
+          data:
+            browser_id: THIS
+            content:
+              cards:
+              - card_mod:
+                  class: content
+                entities:
+                - entity: person.pavanthanuj
+                  secondary_info: last-changed
+                type: entities
+              - entities:
+                - entity: person.pavanthanuj
+                type: history-graph
+              - entities:
+                - entity: sensor.10pro_battery_level
+                  name: Battery
+                - entity: binary_sensor.10pro_is_charging
+                  name: Charging?
+                  style: "state-badge {\n  color: {{ '#bfab28' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.10pro_wifi_state
+                  name: Wi-Fi
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.10pro_bluetooth_state
+                  name: Bluetooth
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                - entity: binary_sensor.10pro_mobile_data
+                  name: Data
+                  style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
+                    \ 'off') else '#3c3f3f' }};\n}\n"
+                show_state: true
+                type: glance
+              - icon: mdi:volume-high
+                name: Find Phone
+                styles:
+                  card:
+                  - margin: 0px 180px
+                tap_action:
+                  action: call-service
+                  service: notify.mobile_app_10pro
+                  service_data:
+                    data:
+                      channel: alarm_stream
+                      priority: high
+                      ttl: 0
+                    message: ''
+                    title: Find My Phone
+                template: icon_name
+                type: custom:button-card
+              type: vertical-stack
+            style:
+              hui-vertical-stack-card:
+                $: "button-card {\n  align-self: center;\n  padding: .2em 0 2em 0;\n\
+                  }\nhui-history-graph-card {\n  padding: 0 1em 0 1em;\n}\n"
+                $hui-entities-card$: "#states {\n  padding-left: 2em;\n  padding-bottom:\
+                  \ .9em;\n}\n"
+                $hui-glance-card$: ".entities {\n  padding: 12px 29px 4px 26px !important;\n\
                   }\n"
-          title: Thanuj
+                $hui-map-card:
+                  $: "#root {\n  height: 25em;\n  padding-bottom: 0 !important;\n\
+                    }\nha-icon-button {\n  color: var(--primary-color);\n  zoom: 140%;\n\
+                    \  margin-left: -0.2em;\n}\nha-card {\n  border-top: 2px solid\
+                    \ #1a1a1a;\n  border-radius: 0;\n  transition: none;\n}\n"
+                  $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n\
+                    .leaflet-control-attribution {\n  display: none;\n}\n.leaflet-bar\
+                    \ a {\n  background-color: rgba(115, 123, 124, 0.2) !important;\n\
+                    \  color: #9da0a2 !important;\n  backdrop-filter: blur(0.25em);\n\
+                    \  zoom: 140%;\n}\na.leaflet-control-zoom-in {\n  border-bottom:\
+                    \ 1px solid #181818 !important;\n}\n.leaflet-pane.leaflet-tile-pane\
+                    \ {\n  filter: invert(0.95) grayscale(0.95) contrast(95%);\n}\n"
+          service: browser_mod.popup
       type: picture-entity
     type: horizontal-stack
   - cards:
@@ -989,53 +1004,54 @@ views:
       double_tap_action:
         action: fire-dom-event
         browser_mod:
-          card:
-            cards:
-            - cards:
-              - entity: camera.hall_camera
-                name: Hall Camera 1
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              - entity: camera.hall_camera_2_hd
-                name: Hall Camera 2
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - aspect_ratio: 3/4
-                entity: camera.firstfloor
-                name: First Floor
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              - aspect_ratio: 3/4
-                entity: camera.secondfloor
-                name: Second Floor
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - aspect_ratio: 3/4
-                entity: camera.entrance
-                name: Entrance
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              - aspect_ratio: 3/4
-                entity: camera.driveway
-                name: Driveway
-                show_live_stream: true
-                size: 100%
-                type: custom:button-card
-              type: horizontal-stack
-            type: vertical-stack
-          command: popup
-          deviceID: this
-          large: true
-          title: Cameras
+          data:
+            browser_id: THIS
+            content:
+              cards:
+              - cards:
+                - entity: camera.hall_camera
+                  name: Hall Camera 1
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                - entity: camera.hall_camera_2_hd
+                  name: Hall Camera 2
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                type: horizontal-stack
+              - cards:
+                - aspect_ratio: 3/4
+                  entity: camera.firstfloor
+                  name: First Floor
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                - aspect_ratio: 3/4
+                  entity: camera.secondfloor
+                  name: Second Floor
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                type: horizontal-stack
+              - cards:
+                - aspect_ratio: 3/4
+                  entity: camera.entrance
+                  name: Entrance
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                - aspect_ratio: 3/4
+                  entity: camera.driveway
+                  name: Driveway
+                  show_live_stream: true
+                  size: 100%
+                  type: custom:button-card
+                type: horizontal-stack
+              type: vertical-stack
+            size: wide
+            title: Cameras
+          service: browser_mod.popup
       hold_action:
         action: navigate
         navigation_path: /lovelace-wallmount/cameras
@@ -1390,16 +1406,15 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          consolidate_entities: true
-                          entity: light.den_lights_group
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            consolidate_entities: true
+                            entity: light.den_lights_group
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.den_lights_group
               icon: mdi:lightbulb-group-outline
               template: rgb_light_button
@@ -1417,15 +1432,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.den_tube_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.den_tube_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.den_tube_light
               template: rgb_light_button
               type: custom:button-card
@@ -1449,15 +1463,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.led_strip
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.led_strip
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.led_strip
               template: rgb_light_button
               type: custom:button-card
@@ -1470,15 +1483,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.shelf_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.shelf_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.shelf_light
               template: rgb_light_button
               type: custom:button-card
@@ -1488,15 +1500,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.top_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.top_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.top_light
               template: rgb_light_button
               type: custom:button-card
@@ -1516,16 +1527,15 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          consolidate_entities: true
-                          entity: light.front_yard_lights_group
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            consolidate_entities: true
+                            entity: light.front_yard_lights_group
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.front_yard_lights_group
               icon: mdi:lightbulb-group-outline
               template: ww_light_button
@@ -1561,15 +1571,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.first_floor_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.first_floor_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.first_floor_light
               icon: mdi:lightbulb-outline
               template: ww_light_button
@@ -1580,15 +1589,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.first_floor_stairway
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.first_floor_stairway
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.first_floor_stairway
               icon: mdi:lightbulb-outline
               template: ww_light_button
@@ -1599,15 +1607,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.first_floor_corner
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.first_floor_corner
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.first_floor_corner
               icon: mdi:lightbulb-outline
               name: First Floor Corner
@@ -1621,15 +1628,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.second_floor_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.second_floor_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.second_floor_light
               icon: mdi:lightbulb-outline
               template: ww_light_button
@@ -1640,15 +1646,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.second_floor_stairway
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.second_floor_stairway
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.second_floor_stairway
               icon: mdi:lightbulb-outline
               template: ww_light_button
@@ -1659,15 +1664,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.second_floor_corner
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.second_floor_corner
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.second_floor_corner
               icon: mdi:lightbulb-outline
               template: ww_light_button
@@ -1689,15 +1693,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.hall_tube_light
-                          hide_header: false
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.hall_tube_light
+                            hide_header: false
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.hall_tube_light
               icon: mdi:lightbulb-fluorescent-tube-outline
               template: ww_light_button
@@ -1733,15 +1736,14 @@ views:
                     tap_action:
                       action: fire-dom-event
                       browser_mod:
-                        card:
-                          brightness_icon: brightness-7
-                          entity: light.living_room_light
-                          hide_header: true
-                          show_slider_percent: true
-                          type: custom:light-entity-card
-                        command: popup
-                        deviceID: this
-                        hide_header: true
+                        data:
+                          content:
+                            brightness_icon: brightness-7
+                            entity: light.living_room_light
+                            hide_header: true
+                            show_slider_percent: true
+                            type: custom:light-entity-card
+                        service: browser_mod.popup
               entity: light.living_room_light
               icon: mdi:lightbulb-fluorescent-tube-outline
               template: ww_light_button
@@ -1763,36 +1765,36 @@ views:
               hold_action:
                 action: fire-dom-event
                 browser_mod:
-                  card:
-                    action_button:
-                      icon: mdi:power
-                      mode: toggle
-                      show: false
-                      show_spinner: true
-                      tap_action:
-                        action: toggle
-                    compact: false
-                    entity: fan.fan
-                    icon:
-                      icon: ''
-                      show: false
-                      tap_action:
-                        action: none
-                      use_state_color: false
-                    name: Speed
-                    show_name: true
-                    show_state: true
-                    slider:
-                      background: gradient
-                      direction: left-right
-                      force_square: false
-                      show_track: true
-                      toggle_on_click: false
-                      use_percentage_bg_opacity: false
-                      use_state_color: false
-                    type: custom:slider-button-card
-                  command: popup
-                  hide_header: true
+                  data:
+                    content:
+                      action_button:
+                        icon: mdi:power
+                        mode: toggle
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: toggle
+                      compact: false
+                      entity: fan.fan
+                      icon:
+                        icon: ''
+                        show: false
+                        tap_action:
+                          action: none
+                        use_state_color: false
+                      name: Speed
+                      show_name: true
+                      show_state: true
+                      slider:
+                        background: gradient
+                        direction: left-right
+                        force_square: false
+                        show_track: true
+                        toggle_on_click: false
+                        use_percentage_bg_opacity: false
+                        use_state_color: false
+                      type: custom:slider-button-card
+                  service: browser_mod.popup
               template: fan_button
               type: custom:button-card
             - entity: switch.wall_fan
