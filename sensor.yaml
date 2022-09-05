@@ -183,3 +183,13 @@
 - platform: seventeentrack
   username: !secret email
   password: !secret 17track
+
+- platform: formulaone_api
+
+- platform: scrape
+  resource: !secret petrol_link
+  name: Petrol Price
+  select: ".fnt27"
+  value_template: '{{ (value.split(" ")[1]) }}'
+  unit_of_measurement: "₹"
+  scan_interval: 28800
