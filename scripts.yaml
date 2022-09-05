@@ -523,7 +523,7 @@ git_commit_copy:
     - service: input_text.set_value
       data:
         value:
-          files on {{ now().timestamp() | timestamp_custom('%b %d, %Y - %-I:%M
+          📁 files on {{ now().timestamp() | timestamp_custom('%b %d, %Y - %-I:%M
           %p') }}
       target:
         entity_id: input_text.git_commit_message
