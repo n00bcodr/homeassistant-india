@@ -7,25 +7,36 @@ FRIGATE_RELEASES_URL = "https://github.com/blakeblackshear/frigate/releases"
 FRIGATE_RELEASE_TAG_URL = f"{FRIGATE_RELEASES_URL}/tag"
 
 # Icons
-ICON_CAR = "mdi:shield-car"
+ICON_BICYCLE = "mdi:bicycle"
+ICON_CAR = "mdi:car"
 ICON_CAT = "mdi:cat"
 ICON_CONTRAST = "mdi:contrast-circle"
+ICON_CORAL = "mdi:scoreboard-outline"
+ICON_COW = "mdi:cow"
 ICON_DOG = "mdi:dog-side"
 ICON_FILM_MULTIPLE = "mdi:filmstrip-box-multiple"
+ICON_HORSE = "mdi:horse"
 ICON_IMAGE_MULTIPLE = "mdi:image-multiple"
 ICON_MOTION_SENSOR = "hass:motion-sensor"
+ICON_MOTORCYCLE = "mdi:motorbike"
 ICON_OTHER = "mdi:shield-alert"
-ICON_PERSON = "mdi:shield-account"
+ICON_PERSON = "mdi:human"
 ICON_SERVER = "mdi:server"
 ICON_SPEEDOMETER = "mdi:speedometer"
 
 # Platforms
 BINARY_SENSOR = "binary_sensor"
+NUMBER = "number"
 SENSOR = "sensor"
 SWITCH = "switch"
 CAMERA = "camera"
 UPDATE = "update"
-PLATFORMS = [SENSOR, CAMERA, SWITCH, BINARY_SENSOR, UPDATE]
+PLATFORMS = [SENSOR, CAMERA, NUMBER, SWITCH, BINARY_SENSOR, UPDATE]
+
+# Device Classes
+# This device class does not exist in HA, but we use it to be able
+# to filter cameras in selectors
+DEVICE_CLASS_CAMERA = "camera"
 
 # Unit of measurement
 FPS = "fps"
@@ -47,6 +58,7 @@ CONF_NOTIFICATION_PROXY_ENABLE = "notification_proxy_enable"
 CONF_PASSWORD = "password"
 CONF_PATH = "path"
 CONF_RTMP_URL_TEMPLATE = "rtmp_url_template"
+CONF_NOTIFICATION_PROXY_EXPIRE_AFTER_SECONDS = "notification_proxy_expire_after_seconds"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
@@ -62,6 +74,14 @@ If you have any issues with this you need to open an issue here:
 https://github.com/blakeblackshear/frigate-hass-integration/issues
 -------------------------------------------------------------------
 """
+
+# Min Values
+MAX_CONTOUR_AREA = 50
+MAX_THRESHOLD = 255
+
+# Min Values
+MIN_CONTOUR_AREA = 15
+MIN_THRESHOLD = 1
 
 # States
 STATE_DETECTED = "active"

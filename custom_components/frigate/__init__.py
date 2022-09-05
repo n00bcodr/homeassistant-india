@@ -51,8 +51,8 @@ from .const import (
 from .views import (
     JSMPEGProxyView,
     NotificationsProxyView,
-    RecordingsProxyView,
     SnapshotsProxyView,
+    ThumbnailsProxyView,
     VodProxyView,
     VodSegmentProxyView,
 )
@@ -175,8 +175,8 @@ async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     session = async_get_clientsession(hass)
     hass.http.register_view(JSMPEGProxyView(session))
     hass.http.register_view(NotificationsProxyView(session))
-    hass.http.register_view(RecordingsProxyView(session))
     hass.http.register_view(SnapshotsProxyView(session))
+    hass.http.register_view(ThumbnailsProxyView(session))
     hass.http.register_view(VodProxyView(session))
     hass.http.register_view(VodSegmentProxyView(session))
     return True
@@ -397,6 +397,8 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
 
 class FrigateEntity(Entity):  # type: ignore[misc]
     """Base class for Frigate entities."""
+
+    _attr_has_entity_name = True
 
     def __init__(self, config_entry: ConfigEntry):
         """Construct a FrigateEntity."""

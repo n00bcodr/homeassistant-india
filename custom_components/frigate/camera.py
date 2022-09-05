@@ -36,6 +36,7 @@ from .const import (
     ATTR_EVENT_ID,
     ATTR_FAVORITE,
     CONF_RTMP_URL_TEMPLATE,
+    DEVICE_CLASS_CAMERA,
     DOMAIN,
     NAME,
     SERVICE_FAVORITE_EVENT,
@@ -71,13 +72,19 @@ async def async_setup_entry(
     platform = entity_platform.async_get_current_platform()
     platform.async_register_entity_service(
         SERVICE_FAVORITE_EVENT,
-        {vol.Required(ATTR_EVENT_ID): str, vol.Required(ATTR_FAVORITE): bool},
+        {
+            vol.Required(ATTR_EVENT_ID): str,
+            vol.Optional(ATTR_FAVORITE, default=True): bool,
+        },
         SERVICE_FAVORITE_EVENT,
     )
 
 
 class FrigateCamera(FrigateMQTTEntity, Camera):  # type: ignore[misc]
     """Representation a Frigate camera."""
+
+    # sets the entity name to same as device name ex: camera.front_doorbell
+    _attr_name = None
 
     def __init__(
         self,
@@ -120,6 +127,9 @@ class FrigateCamera(FrigateMQTTEntity, Camera):  # type: ignore[misc]
         Camera.__init__(self)
         self._url = config_entry.data[CONF_URL]
         self._attr_is_on = True
+        # The device_class is used to filter out regular camera entities
+        # from motion camera entities on selectors
+        self._attr_device_class = DEVICE_CLASS_CAMERA
         self._attr_is_streaming = self._camera_config.get("rtmp", {}).get("enabled")
         self._attr_is_recording = self._camera_config.get("record", {}).get("enabled")
         self._attr_motion_detection_enabled = self._camera_config.get("motion", {}).get(
@@ -164,11 +174,6 @@ class FrigateCamera(FrigateMQTTEntity, Camera):  # type: ignore[misc]
             "camera",
             self._cam_name,
         )
-
-    @property
-    def name(self) -> str:
-        """Return the name of the camera."""
-        return get_friendly_name(self._cam_name)
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -305,7 +310,7 @@ class FrigateMqttSnapshots(FrigateMQTTEntity, Camera):  # type: ignore[misc]
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
-        return f"{get_friendly_name(self._cam_name)} {self._obj_name}".title()
+        return self._obj_name.title()
 
     async def async_camera_image(
         self, width: int | None = None, height: int | None = None

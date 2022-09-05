@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_URL
+from homeassistant.const import CONF_URL, TEMP_CELSIUS
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -27,9 +27,14 @@ from .const import (
     ATTR_COORDINATOR,
     DOMAIN,
     FPS,
+    ICON_BICYCLE,
     ICON_CAR,
     ICON_CAT,
+    ICON_CORAL,
+    ICON_COW,
     ICON_DOG,
+    ICON_HORSE,
+    ICON_MOTORCYCLE,
     ICON_OTHER,
     ICON_PERSON,
     ICON_SERVER,
@@ -57,9 +62,9 @@ async def async_setup_entry(
             for name in value.keys():
                 entities.append(DetectorSpeedSensor(coordinator, entry, name))
         elif key == "service":
-            # Media storage statistics, uptime and Frigate version. For now,
-            # these do not feature in entities.
-            continue
+            # Temperature is only supported on PCIe Coral.
+            for name in value.get("temperatures", {}):
+                entities.append(DeviceTempSensor(coordinator, entry, name))
         else:
             entities.extend(
                 [CameraFpsSensor(coordinator, entry, key, t) for t in CAMERA_FPS_TYPES]
@@ -80,6 +85,7 @@ class FrigateFpsSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[misc]
     """Frigate Sensor class."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_name = "Detection fps"
 
     def __init__(
         self, coordinator: FrigateDataUpdateCoordinator, config_entry: ConfigEntry
@@ -108,11 +114,6 @@ class FrigateFpsSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[misc]
         }
 
     @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return "Detection Fps"
-
-    @property
     def state(self) -> int | None:
         """Return the state of the sensor."""
         if self.coordinator.data:
@@ -139,6 +140,7 @@ class FrigateStatusSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[mis
     """Frigate Status Sensor class."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_name = "Status"
 
     def __init__(
         self, coordinator: FrigateDataUpdateCoordinator, config_entry: ConfigEntry
@@ -165,11 +167,6 @@ class FrigateStatusSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[mis
             "configuration_url": self._config_entry.data.get(CONF_URL),
             "manufacturer": NAME,
         }
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return "Frigate Status"
 
     @property
     def state(self) -> str:
@@ -220,7 +217,7 @@ class DetectorSpeedSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[mis
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
-        return f"{get_friendly_name(self._detector_name)} inference speed".title()
+        return f"{get_friendly_name(self._detector_name)} inference speed"
 
     @property
     def state(self) -> int | None:
@@ -294,7 +291,7 @@ class CameraFpsSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[misc]
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
-        return f"{get_friendly_name(self._cam_name)} {self._fps_type} FPS".title()
+        return f"{self._fps_type} fps"
 
     @property
     def unit_of_measurement(self) -> str:
@@ -346,6 +343,14 @@ class FrigateObjectCountSensor(FrigateMQTTEntity):
             self._icon = ICON_DOG
         elif self._obj_name == "cat":
             self._icon = ICON_CAT
+        elif self._obj_name == "motorcycle":
+            self._icon = ICON_MOTORCYCLE
+        elif self._obj_name == "bicycle":
+            self._icon = ICON_BICYCLE
+        elif self._obj_name == "cow":
+            self._icon = ICON_COW
+        elif self._obj_name == "horse":
+            self._icon = ICON_HORSE
         else:
             self._icon = ICON_OTHER
 
@@ -400,7 +405,7 @@ class FrigateObjectCountSensor(FrigateMQTTEntity):
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
-        return f"{get_friendly_name(self._cam_name)} {self._obj_name} Count".title()
+        return f"{self._obj_name} count"
 
     @property
     def state(self) -> int:
@@ -416,3 +421,69 @@ class FrigateObjectCountSensor(FrigateMQTTEntity):
     def icon(self) -> str:
         """Return the icon of the sensor."""
         return self._icon
+
+
+class DeviceTempSensor(FrigateEntity, CoordinatorEntity):  # type: ignore[misc]
+    """Frigate Coral Temperature Sensor class."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(
+        self,
+        coordinator: FrigateDataUpdateCoordinator,
+        config_entry: ConfigEntry,
+        name: str,
+    ) -> None:
+        """Construct a CoralTempSensor."""
+        self._name = name
+        FrigateEntity.__init__(self, config_entry)
+        CoordinatorEntity.__init__(self, coordinator)
+        self._attr_entity_registry_enabled_default = False
+
+    @property
+    def unique_id(self) -> str:
+        """Return a unique ID to use for this entity."""
+        return get_frigate_entity_unique_id(
+            self._config_entry.entry_id, "sensor_temp", self._name
+        )
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Get device information."""
+        return {
+            "identifiers": {get_frigate_device_identifier(self._config_entry)},
+            "name": NAME,
+            "model": self._get_model(),
+            "configuration_url": self._config_entry.data.get(CONF_URL),
+            "manufacturer": NAME,
+        }
+
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return f"{get_friendly_name(self._name)} temperature"
+
+    @property
+    def state(self) -> float | None:
+        """Return the state of the sensor."""
+        if self.coordinator.data:
+            data = (
+                self.coordinator.data.get("service", {})
+                .get("temperatures", {})
+                .get(self._name, 0.0)
+            )
+            try:
+                return float(data)
+            except (TypeError, ValueError):
+                pass
+        return None
+
+    @property
+    def unit_of_measurement(self) -> Any:
+        """Return the unit of measurement of the sensor."""
+        return TEMP_CELSIUS
+
+    @property
+    def icon(self) -> str:
+        """Return the icon of the sensor."""
+        return ICON_CORAL
