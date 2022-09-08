@@ -7,6 +7,11 @@
     { "item": "Studio Code Server" },
     { "item": "Media" },
     { "item": "Calendar" },
+    { 
+      "item": "Browser Mod" ,
+      "icon": "mdi:web-box"
+    },
+    
     {
       "new_item": true,
       "item": "Automations",
@@ -22,16 +27,16 @@
     },
     {
       "new_item": true,
-      "item": "Server Controls",
-      "href": "/developer-tools/yaml",
-      "icon": "mdi:server-network",
+      "item": "Supervisor",
+      "href": "/hassio/dashboard",
+      "icon": "mdi:home-assistant",
       "bottom": true
     },
     {
       "new_item": true,
-      "item": "Supervisor",
-      "href": "/hassio/dashboard",
-      "icon": "mdi:home-assistant",
+      "item": "Server Controls",
+      "href": "/developer-tools/yaml",
+      "icon": "mdi:server-network",
       "bottom": true
     },
     {
@@ -41,7 +46,6 @@
       "icon": "mdi:hammer",
       "bottom": true
     },
-
     {
       "item": "Settings",
       "bottom": true
