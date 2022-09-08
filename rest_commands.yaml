@@ -1,0 +1,100 @@
+pipup_image_on_sony_tv:
+  url: http://192.168.0.122:7979/notify
+  content_type: "application/json"
+  verify_ssl: false
+  method: "post"
+  timeout: 20
+  payload: >
+    {
+      "duration": {{ duration | default(20) }},
+      "position": {{ position | default(0) }},
+      "title": "{{ title | default('') }}",
+      "titleColor": "{{ titleColor | default('#50BFF2') }}",
+      "titleSize": {{ titleSize | default(10) }},
+      "message": "{{ message }}",
+      "messageColor": "{{ messageColor | default('#fbf5f5') }}",
+      "messageSize": {{ messageSize | default(14) }},
+      "backgroundColor": "{{ backgroundColor | default('#0f0e0e') }}",
+      "media": { 
+        "image": {
+          "uri": "{{ url }}",
+          "width": {{ width | default(640) }}
+        }
+      }
+    }
+
+pipup_url_on_sony_tv:
+  url: http://192.168.0.122:7979/notify
+  content_type: "application/json"
+  verify_ssl: false
+  method: "post"
+  timeout: 20
+  payload: >
+    {
+      "duration": {{ duration | default(20) }},
+      "position": {{ position | default(0) }},
+      "title": "{{ title | default('') }}",
+      "titleColor": "{{ titleColor | default('#50BFF2') }}",
+      "titleSize": {{ titleSize | default(10) }},
+      "message": "{{ message }}",
+      "messageColor": "{{ messageColor | default('#fbf5f5') }}",
+      "messageSize": {{ messageSize | default(14) }},
+      "backgroundColor": "{{ backgroundColor | default('#0f0e0e') }}",
+      "media": { 
+        "web": {
+          "uri": "{{ url }}", 
+          "width": {{ width | default(640) }},
+          "height": {{ height | default(480) }}
+        }
+      }
+    }
+pipup_image_on_google_tv:
+  url: http://192.168.0.121:7979/notify
+  content_type: "application/json"
+  verify_ssl: false
+  method: "post"
+  timeout: 20
+  payload: >
+    {
+      "duration": {{ duration | default(20) }},
+      "position": {{ position | default(0) }},
+      "title": "{{ title | default('') }}",
+      "titleColor": "{{ titleColor | default('#50BFF2') }}",
+      "titleSize": {{ titleSize | default(10) }},
+      "message": "{{ message }}",
+      "messageColor": "{{ messageColor | default('#fbf5f5') }}",
+      "messageSize": {{ messageSize | default(14) }},
+      "backgroundColor": "{{ backgroundColor | default('#0f0e0e') }}",
+      "media": { 
+        "image": {
+          "uri": "{{ url }}",
+          "width": {{ width | default(640) }}
+        }
+      }
+    }
+
+pipup_url_on_google_tv:
+  url: http://192.168.0.121:7979/notify
+  content_type: "application/json"
+  verify_ssl: false
+  method: "post"
+  timeout: 20
+  payload: >
+    {
+      "duration": {{ duration | default(20) }},
+      "position": {{ position | default(0) }},
+      "title": "{{ title | default('') }}",
+      "titleColor": "{{ titleColor | default('#50BFF2') }}",
+      "titleSize": {{ titleSize | default(10) }},
+      "message": "{{ message }}",
+      "messageColor": "{{ messageColor | default('#fbf5f5') }}",
+      "messageSize": {{ messageSize | default(14) }},
+      "backgroundColor": "{{ backgroundColor | default('#0f0e0e') }}",
+      "media": { 
+        "web": {
+          "uri": "{{ url }}", 
+          "width": {{ width | default(640) }},
+          "height": {{ height | default(480) }}
+        }
+      }
+    }

@@ -2086,7 +2086,7 @@
         color: red
         actions:
         - action: tag_update
-          title: Let's do it!
+          title: Update!
         - action: URI
           title: Open Repo
           uri: https://github.com/n00bcodr/homeassistant
@@ -2199,23 +2199,6 @@
   - service: script.load_share_url_googletv
     data: {}
   mode: single
-- id: '1659895269868'
-  alias: ⚙️HACS - New Repository Added
-  trigger:
-  - platform: event
-    event_type: hacs/repository
-    event_data:
-      action: registration
-  condition:
-  - condition: template
-    value_template: '{{ trigger.event.data.repository is defined }}'
-  action:
-  - service: persistent_notification.create
-    data_template:
-      title: HACS - New Repository Added
-      message: '{% set repo = trigger.event.data.repository %} {% set id = trigger.event.data.repository_id
-        %} [{{ repo }}](/hacs/repository/{{ id }}) was just added to HACS.'
-  mode: single
 - id: '1659929141343'
   alias: "\U0001F4A7Turn Motor Off when tank full "
   description: Turns both motors off if the tank becomes full
@@ -2254,5 +2237,27 @@
   - service: pyscript.f1driverstandings
     data: {}
   - service: pyscript.f1constructorstandings
+    data: {}
+  mode: single
+- id: '1662572670594'
+  alias: ⚙️Front Yard Motion - PIP Video
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.front_yard_camera_motion
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: media_player.sony_tv
+      state: 'off'
+  - condition: state
+    entity_id: binary_sensor.front_yard_camera_person_occupancy
+    state: 'on'
+  action:
+  - service: script.display_frontyard_pip_popup_on_tv
     data: {}
   mode: single

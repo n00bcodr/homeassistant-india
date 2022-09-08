@@ -7,12 +7,12 @@ homeassistant:
 browser:
 logger:
   default: critical
-  # logs:
-  #   custom_components.pyscript: debug
+  logs:
+    homeassistant.components.pyscript: debug
 
 ffmpeg:
 python_script:
-# Example LL-HLS configuration.yaml entry.
+
 stream:
   ll_hls: true
   part_duration: 0.5
@@ -36,6 +36,7 @@ binary_sensor: !include binary_sensors.yaml
 input_select: !include input_select.yaml
 sensor: !include sensor.yaml
 notify: !include notify.yaml
+rest_command: !include rest_commands.yaml
 
 frontend:
   themes: !include_dir_merge_named themes

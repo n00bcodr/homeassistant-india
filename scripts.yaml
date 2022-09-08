@@ -523,8 +523,8 @@ git_commit_copy:
     - service: input_text.set_value
       data:
         value:
-          📁 files on {{ now().timestamp() | timestamp_custom('%b %d, %Y - %-I:%M
-          %p') }}
+          "\U0001F4C1 files on {{ now().timestamp() | timestamp_custom('%b %d,
+          %Y - %-I:%M %p') }}"
       target:
         entity_id: input_text.git_commit_message
   mode: single
@@ -535,47 +535,73 @@ load_share_url_googletv:
     - choose:
         - conditions:
             - condition: template
-              value_template: >-
-                {{ states('input_text.ccgtv_share_url') is
-                match('http.*primevideo', ignorecase=False) }}
+              value_template:
+                "{{ states('input_text.ccgtv_share_url') is match('http.*primevideo',
+                ignorecase=False) }}"
           sequence:
             - service: androidtv.adb_command
               data:
                 entity_id: media_player.google_tv
-                command: >-
-                  am start -a android.intent.action.VIEW -n
-                  com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity
+                command:
+                  am start -a android.intent.action.VIEW -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity
                   -d {{ states('input_text.ccgtv_share_url') }}
         - conditions:
             - condition: template
-              value_template: >-
-                {{ states('input_text.ccgtv_share_url') is
-                match('http.*netflix.com', ignorecase=False) }}
+              value_template:
+                "{{ states('input_text.ccgtv_share_url') is match('http.*netflix.com',
+                ignorecase=False) }}"
           sequence:
             - service: androidtv.adb_command
               data:
                 entity_id: media_player.google_tv
-                command: >-
-                  am start -n com.netflix.ninja/.MainActivity -a
-                  android.intent.action.VIEW -d netflix://title/{{
-                  states('input_text.ccgtv_share_url')|regex_findall_index(find='netflix.com(?:.*?)([0-9]+)',
-                  index=0, ignorecase=False) }} -f 0x10000020 -e
-                  "amzn_deeplink_data" "{{
+                command:
+                  am start -n com.netflix.ninja/.MainActivity -a android.intent.action.VIEW
+                  -d netflix://title/{{ states('input_text.ccgtv_share_url')|regex_findall_index(find='netflix.com(?:.*?)([0-9]+)',
+                  index=0, ignorecase=False) }} -f 0x10000020 -e "amzn_deeplink_data" "{{
                   states('input_text.ccgtv_share_url')|regex_findall_index(find='netflix.com(?:.*?)([0-9]+)',
                   index=0, ignorecase=False) }}"
         - conditions:
             - condition: template
-              value_template: >-
-                {{ states('input_text.ccgtv_share_url') is match('http.*youtu*',
-                ignorecase=False) }}
+              value_template:
+                "{{ states('input_text.ccgtv_share_url') is match('http.*youtu*',
+                ignorecase=False) }}"
           sequence:
             - service: androidtv.adb_command
               data:
                 entity_id: media_player.google_tv
-                command: >-
-                  am start -a android.intent.action.VIEW -d
-                  "{{states('input_text.ccgtv_share_url') }}"
-                  com.google.android.youtube.tv
+                command:
+                  am start -a android.intent.action.VIEW -d "{{states('input_text.ccgtv_share_url')
+                  }}" com.google.android.youtube.tv
       default: []
   mode: single
   icon: mdi:monitor-share
+display_frontyard_pip_popup_on_tv:
+  alias: Display Frontyard PIP Popup on TV
+  mode: restart
+  variables:
+    link_id: "{% for _ in range(10) %}{{ range(10)|random }}{% endfor %}"
+  sequence:
+    - parallel:
+        - service: androidtv.adb_command
+          data:
+            entity_id: media_player.sony_tv
+            command: ps -ef | grep -v grep | grep pipup || am start nl.rogro82.pipup/.MainActivity
+        - service: androidtv.adb_command
+          data:
+            command: input keyevent KEYCODE_WAKEUP
+          target:
+            entity_id: media_player.sony_tv
+        - service: webrtc.create_link
+          data:
+            link_id: "{{ link_id }}"
+            entity: camera.firstfloor
+            open_limit: 1
+            time_to_live: 60
+    - service: rest_command.pipup_url_on_sony_tv
+      data:
+        width: 500
+        height: 500
+        position: 2
+        title: "                                   Motion Detected"
+        url: http://192.168.0.168:8123/webrtc/embed?url={{ link_id }}&webrtc=false
+  icon: mdi:picture-in-picture-bottom-right

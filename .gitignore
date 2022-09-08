@@ -47,5 +47,4 @@ known_devices.yaml
 home-assistant.log
 home-assistant.log.1
 home-assistant.log.fault
-.HA_VERSION
 .DS_Store
