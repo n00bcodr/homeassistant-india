@@ -190,6 +190,7 @@ views:
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion','on')\
         \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
     - entity: binary_sensor.hall_motion
+      hold_action: more-info
       name: Hall Motion
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
         \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
@@ -2066,35 +2067,79 @@ views:
   - entity: sensor.multisensor_1_humidity
   cards:
   - cards:
-    - entities:
-      - entity: switch.upstairs_tv
-        name: TV
-      - entities:
-        - icon: mdi:lightbulb-fluorescent-tube
-          state_color: true
-          tap_action:
-            action: call-service
-            service: script.hall_tubelight_white
-        entity: light.hall_tube_light
-        icon: mdi:lightbulb-fluorescent-tube-outline
-        name: Tube Light
-        toggle: true
-        type: custom:multiple-entity-row
+    - entity: switch.upstairs_tv
+      type: custom:mushroom-entity-card
+    - collapsible_controls: true
+      entity: light.hall_tube_light
+      fill_container: false
+      hold_action:
+        action: call-service
+        data: {}
+        service: script.hall_tubelight_white
+        target: {}
+      icon: mdi:lightbulb-fluorescent-tube-outline
+      name: Tube Light
+      show_brightness_control: true
+      show_color_temp_control: true
+      tap_action:
+        action: toggle
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - cards:
       - entity: switch.rice_lights_l
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
       - entity: switch.rice_lights_r
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
       - entity: light.rgb1
+        type: custom:mushroom-light-card
+        use_light_color: true
       - entity: light.rgb2
-      - entity: binary_sensor.pavanthanuj
-      - entity: automation.hall_lights_on_when_motion_detected
-      state_color: true
-      type: entities
-    - artwork: full-cover
+        type: custom:mushroom-light-card
+        use_light_color: true
+      columns: 2
+      square: false
+      type: grid
+    - entity: binary_sensor.pavanthanuj
+      icon_type: entity-picture
+      type: custom:mushroom-entity-card
+    - entity: automation.hall_lights_on_when_motion_detected
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
+    - collapsible_controls: true
       entity: media_player.friday
-      group: true
-      type: custom:mini-media-player
-    - entity: media_player.hall_tv
-      group: true
-      type: custom:mini-media-player
+      fill_container: false
+      media_controls:
+      - on_off
+      - play_pause_stop
+      - next
+      - previous
+      show_volume_level: true
+      type: custom:mushroom-media-player-card
+      use_media_info: true
+      volume_controls:
+      - volume_mute
+      - volume_set
+      - volume_buttons
+    - collapsible_controls: true
+      entity: media_player.hall_tv
+      fill_container: false
+      media_controls:
+      - on_off
+      - play_pause_stop
+      - next
+      - previous
+      show_volume_level: true
+      type: custom:mushroom-media-player-card
+      use_media_info: true
+      volume_controls:
+      - volume_mute
+      - volume_set
+      - volume_buttons
     type: vertical-stack
   - cards:
     - entities:
@@ -2161,70 +2206,52 @@ views:
   title: Hall
 - badges: []
   cards:
-  - entities:
-    - entities:
-      - entity: light.front_yard_lights_group_2
-        icon: mdi:lightbulb-group-outline
-        name: false
-        state_color: true
+  - cards:
+    - collapsible_controls: false
       entity: light.front_yard_lights_group
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.first_floor_light_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.first_floor_light
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.first_floor_stairway_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.first_floor_stairway
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.first_floor_corner_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.first_floor_corner
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.second_floor_light_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.second_floor_light
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.second_floor_stairway_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.second_floor_stairway
-      toggle: true
-      type: custom:multiple-entity-row
-    - entities:
-      - entity: light.second_floor_corner_2
-        icon: mdi:lightbulb-outline
-        name: false
-        state_color: true
-      entity: light.second_floor_corner
-      toggle: true
-      type: custom:multiple-entity-row
-    - entity: switch.rice_string_1
-    - entity: switch.rice_string_2
+      fill_container: false
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.first_floor_light
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.first_floor_stairway
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.first_floor_corner
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.second_floor_light
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.second_floor_stairway
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - entity: light.second_floor_corner
+      secondary_info: none
+      type: custom:mushroom-light-card
+      use_light_color: true
+    - cards:
+      - entity: switch.rice_string_1
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      - entity: switch.rice_string_2
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      type: horizontal-stack
     - entity: automation.turn_off_front_yard_lights_day_time
-    show_header_toggle: false
-    state_color: true
-    title: Front Yard Lights
-    type: entities
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
+    type: vertical-stack
   - cards:
     - camera_image: camera.front_yard_camera
       camera_view: live
@@ -2500,7 +2527,7 @@ views:
   path: motors
   theme: Backend-selected
   title: Motors
-  type: custom:masonry-layout
+  type: custom:vertical-layout
 - badges: []
   cards:
   - cards:
@@ -2941,7 +2968,7 @@ views:
       icon: fab:github
       title: Git
       type: entities
-    - aspect_ratio: 100%
+    - aspect_ratio: 120%
       type: iframe
       url: http://homeassistant.local:8123/local/git_status.txt
     type: vertical-stack
@@ -3373,7 +3400,7 @@ views:
             name: false
           type: custom:mini-graph-card
           update_interval: 10
-        title: Upstairs Hall
+        title: Living Room
         type: horizontal-stack
       - cards:
         - align_icon: left
@@ -3411,7 +3438,7 @@ views:
             name: false
           type: custom:mini-graph-card
           update_interval: 10
-        title: Living Room
+        title: Hall
         type: horizontal-stack
       mode: vertical
       type: custom:stack-in-card
@@ -3707,12 +3734,11 @@ views:
       fill: fade
     type: custom:mini-graph-card
     update_interval: 28800
+    view_layout:
+      column: 2
   icon: mdi:home-analytics
   path: network
   theme: ''
   title: Network and Devices
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
-- badges: []
-  cards: []
-  theme: Backend-selected
