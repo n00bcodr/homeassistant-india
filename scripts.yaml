@@ -599,8 +599,8 @@ display_frontyard_pip_popup_on_tv:
             time_to_live: 60
     - service: rest_command.pipup_url_on_sony_tv
       data:
-        width: 500
-        height: 500
+        width: 300
+        height: 300
         position: 2
         title: "                                   Motion Detected"
         url: http://192.168.0.168:8123/webrtc/embed?url={{ link_id }}&webrtc=false

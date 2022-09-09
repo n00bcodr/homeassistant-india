@@ -25,7 +25,7 @@ logger:
 sensor:
   - platform: dht
     pin: D7
-    model: dht22
+    model: dht11
     update_interval: 30s
     temperature:
       name: "${friendly_name} Temperature"
