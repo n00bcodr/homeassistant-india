@@ -8,7 +8,7 @@ browser:
 logger:
   default: critical
   logs:
-    homeassistant.components.pyscript: debug
+    homeassistant.config_entries: debug
 
 ffmpeg:
 python_script:
@@ -98,7 +98,7 @@ climate:
     name: Den AC
     unique_id: den_ac
     device_code: 99999
-    controller_data: remote.broadlink_rm4_remote
+    controller_data: remote.rm4_remote
     temperature_sensor: sensor.den_temperature
     humidity_sensor: sensor.den_humidity
 

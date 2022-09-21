@@ -190,11 +190,7 @@ views:
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion','on')\
         \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
     - entity: binary_sensor.hall_motion
-      hold_action: more-info
-      name: Hall Motion
-      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
-        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-      tap_action:
+      hold_action:
         action: fire-dom-event
         browser_mod:
           data:
@@ -205,6 +201,9 @@ views:
               - automation.hall_lights_on_when_motion_detected
               type: entities
           service: browser_mod.popup
+      name: Hall Motion
+      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
+        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
     - entity: binary_sensor.chair_occupancy
       name: Occupancy
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
@@ -266,27 +265,19 @@ views:
         value: 0
       type: entity-filter
     - entities:
-      - entity: binary_sensor.homeassistant_update
+      - entity: update.home_assistant_core_update
         hold_action:
-          action: navigate
-          navigation_path: /config/dashboard
+          action: more-info
         name: Update Available
         style:
           ha-state-label-badge:
             $:
               ha-label-badge:
-                $: ".label-badge {\n border-style: dashed !important;\n}   \n"
+                $: ".label-badge {\n border-style: dashed !important;\n border-color:\
+                  \ blue !important;\n}   \n"
         tap_action:
-          action: fire-dom-event
-          browser_mod:
-            data:
-              browser_id: THIS
-              content:
-                entities:
-                - sensor.docker_hub_beta
-                - sensor.current_version
-                type: entities
-            service: browser_mod.popup
+          action: navigate
+          navigation_path: /config/dashboard
       state_filter:
       - 'on'
       - name: updates
@@ -426,6 +417,14 @@ views:
     type: custom:stack-in-card
     view_layout:
       column: 1
+  - content: "<center><h3>\U0001F4C4 Work Permit Applications submitted on <u>{{(states.sensor.visa_current_processing_date.state)\
+      \ | replace (\" 2022\", \"\")}}</u><br>are being processed as on <u>{{(states.sensor.visa_last_updated.state)\
+      \ | replace (\"As of \", \"\") | replace (\" 2022, we are processing applications\
+      \ received on the following dates for the specific types of applications:\"\
+      , \"\")}}</u> \U0001F5D3"
+    type: markdown
+    view_layout:
+      column: 1
   - cards:
     - cards:
       - double_tap_action:
@@ -501,7 +500,7 @@ views:
       square: false
       type: grid
     - cards:
-      - collapsible_controls: true
+      - collapsible_controls: false
         entity: light.den_lights_group
         show_brightness_control: true
         show_color_control: true
@@ -747,26 +746,6 @@ views:
     type: custom:swipe-card
     view_layout:
       column: 3
-  - card:
-      content: '{% for package in states.sensor.seventeentrack_packages_in_transit.attributes.packages
-        %}
-
-        >- **{{ package.friendly_name }} ({{ package.tracking_number }}):** {{ package.info_text
-        }}
-
-        {% endfor %}
-
-        '
-      title: Packages
-      type: markdown
-    conditions:
-    - entity: sensor.seventeentrack_packages_in_transit
-      state_not: '0'
-    - entity: sensor.seventeentrack_packages_ready_to_be_picked_up
-      state_not: '0'
-    type: conditional
-    view_layout:
-      column: 1
   - entity: mediaquery
     states:
       '(min-width: 1000px)':
@@ -1217,6 +1196,7 @@ views:
       tap_action:
         action: toggle
       type: custom:mushroom-light-card
+      use_light_color: true
     - collapsible_controls: true
       entity: light.led_strip_tv
       layout: horizontal
@@ -2067,9 +2047,9 @@ views:
   - entity: sensor.multisensor_1_humidity
   cards:
   - cards:
-    - entity: switch.upstairs_tv
-      type: custom:mushroom-entity-card
     - collapsible_controls: true
+      double_tap_action:
+        action: more-info
       entity: light.hall_tube_light
       fill_container: false
       hold_action:
@@ -2140,6 +2120,10 @@ views:
       - volume_mute
       - volume_set
       - volume_buttons
+    - entity: switch.upstairs_tv
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     type: vertical-stack
   - cards:
     - entities:
@@ -3286,163 +3270,119 @@ views:
     type: custom:stack-in-card
   - cards:
     - cards:
-      - cards:
-        - align_icon: left
-          align_state: center
-          decimals: 1
-          entities:
-          - sensor.den_humidity
-          font_size: 70
-          hours_to_show: 6
-          line_color: skyblue
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        - align_icon: left
-          align_state: center
-          color_thresholds:
-          - color: '#f39c12'
-            value: 25
-          - color: '#d35400'
-            value: 29
-          - color: '#ff1800'
-            value: 30
-          decimals: 1
-          entities:
-          - sensor.den_temperature
-          font_size: 70
-          hours_to_show: 6
-          line_color: '#e74c3c'
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        title: Den
-        type: horizontal-stack
-      - cards:
-        - align_icon: left
-          align_state: center
-          decimals: 1
-          entities:
-          - sensor.temperature_and_humidity_humidity
-          font_size: 70
-          hours_to_show: 8
-          line_color: skyblue
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        - align_icon: left
-          align_state: center
-          color_thresholds:
-          - color: '#f39c12'
-            value: 25
-          - color: '#ff6703'
-            value: 28
-          - color: '#ff1800'
-            value: 33
-          decimals: 1
-          entities:
-          - sensor.temperature_and_humidity_temperature
-          font_size: 70
-          hours_to_show: 8
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        title: Hall
-        type: horizontal-stack
-      mode: vertical
-      type: custom:stack-in-card
+      - align_icon: left
+        align_state: center
+        decimals: 1
+        entities:
+        - sensor.multisensor_2_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        points_per_hour: 10
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      - align_icon: left
+        align_state: center
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 28
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.multisensor_2_temperature
+        font_size: 70
+        hours_to_show: 6
+        line_color: '#e74c3c'
+        line_width: 5
+        points_per_hour: 10
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      title: Living Room
+      type: horizontal-stack
     - cards:
-      - cards:
-        - align_icon: left
-          align_state: center
-          decimals: 1
-          entities:
-          - sensor.multisensor_2_humidity
-          font_size: 70
-          hours_to_show: 6
-          line_color: skyblue
-          line_width: 5
-          points_per_hour: 10
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        - align_icon: left
-          align_state: center
-          color_thresholds:
-          - color: '#f39c12'
-            value: 25
-          - color: '#d35400'
-            value: 28
-          - color: '#ff1800'
-            value: 30
-          decimals: 1
-          entities:
-          - sensor.multisensor_2_temperature
-          font_size: 70
-          hours_to_show: 6
-          line_color: '#e74c3c'
-          line_width: 5
-          points_per_hour: 10
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        title: Living Room
-        type: horizontal-stack
-      - cards:
-        - align_icon: left
-          align_state: center
-          decimals: 1
-          entities:
-          - sensor.multisensor_1_humidity
-          font_size: 70
-          hours_to_show: 6
-          line_color: skyblue
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        - align_icon: left
-          align_state: center
-          color_thresholds:
-          - color: '#f39c12'
-            value: 25
-          - color: '#d35400'
-            value: 28
-          - color: '#ff1800'
-            value: 30
-          decimals: 1
-          entities:
-          - sensor.multisensor_1_temperature
-          font_size: 70
-          hours_to_show: 6
-          line_color: '#e74c3c'
-          line_width: 5
-          points_per_hour: 30
-          show:
-            name: false
-          type: custom:mini-graph-card
-          update_interval: 10
-        title: Hall
-        type: horizontal-stack
-      mode: vertical
-      type: custom:stack-in-card
-    mode: horizontal
+      - align_icon: left
+        align_state: center
+        decimals: 1
+        entities:
+        - sensor.hall_humidity
+        font_size: 70
+        hours_to_show: 8
+        line_color: skyblue
+        line_width: 5
+        points_per_hour: 30
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      - align_icon: left
+        align_state: center
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#ff6703'
+          value: 28
+        - color: '#ff1800'
+          value: 33
+        decimals: 1
+        entities:
+        - sensor.hall_temperature
+        font_size: 70
+        hours_to_show: 8
+        line_width: 5
+        points_per_hour: 30
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      title: Hall
+      type: horizontal-stack
+    - cards:
+      - align_icon: left
+        align_state: center
+        decimals: 1
+        entities:
+        - sensor.den_humidity
+        font_size: 70
+        hours_to_show: 6
+        line_color: skyblue
+        line_width: 5
+        points_per_hour: 30
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      - align_icon: left
+        align_state: center
+        color_thresholds:
+        - color: '#f39c12'
+          value: 25
+        - color: '#d35400'
+          value: 29
+        - color: '#ff1800'
+          value: 30
+        decimals: 1
+        entities:
+        - sensor.den_temperature
+        font_size: 70
+        hours_to_show: 8
+        line_color: '#e74c3c'
+        line_width: 5
+        points_per_hour: 30
+        show:
+          name: false
+        type: custom:mini-graph-card
+        update_interval: 10
+      title: Den
+      type: horizontal-stack
+    mode: vertical
     type: custom:stack-in-card
   - aggregate_func: max
     entities:
@@ -3718,21 +3658,6 @@ views:
       secondary: Prasad
       type: custom:mushroom-template-card
     type: vertical-stack
-  - align_icon: left
-    align_state: center
-    entities:
-    - entity: sensor.petrol_price
-      icon: mdi:fuel
-      name: Petrol
-    font_size: 90
-    icon: mdi:fuel
-    line_width: 1
-    show:
-      fill: fade
-    type: custom:mini-graph-card
-    update_interval: 28800
-    view_layout:
-      column: 2
   icon: mdi:home-analytics
   path: network
   theme: ''

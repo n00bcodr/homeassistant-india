@@ -59,12 +59,7 @@
         {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
-    homeassistant_update:
-      friendly_name: "HomeAssistant Update"
-      device_class: update
-      value_template: "{{ (states('sensor.docker_hub_beta') != 'unavailable') and (states('sensor.docker_hub_beta') > states('sensor.current_version')) }}"
-
-    # True if there's an update available for supervisor
+# True if there's an update available for supervisor
     updater_supervisor:
       friendly_name: "Updater Supervisor"
       device_class: problem
