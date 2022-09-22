@@ -417,14 +417,6 @@ views:
     type: custom:stack-in-card
     view_layout:
       column: 1
-  - content: "<center><h3>\U0001F4C4 Work Permit Applications submitted on <u>{{(states.sensor.visa_current_processing_date.state)\
-      \ | replace (\" 2022\", \"\")}}</u><br>are being processed as on <u>{{(states.sensor.visa_last_updated.state)\
-      \ | replace (\"As of \", \"\") | replace (\" 2022, we are processing applications\
-      \ received on the following dates for the specific types of applications:\"\
-      , \"\")}}</u> \U0001F5D3"
-    type: markdown
-    view_layout:
-      column: 1
   - cards:
     - cards:
       - double_tap_action:

@@ -193,27 +193,3 @@
   device_id: "samsung:e406feef7f4a"
   state_topic: "espresense/rooms"
   timeout: 2
-
-- platform: scrape
-  resource: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
-  name: Visa Current Processing Date
-  select: ".content-body__sections__main .tablesaw-stack:nth-child(8) tr:nth-of-type(2) .right .left"
-  scan_interval: 60
-
-- platform: scrape
-  resource: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
-  name: Visa Current Processing Type
-  select: ".content-body__sections__main .tablesaw-stack:nth-child(8) tr:nth-of-type(2) .left:nth-of-type(1) p"
-  scan_interval: 60
-
-- platform: scrape
-  resource: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
-  name: Visa Type
-  select: ".content-body__sections__main .tablesaw-stack:nth-child(8) .left:nth-of-type(1) .left"
-  scan_interval: 60
-
-- platform: scrape
-  resource: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
-  name: Visa Last Updated
-  select: ".content-body__sections__main p:nth-child(5)"
-  scan_interval: 60

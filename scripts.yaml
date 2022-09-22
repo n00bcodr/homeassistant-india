@@ -568,28 +568,3 @@ display_frontyard_pip_popup_on_tv:
       title: '                                   Motion Detected'
       url: http://192.168.0.168:8123/webrtc/embed?url={{ link_id }}&webrtc=false
   icon: mdi:picture-in-picture-bottom-right
-visa_tts_update:
-  alias: Visa TTS Update
-  sequence:
-  - service: notify.alexa_media
-    data:
-      target: media_player.echo_dot_2nd_gen
-      message: Work Permit Applications submitted on {{(states.sensor.visa_current_processing_date.state)
-        | replace (" 2022", "")}} are being processed as on {{(states.sensor.visa_last_updated.state)
-        | replace ("As of ", "") | replace (" 2022, we are processing applications
-        received on the following dates for the specific types of applications:",
-        "")}}
-      data:
-        type: tts
-    enabled: false
-  - service: tts.cloud_say
-    data:
-      entity_id: media_player.motu
-      message: Today is {{ as_timestamp(states.sensor.date.state) | timestamp_custom('%-d
-        %B') }} ... Work Permit Applications submitted on {{(states.sensor.visa_current_processing_date.state)
-        | replace (" 2022", "")}} are being processed as on {{(states.sensor.visa_last_updated.state)
-        | replace ("As of ", "") | replace (" 2022, we are processing applications
-        received on the following dates for the specific types of applications:",
-        "")}}
-      language: en-IE
-  mode: single

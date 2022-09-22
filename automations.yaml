@@ -1368,8 +1368,6 @@
     data: {}
   - service: script.den_tubelight_white
     data: {}
-  - service: script.visa_tts_update
-    data: {}
   mode: single
 - id: '1642654396519'
   alias: ⚙️Low battery level detection & notification for all battery sensors
@@ -2267,21 +2265,4 @@
   action:
   - service: script.display_frontyard_pip_popup_on_tv
     data: {}
-  mode: single
-- id: '1663059893243'
-  alias: New Automation
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - sensor.visa_current_processing_date
-  condition: []
-  action:
-  - service: notify.mobile_app_10pro
-    data:
-      message: Work Permit Applications submitted on {{(states.sensor.visa_current_processing_date.state)
-        | replace (" 2022", "")}} are being processed.
-      title: "Visa Update \U0001F6C2"
-      data:
-        notification_icon: mdi:airplane
   mode: single
