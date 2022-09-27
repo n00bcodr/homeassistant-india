@@ -1,9 +1,0 @@
-{
-  "domain": "genius_lyrics",
-  "name": "Genius Lyrics",
-  "documentation": "https://github.com/robert-alfaro/genius-lyrics",
-  "requirements": ["lyricsgenius"],
-  "dependencies": [],
-  "codeowners": ["@ralfaro", "@airdrummingfool"],
-  "version": "0.0.1"
-}
