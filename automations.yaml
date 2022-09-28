@@ -30,8 +30,8 @@
       - light.den_tube_light
       - light.top_light
       - light.shelf_light
-      - switch.den_fan
-      - switch.den_wall_fan
+      - fan.den_fan
+      - fan.den_wall_fan
       - switch.workstation
       - media_player.spotify
       - media_player.chotu
@@ -47,8 +47,8 @@
       - light.top_light
       - light.shelf_light
       - switch.workstation
-      - switch.den_fan
-      - switch.den_wall_fan
+      - fan.den_fan
+      - fan.den_wall_fan
       - input_boolean.den_state
   - service: media_player.media_pause
     data: {}
@@ -158,19 +158,6 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 30
-      milliseconds: 0
-  - if:
-    - condition: template
-      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
-        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
-        ''on''))) }}'
-    then:
-    - service: script.reload_local_tuya
-      data: {}
-  - delay:
-      hours: 0
-      minutes: 0
       seconds: 15
       milliseconds: 0
   - if:
@@ -264,14 +251,14 @@
           - switch.upstairs_tv
           - switch.rice_lights_l
           - switch.rice_lights_r
-          - switch.den_wall_fan
+          - fan.den_wall_fan
           - light.hall_tube_light
           - light.front_yard_lights_group
-      - service: switch.turn_on
+      - service: homeassistant.turn_on
         data: {}
         target:
           entity_id:
-          - switch.den_fan
+          - fan.den_fan
           - switch.plasma_ball
       - service: light.turn_on
         data:
@@ -293,8 +280,8 @@
       - service: homeassistant.turn_off
         target:
           entity_id:
-          - switch.den_fan
-          - switch.den_wall_fan
+          - fan.den_fan
+          - fan.den_wall_fan
           - switch.plasma_ball
           - light.den_tube_light
           - light.shelf_light
@@ -674,10 +661,10 @@
         entity_id: switch.workstation
         state: 'on'
       - condition: state
-        entity_id: switch.den_wall_fan
+        entity_id: fan.den_wall_fan
         state: 'on'
       - condition: state
-        entity_id: switch.den_fan
+        entity_id: fan.den_fan
         state: 'on'
     - condition: state
       entity_id: binary_sensor.chair_occupancy
@@ -1027,7 +1014,7 @@
           entity_id:
           - switch.workstation
           - light.led_strip
-          - switch.den_wall_fan
+          - fan.den_wall_fan
         data: {}
     default: []
   mode: single
@@ -1081,21 +1068,21 @@
       - choose:
         - conditions:
           - condition: state
-            entity_id: switch.den_fan
+            entity_id: fan.den_fan
             state: 'off'
           sequence:
-          - service: switch.turn_on
+          - service: homeassistant.turn_on
             target:
-              entity_id: switch.den_fan
+              entity_id: fan.den_fan
             data: {}
         - conditions:
           - condition: state
-            entity_id: switch.den_fan
+            entity_id: fan.den_fan
             state: 'on'
           sequence:
-          - service: switch.turn_off
+          - service: homeassistant.turn_off
             target:
-              entity_id: switch.den_fan
+              entity_id: fan.den_fan
             data: {}
         default: []
     default: []
@@ -1105,7 +1092,7 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.hall_camera_motion
+    entity_id: binary_sensor.hall_camera_1_motion
     to: 'on'
     from: 'off'
   condition:
@@ -1115,7 +1102,7 @@
       entity_id: switch.workstation
       state: 'on'
     - condition: state
-      entity_id: switch.den_wall_fan
+      entity_id: fan.den_wall_fan
       state: 'on'
   action:
   - choose:
@@ -1360,8 +1347,8 @@
   - service: homeassistant.turn_off
     target:
       entity_id:
-      - switch.den_fan
-      - switch.den_wall_fan
+      - fan.den_fan
+      - fan.den_wall_fan
       - switch.plasma_ball
       - light.shelf_light
       - light.top_light
@@ -1569,7 +1556,7 @@
       slide_face_2:
       - service: homeassistant.toggle
         target:
-          entity_id: switch.den_wall_fan
+          entity_id: fan.den_wall_fan
         data: {}
       slide_face_4:
       - service: media_player.media_next_track
@@ -1660,12 +1647,12 @@
       slide_face_2:
       - service: homeassistant.toggle
         target:
-          entity_id: switch.den_wall_fan
+          entity_id: fan.den_wall_fan
         data: {}
       rotate_cw_face_2:
       - service: homeassistant.turn_on
         target:
-          entity_id: switch.den_fan
+          entity_id: fan.den_fan
         data: {}
       rotate_cw_face_1:
       - service: light.turn_on
@@ -1677,7 +1664,7 @@
       rotate_ccw_face_2:
       - service: homeassistant.turn_off
         target:
-          entity_id: switch.den_fan
+          entity_id: fan.den_fan
         data: {}
       doubletap_face_1:
       - choose:
@@ -2265,4 +2252,67 @@
   action:
   - service: script.display_frontyard_pip_popup_on_tv
     data: {}
+  mode: single
+- id: '1663912645183'
+  alias: New Automation
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 580f52bf416b0d96387578c4bdc244d7
+    domain: nest
+    type: camera_motion
+    id: motion
+  - platform: device
+    device_id: 580f52bf416b0d96387578c4bdc244d7
+    domain: nest
+    type: camera_person
+    id: person
+  - platform: device
+    device_id: 580f52bf416b0d96387578c4bdc244d7
+    domain: nest
+    type: camera_sound
+    id: sound
+  condition: []
+  action:
+  - service: notify.mobile_app_10pro
+    data:
+      message: Living Room Motion
+      title: Living Room Motion
+      data:
+        image: /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
+          }}/thumbnail
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+      sequence:
+      - service: notify.mobile_app_10pro
+        data:
+          message: Living Room Motion
+          title: Living Room Motion
+          data:
+            image: /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
+              }}/thumbnail
+    - conditions:
+      - condition: trigger
+        id: person
+      sequence:
+      - service: notify.mobile_app_10pro
+        data:
+          message: Living Room Person
+          title: Living Room Person
+          data:
+            image: /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
+              }}/thumbnail
+    - conditions:
+      - condition: trigger
+        id: sound
+      sequence:
+      - service: notify.mobile_app_10pro
+        data:
+          message: Living Room Sound
+          title: Living Room Sound
+          data:
+            image: /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
+              }}/thumbnail
   mode: single

@@ -37,6 +37,8 @@ input_select: !include input_select.yaml
 sensor: !include sensor.yaml
 notify: !include notify.yaml
 rest_command: !include rest_commands.yaml
+template: !include template.yaml
+homekit: !include homekit.yaml
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -108,9 +110,4 @@ shell_command:
   git_core_update_push: bash /config/tools/git_core_update_push.sh
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
   git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
-
-genius_lyrics:
-  access_token: !secret genius_clientaccesstoken
-  entities:
-    - media_player.spotify
-    - media_player.motu
+  git_hacs_update: bash /config/tools/hacs_updates_push.sh

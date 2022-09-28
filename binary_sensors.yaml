@@ -11,35 +11,13 @@
       friendly_name: Hall Motion
       device_class: motion
       value_template: >-
-        {{ is_state('binary_sensor.hall_camera_motion', 'on') or is_state('binary_sensor.hall_camera_2_motion', 'on') }}
+        {{ is_state('binary_sensor.hall_camera_1_motion', 'on') or is_state('binary_sensor.hall_camera_2_motion', 'on') }}
 
     den_motion:
       friendly_name: Den Motion
       device_class: motion
       value_template: >-
         {{ is_state('binary_sensor.den_motion_1', 'on') or is_state('binary_sensor.den_motion_2', 'on') }}
-
-    hall_camera_sound:
-      friendly_name: "Hall Camera Sound"
-      value_template: >-
-        {{ states.camera.hall_camera_hd.attributes.noise_detected != 'off' }}
-      icon_template: >-
-        {% if (states.camera.hall_camera_hd.attributes.noise_detected == 'off') %}
-          mdi:volume-off
-        {% elif (states.camera.hall_camera_hd.attributes.noise_detected == 'on') %}
-          mdi:volume-high
-        {% endif %}
-
-    hall_camera_2_sound:
-      friendly_name: "Hall Camera 2 Sound"
-      value_template: >-
-        {{ states.camera.hall_camera_2_hd.attributes.noise_detected != 'off' }}
-      icon_template: >-
-        {% if (states.camera.hall_camera_2_hd.attributes.noise_detected == 'off') %}
-          mdi:volume-off
-        {% elif (states.camera.hall_camera_2_hd.attributes.noise_detected == 'on') %}
-          mdi:volume-high
-        {% endif %}
 
     chair_occupancy:
       friendly_name: "Chair Occupancy"
@@ -50,16 +28,16 @@
     downstairs_power_failed:
       friendly_name: "Downstairs Power"
       value_template: >-
-        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('switch.wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
+        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('fan.livingroom_wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
       icon_template: "{{ iif(is_state('binary_sensor.downstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     upstairs_power_failed:
       friendly_name: "Upstairs Power"
       value_template: >-
-        {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
+        {{ not ((is_state('light.front_down_light', 'unavailable') and is_state('fan.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
-# True if there's an update available for supervisor
+    # True if there's an update available for supervisor
     updater_supervisor:
       friendly_name: "Updater Supervisor"
       device_class: problem

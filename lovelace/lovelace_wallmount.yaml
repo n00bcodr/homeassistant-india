@@ -1077,18 +1077,22 @@ views:
         navigation_path: /lovelace-wallmount/motors
       icon: mdi:water-pump
       show_label: false
-      show_name: false
+      show_name: true
       size: 70%
       state:
       - color: blue
+        name: Upstairs
         value: Upstairs
       - color: blue
+        name: Downstairs
         value: Downstairs
       - color: lightgrey
         icon: mdi:water-pump-off
+        name: ' '
         value: MotorsOff
       - color: var(--disabled-text-color)
         icon: mdi:water-pump
+        name: ' '
         value: TankFull
       styles:
         card:
@@ -1108,7 +1112,7 @@ views:
         action: more-info
       show_entity_picture: true
       show_name: false
-      size: 120px
+      size: 70%
       state:
       - styles:
           icon:
@@ -1145,10 +1149,11 @@ views:
         size: 200%
         styles:
           card:
+          - position: absolute
+          - left: -150px
           - height: 100px
           - width: 100px
-          - padding: 0px 0px
-          - margin: 0px -110px
+          - color: ivory
         type: custom:button-card
       conditions:
       - entity: device_tracker.phone_prasad_redmi9i
@@ -1299,40 +1304,6 @@ views:
         - color: transparent
           color_type: label-card
           entity: input_select.room_select
-          name: Bedroom
-          show_name: true
-          state:
-          - icon: mdi:bed-double
-            styles:
-              icon:
-              - color: white
-              - width: 50px
-              name:
-              - color: white
-              - font-size: 12px
-              - padding-top: 5px
-            value: Bedroom
-          - icon: mdi:bed-double-outline
-            operator: default
-            styles:
-              icon:
-              - color: white
-              - opacity: 0.2
-              - width: 45px
-              name:
-              - color: white
-              - font-size: 12px
-              - padding-top: 5px
-          tap_action:
-            action: call-service
-            service: input_select.select_option
-            service_data:
-              entity_id: input_select.room_select
-              option: Bedroom
-          type: custom:button-card
-        - color: transparent
-          color_type: label-card
-          entity: input_select.room_select
           name: Den
           show_name: true
           state:
@@ -1443,11 +1414,11 @@ views:
               entity: light.den_tube_light
               template: rgb_light_button
               type: custom:button-card
-            - entity: switch.den_fan
+            - entity: fan.den_fan
               name: Fan
               template: fan_button
               type: custom:button-card
-            - entity: switch.den_wall_fan
+            - entity: fan.den_wall_fan
               hold_action: more-info
               name: Wall Fan
               template: fan_button
@@ -1761,7 +1732,7 @@ views:
                 - width: 30px
                 - height: 10px
               type: custom:button-card
-            - entity: fan.fan
+            - entity: fan.living_room_fan
               hold_action:
                 action: fire-dom-event
                 browser_mod:
@@ -1775,7 +1746,7 @@ views:
                         tap_action:
                           action: toggle
                       compact: false
-                      entity: fan.fan
+                      entity: fan.living_room_fan
                       icon:
                         icon: ''
                         show: false
@@ -1797,7 +1768,7 @@ views:
                   service: browser_mod.popup
               template: fan_button
               type: custom:button-card
-            - entity: switch.wall_fan
+            - entity: fan.livingroom_wall_fan
               template: fan_button
               type: custom:button-card
             - color_type: blank-card
@@ -2417,6 +2388,10 @@ views:
   - type: custom:layout-break
   - card:
       color_type: card
+      entity: switch.sonoff_1000f38ea4
+      extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
+
+        '
       icon: mdi:water
       name: Tank Full
       show_label: true
@@ -2424,25 +2399,32 @@ views:
       styles:
         card:
         - height: 80px
+        - animation: '[[[ if (entity.state == "on") return "bgswap 1000s linear infinite";
+            else return " " ]]]'
+        - background-size: 20%
+        - border-radius: 25px
         grid:
         - grid-template-areas: '"i n" "i n" "i l"'
-        - grid-template-columns: 0.3fr 1fr
+        - grid-template-columns: .5fr 1fr
         - grid-template-rows: min-content min-content min-content
         icon:
         - width: 50px
         - align-self: start
         - text-align: start
+        - color: black
         img_cell:
         - align-self: start
         - text-align: start
         label:
         - justify-self: start
         - font-size: 16px
-        - font-weight: 300
+        - font-weight: 500
+        - color: black
         name:
         - justify-self: start
         - font-size: 30px
-        - font-weight: 300
+        - font-weight: 500
+        - color: black
       type: custom:button-card
     conditions:
     - entity: switch.sonoff_1000f38ea4
@@ -2486,7 +2468,7 @@ views:
   - camera_image: camera.hall_camera
     camera_view: live
     entities:
-    - entity: binary_sensor.hall_camera_motion
+    - entity: binary_sensor.hall_camera_1_motion
     - entity: camera.hall_camera
       icon: mdi:arrow-left
       name: Pan Left
@@ -2498,8 +2480,8 @@ views:
         service_data:
           pan: LEFT
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-up
       name: Tilt Up
       tap_action:
@@ -2508,8 +2490,8 @@ views:
         service_data:
           tilt: UP
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-down
       name: Tilt Down
       show_icon: true
@@ -2519,8 +2501,8 @@ views:
         service_data:
           tilt: DOWN
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-right
       name: Pan Right
       show_icon: true
@@ -2530,8 +2512,8 @@ views:
         service_data:
           pan: RIGHT
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-1-box
       name: Preset 1
       tap_action:
@@ -2540,8 +2522,8 @@ views:
         service_data:
           preset: '1'
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
@@ -2551,7 +2533,7 @@ views:
         service_data:
           preset: '2'
         target:
-          entity_id: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
     title: Hall Camera 1
     type: picture-glance
   - camera_image: camera.secondfloor
@@ -2564,7 +2546,6 @@ views:
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_2_motion
-    - entity: binary_sensor.hall_camera_2_sound
     tap_action:
       action: more-info
     title: Hall Camera 2

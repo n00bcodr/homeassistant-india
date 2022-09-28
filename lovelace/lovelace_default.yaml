@@ -145,7 +145,7 @@ views:
   cards:
   - entity: mediaquery
     states:
-      '(min-width: 1000px)':
+      '(min-width: 800px)':
         entity: weather.weather
         number_of_forecasts: '5'
         type: custom:weather-card
@@ -537,13 +537,13 @@ views:
     - height: 3
       type: custom:gap-card
     - cards:
-      - entity: switch.den_fan
+      - entity: fan.den_fan
         icon: ''
         icon_animation: false
         tap_action:
           action: toggle
         type: custom:mushroom-fan-card
-      - entity: switch.den_wall_fan
+      - entity: fan.den_wall_fan
         icon_animation: true
         type: custom:mushroom-fan-card
       columns: 2
@@ -697,16 +697,6 @@ views:
     - content: '{{(states.media_player.spotify.attributes.media_content_id) | replace
         ("spotify:track:", "https://open.spotify.com/track/")}}'
       type: markdown
-    - card:
-        content: '## {{ states.sensor.spotify_lyrics.attributes.media_artist }} -
-          {{ states.sensor.spotify_lyrics.attributes.media_title }}
-
-          {{ states.sensor.spotify_lyrics.attributes.media_lyrics }}'
-        type: markdown
-      conditions:
-      - entity: sensor.spotify_lyrics
-        state: 'on'
-      type: conditional
     - account: default
       always_play_random_song: true
       device: Motu
@@ -740,7 +730,7 @@ views:
       column: 3
   - entity: mediaquery
     states:
-      '(min-width: 1000px)':
+      '(min-width: 800px)':
         alignment: center
         chips:
         - content: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
@@ -806,25 +796,36 @@ views:
     view_layout:
       column: 1
   - cards:
-    - buttonStyle: 'font-size: 14px;'
-      cards:
-      - artwork: material
-        entity: media_player.den_group
-        group: true
-        type: custom:mini-media-player
+    - card:
+        buttonStyle: 'font-size: 14px;'
+        cards:
+        - artwork: material
+          entity: media_player.den_group
+          group: true
+          type: custom:mini-media-player
+        - entity: media_player.motu
+          group: true
+          type: custom:mini-media-player
+        - entity: media_player.chotu
+          group: true
+          toggle_power: false
+          type: custom:mini-media-player
+        - entity: media_player.clock
+          group: true
+          type: custom:mini-media-player
+        defaultOpen: contain-toggled
+        title: Players
+        type: custom:collapsable-cards
+      conditions:
+      - entity: media_player.den_group
+        state_not: 'off'
       - entity: media_player.motu
-        group: true
-        type: custom:mini-media-player
+        state_not: 'off'
       - entity: media_player.chotu
-        group: true
-        toggle_power: false
-        type: custom:mini-media-player
+        state_not: 'off'
       - entity: media_player.clock
-        group: true
-        type: custom:mini-media-player
-      defaultOpen: contain-toggled
-      title: Players
-      type: custom:collapsable-cards
+        state_not: 'off'
+      type: conditional
     - artwork: full-cover
       entity: media_player.google_tv
       group: true
@@ -1174,7 +1175,7 @@ views:
       state: 'on'
     type: conditional
   - cards:
-    - entity: fan.fan
+    - entity: fan.living_room_fan
       icon_animation: true
       layout: horizontal
       show_percentage_control: true
@@ -2030,9 +2031,9 @@ views:
   theme: Backend-selected
   title: Living Room
 - badges:
-  - entity: binary_sensor.hall_camera_motion
+  - entity: binary_sensor.hall_motion
     name: Hall Motion
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_motion','on')\
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
   - entity: sensor.multisensor_1_light
   - entity: sensor.multisensor_1_temperature
@@ -2265,7 +2266,7 @@ views:
   - camera_image: camera.hall_camera
     camera_view: live
     entities:
-    - entity: binary_sensor.hall_camera_motion
+    - entity: binary_sensor.hall_camera_1_motion
     - entity: camera.hall_camera
       icon: mdi:arrow-left
       name: Pan Left
@@ -2277,8 +2278,8 @@ views:
         service_data:
           pan: LEFT
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-up
       name: Tilt Up
       tap_action:
@@ -2287,8 +2288,8 @@ views:
         service_data:
           tilt: UP
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-down
       name: Tilt Down
       show_icon: true
@@ -2298,8 +2299,8 @@ views:
         service_data:
           tilt: DOWN
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:arrow-right
       name: Pan Right
       show_icon: true
@@ -2309,8 +2310,8 @@ views:
         service_data:
           pan: RIGHT
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-1-box
       name: Preset 1
       tap_action:
@@ -2319,8 +2320,8 @@ views:
         service_data:
           preset: '1'
         target:
-          entity_id: camera.hall_camera_hd
-    - entity: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
+    - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
@@ -2330,13 +2331,12 @@ views:
         service_data:
           preset: '2'
         target:
-          entity_id: camera.hall_camera_hd
+          entity_id: camera.hall_camera_1_hd
     title: Hall Camera 1
     type: picture-glance
   - camera_image: camera.hall_camera_2_hd
     camera_view: live
     entities:
-    - entity: binary_sensor.hall_camera_2_sound
     - entity: binary_sensor.hall_camera_2_motion
     tap_action:
       action: more-info
@@ -2453,6 +2453,10 @@ views:
   - type: custom:layout-break
   - card:
       color_type: card
+      entity: switch.sonoff_1000f38ea4
+      extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
+
+        '
       icon: mdi:water
       name: Tank Full
       show_label: true
@@ -2460,25 +2464,32 @@ views:
       styles:
         card:
         - height: 80px
+        - animation: '[[[ if (entity.state == "on") return "bgswap 1000s linear infinite";
+            else return " " ]]]'
+        - background-size: 20%
+        - border-radius: 25px
         grid:
         - grid-template-areas: '"i n" "i n" "i l"'
-        - grid-template-columns: 0.3fr 1fr
+        - grid-template-columns: .5fr 1fr
         - grid-template-rows: min-content min-content min-content
         icon:
         - width: 50px
         - align-self: start
         - text-align: start
+        - color: black
         img_cell:
         - align-self: start
         - text-align: start
         label:
         - justify-self: start
         - font-size: 16px
-        - font-weight: 300
+        - font-weight: 500
+        - color: black
         name:
         - justify-self: start
         - font-size: 30px
-        - font-weight: 300
+        - font-weight: 500
+        - color: black
       type: custom:button-card
     conditions:
     - entity: switch.sonoff_1000f38ea4
@@ -2784,6 +2795,28 @@ views:
       - justify-self: start
       - padding-bottom: 4px
     type: custom:button-card
+  - cards:
+    - entity: sensor.download_speed
+      max: 300
+      min: 0
+      needle: false
+      severity:
+        green: 300
+        red: 0
+        yellow: 150
+      type: gauge
+    - entity: sensor.upload_speed
+      max: 300
+      min: 0
+      needle: false
+      severity:
+        green: 250
+        red: 0
+        yellow: 0
+      type: gauge
+    mode: horizontal
+    title: SpeedTest
+    type: custom:stack-in-card
   - entities:
     - entity: sensor.count_automations
       icon: mdi:robot
@@ -2820,28 +2853,6 @@ views:
       icon: mdi:map-clock
       name: '# Zones'
     type: entities
-  - cards:
-    - entity: sensor.download_speed
-      max: 300
-      min: 0
-      needle: false
-      severity:
-        green: 300
-        red: 0
-        yellow: 150
-      type: gauge
-    - entity: sensor.upload_speed
-      max: 300
-      min: 0
-      needle: false
-      severity:
-        green: 250
-        red: 0
-        yellow: 0
-      type: gauge
-    mode: horizontal
-    title: SpeedTest
-    type: custom:stack-in-card
   - cards:
     - entity: sensor.database_size
       icon_color: blue-grey
@@ -2886,15 +2897,6 @@ views:
       secondary_info: name
       type: custom:mushroom-entity-card
     type: vertical-stack
-  - card:
-      content: Snapshots are stale! Please visit the "Home Assistant Google Drive
-        Backup" add-on status page for details.
-      title: Stale Snapshots!
-      type: markdown
-    conditions:
-    - entity: binary_sensor.backups_stale
-      state: 'on'
-    type: conditional
   - cards:
     - entities:
       - icon: fab:git
@@ -2948,209 +2950,52 @@ views:
       type: iframe
       url: http://homeassistant.local:8123/local/git_status.txt
     type: vertical-stack
+  - card:
+      content: Snapshots are stale! Please visit the "Home Assistant Google Drive
+        Backup" add-on status page for details.
+      title: Stale Snapshots!
+      type: markdown
+    conditions:
+    - entity: binary_sensor.backups_stale
+      state: 'on'
+    type: conditional
   icon: mdi:server-network
   path: system_monitor
   theme: Backend-selected
   title: System Monitor
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
-- badges: []
-  cards:
-  - cards:
-    - entities:
-      - entity: light.den_tube_light
-        name: Light
-        show_icon: true
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.led_strip
-        icon: mdi:led-strip-variant
-        name: LED Strip
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.shelf_light
-        icon: mdi:bookshelf
-        name: Shelf Light
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.workstation
-        icon: mdi:desk
-        name: Workstation
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.monitor
-        icon: mdi:monitor-shimmer
-        name: Monitor
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.den_wall_fan
-        name: Wall Fan
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.den_fan
-        name: Fan
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: climate.den_ac
-        name: AC
-        state_color: true
-        tap_action:
-          action: toggle
-      entity: group.den
-      icon: mdi:castle
-      info_entities:
-      - sensor.den_temperature
-      - sensor.den_humidity
-      - entity: binary_sensor.den_motion
-        icon:
-          state_off: mdi:motion-sensor-off
-          state_on: mdi:motion-sensor
-        show_icon: true
-        state_color: true
-      - entity: binary_sensor.in_bed
-        icon:
-          state_off: mdi:bed-empty
-          state_on: mdi:bed
-        show_icon: true
-      state_color: true
-      tap_action:
-        action: toggle
-      title: Den
-      type: custom:room-card
-    - entities:
-      - entity: light.hall_tube_light
-        name: Light
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.rice_lights_l
-        icon: mdi:string-lights
-        name: Rice Lights L
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.rice_lights_r
-        icon: mdi:string-lights
-        name: Rice Lights R
-        state_color: true
-        tap_action:
-          action: toggle
-      info_entities:
-      - entity: binary_sensor.hall_motion
-        icon:
-          state_off: mdi:motion-sensor-off
-          state_on: mdi:motion-sensor
-        show_icon: true
-        state_color: true
-      - sensor.multisensor_1_light
-      title: Hall
-      type: custom:room-card
-    - cards:
-      - entities:
-        - entity: switch.rice_string_1
-          state_color: true
-        - entity: switch.rice_string_2
-          state_color: true
-        type: entities
-      entities:
-      - entity: light.first_floor_light
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.first_floor_stairway
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.first_floor_corner
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.second_floor_light
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.second_floor_stairway
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: light.second_floor_corner
-        state_color: true
-        tap_action:
-          action: toggle
-      entity: light.front_yard_lights_group
-      icon: mdi:lightbulb-group
-      info_entities:
-      - entity: binary_sensor.front_yard_camera_person_occupancy
-        icon:
-          state_off: mdi:motion-sensor-off
-          state_on: mdi:motion-sensor
-        show_icon: true
-        state_color: true
-      state_color: true
-      style: "div.entities-row {\n  justify-content: center;\n  flex-wrap: wrap;\n\
-        }\n"
-      tap_action:
-        action: toggle
-      title: Front Yard
-      type: custom:room-card
-    - entities:
-      - entity: light.living_room_light
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: fan.fan
-        state_color: true
-        tap_action:
-          action: toggle
-      - entity: switch.wall_fan
-        state_color: true
-        tap_action:
-          action: toggle
-      info_entities:
-      - entity: binary_sensor.multisensor_2_motion
-        icon:
-          state_off: mdi:motion-sensor-off
-          state_on: mdi:motion-sensor
-        show_icon: true
-        state_color: true
-      - sensor.multisensor_2_humidity
-      - sensor.multisensor_2_temperature
-      - sensor.multisensor_2_light
-      title: Living Room
-      type: custom:room-card
-    type: vertical-stack
-  icon: mdi:tablet-dashboard
-  path: kiosk
-  theme: Backend-selected
-  title: kiosk
-  type: custom:horizontal-layout
-  visible: []
 - badges:
   - entity: person.murthy
   - entity: person.kameswari
   - entity: person.pavanthanuj
   - entity: binary_sensor.den_motion_1
-    name: Den Motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_1','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
   - entity: binary_sensor.den_motion_2
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_2','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.hall_camera_motion
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_motion','on')\
+  - entity: binary_sensor.den_door
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_door','off')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.chair_occupancy
+    name: Occupancy
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
+      \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.vibration
+  - entity: input_boolean.den_state
+  - entity: binary_sensor.hall_camera_1_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_1_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
   - entity: binary_sensor.hall_camera_2_motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_2_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.hall_camera_sound
-  - entity: binary_sensor.hall_camera_2_sound
+  - entity: binary_sensor.living_room_motion
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.living_room_motion','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
+  - entity: binary_sensor.living_room_person
+    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.living_room_person','on')\
+      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
   - entity: binary_sensor.firstfloor_motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.firstfloor_motion','off')\
       \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
@@ -3163,16 +3008,6 @@ views:
   - entity: binary_sensor.driveway_motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.driveway_motion','off')\
       \ %}\n      green\n    {% else %}\n      Red\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.den_door
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_door','off')\
-      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.chair_occupancy
-    name: Occupancy
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
-      \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
-  - entity: input_boolean.den_state
-  - entity: sensor.chair_occupancy
-  - entity: binary_sensor.vibration
   - entity: script.update_all_phone_sensors
     hold_action:
       action: more-info
@@ -3214,6 +3049,12 @@ views:
         state: 'on'
       entity: sensor.10pro_battery_level
       name: 10 Pro
+      tap_action: more-info
+    - charging_state:
+        entity_id: sensor.pavan_thanujs_ipad_battery_state
+        state: 'on'
+      entity: sensor.pavan_thanujs_ipad_battery_level
+      name: iPad Pro
       tap_action: more-info
     - charging_state:
         entity_id: binary_sensor.kameswari_nord_is_charging
@@ -3385,7 +3226,7 @@ views:
       entity: binary_sensor.den_motion_2
       name: Den 2
     - color: red
-      entity: binary_sensor.hall_camera_motion
+      entity: binary_sensor.hall_camera_1_motion
       name: Hall
     - color: yellow
       entity: binary_sensor.hall_camera_2_motion
@@ -3427,7 +3268,7 @@ views:
               }\n"
       content: '<h2 class="some"> <ha-icon icon=''mdi:shield-half-full''></ha-icon>
         Watchman report<h2> <h3> Missing Services: {{ states.sensor.watchman_missing_services.state
-        }} </h3> {%- for item in state_attr("sensor.watchman_missing_services", "services")
+        }} </h3> {%- for item in state_attr("sensor.watchman_missing_services", "entities")
         %} <hr><table><tr> <td>  <ha-icon icon=''mdi:cloud-alert''></ha-icon> {{ item.id
         }} <a title="{{item.occurrences}}">{{item.occurrences.split(''/'')[-1].split('':'')[0]}}</a>
         </td></tr></table> {%- endfor %}'

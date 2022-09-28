@@ -1,0 +1,25 @@
+# Living Room Motion
+- trigger:
+    - platform: event
+      event_type: nest_event
+      event_data:
+        device_id: 580f52bf416b0d96387578c4bdc244d7
+        type: camera_motion
+  binary_sensor:
+    - name: "Living Room Motion"
+      device_class: motion
+      auto_off: 30
+      state: "on"
+
+# Living Room Person
+- trigger:
+    - platform: event
+      event_type: nest_event
+      event_data:
+        device_id: 580f52bf416b0d96387578c4bdc244d7
+        type: camera_person
+  binary_sensor:
+    - name: "Living Room Person"
+      device_class: motion
+      auto_off: 30
+      state: "on"

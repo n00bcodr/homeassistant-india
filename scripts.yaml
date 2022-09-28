@@ -9,7 +9,7 @@ good_night:
       minutes: 0
       seconds: 8
       milliseconds: 0
-  - service: switch.turn_off
+  - service: homeassistant.turn_off
     data: {}
     target:
       entity_id:
@@ -303,19 +303,18 @@ add_shopping_list:
   - service: shopping_list.add_item
     data:
       name: '{{ states(''input_text.shopping_list'') }}'
-  - service: browser_mod.lovelace_reload
   mode: single
 check_shopping_list:
   alias: Check all Shopping Item
   sequence:
   - service: shopping_list.complete_all
-  - service: browser_mod.lovelace_reload
+    data: {}
   mode: single
 clear_shopping_list:
   alias: Clear all Shopping Item
   sequence:
   - service: shopping_list.clear_completed_items
-  - service: browser_mod.lovelace_reload
+    data: {}
   mode: single
 ac_off:
   alias: AC OFF
