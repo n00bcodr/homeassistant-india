@@ -26,10 +26,11 @@
     data:
       scene_id: den_as_it_was
       snapshot_entities:
-      - light.led_strip
       - light.den_tube_light
       - light.top_light
       - light.shelf_light
+      - light.front_down_light
+      - light.rear_down_light
       - fan.den_fan
       - fan.den_wall_fan
       - switch.workstation
@@ -42,7 +43,8 @@
     data: {}
     target:
       entity_id:
-      - light.led_strip
+      - light.front_down_light
+      - light.rear_down_light
       - light.den_tube_light
       - light.top_light
       - light.shelf_light
@@ -86,14 +88,6 @@
           - light.second_floor_stairway
           - light.second_floor_light
           - light.second_floor_corner
-          - light.first_floor_stairway_2
-          - light.first_floor_light_2
-          - light.first_floor_corner_2
-          - light.second_floor_stairway_2
-          - light.second_floor_light_2
-          - light.second_floor_corner_2
-          - light.front_yard_lights_group
-          - light.front_yard_lights_group_2
         data: {}
   - service: notify.sony_tv
     data:
@@ -127,7 +121,6 @@
           - switch.rice_lights_r
           - switch.rice_lights_l
           - light.front_yard_lights_group
-          - light.front_yard_lights_group_2
         data: {}
   - if:
     - condition: template
@@ -153,28 +146,12 @@
           target:
             entity_id:
             - light.front_yard_lights_group
-            - light.front_yard_lights_group_2
           data: {}
   - delay:
       hours: 0
       minutes: 0
       seconds: 15
       milliseconds: 0
-  - if:
-    - condition: template
-      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
-        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
-        ''on''))) }}'
-    then:
-    - repeat:
-        count: '5'
-        sequence:
-        - service: homeassistant.turn_on
-          target:
-            entity_id:
-            - light.front_yard_lights_group
-            - light.front_yard_lights_group_2
-          data: {}
   - if:
     - condition: template
       value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
@@ -246,7 +223,8 @@
         target:
           entity_id:
           - light.den_tube_light
-          - light.led_strip
+          - light.front_down_light
+          - light.rear_down_light
           - switch.workstation
           - switch.upstairs_tv
           - switch.rice_lights_l
@@ -254,6 +232,8 @@
           - fan.den_wall_fan
           - light.hall_tube_light
           - light.front_yard_lights_group
+          - light.front_down_light
+          - light.rear_down_light
       - service: homeassistant.turn_on
         data: {}
         target:
@@ -346,15 +326,12 @@
     target:
       entity_id:
       - light.hall_tube_light
-      - light.rgb1
-      - light.rgb2
+      - light.rgb_1
+      - light.rgb_2
+      - light.rgb_3
       - light.first_floor_stairway
-      - light.first_floor_stairway_2
       - light.second_floor_corner
-      - light.second_floor_corner_2
       - light.first_floor_corner
-      - light.first_floor_corner_2
-      - light.second_floor_stairway_2
       - light.second_floor_stairway
   mode: single
 - id: tankfull_notification
@@ -452,7 +429,6 @@
       - light.hall_tube_light
       - switch.rice_lights_l
       - switch.rice_lights_r
-      - light.front_yard_lights_group_2
     data: {}
   - service: switch.turn_on
     data: {}
@@ -536,9 +512,6 @@
   - platform: state
     entity_id: light.front_yard_lights_group
     to: 'on'
-  - platform: state
-    entity_id: light.front_yard_lights_group_2
-    to: 'on'
   condition:
   - condition: time
     before: '16:00:00'
@@ -549,7 +522,6 @@
     target:
       entity_id:
       - light.front_yard_lights_group
-      - light.front_yard_lights_group_2
   mode: single
 - id: washing_machine_off
   alias: "\U0001F9FAWashing Machine - Cycle Complete"
@@ -862,24 +834,6 @@
   - condition: template
     value_template: '{{ trigger.event.data.tag_id in tags }}'
   action:
-  - service: scene.create
-    data:
-      scene_id: led_nfc_scan
-      snapshot_entities: light.led_strip
-  - service: light.turn_on
-    data:
-      color_name: green
-    target:
-      entity_id: light.led_strip
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: scene.turn_on
-    target:
-      entity_id: scene.led_nfc_scan
-    data: {}
   - variables:
       uri: '{{ tags[trigger.event.data.tag_id].uri }}'
   - service: spotcast.start
@@ -1013,7 +967,6 @@
         target:
           entity_id:
           - switch.workstation
-          - light.led_strip
           - fan.den_wall_fan
         data: {}
     default: []
@@ -1085,71 +1038,6 @@
               entity_id: fan.den_fan
             data: {}
         default: []
-    default: []
-  mode: single
-- id: '1629625852138'
-  alias: "\U0001F3F0Motion in hall, change LED color"
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.hall_camera_1_motion
-    to: 'on'
-    from: 'off'
-  condition:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: switch.workstation
-      state: 'on'
-    - condition: state
-      entity_id: fan.den_wall_fan
-      state: 'on'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.led_strip
-        state: 'on'
-      sequence:
-      - service: scene.create
-        data:
-          scene_id: led_strip_state
-          snapshot_entities: light.led_strip
-      - service: light.turn_on
-        data:
-          color_name: red
-          effect: solid
-        target:
-          entity_id: light.led_strip
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-      - service: scene.turn_on
-        target:
-          entity_id: scene.led_strip_state
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: light.led_strip
-        state: 'off'
-      sequence:
-      - service: light.turn_on
-        data:
-          color_name: peru
-          effect: solid
-        target:
-          entity_id: light.led_strip
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 20
-          milliseconds: 0
-      - service: light.turn_off
-        target:
-          entity_id: light.led_strip
-        data: {}
     default: []
   mode: single
 - id: '1631243477111'
@@ -1912,17 +1800,41 @@
   - platform: state
     entity_id: binary_sensor.10pro_is_charging
     to: 'on'
-  condition:
-  - condition: state
-    entity_id: sensor.10pro_battery_level
-    state: '100'
+    id: 10pro
+  - platform: state
+    entity_id:
+    - sensor.pavan_thanujs_ipad_battery_state
+    to: 'on'
+    id: ipad
+  condition: []
   action:
-  - service: notify.mobile_app_10pro
-    data:
-      message: ⚡Charging Complete⚡
-      data:
-        notification_icon: mdi:battery-charging-high
-        color: red
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.10pro_battery_level
+        state: '100'
+      - condition: trigger
+        id: 10pro
+      sequence:
+      - service: notify.mobile_app_10pro
+        data:
+          message: ⚡Charging Complete⚡
+          data:
+            notification_icon: mdi:battery-charging-high
+            color: red
+    - conditions:
+      - condition: state
+        entity_id: sensor.pavan_thanujs_ipad_battery_level
+        state: '100'
+      - condition: trigger
+        id: ipad
+      sequence:
+      - service: notify.mobile_app_10pro
+        data:
+          message: ⚡iPad Charging Complete⚡
+          data:
+            notification_icon: mdi:battery-charging-high
+            color: red
   mode: single
 - id: '1654855270389'
   alias: ⚙️Send Notification to Stop Playing if Hall TV is off
@@ -2254,7 +2166,7 @@
     data: {}
   mode: single
 - id: '1663912645183'
-  alias: New Automation
+  alias: Nest Hub Max - Notifications
   description: ''
   trigger:
   - platform: device
@@ -2262,6 +2174,7 @@
     domain: nest
     type: camera_motion
     id: motion
+    enabled: false
   - platform: device
     device_id: 580f52bf416b0d96387578c4bdc244d7
     domain: nest
@@ -2272,15 +2185,9 @@
     domain: nest
     type: camera_sound
     id: sound
+    enabled: false
   condition: []
   action:
-  - service: notify.mobile_app_10pro
-    data:
-      message: Living Room Motion
-      title: Living Room Motion
-      data:
-        image: /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
-          }}/thumbnail
   - choose:
     - conditions:
       - condition: trigger

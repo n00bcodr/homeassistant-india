@@ -261,10 +261,9 @@ den_tubelight_white:
   - service: light.turn_on
     data:
       brightness_pct: 100
-      color_temp: 125
     target:
-      entity_id:
-      - light.den_tube_light
+      entity_id: light.den_tube_light
+  mode: single
 spotify_start:
   alias: 'Spotify: Start Playback'
   sequence:

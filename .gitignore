@@ -35,8 +35,8 @@ node-red
 aircast.xml
 *.db-journal
 addons_config
-custom_components
-www/community/
+custom_components/*
+www/community/*
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 frigate.yml

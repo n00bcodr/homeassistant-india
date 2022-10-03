@@ -197,7 +197,6 @@ views:
             browser_id: THIS
             content:
               entities:
-              - automation.motion_in_hall_change_led_color
               - automation.hall_lights_on_when_motion_detected
               type: entities
           service: browser_mod.popup
@@ -509,13 +508,6 @@ views:
       columns: 2
       square: false
       type: grid
-    - collapsible_controls: true
-      entity: light.led_strip
-      fill_container: true
-      show_brightness_control: true
-      show_color_control: true
-      type: custom:mushroom-light-card
-      use_light_color: true
     - cards:
       - entity: switch.front_down_light
         type: custom:mushroom-light-card
@@ -2067,15 +2059,27 @@ views:
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
-      - entity: light.rgb1
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: light.rgb2
-        type: custom:mushroom-light-card
         use_light_color: true
       columns: 2
       square: false
       type: grid
+    - cards:
+      - entity: light.rgb_1
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - entity: light.rgb_2
+        type: custom:mushroom-light-card
+        use_light_color: true
+      - entity: light.rgb_3
+        type: custom:mushroom-light-card
+        use_light_color: true
+      columns: 3
+      square: false
+      type: grid
+    - entity: switch.upstairs_tv
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - entity: binary_sensor.pavanthanuj
       icon_type: entity-picture
       type: custom:mushroom-entity-card
@@ -2113,10 +2117,6 @@ views:
       - volume_mute
       - volume_set
       - volume_buttons
-    - entity: switch.upstairs_tv
-      tap_action:
-        action: toggle
-      type: custom:mushroom-entity-card
     type: vertical-stack
   - cards:
     - entities:
@@ -2496,25 +2496,24 @@ views:
       state: 'on'
     type: conditional
   - entities:
+    - switch.downstairs_motor
+    - switch.upstairs_motor
+    - switch.sonoff_1000f38ea4
+    hours_to_show: 24
+    type: logbook
+  - entities:
     - entity: switch.upstairs_motor
     - entity: switch.downstairs_motor
     hours_to_show: 6
     refresh_interval: 1
     title: History
     type: history-graph
-  - entities:
-    - switch.downstairs_motor
-    - switch.upstairs_motor
-    - switch.sonoff_1000f38ea4
-    hours_to_show: 24
-    type: logbook
   icon: mdi:water-pump
   layout:
     max_cols: 2
   path: motors
   theme: Backend-selected
   title: Motors
-  type: custom:vertical-layout
 - badges: []
   cards:
   - cards:
@@ -2937,6 +2936,11 @@ views:
           icon: mdi:upload
         type: custom:paper-buttons-row
       - buttons:
+        - icon: hacs:hacs
+          name: Push Custom Components
+          tap_action:
+            action: call-service
+            service: shell_command.git_hacs_update
         - icon: mdi:git
           name: Git Status
           tap_action:

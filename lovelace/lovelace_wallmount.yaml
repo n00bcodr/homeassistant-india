@@ -1437,26 +1437,6 @@ views:
                         data:
                           content:
                             brightness_icon: brightness-7
-                            entity: light.led_strip
-                            hide_header: true
-                            show_slider_percent: true
-                            type: custom:light-entity-card
-                        service: browser_mod.popup
-              entity: light.led_strip
-              template: rgb_light_button
-              type: custom:button-card
-            - entity: switch.geyser
-              template: light_button_no_brightness
-              type: custom:button-card
-            - custom_fields:
-                cl:
-                  card:
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        data:
-                          content:
-                            brightness_icon: brightness-7
                             entity: light.shelf_light
                             hide_header: true
                             show_slider_percent: true

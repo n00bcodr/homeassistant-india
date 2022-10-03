@@ -20,9 +20,6 @@
       - switch.monitor
       - switch.laser
       - switch.plasma_ball
-      - light.led_strip_monitors
-      - light.led_strip_table
-      - light.led_strip_sidetable
       - light.den_tube_light
       - light.shelf_light
       - light.top_light
