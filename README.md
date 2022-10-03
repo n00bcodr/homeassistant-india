@@ -1,7 +1,7 @@
-[![My HA Version](https://img.shields.io/github/v/tag/n00bcodr/homeassistant?color=d42a1e&label=My%20HA%20Version&logo=homeassistant&logoColor=white)](https://github.com/n00bcodr/homeassistant/blob/master/.HA_VERSION)
+[![My HA Version](https://img.shields.io/github/v/tag/n00bcodr/homeassistant?color=d42a1e&label=My%20HA%20Version&logo=homeassistant&logoColor=white&?cacheSeconds=600)](https://github.com/n00bcodr/homeassistant/blob/master/.HA_VERSION)
 [![Latest HA Release](https://img.shields.io/github/v/release/home-assistant/home-assistant?include_prereleases&label=Latest%20HA%20Release&logo=home-assistant)](https://github.com/home-assistant/home-assistant/releases/latest)
 [![Years Badge](https://badges.strrl.dev/years/n00bcodr?color=darkgreen)](https://github.com/n00bcodr)
-![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=f58153)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=f58153&?cacheSeconds=600)
 [![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant?color=purple)](https://github.com/n00bcodr/homeassistant/commits/master)
 
 ---
