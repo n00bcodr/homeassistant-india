@@ -1,12 +1,5 @@
 - platform: template
   sensors:
-    in_bed:
-      friendly_name: In Bed?
-      device_class: occupancy
-      value_template: >-
-        {{ not (is_state('binary_sensor.withings_in_bed_homassistant', 'off') or is_state('binary_sensor.withings_in_bed_homassistant', 'unavailable')) }}
-      icon_template: "{{ iif(is_state('binary_sensor.in_bed', 'on'), 'mdi:bed', 'mdi:bed-outline') }}"
-
     hall_motion:
       friendly_name: Hall Motion
       device_class: motion
@@ -28,13 +21,13 @@
     downstairs_power_failed:
       friendly_name: "Downstairs Power"
       value_template: >-
-        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('fan.livingroom_wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
+        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor_switch_1', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('fan.livingroom_wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
       icon_template: "{{ iif(is_state('binary_sensor.downstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     upstairs_power_failed:
       friendly_name: "Upstairs Power"
       value_template: >-
-        {{ not ((is_state('light.front_down_light', 'unavailable') and is_state('fan.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
+        {{ not ((is_state('light.front_down_light', 'unavailable') and is_state('fan.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r_socket_1', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     # True if there's an update available for supervisor

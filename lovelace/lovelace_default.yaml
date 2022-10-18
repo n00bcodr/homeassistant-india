@@ -207,16 +207,6 @@ views:
       name: Occupancy
       style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
         \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
-    - entity: binary_sensor.in_bed
-      name: Bed
-      style:
-        ha-state-label-badge:
-          $:
-            ha-label-badge:
-              $: ".label-badge {\n  {% if is_state('binary_sensor.in_bed','off') %}\n\
-                \    border-style: dashed dotted !important;\n    border-color: grey\
-                \ !important;\n  {% else %}\n    border-style: double !important;\n\
-                \    border-color: blue !important;\n  {% endif %}\n"
     - entities:
       - entity: binary_sensor.upstairs_power_failed
         style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.upstairs_power_failed','off')\
@@ -500,6 +490,8 @@ views:
         use_light_color: true
       - collapsible_controls: false
         entity: light.den_tube_light
+        icon: mdi:lightbulb-fluorescent-tube-outline
+        name: Tube Light
         show_brightness_control: true
         show_color_control: true
         show_color_temp_control: true
@@ -578,7 +570,7 @@ views:
                   type: custom:mushroom-template-card
                 type: horizontal-stack
             service: browser_mod.popup
-        entity: switch.workstation
+        entity: switch.workstation_socket_1
         hold_action:
           action: fire-dom-event
           browser_mod:
@@ -613,11 +605,15 @@ views:
                   type: custom:mushroom-template-card
                 type: horizontal-stack
             service: browser_mod.popup
+        icon: mdi:desk
+        name: Workstation
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
-      - entity: switch.monitor
+      - entity: switch.monitor_socket_1
+        icon: mdi:monitor
         icon_color: red
+        name: Monitor
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
@@ -1107,7 +1103,8 @@ views:
   - card:
       buttons:
       - align_icon: bottom
-        entity: switch.downstairs_motor
+        entity: switch.downstairs_motor_switch_1
+        name: Downstairs Motor
         state_icons:
           'off': mdi:water-pump-off
           'on': mdi:water-pump
@@ -1132,7 +1129,7 @@ views:
             --mdc-icon-size: 300px
       type: custom:paper-buttons-row
     conditions:
-    - entity: switch.downstairs_motor
+    - entity: switch.downstairs_motor_switch_1
       state: 'on'
     type: conditional
   - card:
@@ -1170,12 +1167,15 @@ views:
     - entity: fan.living_room_fan
       icon_animation: true
       layout: horizontal
+      name: Fan
       show_percentage_control: true
       type: custom:mushroom-fan-card
     - collapsible_controls: true
       entity: light.living_room_light
       fill_container: true
+      icon: mdi:lightbulb-fluorescent-tube-outline
       layout: horizontal
+      name: Light
       show_brightness_control: true
       show_color_temp_control: true
       tap_action:
@@ -2055,11 +2055,12 @@ views:
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
-      - entity: switch.rice_lights_r
+      - entity: switch.rice_lights_r_socket_1
+        icon: mdi:string-lights
+        name: Rice Lights R
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
-        use_light_color: true
       columns: 2
       square: false
       type: grid
@@ -2076,7 +2077,9 @@ views:
       columns: 3
       square: false
       type: grid
-    - entity: switch.upstairs_tv
+    - entity: switch.upstairs_tv_socket_1
+      icon: mdi:television
+      name: TV
       tap_action:
         action: toggle
       type: custom:mushroom-entity-card
@@ -2120,7 +2123,9 @@ views:
     type: vertical-stack
   - cards:
     - entities:
-      - switch.washing_machine
+      - entity: switch.washing_machine_socket_1
+        icon: mdi:washing-machine
+        name: Washing Machine
       show_header_toggle: false
       state_color: true
       type: entities
@@ -2191,35 +2196,45 @@ views:
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.first_floor_light
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.first_floor_stairway
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.first_floor_corner
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.second_floor_light
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.second_floor_stairway
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - entity: light.second_floor_corner
+      icon: hue:bulb-classic-hung
       secondary_info: none
       type: custom:mushroom-light-card
       use_light_color: true
     - cards:
-      - entity: switch.rice_string_1
+      - entity: switch.rice_string_1_socket_1
+        icon: mdi:string-lights
+        name: Rice String 1
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
-      - entity: switch.rice_string_2
+      - entity: switch.rice_string_2_socket_1
+        icon: mdi:string-lights
+        name: Rice String 2
         tap_action:
           action: toggle
         type: custom:mushroom-entity-card
@@ -2421,7 +2436,8 @@ views:
         - color: white
       type: custom:button-card
     - color_type: card
-      entity: switch.downstairs_motor
+      entity: switch.downstairs_motor_switch_1
+      name: Downstairs Motor
       show_state: true
       size: 60%
       state:
@@ -2496,14 +2512,15 @@ views:
       state: 'on'
     type: conditional
   - entities:
-    - switch.downstairs_motor
+    - switch.downstairs_motor_switch_1
     - switch.upstairs_motor
     - switch.sonoff_1000f38ea4
     hours_to_show: 24
     type: logbook
   - entities:
     - entity: switch.upstairs_motor
-    - entity: switch.downstairs_motor
+    - entity: switch.downstairs_motor_switch_1
+      name: Downstairs Motor
     hours_to_show: 6
     refresh_interval: 1
     title: History

@@ -16,8 +16,8 @@
       - sensor.multisensor_2_light
       - sensor.air_purifier_pm2_5
       - climate.den_ac
-      - switch.workstation
-      - switch.monitor
+      - switch.workstation_socket_1
+      - switch.monitor_socket_1
       - switch.laser
       - switch.plasma_ball
       - light.den_tube_light
@@ -32,15 +32,15 @@
       - light.second_floor_light
       - light.second_floor_stairway
       - light.second_floor_corner
-      - switch.rice_string_1
-      - switch.rice_string_2
+      - switch.rice_string_1_socket_1
+      - switch.rice_string_2_socket_1
       - switch.rice_lights_l
-      - switch.rice_lights_r
+      - switch.rice_lights_r_socket_1
       - light.hall_tube_light
-      - switch.washing_machine
-      - switch.upstairs_tv
+      - switch.washing_machine_socket_1
+      - switch.upstairs_tv_socket_1
       - switch.upstairs_motor
-      - switch.downstairs_motor
+      - switch.downstairs_motor_switch_1
       - fan.den_fan
       - fan.den_wall_fan
       - fan.mi_air_purifier

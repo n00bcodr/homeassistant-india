@@ -33,7 +33,7 @@
       - light.rear_down_light
       - fan.den_fan
       - fan.den_wall_fan
-      - switch.workstation
+      - switch.workstation_socket_1
       - media_player.spotify
       - media_player.chotu
       - media_player.motu
@@ -48,7 +48,7 @@
       - light.den_tube_light
       - light.top_light
       - light.shelf_light
-      - switch.workstation
+      - switch.workstation_socket_1
       - fan.den_fan
       - fan.den_wall_fan
       - input_boolean.den_state
@@ -79,7 +79,7 @@
         target:
           entity_id:
           - light.hall_tube_light
-          - switch.rice_lights_r
+          - switch.rice_lights_r_socket_1
           - switch.rice_lights_l
           - switch.laser
           - light.first_floor_stairway
@@ -118,7 +118,7 @@
         target:
           entity_id:
           - light.hall_tube_light
-          - switch.rice_lights_r
+          - switch.rice_lights_r_socket_1
           - switch.rice_lights_l
           - light.front_yard_lights_group
         data: {}
@@ -225,10 +225,10 @@
           - light.den_tube_light
           - light.front_down_light
           - light.rear_down_light
-          - switch.workstation
-          - switch.upstairs_tv
+          - switch.workstation_socket_1
+          - switch.upstairs_tv_socket_1
           - switch.rice_lights_l
-          - switch.rice_lights_r
+          - switch.rice_lights_r_socket_1
           - fan.den_wall_fan
           - light.hall_tube_light
           - light.front_yard_lights_group
@@ -281,7 +281,7 @@
   action:
   - service: switch.turn_on
     data: {}
-    entity_id: switch.washing_machine
+    entity_id: switch.washing_machine_socket_1
   mode: single
 - id: power_outage_lights_restore_downstairs
   alias: "\U0001F4A1Restore Lights after a power outage"
@@ -379,7 +379,7 @@
   description: Tuns of both motors when tank is full.
   trigger:
   - platform: state
-    entity_id: switch.downstairs_motor
+    entity_id: switch.downstairs_motor_switch_1
     to: 'on'
   - platform: state
     entity_id: switch.upstairs_motor
@@ -393,7 +393,7 @@
     data: {}
     target:
       entity_id:
-      - switch.downstairs_motor
+      - switch.downstairs_motor_switch_1
       - switch.upstairs_motor
   - service: tts.google_translate_say
     data:
@@ -428,14 +428,14 @@
       - light.front_yard_lights_group
       - light.hall_tube_light
       - switch.rice_lights_l
-      - switch.rice_lights_r
+      - switch.rice_lights_r_socket_1
     data: {}
   - service: switch.turn_on
     data: {}
     target:
       entity_id:
-      - switch.rice_string_1
-      - switch.rice_string_2
+      - switch.rice_string_1_socket_1
+      - switch.rice_string_2_socket_1
   - service: notify.mobile_app_10pro
     data:
       message: Turning off front yard lights.
@@ -455,8 +455,8 @@
     data: {}
     target:
       entity_id:
-      - switch.rice_string_2
-      - switch.rice_string_1
+      - switch.rice_string_2_socket_1
+      - switch.rice_string_1_socket_1
   mode: single
 - id: hall_lights_motion
   alias: "\U0001F4A1Hall Lights on when Motion detected"
@@ -469,7 +469,7 @@
   - condition: not
     conditions:
     - condition: state
-      entity_id: switch.rice_lights_r
+      entity_id: switch.rice_lights_r_socket_1
       state: 'on'
   - condition: not
     conditions:
@@ -485,7 +485,7 @@
     target:
       entity_id:
       - switch.rice_lights_l
-      - switch.rice_lights_r
+      - switch.rice_lights_r_socket_1
   - service: light.turn_on
     target:
       entity_id: light.hall_tube_light
@@ -500,7 +500,7 @@
   - service: homeassistant.turn_off
     target:
       entity_id:
-      - switch.rice_lights_r
+      - switch.rice_lights_r_socket_1
       - switch.rice_lights_l
       - light.hall_tube_light
     data: {}
@@ -536,7 +536,7 @@
     below: '1'
   condition:
   - condition: state
-    entity_id: switch.washing_machine
+    entity_id: switch.washing_machine_socket_1
     state: 'on'
     for:
       hours: 0
@@ -562,7 +562,7 @@
       cache: true
   - service: switch.turn_off
     target:
-      entity_id: switch.washing_machine
+      entity_id: switch.washing_machine_socket_1
   mode: single
   max: 10
 - id: homeassistant_update_notification
@@ -610,7 +610,7 @@
   action:
   - service: switch.turn_on
     target:
-      entity_id: switch.downstairs_motor
+      entity_id: switch.downstairs_motor_switch_1
   mode: single
 - id: no_motion_notification_den
   alias: "\U0001F3F0Send notification if no motion in Den."
@@ -630,7 +630,7 @@
     - condition: or
       conditions:
       - condition: state
-        entity_id: switch.workstation
+        entity_id: switch.workstation_socket_1
         state: 'on'
       - condition: state
         entity_id: fan.den_wall_fan
@@ -682,7 +682,7 @@
   - service: switch.turn_on
     target:
       entity_id:
-      - switch.workstation
+      - switch.workstation_socket_1
     data: {}
   - choose:
     - conditions:
@@ -945,7 +945,7 @@
       after: 08:00:00
       before: '10:00:00'
     - condition: state
-      entity_id: switch.workstation
+      entity_id: switch.workstation_socket_1
       state: 'off'
   action:
   - choose:
@@ -966,7 +966,7 @@
       - service: homeassistant.turn_on
         target:
           entity_id:
-          - switch.workstation
+          - switch.workstation_socket_1
           - fan.den_wall_fan
         data: {}
     default: []
@@ -1216,34 +1216,6 @@
         tag: den_off
       message: clear_notification
   mode: single
-- id: '1642584769169'
-  alias: "\U0001F3F0Morning Routine"
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.in_bed
-    from: 'on'
-    to: 'off'
-  condition:
-  - condition: time
-    after: 05:30:00
-    before: 09:00:00
-  - condition: state
-    entity_id: switch.workstation
-    state: 'off'
-  action:
-  - service: homeassistant.turn_off
-    target:
-      entity_id:
-      - fan.den_fan
-      - fan.den_wall_fan
-      - switch.plasma_ball
-      - light.shelf_light
-      - light.top_light
-    data: {}
-  - service: script.den_tubelight_white
-    data: {}
-  mode: single
 - id: '1642654396519'
   alias: ⚙️Low battery level detection & notification for all battery sensors
   description: ''
@@ -1364,12 +1336,12 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.workstation
+    entity_id: switch.workstation_socket_1
     id: 'on'
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: switch.workstation
+    entity_id: switch.workstation_socket_1
     id: 'off'
     from: 'on'
     to: 'off'
@@ -1391,7 +1363,7 @@
       - service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.monitor
+          entity_id: switch.monitor_socket_1
     - conditions:
       - condition: trigger
         id: 'off'
@@ -1399,7 +1371,7 @@
       - service: switch.turn_off
         data: {}
         target:
-          entity_id: switch.monitor
+          entity_id: switch.monitor_socket_1
     default: []
   mode: single
 - id: '1647515420274'
@@ -1847,7 +1819,7 @@
     type: playing
   condition:
   - condition: state
-    entity_id: switch.upstairs_tv
+    entity_id: switch.upstairs_tv_socket_1
     state: 'off'
   action:
   - service: notify.mobile_app_10pro
@@ -2115,7 +2087,7 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: switch.downstairs_motor
+      entity_id: switch.downstairs_motor_switch_1
       state: 'on'
     - condition: state
       entity_id: switch.upstairs_motor
@@ -2125,7 +2097,7 @@
     data: {}
     target:
       entity_id:
-      - switch.downstairs_motor
+      - switch.downstairs_motor_switch_1
       - switch.upstairs_motor
   mode: single
 - id: '1659935815150'

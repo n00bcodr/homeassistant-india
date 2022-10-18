@@ -16,7 +16,7 @@
     motor_state:
       friendly_name: "Motor State"
       value_template: >
-        {% if is_state('switch.downstairs_motor', 'on') %}
+        {% if is_state('switch.downstairs_motor_switch_1', 'on') %}
           Downstairs
         {% elif is_state('switch.upstairs_motor', 'on') %}
           Upstairs

@@ -7,8 +7,8 @@ den:
     - light.rear_down_light
     - fan.den_fan
     - fan.den_wall_fan
-    - switch.workstation
-    - switch.monitor
+    - switch.workstation_socket_1
+    - switch.monitor_socket_1
     - light.front_down_light
     - light.rear_down_light
   icon: mdi:castle
