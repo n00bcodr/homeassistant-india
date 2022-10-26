@@ -1,9 +1,12 @@
-from homeassistant import config_entries
-from homeassistant.components.ffmpeg import CONF_EXTRA_ARGUMENTS
-from homeassistant.const import CONF_IP_ADDRESS, CONF_USERNAME, CONF_PASSWORD
-from homeassistant.core import callback
-from homeassistant.helpers import device_registry as dr
 import voluptuous as vol
+
+from homeassistant.core import callback
+
+from homeassistant.components.ffmpeg import CONF_EXTRA_ARGUMENTS
+from homeassistant.config_entries import HANDLERS, ConfigFlow, OptionsFlow
+from homeassistant.const import CONF_IP_ADDRESS, CONF_USERNAME, CONF_PASSWORD
+from homeassistant.helpers.device_registry import async_get as device_registry_async_get
+
 from .utils import (
     registerController,
     isRtspStreamWorking,
@@ -27,8 +30,8 @@ from .const import (
 )
 
 
-@config_entries.HANDLERS.register(DOMAIN)
-class FlowHandler(config_entries.ConfigFlow):
+@HANDLERS.register(DOMAIN)
+class FlowHandler(ConfigFlow):
     """Handle a config flow."""
 
     VERSION = 9
@@ -209,6 +212,7 @@ class FlowHandler(config_entries.ConfigFlow):
                 }
             ),
             errors=errors,
+            last_step=True,
         )
 
     async def async_step_auth_cloud_password(self, user_input=None):
@@ -257,6 +261,7 @@ class FlowHandler(config_entries.ConfigFlow):
                 }
             ),
             errors=errors,
+            last_step=False,
         )
 
     async def async_step_ip(self, user_input=None):
@@ -336,6 +341,7 @@ class FlowHandler(config_entries.ConfigFlow):
                 }
             ),
             errors=errors,
+            last_step=False,
         )
 
     async def async_step_auth(self, user_input=None):
@@ -435,10 +441,11 @@ class FlowHandler(config_entries.ConfigFlow):
                 }
             ),
             errors=errors,
+            last_step=False,
         )
 
 
-class TapoOptionsFlowHandler(config_entries.OptionsFlow):
+class TapoOptionsFlowHandler(OptionsFlow):
     def __init__(self, config_entry):
         self.config_entry = config_entry
         self.options = dict(config_entry.options)
@@ -636,7 +643,7 @@ class TapoOptionsFlowHandler(config_entries.OptionsFlow):
 
                 if ipChanged:
                     LOGGER.debug("[%s] IP Changed, cleaning up devices...", ip_address)
-                    device_registry = dr.async_get(self.hass)
+                    device_registry = device_registry_async_get(self.hass)
                     for deviceID in device_registry.devices:
                         device = device_registry.devices[deviceID]
                         LOGGER.debug("[%s] Removing device %s.", ip_address, deviceID)
@@ -761,4 +768,3 @@ class TapoOptionsFlowHandler(config_entries.OptionsFlow):
             ),
             errors=errors,
         )
-
