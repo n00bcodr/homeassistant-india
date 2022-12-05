@@ -28,7 +28,6 @@ tts:
 
 wake_on_lan:
 
-group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
@@ -38,7 +37,6 @@ sensor: !include sensor.yaml
 notify: !include notify.yaml
 rest_command: !include rest_commands.yaml
 template: !include template.yaml
-homekit: !include homekit.yaml
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -52,10 +50,10 @@ monitor_docker:
     containers:
       - plex
       - my_special_tower
-      - Tautulli
       - broadlinkmanager
       - portainer
       - addon_core_samba
+      - tailscaled
     rename:
       plex: Plex
       my_special_tower: WatchTower
@@ -74,24 +72,11 @@ monitor_docker:
 #mariadb config
 recorder:
   db_url: !secret recorder_db_url
-  purge_keep_days: 10
+  purge_keep_days: 5
   exclude:
     entity_globs:
       - sensor.weather_*
       - sensor.time_date
-
-spotcast:
-  sp_dc: !secret sp_dc
-  sp_key: !secret sp_key
-
-telegram_bot:
-  - platform: polling
-    api_key: !secret telegram_api
-    allowed_chat_ids:
-      - !secret telegram_chat_id
-
-withings:
-  use_webhook: true
 
 smartir:
 

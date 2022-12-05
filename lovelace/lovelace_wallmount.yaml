@@ -723,14 +723,6 @@ button_card_templates:
 views:
 - badges: []
   cards:
-  - backdrop: true
-    entity: weather.home
-    name: ' '
-    primary_info:
-    - humidity
-    - precipitation_probability
-    secondary_info: null
-    type: custom:simple-weather-card
   - cards:
     - aspect_ratio: 1/1
       camera_view: live
@@ -1160,33 +1152,30 @@ views:
         state: home
       type: conditional
     type: horizontal-stack
-  - background: true
-    cards:
-    - content: <center><img height="50" src="/local/f1/F1.png"></center>
-      type: markdown
-    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
-        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
-        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
-        0) %} race_day {% endif %}'
-      states:
-        race_day:
-          content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n\n<h2><center><img\n\
-            \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
-            > {{ states.sensor.ics_1.attributes.description}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
-            \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
-          type: markdown
-        race_weekend:
-          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
-            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
-            | replace ("Qualifying ", "")}} <br>
-          type: markdown
-        wait:
-          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
-            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
-            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
-            days to go </center> '
-          type: markdown
-      type: custom:state-switch
+  - cards:
+    - cards:
+      - camera_view: live
+        entity: camera.front_yard_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.hall_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    - cards:
+      - camera_view: live
+        entity: camera.entrance_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: camera.second_floor_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
+      type: horizontal-stack
+    mode: vertical
     type: custom:stack-in-card
   - type: custom:layout-break
   - cards:
@@ -1301,40 +1290,6 @@ views:
               entity_id: input_select.room_select
               option: Hall
           type: custom:button-card
-        - color: transparent
-          color_type: label-card
-          entity: input_select.room_select
-          name: Den
-          show_name: true
-          state:
-          - icon: mdi:castle
-            styles:
-              icon:
-              - color: white
-              - width: 50px
-              name:
-              - color: white
-              - font-size: 12px
-              - padding-top: 5px
-            value: Den
-          - icon: mdi:castle
-            operator: default
-            styles:
-              icon:
-              - color: white
-              - opacity: 0.2
-              - width: 45px
-              name:
-              - color: white
-              - font-size: 12px
-              - padding-top: 5px
-          tap_action:
-            action: call-service
-            service: input_select.select_option
-            service_data:
-              entity_id: input_select.room_select
-              option: Den
-          type: custom:button-card
         - color_type: blank-card
           styles:
             card:
@@ -1344,126 +1299,6 @@ views:
       type: horizontal-stack
     - entity: input_select.room_select
       states:
-        Bedroom:
-          cards:
-          - cards:
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 100px
-              type: custom:button-card
-            - icon: mdi:lightbulb-fluorescent-tube-outline
-              name: Tube Light
-              template: light_button_no_brightness
-              type: custom:button-card
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 100px
-              type: custom:button-card
-            type: horizontal-stack
-          type: vertical-stack
-        Den:
-          cards:
-          - cards:
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 90px
-              type: custom:button-card
-            - custom_fields:
-                cl:
-                  card:
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        data:
-                          content:
-                            brightness_icon: brightness-7
-                            consolidate_entities: true
-                            entity: light.den_lights_group
-                            hide_header: true
-                            show_slider_percent: true
-                            type: custom:light-entity-card
-                        service: browser_mod.popup
-              entity: light.den_lights_group
-              icon: mdi:lightbulb-group-outline
-              template: rgb_light_button
-              type: custom:button-card
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 90px
-              type: custom:button-card
-            type: horizontal-stack
-          - cards:
-            - custom_fields:
-                cl:
-                  card:
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        data:
-                          content:
-                            brightness_icon: brightness-7
-                            entity: light.den_tube_light
-                            hide_header: true
-                            show_slider_percent: true
-                            type: custom:light-entity-card
-                        service: browser_mod.popup
-              entity: light.den_tube_light
-              template: rgb_light_button
-              type: custom:button-card
-            - entity: fan.den_fan
-              name: Fan
-              template: fan_button
-              type: custom:button-card
-            - entity: fan.den_wall_fan
-              hold_action: more-info
-              name: Wall Fan
-              template: fan_button
-              type: custom:button-card
-            - entity: switch.workstation_socket_1
-              template: tv_button
-              type: custom:button-card
-            type: horizontal-stack
-          - cards:
-            - custom_fields:
-                cl:
-                  card:
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        data:
-                          content:
-                            brightness_icon: brightness-7
-                            entity: light.shelf_light
-                            hide_header: true
-                            show_slider_percent: true
-                            type: custom:light-entity-card
-                        service: browser_mod.popup
-              entity: light.shelf_light
-              template: rgb_light_button
-              type: custom:button-card
-            - custom_fields:
-                cl:
-                  card:
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        data:
-                          content:
-                            brightness_icon: brightness-7
-                            entity: light.top_light
-                            hide_header: true
-                            show_slider_percent: true
-                            type: custom:light-entity-card
-                        service: browser_mod.popup
-              entity: light.top_light
-              template: rgb_light_button
-              type: custom:button-card
-            type: horizontal-stack
-          type: vertical-stack
         FrontYard:
           cards:
           - cards:
@@ -1495,28 +1330,6 @@ views:
               styles:
                 card:
                 - width: 90px
-              type: custom:button-card
-            type: horizontal-stack
-          - cards:
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 50px
-              type: custom:button-card
-            - entity: switch.rice_string_1_socket_1
-              icon: mdi:string-lights
-              name: Rice String 1
-              template: light_button_no_brightness
-              type: custom:button-card
-            - entity: switch.rice_string_2_socket_1
-              icon: mdi:string-lights
-              name: Rice String 2
-              template: light_button_no_brightness
-              type: custom:button-card
-            - color_type: blank-card
-              styles:
-                card:
-                - width: 50px
               type: custom:button-card
             type: horizontal-stack
           - cards:
@@ -1632,6 +1445,28 @@ views:
               template: ww_light_button
               type: custom:button-card
             type: horizontal-stack
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 50px
+              type: custom:button-card
+            - entity: switch.rice_string_1_socket_1
+              icon: mdi:string-lights
+              name: Rice String 1
+              template: light_button_no_brightness
+              type: custom:button-card
+            - entity: switch.rice_string_2_socket_1
+              icon: mdi:string-lights
+              name: Rice String 2
+              template: light_button_no_brightness
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 50px
+              type: custom:button-card
+            type: horizontal-stack
           type: vertical-stack
         Hall:
           cards:
@@ -1675,6 +1510,24 @@ views:
               icon: mdi:string-lights
               name: Rice Lights R
               template: light_button_no_brightness
+              type: custom:button-card
+            type: horizontal-stack
+          - cards:
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+                - height: 100px
+              type: custom:button-card
+            - entity: switch.upstairs_tv_socket_1
+              name: TV
+              template: tv_button
+              type: custom:button-card
+            - color_type: blank-card
+              styles:
+                card:
+                - width: 100px
+                - height: 100px
               type: custom:button-card
             type: horizontal-stack
           type: vertical-stack
@@ -1766,6 +1619,18 @@ views:
                 - height: 10px
               type: custom:button-card
             type: horizontal-stack
+          - collapsible_controls: false
+            entity: light.top_light
+            icon: mdi:light-flood-up
+            name: Top Light
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            type: custom:mushroom-light-card
+            use_light_color: true
+          - entity: fan.mi_air_purifier
+            show_percentage_control: true
+            type: custom:mushroom-fan-card
           type: vertical-stack
       type: custom:state-switch
     type: vertical-stack
@@ -2306,6 +2171,7 @@ views:
   - cards:
     - color_type: card
       entity: switch.upstairs_motor
+      name: Upstairs Motor
       show_state: true
       size: 70%
       state:
@@ -2340,6 +2206,7 @@ views:
       type: custom:button-card
     - color_type: card
       entity: switch.downstairs_motor_switch_1
+      name: Downstairs Motor
       show_state: true
       size: 70%
       state:
@@ -2457,71 +2324,52 @@ views:
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_1_motion
-    - entity: camera.hall_camera
-      icon: mdi:arrow-left
-      name: Pan Left
-      show_icon: true
-      show_state: false
+    - entity: button.hall_camera_move_left
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          pan: LEFT
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-up
-      name: Tilt Up
+          entity_id: button.hall_camera_move_left
+    - entity: button.hall_camera_move_up
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          tilt: UP
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-down
-      name: Tilt Down
-      show_icon: true
+          entity_id: button.hall_camera_move_up
+    - entity: button.hall_camera_move_down
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          tilt: DOWN
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-right
-      name: Pan Right
-      show_icon: true
+          entity_id: button.hall_camera_move_down
+    - entity: button.hall_camera_move_right
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          pan: RIGHT
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: button.hall_camera_move_right
     - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-1-box
       name: Preset 1
+      show_icon: true
       tap_action:
         action: call-service
-        service: tapo_control.ptz
+        service: select.select_option
         service_data:
-          preset: '1'
+          option: Marked Position 1
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_move_to_preset
     - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
       tap_action:
         action: call-service
-        service: tapo_control.ptz
+        service: select.select_option
         service_data:
-          preset: '2'
+          option: Marked Position 2
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_move_to_preset
     title: Hall Camera 1
     type: picture-glance
   - camera_image: camera.secondfloor

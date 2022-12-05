@@ -6,18 +6,6 @@
       value_template: >-
         {{ is_state('binary_sensor.hall_camera_1_motion', 'on') or is_state('binary_sensor.hall_camera_2_motion', 'on') }}
 
-    den_motion:
-      friendly_name: Den Motion
-      device_class: motion
-      value_template: >-
-        {{ is_state('binary_sensor.den_motion_1', 'on') or is_state('binary_sensor.den_motion_2', 'on') }}
-
-    chair_occupancy:
-      friendly_name: "Chair Occupancy"
-      device_class: occupancy
-      value_template: "{{ is_state('binary_sensor.chair', 'off') or is_state('binary_sensor.vibration', 'on') }}"
-      icon_template: "{{ iif(is_state('binary_sensor.chair_occupancy', 'on'), 'mdi:table-chair', 'mdi:account-off') }}"
-
     downstairs_power_failed:
       friendly_name: "Downstairs Power"
       value_template: >-
@@ -49,6 +37,6 @@
   upper: 0.5
 
 - platform: hikvision
-  host: 192.168.0.184
+  host: !secret hikvision_ip
   username: homeassistant
   password: !secret hikvision_password

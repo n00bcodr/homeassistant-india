@@ -1,7 +1,7 @@
 - id: "1613729241622"
-  name: Den Tube Light White
+  name: Top Light White
   entities:
-    light.den_tube_light:
+    light.top_light:
       min_mireds: 153
       max_mireds: 370
       brightness: 255

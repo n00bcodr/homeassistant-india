@@ -141,932 +141,6 @@ preload_rows:
 - divider
 title: ''
 views:
-- badges: []
-  cards:
-  - entity: mediaquery
-    states:
-      '(min-width: 800px)':
-        entity: weather.weather
-        number_of_forecasts: '5'
-        type: custom:weather-card
-    type: custom:state-switch
-  - badges:
-    - entity: sun.sun
-      style: ":host {\n  --label-badge-red: #F28C38;\n}           \n"
-      tap_action:
-        action: fire-dom-event
-        browser_mod:
-          data:
-            browser_id: THIS
-            content:
-              type: custom:sun-card
-          service: browser_mod.popup
-    - entity: sensor.moon_phase
-      style:
-        ha-state-label-badge:
-          $:
-            ha-label-badge:
-              $: ".label-badge {\n    border-style: none !important;   \n  }    \n\
-                \      \n"
-    - entity: sensor.download_speed
-      hold_action:
-        action: more-info
-      name: Internet Speed
-      style: ':host {
-
-        --label-badge-red: teal;
-
-        }
-
-        '
-      tap_action:
-        action: call-service
-        service: homeassistant.update_entity
-        service_data:
-          entity_id: sensor.speedtest_download
-      unit_of_measurement: Mbps
-    - entity: binary_sensor.den_motion
-      name: Den Motion
-      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion','on')\
-        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-    - entity: binary_sensor.hall_motion
-      hold_action:
-        action: fire-dom-event
-        browser_mod:
-          data:
-            browser_id: THIS
-            content:
-              entities:
-              - automation.hall_lights_on_when_motion_detected
-              type: entities
-          service: browser_mod.popup
-      name: Hall Motion
-      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
-        \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-    - entity: binary_sensor.chair_occupancy
-      name: Occupancy
-      style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
-        \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
-    - entities:
-      - entity: binary_sensor.upstairs_power_failed
-        style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.upstairs_power_failed','off')\
-          \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n"
-      state_filter:
-      - 'off'
-      type: entity-filter
-    - entities:
-      - entity: binary_sensor.downstairs_power_failed
-        style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.downstairs_power_failed','off')\
-          \ %}\n      red\n    {% else %}\n      skyblue\n    {% endif %}\n    ;\n\
-          } \n"
-      state_filter:
-      - 'off'
-      type: entity-filter
-    - entities:
-      - entity: sensor.hacs
-        style:
-          ha-state-label-badge:
-            $:
-              ha-label-badge:
-                $: ".label-badge {\n border-style: dashed !important;\n}      \n"
-        tap_action:
-          action: navigate
-          navigation_path: /config/dashboard
-      state_filter:
-      - 'on'
-      - operator: '>'
-        value: 0
-      type: entity-filter
-    - entities:
-      - entity: sensor.supervisor_updates
-        style:
-          ha-state-label-badge:
-            $:
-              ha-label-badge:
-                $: ".label-badge {\n border-style: dashed !important;\n border-color:\
-                  \ yellow !important;\n}     \n"
-        tap_action:
-          action: navigate
-          navigation_path: /config/dashboard
-      state_filter:
-      - 'on'
-      - operator: '>'
-        value: 0
-      type: entity-filter
-    - entities:
-      - entity: update.home_assistant_core_update
-        hold_action:
-          action: more-info
-        name: Update Available
-        style:
-          ha-state-label-badge:
-            $:
-              ha-label-badge:
-                $: ".label-badge {\n border-style: dashed !important;\n border-color:\
-                  \ blue !important;\n}   \n"
-        tap_action:
-          action: navigate
-          navigation_path: /config/dashboard
-      state_filter:
-      - 'on'
-      - name: updates
-      type: entity-filter
-    - entities:
-      - entity: binary_sensor.backups_stale
-      state_filter:
-      - 'on'
-      style:
-        ha-state-label-badge:
-          $:
-            ha-label-badge:
-              $: ".label-badge {\n border-style: dashed solid !important;\n"
-      type: entity-filter
-    type: custom:badge-card
-    view_layout:
-      column: 2
-  - entity: mediaquery
-    states:
-      '(max-width: 1000px)':
-        alignment: justify
-        chips:
-        - entity: weather.home
-          show_conditions: true
-          show_temperature: true
-          type: weather
-        - content: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
-            \ | replace(\"living_room\",\" Living Room\") }} - {{ states.device_tracker.oneplus_10pro.attributes.connection_type\
-            \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\"\
-            ,\"2.4 GHz\")}} \n{% else %}\n  Not Connected\n{% endif %}"
-          double_tap_action:
-            action: none
-          hold_action:
-            action: none
-          icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
-
-            mdi:cellphone-wireless
-
-            {% else %}
-
-            mdi:cellphone-off
-
-            {% endif %}'
-          icon_color: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'')
-            %}
-
-            blue
-
-            {% else %}
-
-            white
-
-            {% endif %}
-
-            '
-          tap_action:
-            action: none
-          type: template
-        type: custom:mushroom-chips-card
-    type: custom:state-switch
-    view_layout:
-      column: 2
-  - cards:
-    - double_tap_action:
-        action: fire-dom-event
-        browser_mod:
-          data:
-            browser_id: THIS
-            content:
-              cards:
-              - content: "<h2><center> <ha-icon icon='mdi:podium'></ha-icon> Constructors\
-                  \ Standings</h2>  <center><table border= \"1\" style=\"width: 80%;\
-                  \ text-align: center;border-collapse: collapse;\"> <tr>\n  <th><b>Position</th>\n\
-                  \  <th><b>Constructor</th>\n  <th><b>Wins</th>\n  <th><b>Points</th>\n\
-                  </tr> {%- for item in state_attr(\"sensor.f1_constructor_standings\"\
-                  , \"standings\") %}  <tr>  <td> {{ item.Position }} </td> <td>\n\
-                  \ {{item.Constructor}}\n</td> <td> {{item.Wins}} </td> <td> {{item.Points}}\
-                  \ </td> </tr> {%- endfor %}"
-                type: markdown
-              - content: "<h2> <center><ha-icon icon='mdi:racing-helmet'></ha-icon>\
-                  \ Driver Standings</h2> <center><table border= \"1\" style=\"width:\
-                  \ 80%; text-align: center;\"> <tr>\n  <th><b>Position</th>\n  <th><b>Driver</th>\n\
-                  \  <th><b>Team</th>\n  <th><b>Points</th>\n</tr> {%- for item in\
-                  \ state_attr(\"sensor.f1_driver_standings\", \"standings\") %} \
-                  \ <tr>  <td> {{ item.Position }} </td> <td>\n {{item.Driver}}\n\
-                  </td> <td> {{item.Team}} </td><td> {{item.Points}} </td> </tr> {%-\
-                  \ endfor %}"
-                type: markdown
-              parameters:
-                autoHeight: true
-                effect: fade
-              type: custom:swipe-card
-            title: Standings
-          service: browser_mod.popup
-      entity_picture: /local/f1/F1.png
-      show_entity_picture: true
-      type: custom:button-card
-    - entity: '{% if (states.sensor.ics_1.attributes.remaining > 5) %} wait {% elif
-        (states.sensor.ics_1.attributes.remaining <= 5) and (states.sensor.ics_1.attributes.remaining
-        >= 1) %} race_weekend {% elif (states.sensor.ics_1.attributes.remaining ==
-        0) %} race_day {% endif %}'
-      states:
-        race_day:
-          cards:
-          - content: "<h1><center>\U0001F3C1 Race Day \U0001F3C1</center></h1>\n<h2><em><center><img\n\
-              \          height=\"18\"\n          src=\"{{(states.sensor.formula_1.attributes.flag)}}\"\
-              >{{(states.sensor.formula_1.attributes.grand_prix) |\nreplace (\"FORMULA\
-              \ 1\", \"\") }}</em></h2>\n<h2><center> {{ states.sensor.ics_1.attributes.description\
-              \  | replace (\"Grand Prix \",\"\")}}\n      \n{{ as_timestamp(states.sensor.ics_1.attributes.start)\
-              \ |\ntimestamp_custom('at %-I:%M %p') }}</center> </h2>"
-            type: markdown
-          - cards:
-            - content: " <img src=\"{{(states.sensor.formula_1.attributes.circuit_image)}}\"\
-                \n  alt=\"{{(states.sensor.ics_1.attributes.description) | replace\
-                \ (\"Qualifying \",\n  \"\")}} Circuit\">"
-              theme: Google Light Theme
-              type: markdown
-            - content: "<p><a href=\"{{(states.sensor.formula_1.attributes.circuit_link)}}\"\
-                >\n<img src=\"/local/f1/circuit_stats/{{(states.sensor.ics_1.attributes.location)}}.png\"\
-                \n              alt=\"{{(states.sensor.ics_1.attributes.description)\
-                \ | replace (\"Qualifying \",\n              \"\")}} Circuit\"> </a></p>"
-              type: markdown
-            type: custom:swipe-card
-          type: vertical-stack
-        race_weekend:
-          content: <h1><center>Race this weekend</center>       <h2><center><img height="18"
-            src="{{(states.sensor.formula_1.attributes.flag)}}"> {{(states.sensor.ics_1.attributes.description)
-            | replace ("Qualifying ", "")}} <br>
-          type: markdown
-        wait:
-          content: '<h1><center><img height="18"       src="{{(states.sensor.formula_1.attributes.flag)}}">
-            {{(states.sensor.ics_1.attributes.description) | replace ("Qualifying
-            ", "")}} </center> <h2><center>{{(states.sensor.ics_1.attributes.remaining)}}
-            days to go </center> '
-          type: markdown
-      type: custom:state-switch
-    type: custom:stack-in-card
-    view_layout:
-      column: 1
-  - cards:
-    - cards:
-      - double_tap_action:
-          action: call-service
-          data: {}
-          service: automation.trigger
-          target:
-            entity_id: automation.den_as_it_was
-        entity: group.den
-        fill_container: false
-        hold_action:
-          action: none
-        icon: mdi:home-account
-        icon_color: '{% if is_state(''group.den'', ''on'') %}
-
-          green
-
-          {% else %}
-
-          grey
-
-          {% endif %}'
-        layout: horizontal
-        primary: Home
-        secondary: ''
-        tap_action:
-          action: none
-        type: custom:mushroom-template-card
-      - double_tap_action:
-          action: call-service
-          data: {}
-          service: automation.trigger
-          target:
-            entity_id: automation.den_off
-        fill_container: false
-        hold_action:
-          action: none
-        icon: mdi:door-open
-        icon_color: '{% if is_state(''group.den'', ''on'') %}
-
-          grey
-
-          {% else %}
-
-          blue
-
-          {% endif %}'
-        layout: horizontal
-        primary: Away
-        secondary: ''
-        tap_action:
-          action: none
-        type: custom:mushroom-template-card
-      - double_tap_action:
-          action: call-service
-          data:
-            skip_condition: false
-          service: automation.trigger
-          target:
-            entity_id: automation.bed_tag_den
-        fill_container: false
-        hold_action:
-          action: none
-        icon: mdi:sleep
-        icon_color: yellow
-        layout: horizontal
-        primary: Sleep
-        secondary: ''
-        tap_action:
-          action: none
-        type: custom:mushroom-template-card
-      columns: 3
-      square: false
-      type: grid
-    - cards:
-      - collapsible_controls: false
-        entity: light.den_lights_group
-        show_brightness_control: true
-        show_color_control: true
-        show_color_temp_control: true
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - collapsible_controls: false
-        entity: light.den_tube_light
-        icon: mdi:lightbulb-fluorescent-tube-outline
-        name: Tube Light
-        show_brightness_control: true
-        show_color_control: true
-        show_color_temp_control: true
-        type: custom:mushroom-light-card
-        use_light_color: true
-      columns: 2
-      square: false
-      type: grid
-    - cards:
-      - entity: switch.front_down_light
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: switch.rear_down_light
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: light.top_light
-        icon: mdi:light-flood-up
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: light.shelf_light
-        icon: mdi:bookshelf
-        type: custom:mushroom-light-card
-        use_light_color: true
-      columns: 2
-      square: false
-      type: grid
-    - height: 3
-      type: custom:gap-card
-    - cards:
-      - entity: fan.den_fan
-        icon: ''
-        icon_animation: false
-        tap_action:
-          action: toggle
-        type: custom:mushroom-fan-card
-      - entity: fan.den_wall_fan
-        icon_animation: true
-        type: custom:mushroom-fan-card
-      columns: 2
-      square: false
-      type: grid
-    - height: 3
-      type: custom:gap-card
-    - cards:
-      - double_tap_action:
-          action: fire-dom-event
-          browser_mod:
-            data:
-              browser_id: THIS
-              content:
-                cards:
-                - fill_container: false
-                  icon: fab:windows
-                  icon_color: blue
-                  layout: vertical
-                  primary: ''
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_three
-                  type: custom:mushroom-template-card
-                - fill_container: false
-                  icon: fab:apple
-                  icon_color: grey
-                  layout: vertical
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_two
-                  type: custom:mushroom-template-card
-                - fill_container: false
-                  icon: fab:google
-                  icon_color: green
-                  layout: vertical
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_one
-                  type: custom:mushroom-template-card
-                type: horizontal-stack
-            service: browser_mod.popup
-        entity: switch.workstation_socket_1
-        hold_action:
-          action: fire-dom-event
-          browser_mod:
-            data:
-              browser_id: THIS
-              content:
-                cards:
-                - fill_container: false
-                  icon: fab:windows
-                  icon_color: blue
-                  layout: vertical
-                  primary: ''
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_three
-                  type: custom:mushroom-template-card
-                - fill_container: false
-                  icon: fab:apple
-                  icon_color: grey
-                  layout: vertical
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_two
-                  type: custom:mushroom-template-card
-                - fill_container: false
-                  icon: fab:google
-                  icon_color: green
-                  layout: vertical
-                  tap_action:
-                    action: call-service
-                    service: script.hdmi_one
-                  type: custom:mushroom-template-card
-                type: horizontal-stack
-            service: browser_mod.popup
-        icon: mdi:desk
-        name: Workstation
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      - entity: switch.monitor_socket_1
-        icon: mdi:monitor
-        icon_color: red
-        name: Monitor
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      columns: 2
-      square: false
-      type: grid
-    - height: 3
-      type: custom:gap-card
-    - cards:
-      - entity: switch.laser
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      - entity: switch.plasma_ball
-        icon_color: pink
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      columns: 2
-      square: false
-      type: grid
-    - entity: fan.mi_air_purifier
-      layout: horizontal
-      show_percentage_control: true
-      type: custom:mushroom-fan-card
-    - collapsible_controls: true
-      double_tap_action:
-        action: more-info
-      entity: climate.den_ac
-      fill_container: true
-      hold_action:
-        action: fire-dom-event
-        browser_mod:
-          data:
-            browser_id: THIS
-            content:
-              entity: climate.den_ac
-              type: thermostat
-          service: browser_mod.popup
-          title: Thermostat
-      hvac_modes:
-      - cool
-      - auto
-      - fan_only
-      - 'off'
-      icon: mdi:air-conditioner
-      layout: horizontal
-      primary_info: state
-      secondary_info: last-changed
-      show_temperature_control: true
-      type: custom:mushroom-climate-card
-    type: vertical-stack
-    view_layout:
-      column: 2
-  - cards:
-    - artwork: full-cover
-      entity: media_player.spotify
-      group: false
-      hide:
-        icon_state: true
-        power: true
-        shuffle: false
-      info: scroll
-      sound_mode: full
-      source: full
-      toggle_power: true
-      type: custom:mini-media-player
-      volume_stateless: false
-    - content: '{{(states.media_player.spotify.attributes.media_content_id) | replace
-        ("spotify:track:", "https://open.spotify.com/track/")}}'
-      type: markdown
-    - account: default
-      always_play_random_song: true
-      device: Motu
-      display_style: list
-      filter_devices:
-      - Priyadarshini
-      - Downstairs Group
-      - Family Room Mini
-      - TV
-      - Bedroom TV
-      - Akashavani
-      - Friday
-      - Home Group
-      - Bedroom Mini
-      - Hall TV
-      - Upstairs Group
-      grid_center_covers: true
-      height: 350
-      hide_currently_playing: true
-      hide_top_header: true
-      hide_warning: true
-      limit: 40
-      playlist_type: default
-      spotify_entity: media_player.spotify
-      type: custom:spotify-card
-    parameters:
-      autoHeight: true
-      effect: fade
-    type: custom:swipe-card
-    view_layout:
-      column: 3
-  - entity: mediaquery
-    states:
-      '(min-width: 800px)':
-        alignment: center
-        chips:
-        - content: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
-            \ | replace(\"living_room\",\" Living Room\") }} - {{ states.device_tracker.oneplus_10pro.attributes.connection_type\
-            \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\"\
-            ,\"2.4 GHz\")}} \n{% else %}\n  Not Connected\n{% endif %}"
-          double_tap_action:
-            action: none
-          hold_action:
-            action: none
-          icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
-
-            mdi:cellphone-wireless
-
-            {% else %}
-
-            mdi:cellphone-off
-
-            {% endif %}'
-          icon_color: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'')
-            %}
-
-            blue
-
-            {% else %}
-
-            white
-
-            {% endif %}
-
-            '
-          tap_action:
-            action: none
-          type: template
-        - icon: mdi:update
-          icon_color: yellow
-          tap_action:
-            action: call-service
-            data: {}
-            service: script.update_all_phone_sensors
-            target: {}
-          type: action
-        - content_info: state
-          entity: sensor.10pro_battery_level
-          icon: mdi:cellphone
-          icon_color: blue
-          type: entity
-          use_entity_picture: false
-        - content_info: none
-          entity: binary_sensor.10pro_is_charging
-          icon_color: yellow
-          type: entity
-        - entity: sensor.galaxy_watch4_classic_battery_level
-          icon: mdi:watch
-          icon_color: deep-orange
-          type: entity
-        - content_info: none
-          entity: binary_sensor.galaxy_watch4_classic_is_charging
-          icon_color: amber
-          type: entity
-        type: custom:mushroom-chips-card
-    type: custom:state-switch
-    view_layout:
-      column: 1
-  - cards:
-    - card:
-        buttonStyle: 'font-size: 14px;'
-        cards:
-        - artwork: material
-          entity: media_player.den_group
-          group: true
-          type: custom:mini-media-player
-        - entity: media_player.motu
-          group: true
-          type: custom:mini-media-player
-        - entity: media_player.chotu
-          group: true
-          toggle_power: false
-          type: custom:mini-media-player
-        - entity: media_player.clock
-          group: true
-          type: custom:mini-media-player
-        defaultOpen: contain-toggled
-        title: Players
-        type: custom:collapsable-cards
-      conditions:
-      - entity: media_player.den_group
-        state_not: 'off'
-      - entity: media_player.motu
-        state_not: 'off'
-      - entity: media_player.chotu
-        state_not: 'off'
-      - entity: media_player.clock
-        state_not: 'off'
-      type: conditional
-    - artwork: full-cover
-      entity: media_player.google_tv
-      group: true
-      hide:
-        controls: true
-        icon: true
-        name: true
-        power: true
-        volume: true
-      icon: mdi:google
-      name: Google TV
-      source: icon
-      toggle_power: true
-      type: custom:mini-media-player
-      volume_stateless: false
-    - cards:
-      - entities:
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            icon: mdi:power
-            name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
-            styles:
-              icon:
-              - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
-                  "green"]]]
-
-                  '
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: POWER
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/netflix.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: com.netflix.ninja
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/prime.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: Prime
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/youtube.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: YouTube
-            template: logo_button
-            type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/plex.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: Plex
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/disney.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: Hotstar
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            entity_picture: /local/icons/spotify.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.google_tv
-                source: Spotify
-            template: logo_button
-            type: custom:button-card
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            full_row: true
-            grow: true
-            step: 1
-            toggle: false
-            type: custom:slider-entity-row
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            icon: mdi:volume-off
-            name: Mute
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: MUTE
-                entity_id: media_player.google_tv
-            template: menu_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:arrow-up-bold
-            name: Up
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: UP
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:cog
-            name: Settings
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: SETTINGS
-                entity_id: media_player.google_tv
-            template: menu_button
-            type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:arrow-left-bold
-            name: Left
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: LEFT
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:circle
-            name: Ok
-            styles:
-              card:
-              - background: var(--secondary-background-color-alpha)
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: CENTER
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:arrow-right-bold
-            name: Right
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: RIGHT
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.google_tv
-            icon: mdi:keyboard-return
-            name: Return
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: BACK
-                entity_id: media_player.google_tv
-            template: menu_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:arrow-down-bold
-            name: Down
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: DOWN
-                entity_id: media_player.google_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.google_tv
-            icon: mdi:home
-            name: Home
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: HOME
-                entity_id: media_player.google_tv
-            template: menu_button
-            type: custom:button-card
-          type: custom:hui-element
-        show_header_toggle: false
-        type: entities
-      title: Remote
-      type: custom:collapsable-cards
-    type: vertical-stack
-    view_layout:
-      column: 3
-  icon: mdi:castle
-  layout:
-    max_cols: 3
-  path: den
-  title: Den
-  type: custom:vertical-layout
-  visible:
-  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
-  - user: 5e94cdd892054937b560071ed6662cb8
 - badges:
   - entity: person.murthy
   - entity: person.kameswari
@@ -1191,11 +265,24 @@ views:
         action: toggle
       type: custom:mushroom-light-card
       use_light_color: true
+    - collapsible_controls: false
+      entity: light.top_light
+      icon: mdi:light-flood-up
+      name: Top Light
+      show_brightness_control: true
+      show_color_control: true
+      show_color_temp_control: true
+      type: custom:mushroom-light-card
+      use_light_color: true
     - entity: switch.wall_fan
       icon_animation: true
       icon_color: indigo
       layout: horizontal
       show_percentage_control: false
+      type: custom:mushroom-fan-card
+    - entity: fan.mi_air_purifier
+      layout: horizontal
+      show_percentage_control: true
       type: custom:mushroom-fan-card
     - cards:
       - entity: switch.downstairs_geyser
@@ -1217,6 +304,28 @@ views:
       tap_action:
         action: toggle
       type: custom:mushroom-entity-card
+    - collapsible_controls: false
+      entity: climate.refrigerator_fridge
+      fill_container: true
+      hvac_modes: []
+      layout: horizontal
+      name: Fridge
+      primary_info: name
+      show_temperature_control: true
+      tap_action:
+        action: more-info
+      type: custom:mushroom-climate-card
+    - collapsible_controls: false
+      entity: climate.refrigerator_freezer
+      fill_container: true
+      layout: horizontal
+      name: Freezer
+      primary_info: name
+      secondary_info: state
+      show_temperature_control: true
+      tap_action:
+        action: more-info
+      type: custom:mushroom-climate-card
     mode: vertical
     type: custom:stack-in-card
   - cards:
@@ -1233,251 +342,6 @@ views:
       toggle_power: false
       type: custom:mini-media-player
       volume_stateless: false
-    - artwork: full-cover
-      entity: media_player.oneplus_tv
-      icon: si:oneplus
-      sound_mode: full
-      source: full
-      type: custom:mini-media-player
-      volume_stateless: false
-    - cards:
-      - entities:
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            icon: mdi:power
-            name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
-            styles:
-              icon:
-              - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
-                  "green"]]]
-
-                  '
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: POWER
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:video-input-component
-            name: Input
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: INPUT
-                entity_id: media_player.oneplus_tv
-            template: menu_button
-            type: custom:button-card
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            entity_picture: /local/icons/netflix.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.oneplus_tv
-                source: Netflix
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            entity_picture: /local/icons/prime.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.oneplus_tv
-                source: Prime
-            template: logo_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            entity_picture: /local/icons/youtube.png
-            show_entity_picture: true
-            tap_action:
-              service: media_player.select_source
-              service_data:
-                entity_id: media_player.oneplus_tv
-                source: YouTube
-            template: logo_button
-            type: custom:button-card
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            full_row: true
-            grow: true
-            step: 1
-            toggle: false
-            type: custom:slider-entity-row
-          type: custom:hui-element
-        - row_type: section
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            icon: mdi:volume-off
-            name: Mute
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: MUTE
-                entity_id: media_player.oneplus_tv
-            template: menu_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:arrow-up-bold
-            name: Up
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: UP
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:cog
-            name: Settings
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: SETTINGS
-                entity_id: media_player.oneplus_tv
-            template: menu_button
-            type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:arrow-left-bold
-            name: Left
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: LEFT
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:circle
-            name: Ok
-            styles:
-              card:
-              - background: var(--secondary-background-color-alpha)
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: CENTER
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:arrow-right-bold
-            name: Right
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: RIGHT
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            icon: mdi:keyboard-return
-            name: Return
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: BACK
-                entity_id: media_player.oneplus_tv
-            template: menu_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:arrow-down-bold
-            name: Down
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: DOWN
-                entity_id: media_player.oneplus_tv
-            template: icon_button
-            type: custom:button-card
-          - template: blank_button
-            type: custom:button-card
-          - entity: media_player.oneplus_tv
-            icon: mdi:home
-            name: Home
-            tap_action:
-              service: androidtv.adb_command
-              service_data:
-                command: HOME
-                entity_id: media_player.oneplus_tv
-            template: menu_button
-            type: custom:button-card
-          type: custom:hui-element
-        show_header_toggle: false
-        type: entities
-      title: Remote
-      type: custom:collapsable-cards
-    - cards:
-      - artwork: cover
-        entity: media_player.priyadarshini
-        group: true
-        hide:
-          power: true
-        icon: mdi:television
-        idle_view:
-          when_idle: true
-        type: custom:mini-media-player
-      - entity: media_player.family_room_mini
-        group: true
-        hide:
-          power: true
-        icon: mdi:google-assistant
-        idle_view:
-          when_idle: true
-        type: custom:mini-media-player
-      - entity: media_player.akashavani
-        group: true
-        hide:
-          power: true
-        icon: mdi:google-assistant
-        idle_view:
-          when_idle: true
-        type: custom:mini-media-player
-      - entity: media_player.bedroom_mini
-        group: true
-        hide:
-          power: true
-        icon: mdi:google-assistant
-        idle_view:
-          when_idle: true
-        type: custom:mini-media-player
-      defaultOpen: contain-toggled
-      title: Players
-      type: custom:collapsable-cards
     type: custom:stack-in-card
   - cards:
     - color: rgb(255,255,255)
@@ -1995,29 +859,252 @@ views:
       type: custom:state-switch
     type: vertical-stack
   - cards:
-    - collapsible_controls: false
-      entity: climate.refrigerator_fridge
-      fill_container: true
-      hvac_modes: []
-      layout: horizontal
-      name: Fridge
-      primary_info: name
-      show_temperature_control: true
-      tap_action:
-        action: more-info
-      type: custom:mushroom-climate-card
-    - collapsible_controls: false
-      entity: climate.refrigerator_freezer
-      fill_container: true
-      layout: horizontal
-      name: Freezer
-      primary_info: name
-      secondary_info: state
-      show_temperature_control: true
-      tap_action:
-        action: more-info
-      type: custom:mushroom-climate-card
-    type: vertical-stack
+    - artwork: full-cover
+      entity: media_player.oneplus_tv
+      icon: si:oneplus
+      sound_mode: full
+      source: full
+      type: custom:mini-media-player
+      volume_stateless: false
+    - cards:
+      - entities:
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.oneplus_tv
+            icon: mdi:power
+            name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
+            styles:
+              icon:
+              - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
+                  "green"]]]
+
+                  '
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: POWER
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:video-input-component
+            name: Input
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: INPUT
+                entity_id: media_player.oneplus_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.oneplus_tv
+            entity_picture: /local/icons/netflix.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.oneplus_tv
+                source: Netflix
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            entity_picture: /local/icons/prime.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.oneplus_tv
+                source: Prime
+            template: logo_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            entity_picture: /local/icons/youtube.png
+            show_entity_picture: true
+            tap_action:
+              service: media_player.select_source
+              service_data:
+                entity_id: media_player.oneplus_tv
+                source: YouTube
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.oneplus_tv
+            full_row: true
+            grow: true
+            step: 1
+            toggle: false
+            type: custom:slider-entity-row
+          type: custom:hui-element
+        - row_type: section
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.oneplus_tv
+            icon: mdi:volume-off
+            name: Mute
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: MUTE
+                entity_id: media_player.oneplus_tv
+            template: menu_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:arrow-up-bold
+            name: Up
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: UP
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:cog
+            name: Settings
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: SETTINGS
+                entity_id: media_player.oneplus_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:arrow-left-bold
+            name: Left
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: LEFT
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:circle
+            name: Ok
+            styles:
+              card:
+              - background: var(--secondary-background-color-alpha)
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: CENTER
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:arrow-right-bold
+            name: Right
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: RIGHT
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: media_player.oneplus_tv
+            icon: mdi:keyboard-return
+            name: Return
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: BACK
+                entity_id: media_player.oneplus_tv
+            template: menu_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:arrow-down-bold
+            name: Down
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: DOWN
+                entity_id: media_player.oneplus_tv
+            template: icon_button
+            type: custom:button-card
+          - template: blank_button
+            type: custom:button-card
+          - entity: media_player.oneplus_tv
+            icon: mdi:home
+            name: Home
+            tap_action:
+              service: androidtv.adb_command
+              service_data:
+                command: HOME
+                entity_id: media_player.oneplus_tv
+            template: menu_button
+            type: custom:button-card
+          type: custom:hui-element
+        show_header_toggle: false
+        type: entities
+      title: Remote
+      type: custom:collapsable-cards
+    - cards:
+      - artwork: cover
+        entity: media_player.priyadarshini
+        group: true
+        hide:
+          power: true
+        icon: mdi:television
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.family_room_mini
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.akashavani
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      - entity: media_player.bedroom_mini
+        group: true
+        hide:
+          power: true
+        icon: mdi:google-assistant
+        idle_view:
+          when_idle: true
+        type: custom:mini-media-player
+      defaultOpen: contain-toggled
+      title: Players
+      type: custom:collapsable-cards
+    type: custom:stack-in-card
   icon: mdi:sofa
   path: living-room
   theme: Backend-selected
@@ -2125,7 +1212,6 @@ views:
     - entities:
       - entity: switch.washing_machine_socket_1
         icon: mdi:washing-machine
-        name: Washing Machine
       show_header_toggle: false
       state_color: true
       type: entities
@@ -2143,7 +1229,7 @@ views:
       hours_to_show: 6
       icon: mdi:washing-machine
       line_width: 2
-      name: Washing Machine
+      name: Second Floor Washing Machine
       points_per_hour: 10
       smoothing: false
       type: custom:mini-graph-card
@@ -2181,6 +1267,33 @@ views:
         type: custom:lg-remote-control
       title: Remote
       type: custom:collapsable-cards
+    type: custom:stack-in-card
+  - cards:
+    - entities:
+      - entity: switch.washing_machine_1_socket_1
+        icon: mdi:washing-machine
+      show_header_toggle: false
+      state_color: true
+      type: entities
+    - aggregate_func: min
+      entities:
+      - color: green
+        entity: sensor.washing_machine_1_power
+        name: Power
+      - color: magenta
+        entity: sensor.washing_machine_1_current
+        name: Current
+      - color: Black
+        entity: sensor.washing_machine_1_voltage
+        name: Voltage
+      hours_to_show: 6
+      icon: mdi:washing-machine
+      line_width: 2
+      name: First Floor Washing Machine
+      points_per_hour: 10
+      smoothing: false
+      type: custom:mini-graph-card
+      update_interval: 1
     type: custom:stack-in-card
   icon: ''
   path: hall
@@ -2282,71 +1395,52 @@ views:
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_1_motion
-    - entity: camera.hall_camera
-      icon: mdi:arrow-left
-      name: Pan Left
-      show_icon: true
-      show_state: false
+    - entity: button.hall_camera_move_left
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          pan: LEFT
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-up
-      name: Tilt Up
+          entity_id: button.hall_camera_move_left
+    - entity: button.hall_camera_move_up
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          tilt: UP
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-down
-      name: Tilt Down
-      show_icon: true
+          entity_id: button.hall_camera_move_up
+    - entity: button.hall_camera_move_down
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          tilt: DOWN
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
-    - entity: camera.hall_camera_1_hd
-      icon: mdi:arrow-right
-      name: Pan Right
-      show_icon: true
+          entity_id: button.hall_camera_move_down
+    - entity: button.hall_camera_move_right
       tap_action:
         action: call-service
-        service: tapo_control.ptz
-        service_data:
-          pan: RIGHT
+        service: button.press
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: button.hall_camera_move_right
     - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-1-box
       name: Preset 1
+      show_icon: true
       tap_action:
         action: call-service
-        service: tapo_control.ptz
+        service: select.select_option
         service_data:
-          preset: '1'
+          option: Marked Position 1
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_move_to_preset
     - entity: camera.hall_camera_1_hd
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
       tap_action:
         action: call-service
-        service: tapo_control.ptz
+        service: select.select_option
         service_data:
-          preset: '2'
+          option: Marked Position 2
         target:
-          entity_id: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_move_to_preset
     title: Hall Camera 1
     type: picture-glance
   - camera_image: camera.hall_camera_2_hd
@@ -2533,26 +1627,6 @@ views:
   title: Motors
 - badges: []
   cards:
-  - cards:
-    - entities:
-      - entity: input_select.speakers_spotify
-      theme: AMOLED Blue
-      type: entities
-    - cards:
-      - aspect_ratio: 5/2
-        entity: input_select.speakers_spotify
-        show_name: false
-        show_state: true
-        type: custom:button-card
-      - aspect_ratio: 5/2
-        icon: mdi:play-outline
-        tap_action:
-          action: call-service
-          service: script.spotify_start
-        type: custom:button-card
-      mode: horizontal
-      type: custom:stack-in-card
-    type: vertical-stack
   - card:
       show_header_toggle: false
       state_color: true
@@ -2990,20 +2064,6 @@ views:
   - entity: person.murthy
   - entity: person.kameswari
   - entity: person.pavanthanuj
-  - entity: binary_sensor.den_motion_1
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_1','on')\
-      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.den_motion_2
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_motion_2','on')\
-      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.den_door
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.den_door','off')\
-      \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.chair_occupancy
-    name: Occupancy
-    style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.chair_occupancy','on')\
-      \ %}\n      green\n    {% else %}\n      Grey\n    {% endif %}\n    ;\n}\n"
-  - entity: binary_sensor.vibration
   - entity: input_boolean.den_state
   - entity: binary_sensor.hall_camera_1_motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_1_motion','on')\
@@ -3045,38 +2105,11 @@ views:
       to: ''
     - from: e/
       to: 'e and '
-    collapse:
-    - entities:
-      - sensor.den_motion_1_battery
-      - sensor.den_motion_2_battery
-      - sensor.den_door_battery
-      - sensor.temperature_and_humidity_battery
-      - sensor.chair_battery
-      - sensor.button_battery
-      - sensor.magic_cube_battery
-      - sensor.vibration_battery
-      - sensor.ikea_multi_button_battery
-      - sensor.ikea_on_off_battery
-      icon: mdi:zigbee
-      name: 'Zigbee Sensors (min: {min}%, count: {count})'
-      secondary_info: Battery levels {range}%
     color_gradient:
     - '#ff0000'
     - '#ffff00'
     - '#00ff00'
     entities:
-    - charging_state:
-        entity_id: binary_sensor.10pro_is_charging
-        state: 'on'
-      entity: sensor.10pro_battery_level
-      name: 10 Pro
-      tap_action: more-info
-    - charging_state:
-        entity_id: sensor.pavan_thanujs_ipad_battery_state
-        state: 'on'
-      entity: sensor.pavan_thanujs_ipad_battery_level
-      name: iPad Pro
-      tap_action: more-info
     - charging_state:
         entity_id: binary_sensor.kameswari_nord_is_charging
         state: 'on'
@@ -3128,81 +2161,6 @@ views:
         align_state: center
         decimals: 1
         entities:
-        - sensor.multisensor_2_humidity
-        font_size: 70
-        hours_to_show: 6
-        line_color: skyblue
-        line_width: 5
-        points_per_hour: 10
-        show:
-          name: false
-        type: custom:mini-graph-card
-        update_interval: 10
-      - align_icon: left
-        align_state: center
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#d35400'
-          value: 28
-        - color: '#ff1800'
-          value: 30
-        decimals: 1
-        entities:
-        - sensor.multisensor_2_temperature
-        font_size: 70
-        hours_to_show: 6
-        line_color: '#e74c3c'
-        line_width: 5
-        points_per_hour: 10
-        show:
-          name: false
-        type: custom:mini-graph-card
-        update_interval: 10
-      title: Living Room
-      type: horizontal-stack
-    - cards:
-      - align_icon: left
-        align_state: center
-        decimals: 1
-        entities:
-        - sensor.hall_humidity
-        font_size: 70
-        hours_to_show: 8
-        line_color: skyblue
-        line_width: 5
-        points_per_hour: 30
-        show:
-          name: false
-        type: custom:mini-graph-card
-        update_interval: 10
-      - align_icon: left
-        align_state: center
-        color_thresholds:
-        - color: '#f39c12'
-          value: 25
-        - color: '#ff6703'
-          value: 28
-        - color: '#ff1800'
-          value: 33
-        decimals: 1
-        entities:
-        - sensor.hall_temperature
-        font_size: 70
-        hours_to_show: 8
-        line_width: 5
-        points_per_hour: 30
-        show:
-          name: false
-        type: custom:mini-graph-card
-        update_interval: 10
-      title: Hall
-      type: horizontal-stack
-    - cards:
-      - align_icon: left
-        align_state: center
-        decimals: 1
-        entities:
         - sensor.den_humidity
         font_size: 70
         hours_to_show: 6
@@ -3238,35 +2196,6 @@ views:
       type: horizontal-stack
     mode: vertical
     type: custom:stack-in-card
-  - aggregate_func: max
-    entities:
-    - color: magenta
-      entity: binary_sensor.den_motion_1
-      name: Den
-    - color: green
-      entity: binary_sensor.den_motion_2
-      name: Den 2
-    - color: red
-      entity: binary_sensor.hall_camera_1_motion
-      name: Hall
-    - color: yellow
-      entity: binary_sensor.hall_camera_2_motion
-      name: Hall 2
-    - color: cyan
-      entity: binary_sensor.front_yard_camera_person_occupancy
-      name: Front Yard
-    hours_to_show: 1
-    line_width: 2
-    name: Motion Last Hour
-    points_per_hour: 60
-    smoothing: false
-    state_map:
-    - label: Clear
-      value: 'off'
-    - label: Detected
-      value: 'on'
-    type: custom:mini-graph-card
-    update_interval: 10
   - cards:
     - card_mod:
         style:
@@ -3395,7 +2324,7 @@ views:
         type: entities
       filter:
         exclude:
-        - name: "*\U0001F3B5*"
+        - name: "/\U0001F3B5/"
         - name: "*\U0001F9FA*"
         - name: "*\U0001F4A1*"
         - name: "*\U0001F4A7*"
@@ -3418,24 +2347,6 @@ views:
       shortSwipes: true
       simulateTouch: true
     type: custom:swipe-card
-  - align_icon: left
-    align_state: center
-    entities:
-    - color: orange
-      entity: sensor.multisensor_1_light
-      name: Hall
-    - color: aqua
-      entity: sensor.multisensor_2_light
-      name: Living Room
-      show_state: true
-    font_size: 90
-    hours_to_show: 6
-    line_width: 1
-    points_per_hour: 10
-    show:
-      fill: fade
-    type: custom:mini-graph-card
-    update_interval: 30
   - cards:
     - icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
 
@@ -3512,6 +2423,20 @@ views:
       secondary: Prasad
       type: custom:mushroom-template-card
     type: vertical-stack
+  - card:
+      show_header_toggle: false
+      state_color: true
+      title: Docker Containers
+      type: entities
+    filter:
+      exclude: []
+      include:
+      - entity_id: switch.docker*
+    show_empty: true
+    sort:
+      ignore_case: false
+      method: last_triggered
+    type: custom:auto-entities
   icon: mdi:home-analytics
   path: network
   theme: ''

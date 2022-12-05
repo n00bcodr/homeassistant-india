@@ -17,18 +17,6 @@ youtube_music_player_playlist:
   options: # don't change
     - "loading"
 
-speakers_spotify:
-  name: Spotify Output
-  icon: mdi:spotify
-  options:
-    - "pavanthanuj"
-    - "Friday"
-    - "Chotu"
-    - "Motu"
-    - "Clock"
-    - "Priyadarshini"
-    - "Family Room Mini"
-
 room_select:
   name: "Room Select"
   options:

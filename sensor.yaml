@@ -7,10 +7,6 @@
 
 - platform: template
   sensors:
-    magic_cube_active_face:
-      friendly_name: "Magic Cube Active Face"
-      value_template: "{{states.sensor.magic_cube_action.attributes.side}}"
-
     formula_1: !include formula1.yaml
 
     motor_state:
@@ -65,37 +61,10 @@
       unit_of_measurement: "Mbps"
       icon_template: "mdi:upload"
 
-    phone_position:
-      friendly_name: "Phone Position"
-      value_template: >-
-        {% 
-          set bssids = {
-            "10:27:f5:e5:ec:b3":	"Office 5",
-            "10:27:f5:e5:ec:b2":	"Office 2.4",
-            "60:32:b1:e4:75:bf":	"Study 5",
-            "60:32:b1:e4:75:be":	"Study 2.4",
-            "50:d4:f7:f5:13:4f":	"Hallway 5",
-            "50:d4:f7:f5:13:4e":	"Hallway 2.4",
-            "60:32:b1:e4:75:bf":	"Study 5",
-            "60:32:b1:e4:76:53":	"Living Room 5",
-            "60:32:b1:e4:76:52":	"Living Room 2.4",
-            "10:27:f5:e5:ec:c7":	"Bedroom 5",
-            "10:27:f5:e5:ec:c6":	"Bedroom 2.4",
-            "e6:c2:2a:dc:a8:4c":	"Kitchen 5",
-            "e6:c2:2a:dc:a8:4b":	"Kitchen 2.4"
-                        }
-        %}
-        {{ bssids[states('sensor.10pro_wifi_bssid')]|default("Not Connected") }}
-
     moon_phase:
       friendly_name: "Moon Phase"
       value_template: "{{ states.sensor.moon.state }}"
       entity_picture_template: /local/moon_phases/{{ states.sensor.moon.state }}.png
-
-    chair_occupancy:
-      friendly_name: "Chair Occupancy"
-      value_template: "{{ iif(is_state('binary_sensor.chair', 'on'), 'Away', 'At Desk') }}"
-      icon_template: "{{ iif(is_state('binary_sensor.chair', 'on'), 'mdi:account-off', 'mdi:table-chair') }}"
 
     server_last_boot:
       value_template: >
@@ -179,17 +148,3 @@
   id: 1
   timeformat: "%A, %-d.%b.%y"
   icon: mdi:keyboard-f1
-
-- platform: formulaone_api
-
-- platform: mqtt_room
-  name: 10Pro BLE Presence
-  device_id: "iBeacon:b227be7b-9792-4116-b526-c4106b44ca68-100-1"
-  state_topic: "espresense/rooms"
-  timeout: 2
-
-- platform: mqtt_room
-  name: Watch BLE Presence
-  device_id: "samsung:e406feef7f4a"
-  state_topic: "espresense/rooms"
-  timeout: 2

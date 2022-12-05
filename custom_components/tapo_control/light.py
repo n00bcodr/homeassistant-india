@@ -1,11 +1,10 @@
 from homeassistant.core import HomeAssistant
 
-from homeassistant.components.light import LightEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, LOGGER
-from .tapo.entities import TapoEntity
+from .tapo.entities import TapoLightEntity
 from .utils import check_and_create
 
 
@@ -28,29 +27,43 @@ async def async_setup_entry(
         async_add_entities([light])
 
 
-class TapoFloodlight(LightEntity, TapoEntity):
+class TapoFloodlight(TapoLightEntity):
     def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
         LOGGER.debug("TapoFloodlight - init - start")
         self._attr_is_on = False
         self._hass = hass
-        self._attr_icon = "mdi:light-flood-down"
 
-        self.updateTapo(hass.data[DOMAIN][config_entry.entry_id]["camData"])
-        TapoEntity.__init__(self, entry, "Floodlight")
-        LightEntity.__init__(self)
+        TapoLightEntity.__init__(
+            self, "Floodlight", entry, hass, config_entry, "mdi:light-flood-down",
+        )
         LOGGER.debug("TapoFloodlight - init - end")
 
     async def async_turn_on(self) -> None:
-        await self._hass.async_add_executor_job(
+        LOGGER.debug("Turning on light")
+        result = await self._hass.async_add_executor_job(
             self._controller.setForceWhitelampState, True,
         )
+        LOGGER.debug(result)
+        if result["error_code"] == 0:
+            LOGGER.debug("Setting light state to: on")
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
 
     async def async_turn_off(self) -> None:
-        await self._hass.async_add_executor_job(
+        LOGGER.debug("Turning off light")
+        result = await self._hass.async_add_executor_job(
             self._controller.setForceWhitelampState, False,
         )
+        LOGGER.debug(result)
+        if result["error_code"] == 0:
+            LOGGER.debug("Setting light state to: off")
+            self._attr_state = "off"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
 
     def updateTapo(self, camData):
+        LOGGER.debug("Updating light state.")
         if not camData:
             self._attr_state = "unavailable"
         else:
