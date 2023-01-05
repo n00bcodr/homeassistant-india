@@ -250,25 +250,6 @@ led_strip_random:
       - '{{ state_attr(''light.led_strip_tv'',''rgbw_color'')[2] }}'
       - 0
   mode: single
-add_shopping_list:
-  alias: Add Shopping Item
-  sequence:
-  - service: shopping_list.add_item
-    data:
-      name: '{{ states(''input_text.shopping_list'') }}'
-  mode: single
-check_shopping_list:
-  alias: Check all Shopping Item
-  sequence:
-  - service: shopping_list.complete_all
-    data: {}
-  mode: single
-clear_shopping_list:
-  alias: Clear all Shopping Item
-  sequence:
-  - service: shopping_list.clear_completed_items
-    data: {}
-  mode: single
 ac_off:
   alias: AC OFF
   sequence:

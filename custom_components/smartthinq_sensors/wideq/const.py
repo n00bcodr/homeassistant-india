@@ -5,6 +5,10 @@ DEFAULT_COUNTRY = "US"
 DEFAULT_LANGUAGE = "en-US"
 DEFAULT_TIMEOUT = 10  # seconds
 
+# bit status
+BIT_OFF = "OFF"
+BIT_ON = "ON"
+
 # state options
 STATE_OPTIONITEM_OFF = "off"
 STATE_OPTIONITEM_ON = "on"
@@ -17,18 +21,22 @@ UNIT_TEMP_FAHRENHEIT = "fahrenheit"
 
 # ac devices features
 FEAT_ENERGY_CURRENT = "energy_current"
-FEAT_HUMIDITY = "humidity"
 FEAT_HOT_WATER_TEMP = "hot_water_temperature"
-FEAT_IN_WATER_TEMP = "in_water_temperature"
+FEAT_HUMIDITY = "humidity"
 FEAT_LIGHTING_DISPLAY = "lighting_display"
+FEAT_MODE_AIRCLEAN = "mode_airclean"
+FEAT_MODE_AWHP_SILENT = "mode_awhp_silent"
 FEAT_MODE_JET = "mode_jet"
-FEAT_OUT_WATER_TEMP = "out_water_temperature"
+FEAT_ROOM_TEMP = "room_temperature"
+FEAT_WATER_IN_TEMP = "water_in_temperature"
+FEAT_WATER_OUT_TEMP = "water_out_temperature"
 
 # wash devices features
 FEAT_DRYLEVEL = "dry_level"
 FEAT_ERROR_MSG = "error_message"
 FEAT_PRE_STATE = "pre_state"
 FEAT_PROCESS_STATE = "process_state"
+FEAT_RINSEMODE = "rinse_mode"
 FEAT_RUN_STATE = "run_state"
 FEAT_SPINSPEED = "spin_speed"
 FEAT_TEMPCONTROL = "temp_control"
@@ -40,6 +48,7 @@ FEAT_AUTODOOR = "auto_door"
 FEAT_CHILDLOCK = "child_lock"
 FEAT_CREASECARE = "crease_care"
 FEAT_DELAYSTART = "delay_start"
+FEAT_DETERGENT = "detergent"
 FEAT_DOORCLOSE = "door_close"
 FEAT_DOORLOCK = "door_lock"
 FEAT_DOOROPEN = "door_open"
@@ -54,6 +63,7 @@ FEAT_PREWASH = "pre_wash"
 FEAT_REMOTESTART = "remote_start"
 FEAT_RINSEREFILL = "rinse_refill"
 FEAT_SALTREFILL = "salt_refill"
+FEAT_SOFTENER = "softener"
 FEAT_STANDBY = "standby"
 FEAT_STEAM = "steam"
 FEAT_STEAMSOFTENER = "steam_softener"
@@ -88,12 +98,16 @@ FEAT_OVEN_LOWER_STATE = "oven_lower_state"
 FEAT_OVEN_UPPER_CURRENT_TEMP = "oven_upper_current_temp"
 FEAT_OVEN_UPPER_STATE = "oven_upper_state"
 
-# air purifier and dehumidifier device features
+# air purifier and ac device filters features
 FEAT_FILTER_BOTTOM_LIFE = "filter_bottom_life"
 FEAT_FILTER_DUST_LIFE = "filter_dust_life"
 FEAT_FILTER_MAIN_LIFE = "filter_main_life"
+FEAT_FILTER_MAIN_MAX = "filter_main_max"
+FEAT_FILTER_MAIN_USE = "filter_main_use"
 FEAT_FILTER_MID_LIFE = "filter_mid_life"
 FEAT_FILTER_TOP_LIFE = "filter_top_life"
+
+# air purifier and dehumidifier device features
 FEAT_PM1 = "pm1"
 FEAT_PM10 = "pm10"
 FEAT_PM25 = "pm25"

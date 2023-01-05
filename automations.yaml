@@ -493,32 +493,6 @@
       minutes: 0
       seconds: 5
       milliseconds: 0
-- id: '1636123727125'
-  alias: ⚙️Shopping list update
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_text.shopping_list
-  condition: []
-  action:
-  - service: script.add_shopping_list
-    data: {}
-  mode: single
-- id: hacs_sensor_refresh
-  alias: ⚙️HACS Sensor Refresh
-  description: Refreshes the HACS sensor once an update is installed.
-  trigger:
-  - platform: event
-    event_type: hacs/repository
-    event_data:
-      action: install
-  action:
-  - delay:
-      seconds: 4
-  - service: homeassistant.update_entity
-    target:
-      entity_id: sensor.hacs
-  initial_state: true
 - id: '1636974013216'
   alias: ⚙️Lovelace Reload
   description: ''
@@ -586,27 +560,6 @@
         data: {}
     default: []
   mode: single
-- id: '1642654396519'
-  alias: ⚙️Low battery level detection & notification for all battery sensors
-  description: ''
-  use_blueprint:
-    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
-    input:
-      actions:
-      - service: notify.mobile_app_10pro
-        data:
-          message: '{{sensors}}'
-          data:
-            notification_icon: mdi:battery-alert
-            color: red
-      threshold: 15
-      exclude:
-        entity_id:
-        - sensor.kameswari_nord_battery_level
-        - sensor.lenovo_tab_battery_level
-        - sensor.lenovo_tab_m10_hd_battery_level
-        - sensor.murthy_nord2_battery_level
-        - sensor.pavanthanuj_internal_battery_level
 - id: '1643198275646'
   alias: ⚙️Turn off Downstairs Geyser
   description: ''
@@ -696,49 +649,6 @@
           - light.led_strip_tv
     default: []
   mode: single
-- id: '1650769032380'
-  alias: ⚡Full charge notification
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.10pro_is_charging
-    to: 'on'
-    id: 10pro
-  - platform: state
-    entity_id:
-    - sensor.pavan_thanujs_ipad_battery_state
-    to: 'on'
-    id: ipad
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: sensor.10pro_battery_level
-        state: '100'
-      - condition: trigger
-        id: 10pro
-      sequence:
-      - service: notify.mobile_app_10pro
-        data:
-          message: ⚡Charging Complete⚡
-          data:
-            notification_icon: mdi:battery-charging-high
-            color: red
-    - conditions:
-      - condition: state
-        entity_id: sensor.pavan_thanujs_ipad_battery_level
-        state: '100'
-      - condition: trigger
-        id: ipad
-      sequence:
-      - service: notify.mobile_app_10pro
-        data:
-          message: ⚡iPad Charging Complete⚡
-          data:
-            notification_icon: mdi:battery-charging-high
-            color: red
-  mode: single
 - id: '1654855270389'
   alias: ⚙️Send Notification to Stop Playing if Hall TV is off
   description: ''
@@ -822,32 +732,6 @@
   - service: shell_command.git_core_update_push
     data: {}
   mode: single
-- id: '1655643351108'
-  alias: "\U0001F4A1Turn on hall lights if dark"
-  description: ''
-  trigger:
-  - type: illuminance
-    platform: device
-    device_id: 1d69ba14ead735cc4a77cb9dd903ada6
-    entity_id: sensor.multisensor_1_light
-    domain: sensor
-    below: 20
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 2
-  condition:
-  - condition: sun
-    before: sunset
-  - condition: state
-    entity_id: binary_sensor.hall_motion
-    state: 'on'
-  action:
-  - type: turn_on
-    device_id: 0f70275d239bd9297e11413afae487bf
-    entity_id: light.hall_tube_light
-    domain: light
-  mode: single
 - id: '1659929141343'
   alias: "\U0001F4A7Turn Motor Off when tank full "
   description: Turns both motors off if the tank becomes full
@@ -872,21 +756,6 @@
       entity_id:
       - switch.downstairs_motor_switch_1
       - switch.upstairs_motor
-  mode: single
-- id: '1659935815150'
-  alias: ⚙️Update Formula1 Standings after every Race
-  description: ''
-  trigger:
-  - platform: calendar
-    event: end
-    offset: 0:0:0
-    entity_id: calendar.formula1_2022
-  condition: []
-  action:
-  - service: pyscript.f1driverstandings
-    data: {}
-  - service: pyscript.f1constructorstandings
-    data: {}
   mode: single
 - id: '1662572670594'
   alias: ⚙️Front Yard Motion - PIP Video

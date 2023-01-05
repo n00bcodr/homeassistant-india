@@ -281,6 +281,7 @@ views:
       show_percentage_control: false
       type: custom:mushroom-fan-card
     - entity: fan.mi_air_purifier
+      icon_color: purple
       layout: horizontal
       show_percentage_control: true
       type: custom:mushroom-fan-card
@@ -681,12 +682,16 @@ views:
           - row_type: section
             type: custom:hui-element
           - entity: media_player.sony_bravia_tv
-            full_row: true
-            grow: true
-            hide_when_off: true
-            step: 1
-            toggle: false
-            type: custom:slider-entity-row
+            fill_container: false
+            icon_type: none
+            primary_info: none
+            secondary_info: none
+            show_volume_level: true
+            type: custom:mushroom-media-player-card
+            use_media_info: false
+            volume_controls:
+            - volume_set
+            - volume_mute
           - row_type: section
             type: custom:hui-element
           - card_type: horizontal-stack
@@ -1114,9 +1119,6 @@ views:
     name: Hall Motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
-  - entity: sensor.multisensor_1_light
-  - entity: sensor.multisensor_1_temperature
-  - entity: sensor.multisensor_1_humidity
   cards:
   - cards:
     - collapsible_controls: true
@@ -1179,21 +1181,6 @@ views:
       type: custom:mushroom-entity-card
     - collapsible_controls: true
       entity: media_player.friday
-      fill_container: false
-      media_controls:
-      - on_off
-      - play_pause_stop
-      - next
-      - previous
-      show_volume_level: true
-      type: custom:mushroom-media-player-card
-      use_media_info: true
-      volume_controls:
-      - volume_mute
-      - volume_set
-      - volume_buttons
-    - collapsible_controls: true
-      entity: media_player.hall_tv
       fill_container: false
       media_controls:
       - on_off
@@ -1887,22 +1874,14 @@ views:
     type: custom:button-card
   - cards:
     - entity: sensor.download_speed
-      max: 300
+      max: 150
       min: 0
       needle: false
-      severity:
-        green: 300
-        red: 0
-        yellow: 150
       type: gauge
     - entity: sensor.upload_speed
-      max: 300
+      max: 150
       min: 0
       needle: false
-      severity:
-        green: 250
-        red: 0
-        yellow: 0
       type: gauge
     mode: horizontal
     title: SpeedTest
@@ -2041,9 +2020,6 @@ views:
       icon: fab:github
       title: Git
       type: entities
-    - aspect_ratio: 120%
-      type: iframe
-      url: http://homeassistant.local:8123/local/git_status.txt
     type: vertical-stack
   - card:
       content: Snapshots are stale! Please visit the "Home Assistant Google Drive
@@ -2063,8 +2039,6 @@ views:
 - badges:
   - entity: person.murthy
   - entity: person.kameswari
-  - entity: person.pavanthanuj
-  - entity: input_boolean.den_state
   - entity: binary_sensor.hall_camera_1_motion
     style: ":host {\n  --label-badge-blue:\n    {% if is_state('binary_sensor.hall_camera_1_motion','on')\
       \ %}\n      red\n    {% else %}\n      green\n    {% endif %}\n    ;\n}\n"
@@ -2248,20 +2222,6 @@ views:
     - card:
         show_header_toggle: false
         state_color: false
-        title: Den Automations
-        type: entities
-      filter:
-        exclude: []
-        include:
-        - name: "/\U0001F3F0/"
-      show_empty: true
-      sort:
-        ignore_case: false
-        method: last_triggered
-      type: custom:auto-entities
-    - card:
-        show_header_toggle: false
-        state_color: false
         title: Light Automations
         type: entities
       filter:
@@ -2305,21 +2265,6 @@ views:
     - card:
         show_header_toggle: false
         state_color: false
-        title: Media Automations
-        type: entities
-      filter:
-        exclude: []
-        include:
-        - name: "/\U0001F3B5/"
-        - name: "/\U0001F3AC/"
-      show_empty: true
-      sort:
-        ignore_case: false
-        method: last_triggered
-      type: custom:auto-entities
-    - card:
-        show_header_toggle: false
-        state_color: false
         title: Other Automations
         type: entities
       filter:
@@ -2348,34 +2293,6 @@ views:
       simulateTouch: true
     type: custom:swipe-card
   - cards:
-    - icon: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
-
-        mdi:cellphone-wireless
-
-        {% else %}
-
-        mdi:cellphone-off
-
-        {% endif %}
-
-        '
-      icon_color: '{% if is_state(''device_tracker.oneplus_10pro'', ''home'') %}
-
-        blue
-
-        {% else %}
-
-        white
-
-        {% endif %}
-
-        '
-      primary: "{% if is_state('device_tracker.oneplus_10pro', 'home') %}\n  {{states.device_tracker.oneplus_10pro.attributes.deco_device\
-        \ | replace(\"living_room\",\" Living Room\") }} - {{ states.device_tracker.oneplus_10pro.attributes.connection_type\
-        \ | replace(\"band\",\"\") | replace(\"5\",\"5 GHz\")| replace(\"2_4\",\"\
-        2.4 GHz\")}} \n{% else %}\n  Not Connected\n{% endif %}\n"
-      secondary: OnePlus 10Pro
-      type: custom:mushroom-template-card
     - icon: "{% if is_state('device_tracker.phone_kameswari', 'home') %}\nmdi:cellphone-wireless\n\
         {% else %}\n  mdi:cellphone-off\n{% endif %}\n"
       icon_color: "{% if is_state('device_tracker.phone_kameswari', 'home') %}\nred\n\

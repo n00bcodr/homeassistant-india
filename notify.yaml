@@ -1,7 +1,3 @@
-- platform: telegram
-  name: banthi
-  chat_id: !secret telegram_chat_id
-
 - name: all_phones
   platform: group
   services:
