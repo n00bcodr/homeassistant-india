@@ -44,10 +44,9 @@ from .const import (
     __min_ha_version__,
 )
 from .wideq import (
-    UNIT_TEMP_CELSIUS,
-    UNIT_TEMP_FAHRENHEIT,
     DeviceInfo as ThinQDeviceInfo,
     DeviceType,
+    TemperatureUnit,
     get_lge_device,
 )
 from .wideq.core_async import ClientAsync
@@ -148,7 +147,6 @@ class LGEAuthentication:
             language=self._language,
             oauth_url=oauth_url,
             aiohttp_session=self._client_session,
-            # enable_emulation=True,
         )
 
 
@@ -212,7 +210,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     region = entry.data[CONF_REGION]
     language = entry.data[CONF_LANGUAGE]
     refresh_token = entry.data[CONF_TOKEN]
-    oauth2_url = entry.data.get(CONF_OAUTH2_URL)
+    oauth2_url = None  # entry.data.get(CONF_OAUTH2_URL)
     use_api_v2 = entry.data.get(CONF_USE_API_V2, False)
     use_ha_session = entry.data.get(CONF_USE_HA_SESSION, False)
 
@@ -538,9 +536,9 @@ async def lge_devices_setup(
         discovered_devices = {}
 
     device_count = 0
-    temp_unit = UNIT_TEMP_CELSIUS
+    temp_unit = TemperatureUnit.CELSIUS
     if hass.config.units.temperature_unit != UnitOfTemperature.CELSIUS:
-        temp_unit = UNIT_TEMP_FAHRENHEIT
+        temp_unit = TemperatureUnit.FAHRENHEIT
 
     for device_info in client.devices:
         device_id = device_info.device_id

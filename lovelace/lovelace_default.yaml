@@ -943,15 +943,17 @@ views:
           type: custom:hui-element
         - row_type: section
           type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
-          - entity: media_player.oneplus_tv
-            full_row: true
-            grow: true
-            step: 1
-            toggle: false
-            type: custom:slider-entity-row
-          type: custom:hui-element
+        - entity: media_player.oneplus_tv
+          fill_container: false
+          icon_type: none
+          primary_info: none
+          secondary_info: none
+          show_volume_level: true
+          type: custom:mushroom-media-player-card
+          use_media_info: false
+          volume_controls:
+          - volume_set
+          - volume_mute
         - row_type: section
           type: custom:hui-element
         - card_type: horizontal-stack
