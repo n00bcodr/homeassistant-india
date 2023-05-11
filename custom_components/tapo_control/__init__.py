@@ -1,4 +1,6 @@
 import datetime
+import os
+import shutil
 
 from homeassistant.core import HomeAssistant
 from homeassistant.components.ffmpeg import CONF_EXTRA_ARGUMENTS
@@ -11,6 +13,7 @@ from homeassistant.const import (
 )
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.util import dt
 
 from .const import (
     CONF_RTSP_TRANSPORT,
@@ -22,6 +25,7 @@ from .const import (
     CLOUD_PASSWORD,
     ENABLE_STREAM,
     ENABLE_TIME_SYNC,
+    MEDIA_CLEANUP_PERIOD,
     RTSP_TRANS_PROTOCOLS,
     SOUND_DETECTION_DURATION,
     SOUND_DETECTION_PEAK,
@@ -30,6 +34,10 @@ from .const import (
     UPDATE_CHECK_PERIOD,
 )
 from .utils import (
+    deleteDir,
+    getColdDirPathForEntry,
+    getHotDirPathForEntry,
+    mediaCleanup,
     registerController,
     getCamData,
     setupOnvif,
@@ -51,7 +59,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
     LOGGER.debug("Migrating from version %s", config_entry.version)
 
     if config_entry.version == 1:
-
         new = {**config_entry.data}
         new[ENABLE_MOTION_SENSOR] = True
         new[CLOUD_PASSWORD] = ""
@@ -61,7 +68,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 2
 
     if config_entry.version == 2:
-
         new = {**config_entry.data}
         new[CLOUD_PASSWORD] = ""
 
@@ -70,7 +76,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 3
 
     if config_entry.version == 3:
-
         new = {**config_entry.data}
         new[ENABLE_STREAM] = True
 
@@ -79,7 +84,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 4
 
     if config_entry.version == 4:
-
         new = {**config_entry.data}
         new[ENABLE_TIME_SYNC] = False
 
@@ -88,7 +92,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 5
 
     if config_entry.version == 5:
-
         new = {**config_entry.data}
         new[ENABLE_SOUND_DETECTION] = False
         new[SOUND_DETECTION_PEAK] = -50
@@ -100,7 +103,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 6
 
     if config_entry.version == 6:
-
         new = {**config_entry.data}
         new[CONF_EXTRA_ARGUMENTS] = ""
 
@@ -109,7 +111,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 7
 
     if config_entry.version == 7:
-
         new = {**config_entry.data}
         new[CONF_CUSTOM_STREAM] = ""
 
@@ -118,7 +119,6 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         config_entry.version = 8
 
     if config_entry.version == 8:
-
         new = {**config_entry.data}
         new[CONF_RTSP_TRANSPORT] = RTSP_TRANS_PROTOCOLS[0]
 
@@ -138,12 +138,28 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_unload(entry, "light")
     await hass.config_entries.async_forward_entry_unload(entry, "number")
     await hass.config_entries.async_forward_entry_unload(entry, "select")
+    await hass.config_entries.async_forward_entry_unload(entry, "siren")
     await hass.config_entries.async_forward_entry_unload(entry, "switch")
     await hass.config_entries.async_forward_entry_unload(entry, "update")
 
     if hass.data[DOMAIN][entry.entry_id]["events"]:
         await hass.data[DOMAIN][entry.entry_id]["events"].async_stop()
     return True
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    LOGGER.debug("async_remove_entry")
+    entry_id = entry.entry_id
+    coldDirPath = getColdDirPathForEntry(entry_id)
+    hotDirPath = getHotDirPathForEntry(entry_id)
+
+    # Delete all media stored in cold storage for entity
+    LOGGER.debug("Deleting cold storage files for entity " + entry_id + "...")
+    deleteDir(coldDirPath)
+
+    # Delete all media stored in hot storage for entity
+    LOGGER.debug("Deleting hot storage files for entity " + entry_id + "...")
+    deleteDir(hotDirPath)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -157,10 +173,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     cloud_password = entry.data.get(CLOUD_PASSWORD)
     enableTimeSync = entry.data.get(ENABLE_TIME_SYNC)
 
+    # todo: figure out where to set officially?
+    entry.unique_id = DOMAIN + host
+
     try:
         if cloud_password != "":
             tapoController = await hass.async_add_executor_job(
-                registerController, host, "admin", cloud_password
+                registerController, host, "admin", cloud_password, cloud_password
             )
         else:
             tapoController = await hass.async_add_executor_job(
@@ -169,7 +188,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
         def getAllEntities(entry):
             # Gather all entities, including of children devices
-            allEntities = entry["entities"]
+            allEntities = entry["entities"].copy()
             for childDevice in entry["childDevices"]:
                 allEntities.extend(childDevice["entities"])
             return allEntities
@@ -193,21 +212,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                         not hass.data[DOMAIN][entry.entry_id]["eventsDevice"]
                         or not hass.data[DOMAIN][entry.entry_id]["onvifManagement"]
                     ):
-                        LOGGER.debug("Setting up subscription to motion sensor...")
                         # retry if connection to onvif failed
-                        LOGGER.debug("Initiating onvif.")
+                        LOGGER.debug("Setting up subscription to motion sensor...")
                         onvifDevice = await initOnvifEvents(
                             hass, host, username, password
                         )
-                        LOGGER.debug(onvifDevice)
-                        hass.data[DOMAIN][entry.entry_id]["eventsDevice"] = onvifDevice[
-                            "device"
-                        ]
-                        hass.data[DOMAIN][entry.entry_id][
-                            "onvifManagement"
-                        ] = onvifDevice["device_mgmt"]
-                        if motionSensor:
-                            await setupOnvif(hass, entry)
+                        if onvifDevice:
+                            LOGGER.debug(onvifDevice)
+                            hass.data[DOMAIN][entry.entry_id][
+                                "eventsDevice"
+                            ] = onvifDevice["device"]
+                            hass.data[DOMAIN][entry.entry_id][
+                                "onvifManagement"
+                            ] = onvifDevice["device_mgmt"]
+                            if motionSensor:
+                                await setupOnvif(hass, entry)
                     elif (
                         not hass.data[DOMAIN][entry.entry_id]["eventsSetup"]
                         and motionSensor
@@ -216,9 +235,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                             "Setting up subcription to motion sensor events..."
                         )
                         # retry if subscription to events failed
-                        hass.data[DOMAIN][entry.entry_id][
-                            "eventsSetup"
-                        ] = await setupEvents(hass, entry)
+                        try:
+                            hass.data[DOMAIN][entry.entry_id][
+                                "eventsSetup"
+                            ] = await setupEvents(hass, entry)
+                        except AssertionError as e:
+                            if str(e) != "PullPoint manager already started":
+                                raise AssertionError(e)
+
                     else:
                         LOGGER.debug("Motion sensor: OK")
                 else:
@@ -226,16 +250,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                         "Not updating motion sensor because device is child or parent."
                     )
 
+                ts = datetime.datetime.utcnow().timestamp()
                 if (
                     hass.data[DOMAIN][entry.entry_id]["onvifManagement"]
                     and enableTimeSync
                 ):
-                    ts = datetime.datetime.utcnow().timestamp()
                     if (
                         ts - hass.data[DOMAIN][entry.entry_id]["lastTimeSync"]
                         > TIME_SYNC_PERIOD
                     ):
                         await syncTime(hass, entry.entry_id)
+                if (
+                    ts - hass.data[DOMAIN][entry.entry_id]["lastMediaCleanup"]
+                    > MEDIA_CLEANUP_PERIOD
+                ):
+                    mediaCleanup(hass, entry.entry_id)
                 ts = datetime.datetime.utcnow().timestamp()
                 if (
                     ts - hass.data[DOMAIN][entry.entry_id]["lastFirmwareCheck"]
@@ -323,18 +352,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                     ].async_schedule_update_ha_state(True)
 
         tapoCoordinator = DataUpdateCoordinator(
-            hass, LOGGER, name="Tapo resource status", update_method=async_update_data,
+            hass,
+            LOGGER,
+            name="Tapo resource status",
+            update_method=async_update_data,
         )
 
         camData = await getCamData(hass, tapoController)
+        cameraTime = await hass.async_add_executor_job(tapoController.getTime)
+        cameraTS = cameraTime["system"]["clock_status"]["seconds_from_1970"]
+        currentTS = dt.as_timestamp(dt.now())
 
         hass.data[DOMAIN][entry.entry_id] = {
             "controller": tapoController,
+            "usingCloudPassword": cloud_password != "",
             "allControllers": [tapoController],
             "update_listener": entry.add_update_listener(update_listener),
             "coordinator": tapoCoordinator,
             "camData": camData,
             "lastTimeSync": 0,
+            "lastMediaCleanup": 0,
             "lastFirmwareCheck": 0,
             "latestFirmwareVersion": False,
             "motionSensorCreated": False,
@@ -349,6 +386,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             "childDevices": [],
             "isChild": False,
             "isParent": False,
+            "isDownloadingStream": False,
+            "timezoneOffset": cameraTS - currentTS,
         }
 
         if camData["childDevices"] is False or camData["childDevices"] is None:
@@ -377,6 +416,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                         "coordinator": tapoCoordinator,
                         "camData": childCamData,
                         "lastTimeSync": 0,
+                        "lastMediaCleanup": 0,
                         "lastFirmwareCheck": 0,
                         "latestFirmwareVersion": False,
                         "motionSensorCreated": False,
@@ -402,6 +442,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         )
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(entry, "select")
+        )
+        hass.async_create_task(
+            hass.config_entries.async_forward_entry_setup(entry, "siren")
         )
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(entry, "update")

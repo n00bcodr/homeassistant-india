@@ -1,6 +1,4 @@
-"""
-Support for LG SmartThinQ device.
-"""
+"""Support for LG SmartThinQ device."""
 
 from __future__ import annotations
 
@@ -61,6 +59,7 @@ from .wideq.device import Device as ThinQDevice
 
 SMARTTHINQ_PLATFORMS = [
     Platform.BINARY_SENSOR,
+    Platform.BUTTON,
     Platform.CLIMATE,
     Platform.FAN,
     Platform.HUMIDIFIER,

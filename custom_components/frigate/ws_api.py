@@ -147,14 +147,17 @@ async def ws_get_recordings_summary(
     {
         vol.Required("type"): "frigate/events/get",
         vol.Required("instance_id"): str,
-        vol.Optional("camera"): str,
-        vol.Optional("label"): str,
-        vol.Optional("zone"): str,
+        vol.Optional("cameras"): [str],
+        vol.Optional("labels"): [str],
+        vol.Optional("sub_labels"): [str],
+        vol.Optional("zones"): [str],
         vol.Optional("after"): int,
         vol.Optional("before"): int,
         vol.Optional("limit"): int,
         vol.Optional("has_clip"): bool,
         vol.Optional("has_snapshot"): bool,
+        vol.Optional("has_snapshot"): bool,
+        vol.Optional("favorites"): bool,
     }
 )  # type: ignore[misc]
 @websocket_api.async_response  # type: ignore[misc]
@@ -172,14 +175,16 @@ async def ws_get_events(
         connection.send_result(
             msg["id"],
             await client.async_get_events(
-                msg.get("camera"),
-                msg.get("label"),
-                msg.get("zone"),
+                msg.get("cameras"),
+                msg.get("labels"),
+                msg.get("sub_labels"),
+                msg.get("zones"),
                 msg.get("after"),
                 msg.get("before"),
                 msg.get("limit"),
                 msg.get("has_clip"),
                 msg.get("has_snapshot"),
+                msg.get("favorites"),
                 decode_json=False,
             ),
         )
@@ -187,8 +192,8 @@ async def ws_get_events(
         connection.send_error(
             msg["id"],
             "frigate_error",
-            f"API error whilst retrieving events for camera "
-            f"{msg['camera']} for Frigate instance {msg['instance_id']}",
+            f"API error whilst retrieving events for cameras "
+            f"{msg['cameras']} for Frigate instance {msg['instance_id']}",
         )
 
 

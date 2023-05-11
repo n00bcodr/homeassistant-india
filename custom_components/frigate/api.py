@@ -53,27 +53,31 @@ class FrigateApiClient:
 
     async def async_get_events(
         self,
-        camera: str | None = None,
-        label: str | None = None,
-        zone: str | None = None,
+        cameras: list[str] | None = None,
+        labels: list[str] | None = None,
+        sub_labels: list[str] | None = None,
+        zones: list[str] | None = None,
         after: int | None = None,
         before: int | None = None,
         limit: int | None = None,
         has_clip: bool | None = None,
         has_snapshot: bool | None = None,
+        favorites: bool | None = None,
         decode_json: bool = True,
     ) -> list[dict[str, Any]]:
         """Get data from the API."""
         params = {
-            "camera": camera,
-            "label": label,
-            "zone": zone,
+            "cameras": ",".join(cameras) if cameras else None,
+            "labels": ",".join(labels) if labels else None,
+            "sub_labels": ",".join(sub_labels) if sub_labels else None,
+            "zones": ",".join(zones) if zones else None,
             "after": after,
             "before": before,
             "limit": limit,
             "has_clip": int(has_clip) if has_clip is not None else None,
             "has_snapshot": int(has_snapshot) if has_snapshot is not None else None,
             "include_thumbnails": 0,
+            "favorites": int(favorites) if favorites is not None else None,
         }
 
         return cast(

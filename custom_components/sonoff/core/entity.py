@@ -4,7 +4,7 @@ from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC
 from homeassistant.helpers.entity import DeviceInfo, Entity, EntityCategory
 
 from .const import DOMAIN
-from .ewelink import XRegistry, XDevice
+from .ewelink import XDevice, XRegistry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,33 +68,40 @@ class XEntity(Entity):
         # domain will be replaced in entity_registry.async_generate_entity_id
         self.entity_id = f"{DOMAIN}.{DOMAIN}_{self._attr_unique_id}"
 
-        deviceid: str = device['deviceid']
-        params: dict = device['params']
+        deviceid: str = device["deviceid"]
+        params: dict = device["params"]
 
-        connections = {(CONNECTION_NETWORK_MAC, params['staMac'])} \
-            if "staMac" in params else None
+        connections = (
+            {(CONNECTION_NETWORK_MAC, params["staMac"])} if "staMac" in params else None
+        )
 
         self._attr_device_info = DeviceInfo(
             connections=connections,
             identifiers={(DOMAIN, deviceid)},
-            manufacturer=device.get('brandName'),
-            model=device.get('productModel'),
+            manufacturer=device.get("brandName"),
+            model=device.get("productModel"),
             name=device["name"],
-            sw_version=params.get('fwVersion'),
+            sw_version=params.get("fwVersion"),
         )
 
         try:
             self.internal_update(params)
         except Exception as e:
             _LOGGER.error(f"Can't init device: {device}", exc_info=e)
+
         ewelink.dispatcher_connect(deviceid, self.internal_update)
+
+        if parent := device.get("parent"):
+            ewelink.dispatcher_connect(parent["deviceid"], self.internal_parent_update)
 
     def set_state(self, params: dict):
         pass
 
     def internal_available(self) -> bool:
-        return (self.ewelink.cloud.online and self.device.get("online")) or \
-               (self.ewelink.local.online and "host" in self.device)
+        device = self.device.get("parent") or self.device
+        return (self.ewelink.cloud.online and device.get("online")) or (
+            self.ewelink.local.online and device.get("local")
+        )
 
     def internal_update(self, params: dict = None):
         available = self.internal_available()
@@ -111,5 +118,14 @@ class XEntity(Entity):
         if change and self.hass:
             self._async_write_ha_state()
 
+    def internal_parent_update(self, params: dict = None):
+        self.internal_update(None)
+
     async def async_update(self):
-        await self.ewelink.send(self.device)
+        if led := self.device["params"].get("sledOnline"):
+            # device response with current status if we change any param
+            await self.ewelink.send(
+                self.device, params_lan={"sledOnline": led}, cmd_lan="sledonline"
+            )
+        else:
+            await self.ewelink.send(self.device)

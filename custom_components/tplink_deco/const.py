@@ -12,6 +12,8 @@ COORDINATOR_DECOS_KEY = "decos"
 
 DEFAULT_CONSIDER_HOME = DEFAULT_CONSIDER_HOME_SPAN.total_seconds()
 DEFAULT_SCAN_INTERVAL = 30
+DEFAULT_TIMEOUT_ERROR_RETRIES = 1
+DEFAULT_TIMEOUT_SECONDS = 30
 
 DEVICE_TYPE_CLIENT = "client"
 DEVICE_TYPE_DECO = "deco"
@@ -33,7 +35,9 @@ ATTR_SIGNAL_BAND5 = "signal_band5"
 ATTR_UP_KILOBYTES_PER_S = "up_kilobytes_per_s"
 
 # Config
-CONFIG_VERIFY_SSL = "verify_ssl"
+CONF_TIMEOUT_ERROR_RETRIES = "timeout_error_retries"
+CONF_TIMEOUT_SECONDS = "timeout_seconds"
+CONF_VERIFY_SSL = "verify_ssl"
 
 # Signals
 SIGNAL_CLIENT_ADDED = f"{DOMAIN}-client-added"

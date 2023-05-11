@@ -1,14 +1,23 @@
 import asyncio
 import datetime
+import hashlib
+import pathlib
 import onvif
 import os
+import shutil
 import socket
 import time
 import urllib.parse
+import uuid
+from homeassistant.core import HomeAssistant
+from pytapo.media_stream.downloader import Downloader
+from homeassistant.components.media_source.error import Unresolvable
 
 from haffmpeg.tools import IMAGE_JPEG, ImageFrame
 from onvif import ONVIFCamera
 from pytapo import Tapo
+from yarl import URL
+from homeassistant.helpers.network import NoURLAvailableError, get_url
 
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.components.ffmpeg import DATA_FFMPEG
@@ -18,13 +27,30 @@ from homeassistant.util import slugify
 
 from .const import (
     BRAND,
+    COLD_DIR_DELETE_TIME,
     ENABLE_MOTION_SENSOR,
     DOMAIN,
+    HOT_DIR_DELETE_TIME,
     LOGGER,
     CLOUD_PASSWORD,
     ENABLE_TIME_SYNC,
     CONF_CUSTOM_STREAM,
 )
+
+UUID = uuid.uuid4().hex
+
+
+def isUsingHTTPS(hass):
+    try:
+        base_url = get_url(hass, prefer_external=False)
+    except NoURLAvailableError:
+        try:
+            base_url = get_url(hass, prefer_external=True)
+        except NoURLAvailableError:
+            LOGGER.warn("Failed to detect base_url schema, not using webhooks.")
+            return True
+    LOGGER.debug("Detected base_url schema: " + URL(base_url).scheme)
+    return URL(base_url).scheme == "https"
 
 
 def getStreamSource(entry, hdStream):
@@ -62,6 +88,123 @@ def isOpen(ip, port):
         return False
 
 
+def getDataPath():
+    return os.path.abspath(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+    )
+
+
+def getColdDirPathForEntry(entry_id):
+    return os.path.join(getDataPath(), f".storage/{DOMAIN}/{entry_id}/")
+
+
+def getHotDirPathForEntry(entry_id):
+    return os.path.join(getDataPath(), f"www/{DOMAIN}/{entry_id}/")
+
+
+def mediaCleanup(hass, entry_id):
+    LOGGER.debug("Initiating media cleanup for entity " + entry_id + "...")
+    hass.data[DOMAIN][entry_id][
+        "lastMediaCleanup"
+    ] = datetime.datetime.utcnow().timestamp()
+    coldDirPath = getColdDirPathForEntry(entry_id)
+    hotDirPath = getHotDirPathForEntry(entry_id)
+
+    # Delete everything other than COLD_DIR_DELETE_TIME seconds from cold storage
+    LOGGER.debug(
+        "Deleting cold storage files older than "
+        + str(COLD_DIR_DELETE_TIME)
+        + " seconds for entity "
+        + entry_id
+        + "..."
+    )
+    deleteFilesOlderThan(coldDirPath, COLD_DIR_DELETE_TIME)
+
+    # Delete everything other than HOT_DIR_DELETE_TIME seconds from hot storage
+    LOGGER.debug(
+        "Deleting hot storage files older than "
+        + str(HOT_DIR_DELETE_TIME)
+        + " seconds for entity "
+        + entry_id
+        + "..."
+    )
+    deleteFilesOlderThan(hotDirPath, HOT_DIR_DELETE_TIME)
+
+
+def deleteDir(dirPath):
+    if (
+        os.path.exists(dirPath)
+        and os.path.isdir(dirPath)
+        and dirPath != "/"
+        and "tapo_control/" in dirPath
+    ):
+        LOGGER.debug("Deleting folder " + dirPath + "...")
+        shutil.rmtree(dirPath)
+
+
+def deleteFilesOlderThan(dirPath, deleteOlderThan):
+    now = datetime.datetime.utcnow().timestamp()
+    if os.path.exists(dirPath):
+        for f in os.listdir(dirPath):
+            filePath = os.path.join(dirPath, f)
+            last_modified = os.stat(filePath).st_mtime
+            if now - last_modified > deleteOlderThan:
+                os.remove(filePath)
+
+
+def processDownload(status):
+    LOGGER.debug(status)
+
+
+async def getRecording(
+    hass: HomeAssistant,
+    tapo: Tapo,
+    entry_id: str,
+    date: str,
+    startDate: int,
+    endDate: int,
+) -> str:
+    # this NEEDS to happen otherwise camera does not send data!
+    await hass.async_add_executor_job(tapo.getRecordings, date)
+
+    mediaCleanup(hass, entry_id)
+
+    coldDirPath = getColdDirPathForEntry(entry_id)
+    hotDirPath = getHotDirPathForEntry(entry_id)
+
+    pathlib.Path(coldDirPath).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(hotDirPath).mkdir(parents=True, exist_ok=True)
+
+    downloadUID = hashlib.md5((str(startDate) + str(endDate)).encode()).hexdigest()
+    downloader = Downloader(
+        tapo,
+        startDate,
+        endDate,
+        coldDirPath,
+        0,
+        None,
+        None,
+        downloadUID + ".mp4",
+    )
+    # todo: automatic deletion of recordings longer than X in hot storage
+
+    hass.data[DOMAIN][entry_id]["isDownloadingStream"] = True
+    downloadedFile = await downloader.downloadFile(processDownload)
+    hass.data[DOMAIN][entry_id]["isDownloadingStream"] = False
+    if downloadedFile["currentAction"] == "Recording in progress":
+        raise Unresolvable("Recording is currently in progress.")
+
+    coldFilePath = downloadedFile["fileName"]
+    hotFilePath = (
+        coldFilePath.replace("/.storage/", "/www/").replace(".mp4", "") + UUID + ".mp4"
+    )
+    shutil.copyfile(coldFilePath, hotFilePath)
+
+    fileWebPath = hotFilePath[hotFilePath.index("/www/") + 5 :]  # remove ./www/
+
+    return f"/local/{fileWebPath}"
+
+
 def areCameraPortsOpened(host):
     return isOpen(host, 443) and isOpen(host, 554) and isOpen(host, 2020)
 
@@ -89,10 +232,14 @@ async def isRtspStreamWorking(hass, host, username, password, full_url=""):
         ),
     )
     image = await asyncio.shield(
-        ffmpeg.get_image(streaming_url, output_format=IMAGE_JPEG,)
+        ffmpeg.get_image(
+            streaming_url,
+            output_format=IMAGE_JPEG,
+        )
     )
     LOGGER.debug(
-        "[isRtspStreamWorking][%s] Image data received.", host,
+        "[isRtspStreamWorking][%s] Image data received.",
+        host,
     )
     return not image == b""
 
@@ -107,15 +254,20 @@ async def initOnvifEvents(hass, host, username, password):
         no_cache=True,
     )
     try:
+        LOGGER.debug("[initOnvifEvents] Creating onvif connection...")
         await device.update_xaddrs()
-        device_mgmt = device.create_devicemgmt_service()
+        LOGGER.debug("[initOnvifEvents] Connection estabilished.")
+        device_mgmt = await device.create_devicemgmt_service()
+        LOGGER.debug("[initOnvifEvents] Getting device information...")
         device_info = await device_mgmt.GetDeviceInformation()
+        LOGGER.debug("[initOnvifEvents] Got device information.")
         if "Manufacturer" not in device_info:
             raise Exception("Onvif connection has failed.")
 
         return {"device": device, "device_mgmt": device_mgmt}
-    except Exception:
-        pass
+    except Exception as e:
+        LOGGER.error("[initOnvifEvents] Initiating onvif connection failed.")
+        LOGGER.error(e)
 
     return False
 
@@ -187,6 +339,148 @@ async def getCamData(hass, controller):
         person_detection_sensitivity = None
     camData["person_detection_enabled"] = person_detection_enabled
     camData["person_detection_sensitivity"] = person_detection_sensitivity
+
+    try:
+        vehicleDetectionData = data["getVehicleDetectionConfig"]["vehicle_detection"][
+            "detection"
+        ]
+        vehicle_detection_enabled = vehicleDetectionData["enabled"]
+        vehicle_detection_sensitivity = None
+
+        sensitivity = tryParseInt(vehicleDetectionData["sensitivity"])
+        if sensitivity is not None:
+            if sensitivity <= 33:
+                vehicle_detection_sensitivity = "low"
+            elif sensitivity <= 66:
+                vehicle_detection_sensitivity = "normal"
+            else:
+                vehicle_detection_sensitivity = "high"
+    except Exception:
+        vehicle_detection_enabled = None
+        vehicle_detection_sensitivity = None
+    camData["vehicle_detection_enabled"] = vehicle_detection_enabled
+    camData["vehicle_detection_sensitivity"] = vehicle_detection_sensitivity
+
+    try:
+        babyCryDetectionData = data["getBCDConfig"]["sound_detection"]["bcd"]
+        babyCry_detection_enabled = babyCryDetectionData["enabled"]
+        babyCry_detection_sensitivity = None
+
+        sensitivity = babyCryDetectionData["sensitivity"]
+        if sensitivity is not None:
+            if sensitivity == "low":
+                babyCry_detection_sensitivity = "low"
+            elif sensitivity == "medium":
+                babyCry_detection_sensitivity = "normal"
+            else:
+                babyCry_detection_sensitivity = "high"
+    except Exception:
+        babyCry_detection_enabled = None
+        babyCry_detection_sensitivity = None
+    camData["babyCry_detection_enabled"] = babyCry_detection_enabled
+    camData["babyCry_detection_sensitivity"] = babyCry_detection_sensitivity
+
+    try:
+        petDetectionData = data["getPetDetectionConfig"]["pet_detection"]["detection"]
+        pet_detection_enabled = petDetectionData["enabled"]
+        pet_detection_sensitivity = None
+
+        sensitivity = tryParseInt(petDetectionData["sensitivity"])
+        if sensitivity is not None:
+            if sensitivity <= 33:
+                pet_detection_sensitivity = "low"
+            elif sensitivity <= 66:
+                pet_detection_sensitivity = "normal"
+            else:
+                pet_detection_sensitivity = "high"
+    except Exception:
+        pet_detection_enabled = None
+        pet_detection_sensitivity = None
+    camData["pet_detection_enabled"] = pet_detection_enabled
+    camData["pet_detection_sensitivity"] = pet_detection_sensitivity
+
+    try:
+        barkDetectionData = data["getBarkDetectionConfig"]["bark_detection"][
+            "detection"
+        ]
+        bark_detection_enabled = barkDetectionData["enabled"]
+        bark_detection_sensitivity = None
+
+        sensitivity = tryParseInt(barkDetectionData["sensitivity"])
+        if sensitivity is not None:
+            if sensitivity <= 33:
+                bark_detection_sensitivity = "low"
+            elif sensitivity <= 66:
+                bark_detection_sensitivity = "normal"
+            else:
+                bark_detection_sensitivity = "high"
+    except Exception:
+        bark_detection_enabled = None
+        bark_detection_sensitivity = None
+    camData["bark_detection_enabled"] = bark_detection_enabled
+    camData["bark_detection_sensitivity"] = bark_detection_sensitivity
+
+    try:
+        meowDetectionData = data["getMeowDetectionConfig"]["meow_detection"][
+            "detection"
+        ]
+        meow_detection_enabled = meowDetectionData["enabled"]
+        meow_detection_sensitivity = None
+
+        sensitivity = tryParseInt(meowDetectionData["sensitivity"])
+        if sensitivity is not None:
+            if sensitivity <= 33:
+                meow_detection_sensitivity = "low"
+            elif sensitivity <= 66:
+                meow_detection_sensitivity = "normal"
+            else:
+                meow_detection_sensitivity = "high"
+    except Exception:
+        meow_detection_enabled = None
+        meow_detection_sensitivity = None
+    camData["meow_detection_enabled"] = meow_detection_enabled
+    camData["meow_detection_sensitivity"] = meow_detection_sensitivity
+
+    try:
+        glassDetectionData = data["getGlassDetectionConfig"]["glass_detection"][
+            "detection"
+        ]
+        glass_detection_enabled = glassDetectionData["enabled"]
+        glass_detection_sensitivity = None
+
+        sensitivity = tryParseInt(glassDetectionData["sensitivity"])
+        if sensitivity is not None:
+            if sensitivity <= 33:
+                glass_detection_sensitivity = "low"
+            elif sensitivity <= 66:
+                glass_detection_sensitivity = "normal"
+            else:
+                glass_detection_sensitivity = "high"
+    except Exception:
+        glass_detection_enabled = None
+        glass_detection_sensitivity = None
+    camData["glass_detection_enabled"] = glass_detection_enabled
+    camData["glass_detection_sensitivity"] = glass_detection_sensitivity
+
+    try:
+        tamperDetectionData = data["getTamperDetectionConfig"]["tamper_detection"][
+            "tamper_det"
+        ]
+        tamper_detection_enabled = tamperDetectionData["enabled"]
+        tamper_detection_sensitivity = None
+
+        if sensitivity is not None:
+            if sensitivity == "low":
+                tamper_detection_sensitivity = "low"
+            elif sensitivity == "medium":
+                tamper_detection_sensitivity = "normal"
+            else:
+                tamper_detection_sensitivity = "high"
+    except Exception:
+        tamper_detection_enabled = None
+        tamper_detection_sensitivity = None
+    camData["tamper_detection_enabled"] = tamper_detection_enabled
+    camData["tamper_detection_sensitivity"] = tamper_detection_sensitivity
 
     try:
         presets = {
@@ -350,6 +644,7 @@ async def update_listener(hass, entry):
             tapoController = await hass.async_add_executor_job(
                 registerController, host, username, password
             )
+        hass.data[DOMAIN][entry.entry_id]["usingCloudPassword"] = cloud_password != ""
         hass.data[DOMAIN][entry.entry_id]["controller"] = tapoController
     except Exception:
         LOGGER.error(
@@ -425,7 +720,8 @@ async def setupOnvif(hass, entry):
         hass.data[DOMAIN][entry.entry_id]["events"] = EventManager(
             hass,
             hass.data[DOMAIN][entry.entry_id]["eventsDevice"],
-            f"{entry.entry_id}_tapo_events",
+            entry,
+            hass.data[DOMAIN][entry.entry_id]["name"],
         )
 
         hass.data[DOMAIN][entry.entry_id]["eventsSetup"] = await setupEvents(
@@ -438,7 +734,17 @@ async def setupEvents(hass, config_entry):
     if not hass.data[DOMAIN][config_entry.entry_id]["events"].started:
         LOGGER.debug("Setting up events...")
         events = hass.data[DOMAIN][config_entry.entry_id]["events"]
-        if await events.async_start():
+        onvif_capabilities = await hass.data[DOMAIN][config_entry.entry_id][
+            "eventsDevice"
+        ].get_capabilities()
+        onvif_capabilities = onvif_capabilities or {}
+        pull_point_support = onvif_capabilities.get("Events", {}).get(
+            "WSPullPointSupport"
+        )
+        LOGGER.debug("WSPullPointSupport: %s", pull_point_support)
+        shouldUseWebhooks = isUsingHTTPS(hass) is False
+        # Setting Webhooks to False specifically as they seem broken on Tapo
+        if await events.async_start(pull_point_support is not False, shouldUseWebhooks):
             LOGGER.debug("Events started.")
             if not hass.data[DOMAIN][config_entry.entry_id]["motionSensorCreated"]:
                 hass.data[DOMAIN][config_entry.entry_id]["motionSensorCreated"] = True
@@ -467,6 +773,7 @@ def build_device_info(attributes: dict) -> DeviceInfo:
         manufacturer=BRAND,
         model=attributes["device_model"],
         sw_version=attributes["sw_version"],
+        hw_version=attributes["hw_version"],
     )
 
 
@@ -479,6 +786,20 @@ def pytapoFunctionMap(pytapoFunctionName):
         return ["getDetectionConfig"]
     elif pytapoFunctionName == "getPersonDetection":
         return ["getPersonDetectionConfig"]
+    elif pytapoFunctionName == "getVehicleDetection":
+        return ["getVehicleDetectionConfig"]
+    elif pytapoFunctionName == "getBabyCryDetection":
+        return ["getBCDConfig"]
+    elif pytapoFunctionName == "getPetDetection":
+        return ["getPetDetectionConfig"]
+    elif pytapoFunctionName == "getBarkDetection":
+        return ["getBarkDetectionConfig"]
+    elif pytapoFunctionName == "getMeowDetection":
+        return ["getMeowDetectionConfig"]
+    elif pytapoFunctionName == "getGlassBreakDetection":
+        return ["getGlassDetectionConfig"]
+    elif pytapoFunctionName == "getTamperDetection":
+        return ["getTamperDetectionConfig"]
     elif pytapoFunctionName == "getLdc":
         return ["getLensDistortionCorrection"]
     elif pytapoFunctionName == "getAlarm":

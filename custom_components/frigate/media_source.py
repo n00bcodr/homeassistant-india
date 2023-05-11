@@ -463,9 +463,8 @@ class RecordingIdentifier(Identifier):
             and self.hour is not None
         ):
             year, month, day = self.year_month_day.split("-")
-            # Take the selected time in users local time
-            # and find the offset to utc, convert to UTC
-            # then request the vod for that time.
+            # Take the selected time in users local time and find the offset to
+            # UTC, convert to UTC then request the vod for that time.
             start_date: dt.datetime = dt.datetime(
                 int(year),
                 int(month),
@@ -685,9 +684,10 @@ class FrigateMediaSource(MediaSource):  # type: ignore[misc]
                 events = await self._get_client(identifier).async_get_events(
                     after=identifier.after,
                     before=identifier.before,
-                    camera=identifier.camera,
-                    label=identifier.label,
-                    zone=identifier.zone,
+                    cameras=[identifier.camera] if identifier.camera else None,
+                    labels=[identifier.label] if identifier.label else None,
+                    sub_labels=None,
+                    zones=[identifier.zone] if identifier.zone else None,
                     limit=10000 if identifier.name.endswith(".all") else ITEM_LIMIT,
                     **media_kwargs,
                 )

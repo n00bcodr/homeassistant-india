@@ -1,6 +1,8 @@
 """------------------for Washer and Dryer"""
+
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
@@ -28,7 +30,6 @@ WM_ROOT_DATA = "washerDryer"
 WM_SUB_DEV = {"mini": "miniState"}
 
 POWER_STATUS_KEY = ["State", "state"]
-REMOTE_START_KEY = ["RemoteStart", "remoteStart"]
 
 CMD_POWER_OFF = [["Control", "WMOff"], ["Power", "WMOff"], ["Off", None]]
 CMD_WAKE_UP = [["Control", "WMWakeup"], ["Operation", "WMWakeup"], ["WakeUp", None]]
@@ -43,16 +44,18 @@ BIT_FEATURES = {
     WashDeviceFeatures.CHILDLOCK: ["ChildLock", "childLock"],
     WashDeviceFeatures.CREASECARE: ["CreaseCare", "creaseCare"],
     WashDeviceFeatures.DAMPDRYBEEP: ["DampDryBeep", "dampDryBeep"],
-    WashDeviceFeatures.DETERGENT: ["DetergentRemaining", "detergentRemaining"],
+    WashDeviceFeatures.DETERGENT: ["DetergentStatus", "ezDetergentState"],
+    WashDeviceFeatures.DETERGENTLOW: ["DetergentRemaining", "detergentRemaining"],
     WashDeviceFeatures.DOORCLOSE: ["DoorClose", "doorClose"],
     WashDeviceFeatures.DOORLOCK: ["DoorLock", "doorLock"],
     WashDeviceFeatures.HANDIRON: ["HandIron", "handIron"],
     WashDeviceFeatures.MEDICRINSE: ["MedicRinse", "medicRinse"],
     WashDeviceFeatures.PREWASH: ["PreWash", "preWash"],
-    WashDeviceFeatures.REMOTESTART: REMOTE_START_KEY,
+    WashDeviceFeatures.REMOTESTART: ["RemoteStart", "remoteStart"],
     WashDeviceFeatures.RESERVATION: ["Reservation", "reservation"],
     WashDeviceFeatures.SELFCLEAN: ["SelfClean", "selfClean"],
-    WashDeviceFeatures.SOFTENER: ["SoftenerRemaining", "softenerRemaining"],
+    WashDeviceFeatures.SOFTENER: ["SoftenerStatus", "ezSoftenerState"],
+    WashDeviceFeatures.SOFTENERLOW: ["SoftenerRemaining", "softenerRemaining"],
     WashDeviceFeatures.STEAM: ["Steam", "steam"],
     WashDeviceFeatures.STEAMSOFTENER: ["SteamSoftener", "steamSoftener"],
     WashDeviceFeatures.TURBOWASH: ["TurboWash", "turboWash"],
@@ -81,6 +84,7 @@ class WMDevice(Device):
         if sub_key:
             self._attr_unique_id += f"-{sub_key}"
             self._attr_name += f" {sub_key.capitalize()}"
+        self._stand_by = False
         self._remote_start_status = None
 
     def getkey(self, key: str | None) -> str | None:
@@ -220,24 +224,41 @@ class WMDevice(Device):
             return self._prepare_command_v2(cmd, key)
         return self._prepare_command_v1(cmd, key)
 
+    @property
+    def stand_by(self) -> bool:
+        """Return if device is in standby mode."""
+        return self._stand_by
+
+    @property
+    def remote_start_enabled(self) -> bool:
+        """Return if remote start is enabled."""
+        if not self._status.is_on:
+            return False
+        return self._remote_start_status is not None and not self._stand_by
+
     async def power_off(self):
         """Power off the device."""
         keys = self._get_cmd_keys(CMD_POWER_OFF)
-        await self.set(keys[0], keys[1], value=keys[2])
+        await self.set_with_retry(keys[0], keys[1], value=keys[2], num_retry=2)
+        self._remote_start_status = None
         self._update_status(POWER_STATUS_KEY, STATE_WM_POWER_OFF)
 
     async def wake_up(self):
         """Wakeup the device."""
+        if not self._stand_by:
+            raise InvalidDeviceStatus()
+
         keys = self._get_cmd_keys(CMD_WAKE_UP)
-        await self.set(keys[0], keys[1], value=keys[2])
+        await self.set_with_retry(keys[0], keys[1], value=keys[2], num_retry=2)
+        self._stand_by = False
 
     async def remote_start(self):
         """Remote start the device."""
-        if not self._remote_start_status:
+        if not self.remote_start_enabled:
             raise InvalidDeviceStatus()
 
         keys = self._get_cmd_keys(CMD_REMOTE_START)
-        await self.set(keys[0], keys[1], key=keys[2])
+        await self.set_with_retry(keys[0], keys[1], key=keys[2], num_retry=2)
 
     async def set(
         self, ctrl_key, command, *, key=None, value=None, data=None, ctrl_path=None
@@ -252,6 +273,43 @@ class WMDevice(Device):
             ctrl_path=ctrl_path,
         )
 
+    async def set_with_retry(
+        self,
+        ctrl_key,
+        command,
+        *,
+        key=None,
+        value=None,
+        data=None,
+        ctrl_path=None,
+        num_retry=1,
+    ):
+        """Set a device's control for `key` to `value` with retry."""
+        if num_retry <= 0:
+            num_retry = 1
+        for i in range(num_retry):
+            try:
+                await self.set(
+                    ctrl_key,
+                    command,
+                    key=key,
+                    value=value,
+                    data=data,
+                    ctrl_path=ctrl_path,
+                )
+                return
+            except Exception as exc:  # pylint: disable=broad-except
+                if i == num_retry - 1:
+                    raise
+                _LOGGER.debug(
+                    "Device %s, error executing command %s, tentative %s: %s",
+                    self.name,
+                    command,
+                    i,
+                    exc,
+                )
+            await asyncio.sleep(1)
+
     def reset_status(self):
         tcl_count = None
         if self._status:
@@ -261,13 +319,15 @@ class WMDevice(Device):
 
     def _set_remote_start_opt(self, res):
         """Save the status to use for remote start."""
-
-        status_key = self.getkey(self._get_state_key(REMOTE_START_KEY))
-        remote_enabled = self._status.lookup_bit(status_key) == StateOptions.ON
-        if not self._remote_start_status:
-            if remote_enabled:
+        self._stand_by = (
+            self._status.device_features.get(WashDeviceFeatures.STANDBY)
+            == StateOptions.ON
+        )
+        remote_start = self._status.device_features.get(WashDeviceFeatures.REMOTESTART)
+        if remote_start == StateOptions.ON:
+            if self._remote_start_status is None:
                 self._remote_start_status = res
-        elif not remote_enabled:
+        else:
             self._remote_start_status = None
 
     async def poll(self) -> WMStatus | None:
@@ -275,6 +335,7 @@ class WMDevice(Device):
 
         res = await self._device_poll(WM_ROOT_DATA)
         if not res:
+            self._stand_by = False
             return None
 
         self._status = WMStatus(self, res)

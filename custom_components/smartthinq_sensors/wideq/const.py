@@ -5,7 +5,7 @@ from .core_enum import StrEnum
 # default core settings
 DEFAULT_COUNTRY = "US"
 DEFAULT_LANGUAGE = "en-US"
-DEFAULT_TIMEOUT = 10  # seconds
+DEFAULT_TIMEOUT = 15  # seconds
 
 # bit status
 BIT_OFF = "OFF"
@@ -116,6 +116,7 @@ class WashDeviceFeatures(StrEnum):
     DAMPDRYBEEP = "damp_dry_beep"
     DELAYSTART = "delay_start"
     DETERGENT = "detergent"
+    DETERGENTLOW = "detergent_low"
     DOORCLOSE = "door_close"
     DOORLOCK = "door_lock"
     DOOROPEN = "door_open"
@@ -141,6 +142,7 @@ class WashDeviceFeatures(StrEnum):
     SALTREFILL = "salt_refill"
     SELFCLEAN = "self_clean"
     SOFTENER = "softener"
+    SOFTENERLOW = "softener_low"
     SPINSPEED = "spin_speed"
     STANDBY = "standby"
     STEAM = "steam"

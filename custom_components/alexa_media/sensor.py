@@ -17,7 +17,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import UnitOfTemperature, __version__ as HA_VERSION
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady, NoEntitySpecifiedError
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.event import async_track_point_in_utc_time
@@ -64,7 +64,13 @@ async def async_setup_platform(hass, config, add_devices_callback, discovery_inf
         "Timer": TimerSensor,
         "Reminder": ReminderSensor,
     }
-    account = config[CONF_EMAIL] if config else discovery_info["config"][CONF_EMAIL]
+    account = None
+    if config:
+        account = config.get(CONF_EMAIL)
+    if account is None and discovery_info:
+        account = discovery_info.get("config", {}).get(CONF_EMAIL)
+    if account is None:
+        raise ConfigEntryNotReady
     include_filter = config.get(CONF_INCLUDE_DEVICES, [])
     exclude_filter = config.get(CONF_EXCLUDE_DEVICES, [])
     account_dict = hass.data[DATA_ALEXAMEDIA]["accounts"][account]
@@ -625,6 +631,11 @@ class AlexaMediaNotificationSensor(SensorEntity):
             "dismissed": self._dismissed,
         }
         return attr
+
+    @callback
+    def exclude_attributes(hass: HomeAssistant) -> set[str]:
+        """Exclude sorted_active and sorted_all from being recorded in the database."""
+        return {"sorted_active", "sorted_all"}
 
 
 class AlarmSensor(AlexaMediaNotificationSensor):

@@ -42,7 +42,7 @@ from .coordinator import TpLinkDecoClient
 from .coordinator import TplinkDecoClientUpdateCoordinator
 from .coordinator import TplinkDecoUpdateCoordinator
 
-_LOGGER: logging.Logger = logging.getLogger(__package__)
+_LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -69,6 +69,7 @@ def _async_setup_decos(hass, async_add_entities, coordinator):
             if mac in tracked_decos:
                 continue
 
+            _LOGGER.debug("add_untracked_decos: Adding deco mac=%s", deco.mac)
             new_entities.append(TplinkDecoDeviceTracker(coordinator, deco))
             tracked_decos.add(mac)
 
@@ -95,6 +96,7 @@ def _async_setup_clients(
             if mac in tracked_clients:
                 continue
 
+            _LOGGER.debug("add_untracked_clients: Adding client mac=%s", client.mac)
             new_entities.append(
                 TplinkDecoClientDeviceTracker(
                     coordinator_decos, coordinator_clients, client
@@ -124,7 +126,7 @@ def create_device_info(deco: TpLinkDeco, master_deco: TpLinkDeco) -> DeviceInfo:
         sw_version=deco.sw_version,
         hw_version=deco.hw_version,
     )
-    if deco != master_deco:
+    if master_deco is not None and deco != master_deco:
         device_info[ATTR_VIA_DEVICE] = (DOMAIN, master_deco.mac)
 
     return device_info

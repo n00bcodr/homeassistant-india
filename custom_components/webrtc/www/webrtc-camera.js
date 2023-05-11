@@ -1,5 +1,5 @@
 /** Chrome 63+, Safari 11.1+ */
-import {VideoRTC} from "./video-rtc.js";
+import {VideoRTC} from "./video-rtc.js?v3.0.1";
 
 class WebRTCCamera extends VideoRTC {
     /**
@@ -113,7 +113,7 @@ class WebRTCCamera extends VideoRTC {
                 case 'mse':
                 case 'mp4':
                 case 'mjpeg':
-                    this.setStatus(msg.type.toUpperCase());
+                    this.setStatus(msg.type.toUpperCase(), this.config.title || '');
                     break;
             }
         }
@@ -125,12 +125,13 @@ class WebRTCCamera extends VideoRTC {
         super.onpcvideo(ev);
 
         if (this.pcState !== WebSocket.CLOSED) {
-            this.setStatus('RTC');
+            this.setStatus('RTC', this.config.title || '');
         }
     }
 
     renderMain() {
-        this.innerHTML = `
+        const shadow = this.attachShadow({mode: 'open'});
+        shadow.innerHTML = `
         <style>
             ha-card {
                 width: 100%;
@@ -170,6 +171,8 @@ class WebRTCCamera extends VideoRTC {
             </div>
         </ha-card>
         `;
+
+        this.querySelector = selectors => this.shadowRoot.querySelector(selectors);
 
         this.querySelector(".player").appendChild(this.video);
 

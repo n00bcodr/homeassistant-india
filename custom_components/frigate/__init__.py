@@ -210,6 +210,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     for item in get_cameras_and_zones(config):
         current_devices.add(get_frigate_device_identifier(entry, item))
 
+    if config.get("birdseye", {}).get("restream", False):
+        current_devices.add(get_frigate_device_identifier(entry, "birdseye"))
+
     device_registry = dr.async_get(hass)
     for device_entry in dr.async_entries_for_config_entry(
         device_registry, entry.entry_id
@@ -274,7 +277,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 name=new_name,
             )
 
-    hass.config_entries.async_setup_platforms(entry, PLATFORMS)
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
 
     return True
