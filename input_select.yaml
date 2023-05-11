@@ -1,22 +1,3 @@
-youtube_music_player_source:
-  name: Source
-  icon: mdi:music-box-multiple
-  options: # don't change
-    - "Playlist Radio"
-    - "Playlist"
-
-youtube_music_player_speakers:
-  name: Speakers
-  icon: mdi:speaker
-  options: # don't change
-    - "loading"
-
-youtube_music_player_playlist:
-  name: Playlist
-  icon: mdi:playlist-music
-  options: # don't change
-    - "loading"
-
 room_select:
   name: "Room Select"
   options:

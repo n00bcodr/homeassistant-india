@@ -7,8 +7,6 @@ homeassistant:
 browser:
 logger:
   default: critical
-  logs:
-    homeassistant.config_entries: debug
 
 ffmpeg:
 python_script:
@@ -42,10 +40,11 @@ frontend:
   themes: !include_dir_merge_named themes
   extra_module_url:
     - /local/card-mod.js
+    - /local/custom-sidebar.js
 
 monitor_docker:
   - name: Docker
-    url: tcp://192.168.0.168:2375
+    url: tcp://192.168.68.168:2375
     switchname: "Docker {name}"
     containers:
       - plex
@@ -77,17 +76,6 @@ recorder:
     entity_globs:
       - sensor.weather_*
       - sensor.time_date
-
-smartir:
-
-climate:
-  - platform: smartir
-    name: Den AC
-    unique_id: den_ac
-    device_code: 99999
-    controller_data: remote.rm4_remote
-    temperature_sensor: sensor.den_temperature
-    humidity_sensor: sensor.den_humidity
 
 shell_command:
   lovelace_default_convert: python /config/tools/lovelace_default_convert.py

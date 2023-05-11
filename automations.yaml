@@ -398,33 +398,6 @@
     data: {}
   mode: single
   max: 10
-- id: homeassistant_update_notification
-  alias: ⚙️HomeAssistant Update notification
-  trigger:
-  - platform: state
-    entity_id:
-    - update.home_assistant_core_update
-    from: 'off'
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
-  condition: []
-  action:
-  - service: notify.mobile_app_10pro
-    data:
-      message: Home Assistant {{states.update.home_assistant_core_update.attributes.latest_version}}
-        is available.
-      title: "\U0001F195 Update Available!"
-      data:
-        notification_icon: mdi:package-up
-        subject: "You are running {{states.update.home_assistant_core_update.attributes.installed_version
-          }}, the latest\n    version is {{ states.update.home_assistant_core_update.attributes.latest_version
-          }}."
-        clickAction: /config/dashboard
-        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/partying-face_1f973.png
-  mode: single
 - id: fill_the_tank
   alias: "\U0001F4A7Fill the tank"
   description: ''
@@ -481,11 +454,11 @@
   - platform: mqtt
     topic: frigate/events
   action:
-  - service: notify.mobile_app_10pro
+  - service: notify.mobile_app_oneplus10pro
     data_template:
       message: A {{trigger.payload_json["after"]["label"]}} was detected at {{trigger.payload_json["after"]["camera"]}}.
       data:
-        image: http://192.168.0.168:8123/api/frigate/notifications/{{trigger.payload_json["after"]["id"]}}/thumbnail.jpg?format=android
+        image: http://192.168.68.168:8123/api/frigate/notifications/{{trigger.payload_json["after"]["id"]}}/thumbnail.jpg?format=android
         tag: '{{trigger.payload_json["after"]["id"]}}'
         when: '{{trigger.payload_json["after"]["start_time"]|int}}'
   - delay:
@@ -663,7 +636,7 @@
     entity_id: switch.upstairs_tv_socket_1
     state: 'off'
   action:
-  - service: notify.mobile_app_10pro
+  - service: notify.mobile_app_oneplus10pro
     data:
       title: Stop Playing?
       message: Chromecast is Playing but TV is off
@@ -699,39 +672,6 @@
   - service: shell_command.lovelace_wallmount_convert
     data: {}
   mode: single
-- id: '1655137751596'
-  alias: ⚙️Tag Github with version when core updated
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition:
-  - condition: template
-    value_template: '{{states.sensor.current_version.state > states.sensor.n00bcodr_homeassistant_latest_tag.state}}'
-  action:
-  - service: notify.mobile_app_10pro
-    data:
-      message: Update tag in GitHub?
-      title: Home Assistant Core Updated!
-      data:
-        notification_icon: mdi:git
-        icon_url: https://github.com/home-assistant/assets/blob/master/logo/logo-small.png?raw=true
-        color: red
-        actions:
-        - action: tag_update
-          title: Update!
-        - action: URI
-          title: Open Repo
-          uri: https://github.com/n00bcodr/homeassistant
-  - wait_for_trigger:
-    - platform: event
-      event_type: mobile_app_notification_action
-      event_data:
-        action: tag_update
-    continue_on_timeout: false
-  - service: shell_command.git_core_update_push
-    data: {}
-  mode: single
 - id: '1659929141343'
   alias: "\U0001F4A7Turn Motor Off when tank full "
   description: Turns both motors off if the tank becomes full
@@ -756,28 +696,6 @@
       entity_id:
       - switch.downstairs_motor_switch_1
       - switch.upstairs_motor
-  mode: single
-- id: '1662572670594'
-  alias: ⚙️Front Yard Motion - PIP Video
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.front_yard_camera_motion
-    to: 'on'
-    from: 'off'
-  condition:
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: media_player.sony_tv
-      state: 'off'
-  - condition: state
-    entity_id: binary_sensor.front_yard_camera_person_occupancy
-    state: 'on'
-  action:
-  - service: script.display_frontyard_pip_popup_on_tv
-    data: {}
   mode: single
 - id: '1663912645183'
   alias: Nest Hub Max - Notifications
@@ -807,7 +725,7 @@
       - condition: trigger
         id: motion
       sequence:
-      - service: notify.mobile_app_10pro
+      - service: notify.mobile_app_oneplus10pro
         data:
           message: Living Room Motion
           title: Living Room Motion
@@ -818,7 +736,7 @@
       - condition: trigger
         id: person
       sequence:
-      - service: notify.mobile_app_10pro
+      - service: notify.mobile_app_oneplus10pro
         data:
           message: Living Room Person
           title: Living Room Person
@@ -829,7 +747,7 @@
       - condition: trigger
         id: sound
       sequence:
-      - service: notify.mobile_app_10pro
+      - service: notify.mobile_app_oneplus10pro
         data:
           message: Living Room Sound
           title: Living Room Sound

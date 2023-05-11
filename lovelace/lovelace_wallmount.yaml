@@ -923,7 +923,7 @@ views:
                   show_live_stream: true
                   size: 100%
                   type: custom:button-card
-                - entity: camera.hall_camera_2_hd
+                - entity: camera.hall_camera_2_hd_stream
                   name: Hall Camera 2
                   show_live_stream: true
                   size: 100%
@@ -2245,31 +2245,31 @@ views:
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_1_motion
-    - entity: button.hall_camera_move_left
+    - entity: button.hall_camera_1_move_left
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_left
-    - entity: button.hall_camera_move_up
+          entity_id: button.hall_camera_1_move_left
+    - entity: button.hall_camera_1_move_up
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_up
-    - entity: button.hall_camera_move_down
+          entity_id: button.hall_camera_1_move_up
+    - entity: button.hall_camera_1_move_down
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_down
-    - entity: button.hall_camera_move_right
+          entity_id: button.hall_camera_1_move_down
+    - entity: button.hall_camera_1_move_right
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_right
-    - entity: camera.hall_camera_1_hd
+          entity_id: button.hall_camera_1_move_right
+    - entity: camera.hall_camera_1_hd_stream
       icon: mdi:numeric-1-box
       name: Preset 1
       show_icon: true
@@ -2279,8 +2279,8 @@ views:
         service_data:
           option: Marked Position 1
         target:
-          entity_id: select.hall_camera_move_to_preset
-    - entity: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_1_move_to_preset
+    - entity: camera.hall_camera_1_hd_stream
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
@@ -2290,7 +2290,7 @@ views:
         service_data:
           option: Marked Position 2
         target:
-          entity_id: select.hall_camera_move_to_preset
+          entity_id: select.hall_camera_1_move_to_preset
     title: Hall Camera 1
     type: picture-glance
   - camera_image: camera.secondfloor
@@ -2299,7 +2299,7 @@ views:
     - entity: binary_sensor.secondfloor_motion
     title: Second Floor Camera
     type: picture-glance
-  - camera_image: camera.hall_camera_2_hd
+  - camera_image: camera.hall_camera_2_hd_stream
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_2_motion

@@ -166,13 +166,6 @@ views:
     tap_action:
       action: call-service
       service: script.cctv
-  - entity: script.good_night
-    icon: mdi:sleep
-    name: Good Night
-    style: ":host {\n  --label-badge-red: grey }\n"
-    tap_action:
-      action: call-service
-      service: script.good_night
   cards:
   - card:
       buttons:
@@ -276,30 +269,27 @@ views:
       use_light_color: true
     - entity: switch.wall_fan
       icon_animation: true
-      icon_color: indigo
       layout: horizontal
       show_percentage_control: false
       type: custom:mushroom-fan-card
     - entity: fan.mi_air_purifier
-      icon_color: purple
       layout: horizontal
+      name: Air Purifier
       show_percentage_control: true
       type: custom:mushroom-fan-card
-    - cards:
-      - entity: switch.downstairs_geyser
-        fill_container: false
-        icon_color: deep-orange
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      - entities:
-        - entity: sensor.downstairs_geyser_power
-          icon: hide
-          name: ' '
-          state_color: true
-        type: entities
-      mode: horizontal
-      type: custom:stack-in-card
+    - badge_color: ''
+      badge_icon: ''
+      entity: switch.downstairs_geyser
+      icon: '{{ iif(is_state(''switch.downstairs_geyser'', ''on''), ''mdi:water-boiler'',
+        ''mdi:water-boiler-off'')}}'
+      icon_color: '{{ iif(is_state(''switch.downstairs_geyser'', ''on''), ''red'',
+        ''disabled'')}}'
+      primary: Geyser
+      secondary: '{{ iif(is_state(''switch.downstairs_geyser'', ''on''), (states.sensor.downstairs_geyser_power.state
+        + " W"), ''Off'')}}'
+      tap_action:
+        action: toggle
+      type: custom:mushroom-template-card
     - entity: switch.sonoff_1000f38ea4
       icon_color: blue
       tap_action:
@@ -327,8 +317,13 @@ views:
       tap_action:
         action: more-info
       type: custom:mushroom-climate-card
-    mode: vertical
-    type: custom:stack-in-card
+    - entity: switch.refrigerator_ice_plus
+      icon_color: blue
+      name: Ice Plus
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
+    type: vertical-stack
   - cards:
     - artwork: full-cover
       entity: media_player.sony_tv
@@ -1114,7 +1109,6 @@ views:
     type: custom:stack-in-card
   icon: mdi:sofa
   path: living-room
-  theme: Backend-selected
   title: Living Room
 - badges:
   - entity: binary_sensor.hall_motion
@@ -1155,19 +1149,6 @@ views:
       columns: 2
       square: false
       type: grid
-    - cards:
-      - entity: light.rgb_1
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: light.rgb_2
-        type: custom:mushroom-light-card
-        use_light_color: true
-      - entity: light.rgb_3
-        type: custom:mushroom-light-card
-        use_light_color: true
-      columns: 3
-      square: false
-      type: grid
     - entity: switch.upstairs_tv_socket_1
       icon: mdi:television
       name: TV
@@ -1197,33 +1178,6 @@ views:
       - volume_set
       - volume_buttons
     type: vertical-stack
-  - cards:
-    - entities:
-      - entity: switch.washing_machine_socket_1
-        icon: mdi:washing-machine
-      show_header_toggle: false
-      state_color: true
-      type: entities
-    - aggregate_func: min
-      entities:
-      - color: green
-        entity: sensor.washing_machine_power
-        name: Power
-      - color: magenta
-        entity: sensor.washing_machine_current
-        name: Current
-      - color: Black
-        entity: sensor.washing_machine_voltage
-        name: Voltage
-      hours_to_show: 6
-      icon: mdi:washing-machine
-      line_width: 2
-      name: Second Floor Washing Machine
-      points_per_hour: 10
-      smoothing: false
-      type: custom:mini-graph-card
-      update_interval: 1
-    type: custom:stack-in-card
   - cards:
     - entity: media_player.lg_tv
       group: true
@@ -1257,6 +1211,11 @@ views:
       title: Remote
       type: custom:collapsable-cards
     type: custom:stack-in-card
+  icon: ''
+  path: hall
+  title: Hall
+- badges: []
+  cards:
   - cards:
     - entities:
       - entity: switch.washing_machine_1_socket_1
@@ -1284,10 +1243,36 @@ views:
       type: custom:mini-graph-card
       update_interval: 1
     type: custom:stack-in-card
-  icon: ''
-  path: hall
-  theme: Backend-selected
-  title: Hall
+  - cards:
+    - entities:
+      - entity: switch.washing_machine_socket_1
+        icon: mdi:washing-machine
+      show_header_toggle: false
+      state_color: true
+      type: entities
+    - aggregate_func: min
+      entities:
+      - color: green
+        entity: sensor.washing_machine_power
+        name: Power
+      - color: magenta
+        entity: sensor.washing_machine_current
+        name: Current
+      - color: Black
+        entity: sensor.washing_machine_voltage
+        name: Voltage
+      hours_to_show: 6
+      icon: mdi:washing-machine
+      line_width: 2
+      name: Second Floor Washing Machine
+      points_per_hour: 10
+      smoothing: false
+      type: custom:mini-graph-card
+      update_interval: 1
+    type: custom:stack-in-card
+  icon: mdi:washing-machine
+  path: washing
+  title: washing
 - badges: []
   cards:
   - cards:
@@ -1384,31 +1369,31 @@ views:
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_1_motion
-    - entity: button.hall_camera_move_left
+    - entity: button.hall_camera_1_move_left
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_left
-    - entity: button.hall_camera_move_up
+          entity_id: button.hall_camera_1_move_left
+    - entity: button.hall_camera_1_move_up
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_up
-    - entity: button.hall_camera_move_down
+          entity_id: button.hall_camera_1_move_up
+    - entity: button.hall_camera_1_move_down
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_down
-    - entity: button.hall_camera_move_right
+          entity_id: button.hall_camera_1_move_down
+    - entity: button.hall_camera_1_move_right
       tap_action:
         action: call-service
         service: button.press
         target:
-          entity_id: button.hall_camera_move_right
-    - entity: camera.hall_camera_1_hd
+          entity_id: button.hall_camera_1_move_right
+    - entity: camera.hall_camera_1_hd_stream
       icon: mdi:numeric-1-box
       name: Preset 1
       show_icon: true
@@ -1418,8 +1403,8 @@ views:
         service_data:
           option: Marked Position 1
         target:
-          entity_id: select.hall_camera_move_to_preset
-    - entity: camera.hall_camera_1_hd
+          entity_id: select.hall_camera_1_move_to_preset
+    - entity: camera.hall_camera_1_hd_stream
       icon: mdi:numeric-2-box
       name: Preset 2
       show_icon: true
@@ -1429,10 +1414,10 @@ views:
         service_data:
           option: Marked Position 2
         target:
-          entity_id: select.hall_camera_move_to_preset
+          entity_id: select.hall_camera_1_move_to_preset
     title: Hall Camera 1
     type: picture-glance
-  - camera_image: camera.hall_camera_2_hd
+  - camera_image: camera.hall_camera_2_hd_stream
     camera_view: live
     entities:
     - entity: binary_sensor.hall_camera_2_motion
@@ -1612,318 +1597,150 @@ views:
   layout:
     max_cols: 2
   path: motors
-  theme: Backend-selected
   title: Motors
 - badges: []
   cards:
-  - card:
-      show_header_toggle: false
-      state_color: true
-      type: entities
-    filter:
-      exclude:
-      - state: unavailable
-      - state: 'off'
-      - state: standby
-      - state: unknown
-      - entity_id: '*browser*'
-      - entity_id: '*plex*'
-      include:
-      - domain: media_player
-    show_empty: false
-    sort:
-      method: last_changed
-      reverse: true
-    type: custom:auto-entities
   - cards:
-    - aspect_ratio: 21/2
-      name: Refresh Libraries
+    - custom_fields:
+        item:
+          card:
+            cards:
+            - entity: sensor.processor_use_percent
+              icon_color: '#01C852'
+              name: CPU
+              primary_info: state
+              secondary_info: name
+              type: custom:mushroom-entity-card
+            - entity: sensor.memory_use_percent
+              icon_color: '#E91E63'
+              name: RAM
+              primary_info: state
+              secondary_info: name
+              type: custom:mushroom-entity-card
+            - entity: sensor.disk_use_percent
+              icon_color: '#FF9101'
+              name: Disk
+              primary_info: state
+              secondary_info: name
+              type: custom:mushroom-entity-card
+            mode: vertical
+            type: custom:stack-in-card
+        radial:
+          card:
+            apex_config:
+              legend:
+                show: false
+              title:
+                align: top
+                floating: true
+            chart_type: radialBar
+            header:
+              show: false
+            series:
+            - color: '#01C852'
+              entity: sensor.processor_use_percent
+            - color: '#E91E63'
+              entity: sensor.memory_use_percent
+            - color: '#FF9101'
+              entity: sensor.disk_use_percent
+            type: custom:apexcharts-card
+      styles:
+        card:
+        - border: none
+        grid:
+        - grid-template-areas: '''item radial'''
+        - grid-template-columns: 30% 75%
+        - grid-template-rows: 220px
       type: custom:button-card
     - cards:
-      - aspect_ratio: 1/1
-        entity_picture: /local/icons/movie.png
-        show_entity_picture: true
-        size: 60%
-        tap_action:
-          action: call-service
-          service: plex.refresh_library
-          service_data:
-            library_name: Movies
-            server_name: Plex Server
-        type: custom:button-card
-      - aspect_ratio: 1/1
-        entity_picture: /local/icons/music.png
-        show_entity_picture: true
-        size: 60%
-        tap_action:
-          action: call-service
-          service: plex.refresh_library
-          service_data:
-            library_name: Music
-            server_name: Plex Server
-        type: custom:button-card
-      - aspect_ratio: 1/1
-        entity_picture: /local/icons/tvshow.png
-        show_entity_picture: true
-        size: 60%
-        tap_action:
-          action: call-service
-          service: plex.refresh_library
-          service_data:
-            library_name: TV Shows
-            server_name: Plex Server
-        type: custom:button-card
-      - aspect_ratio: 1/1
-        confirmation:
-          text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?`
-            ]]]'
-        entity: switch.docker_plex
-        icon: fab:docker
-        name: Docker
-        show_state: false
-        size: 60%
-        tap_action:
-          action: toggle
-        type: custom:button-card
-      type: horizontal-stack
-    - card:
-        type: entities
-      filter:
-        exclude:
-        - state: unavailable
-        include:
-        - name: Plex Media Server
-          type: weblink
-          url: http://homeassistant.local:32400/web/index.html#!/
-        - name: /[Pp]lex/
-      show_empty: false
-      sort:
-        ignore_case: false
-        method: domain
-        reverse: false
-      type: custom:auto-entities
-    type: vertical-stack
-  - cards:
-    - artwork: material
-      entity: media_player.youtube_music
-      hide:
-        icon_state: false
-        shuffle: false
-      name: YouTube Music
-      type: custom:mini-media-player
-    - entities:
-      - entity: input_select.youtube_music_player_playlist
-      - entity: input_select.youtube_music_player_source
-      - entity: input_select.youtube_music_player_speakers
-      title: YouTube Music
-      type: entities
+      - entity: sensor.processor_temperature
+        icon_color: red
+        name: Processor Temperature
+        primary_info: state
+        secondary_info: name
+        type: custom:mushroom-entity-card
+      - entity: sensor.server_last_boot
+        icon: mdi:clock
+        name: Last Boot
+        primary_info: state
+        secondary_info: name
+        type: custom:mushroom-entity-card
+      mode: horizontal
+      type: custom:stack-in-card
+    mode: vertical
+    title: Debian
     type: custom:stack-in-card
-  - entity: media_player.youtube_music
-    states:
-      playing:
-        content: '{% if is_state(''media_player.youtube_music'',''playing'') %}{{
-          state_attr("sensor.youtube_music_extra", "lyrics") }}{% else %}Player off{%
-          endif %}'
-        title: Lyrics
-        type: markdown
-    type: custom:state-switch
-  - entity: media_player.youtube_music
-    states:
-      playing:
-        cards:
-        - content: "\n**Media Type**: {{state_attr(\"media_player.youtube_music\"\
-            ,\"_media_type\")}} \n**Media ID**: {{state_attr(\"media_player.youtube_music\"\
-            , \"_media_id\")}}\n\n## **Current Track Info:**  \n**Artist:** {{state_attr(\"\
-            media_player.youtube_music\",\"media_artist\")}} \n**Track:** {{state_attr(\"\
-            media_player.youtube_music\",\"media_title\")}}\n**Video Link:** [{{state_attr(\"\
-            media_player.youtube_music\", \"videoId\")}}](https://www.youtube.com/watch?v={{state_attr(\"\
-            media_player.youtube_music\", \"videoId\")}})\n**Rating:** {{state_attr(\"\
-            media_player.youtube_music\",\"likeStatus\")}}\n**Playing on:** {{state_attr(\"\
-            media_player.youtube_music\",\"remote_player_id\")}}"
-          type: markdown
-        - cards:
-          - state:
-            - icon: mdi:thumb-up
-              operator: template
-              value: '[[[ return states[''media_player.youtube_music''].attributes.likeStatus
-                == "LIKE"]]]
-
-                '
-            - icon: mdi:thumb-up-outline
-              operator: template
-              value: '[[[ return states[''media_player.youtube_music''].attributes.likeStatus
-                == "INDIFFERENT"]]]
-
-                '
-            - icon: mdi:power-off
-              operator: default
-              value: false
-            tap_action:
-              action: call-service
-              service: ytube_music_player.call_method
-              service_data:
-                command: rate_track
-                entity_id: media_player.youtube_music
-                parameters: thumb_toggle_up_middle
-            type: custom:button-card
-          - content: '{% if is_state(''media_player.youtube_music'',''playing'') %}Currently
-              playing track {{ state_attr("media_player.youtube_music", "current_track")+1
-              }} of {{ state_attr("sensor.youtube_music_extra", "total_tracks") }}{%
-              else %}Player off{% endif %}     '
-            type: markdown
-          type: horizontal-stack
-        - content: "{% if is_state('media_player.youtube_music','playing') %}{% for\
-            \ i in range(0,state_attr(\"sensor.youtube_music_extra\", \"total_tracks\"\
-            )) %}\n {% if i == state_attr(\"sensor.youtube_music_extra\",\n\"current_track\"\
-            ) %}**{% endif %}\\[{{i+1}}] {{ state_attr(\"sensor.youtube_music_extra\"\
-            , \"tracks\")[i] }}{% if i == state_attr(\"media_player.youtube_music\"\
-            , \"current_track\") %} **{% endif %}\n{%- endfor %}{% else %}Player off{%\
-            \ endif %}\n    "
-          type: markdown
-        type: vertical-stack
-    type: custom:state-switch
-  icon: mdi:play-network
-  path: media
-  title: Media
-  type: custom:masonry-layout
-  visible:
-  - user: 74f7e2ffd3594037b1a2fc4de82d9fea
-- badges: []
-  cards:
-  - aspect_ratio: 4/3
-    custom_fields:
-      cpu: "[[[\n  return `<ha-icon\n    icon=\"mdi:server\"\n    style=\"width: 20px;\
-        \ height: 20px; color: deepskyblue;\">\n    </ha-icon><span> CPU: <span style=\"\
-        color: var(--text-color-sensor);\">${states['sensor.processor_use_percent'].state}%</span></span>`\n\
-        ]]]\n"
-      disk: "[[[\n  return `<ha-icon\n    icon=\"mdi:harddisk\"\n    style=\"width:\
-        \ 20px; height: 20px; color: deepskyblue;\">\n    </ha-icon><span> Disk: <span\
-        \ style=\"color: var(--text-color-sensor);\">${states['sensor.disk_use_percent'].state}%</span></span>`\n\
-        ]]]\n"
-      lastboot: "[[[\n  return `<ha-icon\n    icon=\"mdi:clock\"\n    style=\"width:\
-        \ 20px; height: 20px; color: yellow;\">\n    </ha-icon><span> Last Boot: <span\
-        \ style=\"color: var(--text-color-sensor);\">${states['sensor.server_last_boot'].state}</span></span>`\n\
-        ]]]\n"
-      ram: "[[[\n  return `<ha-icon\n    icon=\"mdi:memory\"\n    style=\"width: 20px;\
-        \ height: 20px; color: deepskyblue;\">\n    </ha-icon><span> RAM: <span style=\"\
-        color: var(--text-color-sensor);\">${states['sensor.memory_use_percent'].state}%</span></span>`\n\
-        ]]]\n"
-      temp: "[[[\n  return `<ha-icon\n    icon=\"mdi:thermometer\"\n    style=\"width:\
-        \ 20px; height: 20px; color: var(--text-color-sensor);\">\n    </ha-icon><span\
-        \ style=\"color: var(--text-color-sensor);\">${entity.state} \xB0C</span>`\n\
-        ]]]\n"
-    entity: sensor.processor_temperature
-    icon: mdi:server
-    name: Debian
+  - custom_fields:
+      item1:
+        card:
+          entity: sensor.download_speed
+          hold_action:
+            action: call-service
+            service: homeassistant.update_entity
+            service_data:
+              entity_id: sensor.speedtest_download
+          icon_color: orange
+          name: Download
+          primary_info: state
+          secondary_info: name
+          type: custom:mushroom-entity-card
+      item2:
+        card:
+          entity: sensor.upload_speed
+          hold_action:
+            action: call-service
+            service: homeassistant.update_entity
+            service_data:
+              entity_id: sensor.speedtest_download
+          icon_color: blue
+          name: Upload
+          primary_info: state
+          secondary_info: name
+          type: custom:mushroom-entity-card
+      item3:
+        card:
+          entity: sensor.speedtest_ping
+          icon_color: green
+          name: Ping
+          primary_info: state
+          secondary_info: name
+          type: custom:mushroom-entity-card
+      line:
+        card:
+          apex_config:
+            chart:
+              height: 250px
+            legend:
+              show: false
+            title:
+              align: top
+          chart_type: line
+          graph_span: 3h
+          header:
+            show: false
+          layout: minimal
+          series:
+          - color: orange
+            curve: smooth
+            entity: sensor.download_speed
+            fill_raw: last
+            float_precision: 1
+            stroke_width: 2
+          - color: skyblue
+            curve: smooth
+            entity: sensor.upload_speed
+            fill_raw: last
+            float_precision: 1
+            stroke_width: 2
+          type: custom:apexcharts-card
     styles:
       card:
-      - background-color: '#000000'
-      - border-radius: 10%
-      - padding: 10%
-      - color: ivory
-      - font-size: 18px
-      - text-shadow: 0px 0px 5px black
-      - text-transform: capitalize
-      custom_fields:
-        cpu:
-        - padding-bottom: 2px
-        - align-self: middle
-        - justify-self: start
-        - --text-color-sensor: '[[[ if (states["sensor.processor_use_percent"].state
-            > 80) return "red"; ]]]'
-        disk:
-        - align-self: middle
-        - justify-self: start
-        - --text-color-sensor: '[[[ if (states["sensor.disk_use_percent"].state >
-            80) return "red"; ]]]'
-        lastboot:
-        - align-self: start
-        - justify-self: end
-        - font_size: 25px
-        ram:
-        - padding-bottom: 2px
-        - align-self: middle
-        - justify-self: start
-        - --text-color-sensor: '[[[ if (states["sensor.memory_use_percent"].state
-            > 80) return "red"; ]]]'
-        temp:
-        - align-self: start
-        - justify-self: end
-        - font_size: 25px
-        - --text-color-sensor: '[[[ if (states["sensor.processor_temperature"].state
-            > 80) return "red"; ]]]'
+      - border: none
       grid:
-      - grid-template-areas: '"i temp" "i lastboot" "n n" "cpu cpu" "ram ram" "disk
-          disk"'
-      - grid-template-columns: 1fr 1fr
-      - grid-template-rows: 1fr 5fr min-content min-content min-content
-      icon:
-      - color: "[[[\n  if (entity.state < 60) return 'lime';\n  if (entity.state >=\
-          \ 60 && entity.state < 80) return 'orange';\n  else return 'red';\n]]]\n"
-      - width: 60%
-      - margin-top: -10%
-      img_cell:
-      - justify-content: start
-      - align-items: start
-      - margin: none
-      name:
-      - font-weight: bold
-      - font-size: 18px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-      - padding-bottom: 4px
+      - grid-template-areas: '''item1 line'' ''item2 line'' ''item3 line'''
+      - grid-template-columns: 33% 65%
+      - grid-template-rows: 1fr 1fr 1fr
     type: custom:button-card
-  - cards:
-    - entity: sensor.download_speed
-      max: 150
-      min: 0
-      needle: false
-      type: gauge
-    - entity: sensor.upload_speed
-      max: 150
-      min: 0
-      needle: false
-      type: gauge
-    mode: horizontal
-    title: SpeedTest
-    type: custom:stack-in-card
-  - entities:
-    - entity: sensor.count_automations
-      icon: mdi:robot
-      name: '# Automations'
-    - entity: sensor.count_scripts
-      icon: mdi:script
-      name: '# Scripts'
-    - entity: sensor.count_scenes
-      icon: mdi:palette-outline
-      name: '# Scenes'
-    - entity: sensor.count_sensors
-      icon: ''
-      name: '# Sensors'
-    - entity: sensor.count_binary_sensors
-      name: '# Binary Sensors'
-    - entity: sensor.count_device_trackers
-      icon: mdi:lan-connect
-      name: '# Device Trackers'
-    - entity: sensor.count_input_booleans
-      name: '# Input Booleans'
-    - entity: sensor.count_switches
-      icon: mdi:light-switch
-      name: '# Switches'
-    - entity: sensor.count_lights
-      icon: mdi:lightbulb
-      name: '# Lights'
-    - entity: sensor.count_fans
-      icon: mdi:fan
-      name: '# Fans'
-    - entity: sensor.count_media_players
-      icon: mdi:cast
-      name: '# Media Players'
-    - entity: sensor.count_zones
-      icon: mdi:map-clock
-      name: '# Zones'
-    type: entities
   - cards:
     - entity: sensor.database_size
       icon_color: blue-grey
@@ -2013,11 +1830,6 @@ views:
           tap_action:
             action: call-service
             service: shell_command.git_hacs_update
-        - icon: mdi:git
-          name: Git Status
-          tap_action:
-            action: call-service
-            service: shell_command.git_status
         type: custom:paper-buttons-row
       icon: fab:github
       title: Git
@@ -2034,7 +1846,6 @@ views:
     type: conditional
   icon: mdi:server-network
   path: system_monitor
-  theme: Backend-selected
   title: System Monitor
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
@@ -2101,7 +1912,7 @@ views:
     - charging_state:
         entity_id: binary_sensor.lenovo_tab_is_charging
         state: 'on'
-      entity: sensor.lenovo_tab_m10_hd_battery_level
+      entity: sensor.lenovo_tab_battery_level
       name: Lenovo Tab
       tap_action: more-info
     title: Battery Status
@@ -2137,7 +1948,7 @@ views:
         align_state: center
         decimals: 1
         entities:
-        - sensor.den_humidity
+        - sensor.rm4_humidity
         font_size: 70
         hours_to_show: 6
         line_color: skyblue
@@ -2158,7 +1969,7 @@ views:
           value: 30
         decimals: 1
         entities:
-        - sensor.den_temperature
+        - sensor.rm4_temperature
         font_size: 70
         hours_to_show: 8
         line_color: '#e74c3c'
@@ -2168,7 +1979,7 @@ views:
           name: false
         type: custom:mini-graph-card
         update_interval: 10
-      title: Den
+      title: Living Room
       type: horizontal-stack
     mode: vertical
     type: custom:stack-in-card
@@ -2358,7 +2169,6 @@ views:
     type: custom:auto-entities
   icon: mdi:home-analytics
   path: network
-  theme: ''
   title: Network and Devices
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
