@@ -1,6 +1,8 @@
 default_config:
 
 homeassistant:
+  external_url: !secret external_url
+  internal_url: "http://192.168.68.168:8123"
   allowlist_external_dirs:
     - /config/.storage
     - /config/
@@ -35,12 +37,12 @@ sensor: !include sensor.yaml
 notify: !include notify.yaml
 rest_command: !include rest_commands.yaml
 template: !include template.yaml
+command_line: !include command_line.yaml
 
 frontend:
   themes: !include_dir_merge_named themes
   extra_module_url:
     - /local/card-mod.js
-    - /local/custom-sidebar.js
 
 monitor_docker:
   - name: Docker
@@ -84,3 +86,5 @@ shell_command:
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
   git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
   git_hacs_update: bash /config/tools/hacs_updates_push.sh
+  apt_upgrade: !secret apt_upgrade #bash /config/tools/apt_upgrade.sh "##password##"
+  reboot_server: !secret reboot_server #bash /config/tools/reboot_server.sh '##password##'

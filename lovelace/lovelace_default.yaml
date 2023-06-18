@@ -317,12 +317,6 @@ views:
       tap_action:
         action: more-info
       type: custom:mushroom-climate-card
-    - entity: switch.refrigerator_ice_plus
-      icon_color: blue
-      name: Ice Plus
-      tap_action:
-        action: toggle
-      type: custom:mushroom-entity-card
     type: vertical-stack
   - cards:
     - artwork: full-cover
@@ -575,7 +569,7 @@ views:
           - card_type: horizontal-stack
             cards:
             - color: red
-              entity: remote.sony_bravia_tv
+              entity: media_player.sony_bravia_tv
               icon: mdi:power
               name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
               styles:
@@ -585,10 +579,9 @@ views:
 
                     '
               tap_action:
-                service: remote.send_command
+                service: remote.toggle
                 service_data:
-                  command: TvPower
-                  entity_id: remote.sony_bravia_tv
+                  entity_id: remote.tv
               template: menu_button
               type: custom:button-card
             - template: blank_button
@@ -1353,18 +1346,6 @@ views:
   title: Front Yard
 - badges: []
   cards:
-  - default: default
-    entity: user
-    states:
-      Pavan Thanuj Upadrasta:
-        camera_image: camera.priyadarshini
-        camera_view: live
-        entities: []
-        tap_action:
-          action: more-info
-        title: Family Room
-        type: picture-glance
-    type: custom:state-switch
   - camera_image: camera.hall_camera
     camera_view: live
     entities:
@@ -1785,6 +1766,15 @@ views:
       secondary_info: name
       type: custom:mushroom-entity-card
     type: vertical-stack
+  - card:
+      content: Snapshots are stale! Please visit the "Home Assistant Google Drive
+        Backup" add-on status page for details.
+      title: Stale Snapshots!
+      type: markdown
+    conditions:
+    - entity: binary_sensor.backups_stale
+      state: 'on'
+    type: conditional
   - cards:
     - entities:
       - icon: fab:git
@@ -1835,15 +1825,6 @@ views:
       title: Git
       type: entities
     type: vertical-stack
-  - card:
-      content: Snapshots are stale! Please visit the "Home Assistant Google Drive
-        Backup" add-on status page for details.
-      title: Stale Snapshots!
-      type: markdown
-    conditions:
-    - entity: binary_sensor.backups_stale
-      state: 'on'
-    type: conditional
   icon: mdi:server-network
   path: system_monitor
   title: System Monitor

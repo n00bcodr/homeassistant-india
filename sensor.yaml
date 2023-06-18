@@ -7,8 +7,6 @@
 
 - platform: template
   sensors:
-    formula_1: !include formula1.yaml
-
     motor_state:
       friendly_name: "Motor State"
       value_template: >
@@ -49,14 +47,14 @@
 
     #----- Speedtest Download
     download_speed:
-      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_download') | float) ) + 50 }}"
+      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_download') | float) )}}"
       friendly_name: "Download Speed"
       unit_of_measurement: "Mbps"
       icon_template: "mdi:download"
 
     #----- Speedtest Upload
     upload_speed:
-      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_upload') | float) ) + 50 }}"
+      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_upload') | float) )}}"
       friendly_name: "Upload Speed"
       unit_of_measurement: "Mbps"
       icon_template: "mdi:upload"
@@ -113,22 +111,6 @@
             unknown
           {% endif %}
 
-- platform: command_line
-  name: Supervisor Updates
-  command: 'curl -sS -X GET http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"update_available":.data.update_available,"addons":[.data.addons[] | select(.update_available)]}'''
-  value_template: "{{ value_json.addons | length }}"
-  unit_of_measurement: "pending update(s)"
-  json_attributes:
-    - update_available
-    - newest_version
-    - current_version
-    - addons
-
-- platform: command_line
-  name: Shopping List
-  unique_id: shopping_list
-  command: python3 /config/tools/shopping_list.py
-
 - platform: systemmonitor
   resources:
     - type: disk_use_percent
@@ -142,9 +124,3 @@
     - type: processor_use
     - type: last_boot
 
-- platform: ics
-  name: Formula1
-  url: https://f1calendar.com/download/f1-calendar_q_gp_alarm-30.ics?t=1645890313291
-  id: 1
-  timeformat: "%A, %-d.%b.%y"
-  icon: mdi:keyboard-f1

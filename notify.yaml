@@ -2,5 +2,5 @@
   platform: group
   services:
     - service: mobile_app_murthy_nord2
-    - service: mobile_app_kameswari_nord
+    - service: mobile_app_nord2
     - service: mobile_app_lenovo_tab
