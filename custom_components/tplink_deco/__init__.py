@@ -22,22 +22,26 @@ from homeassistant.const import ATTR_DEVICE_ID
 from homeassistant.const import CONF_HOST
 from homeassistant.const import CONF_PASSWORD
 from homeassistant.const import CONF_USERNAME
-from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.core import ServiceCall
 from homeassistant.helpers import device_registry
 from homeassistant.helpers import entity_registry
+from homeassistant.helpers import restore_state
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.restore_state import RestoreStateData
 
 from .api import TplinkDecoApi
 from .const import ATTR_DEVICE_TYPE
+from .const import CONF_CLIENT_POSTFIX
+from .const import CONF_CLIENT_PREFIX
+from .const import CONF_DECO_POSTFIX
+from .const import CONF_DECO_PREFIX
 from .const import CONF_TIMEOUT_ERROR_RETRIES
 from .const import CONF_TIMEOUT_SECONDS
 from .const import CONF_VERIFY_SSL
 from .const import COORDINATOR_CLIENTS_KEY
 from .const import COORDINATOR_DECOS_KEY
 from .const import DEFAULT_CONSIDER_HOME
+from .const import DEFAULT_DECO_POSTFIX
 from .const import DEFAULT_SCAN_INTERVAL
 from .const import DEFAULT_TIMEOUT_ERROR_RETRIES
 from .const import DEFAULT_TIMEOUT_SECONDS
@@ -118,7 +122,7 @@ async def async_create_config_data(hass: HomeAssistant, config_entry: ConfigEntr
 
     # Populate client list with existing entries so that we keep track of disconnected clients
     # since deco list_clients only returns connected clients.
-    last_states = (await RestoreStateData.async_get_instance(hass)).last_states
+    last_states = restore_state.async_get(hass).last_states
     for entry in existing_entries:
         if entry.domain != DEVICE_TRACKER_DOMAIN:
             continue
@@ -147,13 +151,10 @@ async def async_create_config_data(hass: HomeAssistant, config_entry: ConfigEntr
     )
 
 
-async def async_setup(hass: HomeAssistant, config: Config):
-    """Set up this integration using YAML is not supported."""
-    return True
-
-
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """Set up this integration using UI."""
+    _LOGGER.debug("async_setup_entry: Config entry %s", config_entry.entry_id)
+
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
 
@@ -195,11 +196,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     )
 
     config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
+
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
+    _LOGGER.debug("async_unload_entry: Config entry %s", config_entry.entry_id)
     data = hass.data[DOMAIN][config_entry.entry_id]
     deco_coordinator = data.get(COORDINATOR_DECOS_KEY)
     clients_coordinator = data.get(COORDINATOR_CLIENTS_KEY)
@@ -224,27 +227,14 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
 
 async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Reload config entry."""
+    _LOGGER.debug("async_reload_entry: Config entry %s", config_entry)
     await async_unload_entry(hass, config_entry)
     await async_setup_entry(hass, config_entry)
 
 
 async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Update options."""
-    if not config_entry.options or config_entry.data == config_entry.options:
-        _LOGGER.debug(
-            "update_listener: No changes in options for %s", config_entry.entry_id
-        )
-        return
-
-    _LOGGER.debug(
-        "update_listener: Updating options and reloading %s", config_entry.entry_id
-    )
-    hass.config_entries.async_update_entry(
-        entry=config_entry,
-        title=config_entry.options.get(CONF_HOST),
-        data=config_entry.options,
-        options={},
-    )
+    _LOGGER.debug("update_listener: Reloading %s", config_entry.entry_id)
     await async_reload_entry(hass, config_entry)
 
 
@@ -265,6 +255,13 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
     if config_entry.version == 3:
         config_entry.version = 4
         new[CONF_TIMEOUT_SECONDS] = DEFAULT_TIMEOUT_SECONDS
+
+    if config_entry.version == 4:
+        config_entry.version = 5
+        new[CONF_CLIENT_PREFIX] = ""
+        new[CONF_CLIENT_POSTFIX] = ""
+        new[CONF_DECO_PREFIX] = ""
+        new[CONF_DECO_POSTFIX] = DEFAULT_DECO_POSTFIX
 
     hass.config_entries.async_update_entry(config_entry, data=new)
 

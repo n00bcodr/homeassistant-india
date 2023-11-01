@@ -193,6 +193,52 @@ class LgRemoteControl extends LitElement {
               </svg>`;
     }
 
+    static get amazon() {
+        return html`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#44739e" viewBox="0 0 24 24"><path d="M20.182 5.404a4.05 4.05 0 0 0 .625.05 1.116 1.116 0 0 0 .342-.03.474.474 
+                0 0 0 .404-.306.605.605 0 0 0 .015-.276.4.4 0 0 0-.243-.334.88.88 0 0 0-.281-.064.791.791 0 0 0-.833.499 1.438 1.438 0 0 0-.102.367c-.006.088-.006.088.073.094zm-1.074-.4a1.808 1.808
+                0 0 1 1.633-1.359 2.38 2.38 0 0 1 1.057.102c.655.224 1.009.932.794 1.59a.986.986 0 0 1-.489.588 1.986 1.986 0 0 1-.66.211 3.534 3.534 0 0 1-1.207-.016 1.221 1.221 0 0 0-.146-.023.88.88 
+                0 0 0 .716.954 2.58 2.58 0 0 0 .995 0c.154-.033.302-.065.456-.102.154-.036.218.012.218.17v.392a.242.242 0 0 1-.18.26 3.082 3.082 0 0 1-.626.17 3.247 3.247 0 0 1-1.214-.01 1.663 1.663 
+                0 0 1-1.36-1.272 2.935 2.935 0 0 1 .016-1.656zm.317 6.367a2.588 2.588 0 0 1 1.012.039 1.936 1.936 0 0 1 1.41 1.635v.011h-.014v.1a.078.078 
+                0 0 0 .024.08v-.021l.007.01v.61l-.012.021v-.01c-.03.02-.02.047-.02.08V14c-.048.9-.747 1.63-1.644 1.717a2.627 2.627 0 0 1-.998-.052 1.694 1.694 
+                0 0 1-1.246-1.114 2.825 2.825 0 0 1 0-2.005c.219-.65.8-1.11 1.482-1.175zM12 3.946c0-.043.006-.086.016-.127a.156.156 0 0 1 .147-.102h.67a.19.19 
+                0 0 1 .184.147c.028.075.044.147.07.223.053 0 .086-.036.122-.057a2.743 2.743 0 0 1 .946-.398 1.962 1.962 0 0 1 .795 0c.25.054.47.202.615.413a.25.25 
+                0 0 0 .03.038v.014c.132-.079.271-.164.415-.237a2.382 2.382 0 0 1 1.203-.266 1.061 1.061 0 0 1 1.095 1.027v2.964c0 .238-.03.27-.27.27h-.647a.906.906
+                0 0 1-.126 0 .147.147 0 0 1-.128-.122.994.994 0 0 1-.01-.175V5.101a.944.944 0 0 0-.033-.293.4.4 0 0 0-.36-.294 1.861 1.861 0 0 0-.912.176.087.087 
+                0 0 0-.063.096v2.788a.774.774 0 0 1-.01.155c0 .07-.058.127-.128.127h-.81c-.197 0-.24-.047-.24-.243V5.1a1.24 1.24 0 0 0-.026-.276.4.4 0 0 0-.371-.318 1.874 1.874 
+                0 0 0-.928.18.085.085 0 0 0-.059.103v2.833c0 .195-.044.236-.239.236h-.704c-.188 0-.235-.053-.235-.232zm2.71 9.92a.178.178 0 0 0-.074-.011 2 2 
+                0 0 0 .057.324c.08.337.358.59.7.636a2.664 2.664 0 0 0 1.088-.037c.117-.026.229-.053.345-.085.154-.037.223.023.223.17v.385a.235.235 
+                0 0 1-.19.271 3.36 3.36 0 0 1-1.141.217 2.901 2.901 0 0 1-.796-.079 1.63 1.63 0 0 1-1.215-1.136 2.946 2.946 0 0 1-.02-1.776 1.848 1.848 
+                0 0 1 1.838-1.363c.268-.012.535.023.792.101.44.123.775.48.868.928a1.468 1.468 0 0 1 0 .587.983.983 0 0 1-.535.704 2.166 2.166 0 0 1-.891.23 4.15 4.15
+                0 0 1-1.055-.067zm-3.133-2.202c.027-.037.012-.075.012-.112V9.847c0-.202.037-.238.238-.238h.734c.161.006.207.044.207.208v5.586c0 .147-.049.201-.196.201h-.69a.19.19 0 0 1-.186-.146.82.82 
+                0 0 0-.057-.185c-.048.008-.069.045-.107.067a1.714 1.714 0 0 1-1.615.276 1.526 1.526 0 0 1-.917-.812 2.495 2.495 0 0 1-.266-1.13 2.999 2.999 
+                0 0 1 .187-1.225 1.66 1.66 0 0 1 .826-.945c.552-.263 1.2-.22 1.713.111a.294.294 0 0 0 .117.059zm-.797-3.817h-.733a.32.32 0 0 1-.075 0 .147.147 
+                0 0 1-.147-.137V3.893c0-.127.054-.176.18-.18a19.455 19.455 0 0 1 .828 0c.122 0 .159.037.17.158v3.67a.982.982 0 0 1-.01.176.134.134 
+                0 0 1-.128.12.456.456 0 0 1-.089 0zm-1.045-5.45a.616.616 0 0 1 .642-.586h.064a.649.649 0 0 1 .248.036.6.6 0 0 1 .411.67.587.587 0 0 1-.506.534.963.963 
+                0 0 1-.355 0 .587.587 0 0 1-.504-.66Zm-3.092 5.2V3.983c0-.244.026-.27.27-.27h.51a.211.211 0 0 1 .238.179c.037.132.07.264.1.408a.161.161 
+                0 0 0 .091-.065 3.514 3.514 0 0 1 .303-.27 1.41 1.41 0 0 1 .964-.293c.138 0 .186.048.197.18.01.18 0 .367 0 .546a.985.985 0 0 1-.012.22.147.147 
+                0 0 1-.147.146 1.812 1.812 0 0 1-.22 0 2.523 2.523 0 0 0-1.027.147c-.074.026-.074.079-.074.138v2.678a.13.13 0 0 1-.128.122.992.992 0 0 1-.132 0v.01h-.69a.784.784 
+                0 0 1-.117 0 .147.147 0 0 1-.126-.132zm.904 3.228a.604.604 0 0 1-.192 0 .998.998 0 0 1-.176-.02.6.6 0 0 1-.466-.7.587.587 0 0 1 .567-.536.473.473 0 0 1 .111 0 .638.638 
+                0 0 1 .313.054c.208.078.35.272.361.494a.624.624 0 0 1-.518.716zm.44.855v3.764a.147.147 0 0 1-.133.159h-.88a.147.147 0 0 1-.162-.128v-.026a.567.567 
+                0 0 1 0-.1v-3.67c0-.164.045-.21.21-.21h.751c.164.007.211.054.211.218zm-1.711.047-.317.844-1.067 2.774c-.01.032-.027.063-.037.095a.261.261 0 0 1-.265.175h-.702a.294.294 
+                0 0 1-.318-.218c-.133-.349-.27-.704-.403-1.055-.318-.832-.641-1.666-.96-2.504a.928.928 0 0 1-.069-.207c-.016-.105.021-.158.128-.158h.901c.128 
+                0 .185.085.218.196.058.201.117.408.18.61.217.733.43 1.479.646 2.217h.01l.096-.308.733-2.46.031-.095a.214.214 0 0 1 .213-.147h.812c.2-.003.243.054.176.245zM1.786 3.82a.377.377 
+                0 0 1 .318-.107h.488a.21.21 0 0 1 .234.18c.01.053.02.106.037.16a.022.022 0 0 0 .02.015.429.429 0 0 0 .11-.08 1.87 1.87 0 0 1 1.586-.354c.48.115.874.454 1.061.91a2.451 2.451 
+                0 0 1 .205.798h-.008c.051.444.011.893-.118 1.321a1.942 1.942 0 0 1-.55.88c-.34.306-.795.448-1.248.388A1.776 1.776 0 0 1 3 7.564c-.039.033-.022.074-.022.113v1.506c0 .329 0 .329-.334.329h-.572a.294.294 
+                0 0 1-.294-.126Zm19.37 15.225a.587.587 0 0 1-.176.2 11.64 11.64 0 0 1-1.962 1.247 15.499 15.499 0 0 1-4.152 1.406 18.226 18.226 0 0 1-2.51.27v.022h-.649v-.018c-.293-.014-.578-.026-.868-.047a15.349 15.349 
+                0 0 1-2.296-.352 15.558 15.558 0 0 1-6.885-3.59c-.185-.164-.36-.333-.54-.503a.405.405 0 0 1-.101-.146.195.195 0 0 1 .098-.256.2.2 0 0 1 .147 0 1.21 1.21 0 0 1 .138.069 20.566 20.566 
+                0 0 0 6.164 2.546 22.087 22.087 0 0 0 2.212.398 20.441 20.441 0 0 0 3.213.146 16.97 16.97 0 0 0 1.724-.146 20.908 20.908 0 0 0 3.935-.896 18.627 18.627 0 0 0 1.973-.776.44.44 0 0 1 .318-.043.33.33 
+                0 0 1 .24.398.578.578 0 0 1-.022.066zm1.028 1.488a3.547 3.547 0 0 1-.615.757.432.432 0 0 1-.17.107.123.123 0 0 1-.169-.124.608.608 0 0 1 .038-.162c.185-.496.366-.99.51-1.504a5.346 5.346 
+                0 0 0 .18-.859 1.65 1.65 0 0 0 0-.318.412.412 0 0 0-.294-.388 2.068 2.068 0 0 0-.509-.095 8.356 8.356 0 0 0-1.459.064l-.641.08c-.07 0-.132 0-.17-.065a.18.18 0 0 1 .014-.19.546.546 
+                0 0 1 .162-.148 3.67 3.67 0 0 1 1.299-.562 6.412 6.412 0 0 1 1.097-.121c.346.001.691.042 1.028.121a1.515 1.515 0 0 1 .276.102c.121.05.206.162.219.293a2.157 2.157 0 0 1 .014.455 5.856 5.856 
+                0 0 1-.806 2.55zm-2.55-5.72a.995.995 0 0 0 .301.01.691.691 0 0 0 .505-.293 1.01 1.01 0 0 0 .147-.308l-.009.014a1.924 1.924 0 0 0 .074-.678 2.449 2.449 0 0 0 0-.293 1.64 1.64 0 0 0-.147-.6.685.685 
+                0 0 0-.483-.376.908.908 0 0 0-.302-.01.694.694 0 0 0-.542.328 1.163 1.163 0 0 0-.147.35 2.89 2.89 0 0 0-.042.933 1.494 1.494 0 0 0 .147.525c.09.207.276.355.497.397zm-3.523-1.96a.473.473 
+                0 0 0-.394-.64c-.026 0-.047-.01-.073-.01a.797.797 0 0 0-.775.302 1.321 1.321 0 0 0-.211.578c-.015.047.01.069.058.073a4.705 4.705 0 0 0 .642.053c.11.006.22-.003.328-.026a.465.465 
+                0 0 0 .425-.33zm-5.981-.255a1.174 1.174 0 0 0-.106.26 2.683 2.683 0 0 0-.065.997 1.48 1.48 0 0 0 .147.536.734.734 0 0 0 .568.391 1.306 1.306 0 0 0 .832-.158.147.147 
+                0 0 0 .086-.147v-.966h.007c0-.323-.01-.641 0-.968a.147.147 0 0 0-.096-.156 1.614 1.614 0 0 0-.817-.147.678.678 0 0 0-.556.358zM3.855 7.051a.747.747 0 0 0 .488-.188.807.807 
+                0 0 0 .243-.425 2.654 2.654 0 0 0 .065-1.002 1.505 1.505 0 0 0-.135-.54.653.653 0 0 0-.505-.382 1.44 1.44 0 0 0-.912.137.16.16 0 0 0-.105.164v1.917a.147.147 0 0 0 .09.147 1.468 1.468 0 0 0 .771.17"/>
+                </svg>`;
+    }
+
     static get lineout() {
         return html`<svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
               viewBox="0 0 567 171" style="enable-background:new 0 0 567 171;" xml:space="preserve">
@@ -221,7 +267,8 @@ class LgRemoteControl extends LitElement {
         return {
             "disney": this.disneyIcon,
             "dazn": this.daznIcon,
-            "nowtv": this.nowTv
+            "nowtv": this.nowTv,
+            "amazon": this.amazon,
         };
     }
 
@@ -232,7 +279,10 @@ class LgRemoteControl extends LitElement {
             _show_inputs: {},
             _show_sound_output: {},
             _show_text: {},
-            _show_keypad: {}
+            _show_keypad: {},
+            _show_vol_text: {},
+            volume_value: { type: Number, reflect: true },
+            output_entity: { type: Number, reflect: true }
         };
     }
 
@@ -242,6 +292,10 @@ class LgRemoteControl extends LitElement {
         this._show_sound_output = false;
         this._show_text = false;
         this._show_keypad = false;
+        this._show_vol_text = false;
+        this.volume_value = 0;
+        this.soundOutput = "";
+
     }
 
     render() {
@@ -257,6 +311,19 @@ class LgRemoteControl extends LitElement {
         const buttonColor = this.config.colors && this.config.colors.buttons ? this.config.colors.buttons : "var(--secondary-background-color)";
         const textColor = this.config.colors && this.config.colors.texts ? this.config.colors.texts : "var(--primary-text-color)";
         const mac = this.config.mac;
+        
+        if (this.config.ampli_entity &&
+            (this.hass.states[this.config.entity].attributes.sound_output === 'external_arc' ||
+             this.hass.states[this.config.entity].attributes.sound_output === 'external_optical')) {
+
+                this.volume_value = Math.round(this.hass.states[this.config.ampli_entity].attributes.volume_level * 100 * 2) / 2;
+                this.output_entity = this.config.ampli_entity;
+
+        } else {
+
+                this.volume_value = Math.round(this.hass.states[this.config.entity].attributes.volume_level * 100);
+                this.output_entity = this.config.entity;
+        }
 
         return html`
             <div class="card">
@@ -351,7 +418,7 @@ class LgRemoteControl extends LitElement {
                       <button class="btn ripple item_up" style="background-color: transparent;" @click=${() => this._button("UP")}><ha-icon icon="mdi:chevron-up"/></button>
                       <button class="btn ripple item_input" @click=${() => this._show_inputs = true}><ha-icon icon="mdi:import"/></button>
                       <button class="btn ripple item_2_sx" style="background-color: transparent;" @click=${() => this._button("LEFT")}><ha-icon icon="mdi:chevron-left"/></button>
-                      <button class="btn bnt_ok ripple item_2_c" style="border: solid 2px ${backgroundColor}"  @click=${() => this._button("ENTER")}>OK</button>
+                      <div class="ok_button ripple item_2_c" style="border: solid 2px ${backgroundColor}"  @click=${() => this._button("ENTER")}>${this._show_vol_text === true ? this.volume_value : 'OK'}</div>
                       <button class="btn ripple item_right" style="background-color: transparent;" @click=${() => this._button("RIGHT")}><ha-icon icon="mdi:chevron-right"/></button>
                       <button class="btn ripple item_back" @click=${() => this._button("BACK")}><ha-icon icon="mdi:undo-variant"/></button>
                       <button class="btn ripple item_down" style="background-color: transparent;" @click=${() => this._button("DOWN")}><ha-icon icon="mdi:chevron-down"/></button>
@@ -375,7 +442,7 @@ class LgRemoteControl extends LitElement {
                     ` : html`
                   <div class="grid-container-source">
                       <button class="btn_source ripple" @click=${() => this._select_source("Netflix")}><ha-icon style="heigth: 70%; width: 70%;" icon="mdi:netflix"/></button>
-                      <button class="btn_source ripple" @click=${() => this._select_source("Amazon Prime Video")}><ha-icon style="heigth: 70%; width: 70%;" icon="mdi:amazon"/></button>
+                      <button class="btn_source ripple" @click=${() => this._select_source("Prime Video")}>${LgRemoteControl.amazon}</button>
                       <button class="btn_source ripple" @click=${() => this._select_source("Disney+")}>${LgRemoteControl.disneyIcon}</button>
                       <button class="btn_source ripple" @click=${() => this._select_source("DAZN")}>${LgRemoteControl.daznIcon}</button>
                   </div>`}
@@ -394,13 +461,13 @@ class LgRemoteControl extends LitElement {
 <!-- ################################# COLORED BUTTONS END ################################# -->
 
                   <div class="grid-container-volume-channel-control" >
-                      <button class="btn ripple"  style="border-radius: 50% 50% 0px 0px; margin: 0px auto 0px auto; height: 100%;" @click=${() => this._media_player_service("volume_up")}><ha-icon icon="mdi:plus"/></button>
+                      <button class="btn ripple" id="plusButton"  style="border-radius: 50% 50% 0px 0px; margin: 0px auto 0px auto; height: 100%;" }><ha-icon icon="mdi:plus"/></button>
                       <button class="btn-flat flat-high ripple" style="margin-top: 0px; height: 50%;" @click=${() => this._button("HOME")}><ha-icon icon="mdi:home"></button>
                       <button class="btn ripple" style="border-radius: 50% 50% 0px 0px; margin: 0px auto 0px auto; height: 100%;" @click=${() => this._button("CHANNELUP")}><ha-icon icon="mdi:chevron-up"/></button>
                       <button class="btn" style="border-radius: 0px; cursor: default; margin: 0px auto 0px auto; height: 100%;"><ha-icon icon="${stateObj.attributes.is_volume_muted === true ? 'mdi:volume-off' : 'mdi:volume-high'}"/></button>
                       <button class="btn ripple" Style="color:${stateObj.attributes.is_volume_muted === true ? 'red' : ''}; height: 100%;"" @click=${() => this._button("MUTE")}><span class="${stateObj.attributes.is_volume_muted === true ? 'blink' : ''}"><ha-icon icon="mdi:volume-mute"></span></button>
                       <button class="btn" style="border-radius: 0px; cursor: default; margin: 0px auto 0px auto; height: 100%;"><ha-icon icon="mdi:parking"/></button>
-                      <button class="btn ripple" style="border-radius: 0px 0px 50% 50%;  margin: 0px auto 0px auto; height: 100%;" @click=${() => this._media_player_service("volume_down")}><ha-icon icon="mdi:minus"/></button>
+                      <button class="btn ripple" id="minusButton" style="border-radius: 0px 0px 50% 50%;  margin: 0px auto 0px auto; height: 100%;" ><ha-icon icon="mdi:minus"/></button>
                       <button class="btn-flat flat-high ripple" style="margin-bottom: 0px; height: 50%;" @click=${() => this._button("INFO")}><ha-icon icon="mdi:information-variant"/></button>
                       <button class="btn ripple" style="border-radius: 0px 0px 50% 50%;  margin: 0px auto 0px auto; height: 100%;"  @click=${() => this._button("CHANNELDOWN")}><ha-icon icon="mdi:chevron-down"/></button>
                   </div>
@@ -423,7 +490,7 @@ class LgRemoteControl extends LitElement {
     }
 
     _channelList() {
-        const popupEvent = new Event('ll-custom', {bubbles: true, cancelable: false, composed: true});
+        const popupEvent = new Event('ll-custom', { bubbles: true, cancelable: false, composed: true });
         popupEvent.detail = {
             "browser_mod": {
                 "service": "browser_mod.popup",
@@ -441,14 +508,14 @@ class LgRemoteControl extends LitElement {
         };
         this.ownerDocument.querySelector("home-assistant").dispatchEvent(popupEvent);
     }
-
+    
     _button(button) {
         this.hass.callService("webostv", "button", {
             entity_id: this.config.entity,
             button: button
         });
     }
-
+    
     _command(command) {
         this.hass.callService("webostv", "command", {
             entity_id: this.config.entity,
@@ -461,23 +528,149 @@ class LgRemoteControl extends LitElement {
                 mac: mac
             });
         } else {
-            this._media_player_service("turn_on");   
+            this._media_player_service("turn_on");
         }
     }
-
+    
     _media_player_service(service) {
         this.hass.callService("media_player", service, {
             entity_id: this.config.entity,
         });
     }
-
+    
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        const plusButton = this.shadowRoot.querySelector("#plusButton");
+        const minusButton = this.shadowRoot.querySelector("#minusButton");
+        const interval = this.output_entity === this.config.ampli_entity ? 250 : 100;
+        let longPressTimer;
+        let isLongPress = false;
+    
+        // Funzione per aggiornare e chiamare il servizio
+        const updateValue = (service) => {
+            this.hass.callService("media_player", service, {
+                entity_id: this.output_entity,
+            });
+        };
+    
+        // Gestore per il pulsante '+' (plusButton)
+        plusButton.addEventListener("mousedown", () => {
+            if (!isNaN(this.volume_value)) {
+                isLongPress = false;
+                this._show_vol_text = true;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    updateValue("volume_up");
+                    longPressTimer = setInterval(() => updateValue("volume_up"), interval);
+                }, 500);
+            }
+        });
+    
+        plusButton.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            if (!isNaN(this.volume_value)) {
+                isLongPress = false;
+                this._show_vol_text = true;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    updateValue("volume_up");
+                    longPressTimer = setInterval(() => updateValue("volume_up"), interval);
+                }, 500);
+            }
+        });
+    
+        plusButton.addEventListener("mouseup", () => {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                updateValue("volume_up");
+            }
+            clearInterval(longPressTimer);
+            this.valueDisplayTimeout = setTimeout(() => {
+                this._show_vol_text = false;
+            }, 500);
+        });
+    
+        plusButton.addEventListener("touchend", () => {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                updateValue("volume_up");
+            }
+            clearInterval(longPressTimer);
+            this.valueDisplayTimeout = setTimeout(() => {
+                this._show_vol_text = false;
+            }, 500);
+        });
+    
+        // Gestore per il pulsante '-' (minusButton)
+        minusButton.addEventListener("mousedown", () => {
+            if (!isNaN(this.volume_value)) {
+                isLongPress = false;
+                this._show_vol_text = true;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    updateValue("volume_down");
+                    longPressTimer = setInterval(() => updateValue("volume_down"), interval);
+                }, 400);
+            }
+        });
+    
+        minusButton.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            if (!isNaN(this.volume_value)) {
+                isLongPress = false;
+                this._show_vol_text = true;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    updateValue("volume_down");
+                    longPressTimer = setInterval(() => updateValue("volume_down"), interval);
+                }, 400);
+            }
+        });
+    
+        minusButton.addEventListener("mouseup", () => {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                updateValue("volume_down");
+            }
+            clearInterval(longPressTimer);
+            this.valueDisplayTimeout = setTimeout(() => {
+                this._show_vol_text = false;
+            }, 500);
+        });
+    
+        minusButton.addEventListener("touchend", () => {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                updateValue("volume_down");
+            }
+            clearInterval(longPressTimer);
+            this.valueDisplayTimeout = setTimeout(() => {
+                this._show_vol_text = false;
+            }, 500);
+        });
+    }
+    
+    updated(changedProperties) {
+    
+        if (changedProperties.has("hass")) {
+            const tvEntity = this.hass.states[this.config.entity];
+            const newSoundOutput = tvEntity.attributes.sound_output;
+    
+            if (newSoundOutput !== this.soundOutput) {
+                this.soundOutput = newSoundOutput; // Aggiorna il valore della variabile di classe
+                this.requestUpdate(); // Richiedi l'aggiornamento della card
+            }
+        }
+    }
+    
+    
     _select_source(source) {
         this.hass.callService("media_player", "select_source", {
             entity_id: this.config.entity,
             source: source
         });
     }
-
+    
     _select_sound_output(sound_output) {
         this.hass.callService("webostv", "select_sound_output", {
             entity_id: this.config.entity,
@@ -485,14 +678,14 @@ class LgRemoteControl extends LitElement {
         });
         this._show_sound_output = false;
     }
-
+    
     setConfig(config) {
         if (!config.entity) {
             throw new Error("Invalid configuration");
         }
         this.config = config;
     }
-
+    
     getCardSize() {
         return 15;
     }
@@ -505,7 +698,403 @@ class LgRemoteControl extends LitElement {
 
     static get styles() {
         return css`
-@keyframes blinker{50%{opacity:0}}.tv_title{width:fit-content;alig:-webkit-center;display:block;margin:auto;padding:calc(var(--remotewidth)/52) calc(var(--remotewidth)/26);border-radius:calc(var(--remotewidth)/10);background-color:var(--remote-button-color)}button:focus{outline:0}.ripple{position:relative;overflow:hidden;transform:translate3d(0,0,0)}.ripple:after{content:"";display:block;position:absolute;border-radius:50%;top:0;left:0;pointer-events:none;background-image:radial-gradient(circle,#7a7f87 2%,transparent 10.01%);background-repeat:no-repeat;background-position:50%;transform:scale(10,10);opacity:0;transition:transform .5s,opacity 1s}.ripple:active:after{transform:scale(0,0);opacity:.3;transition:0s}.blink{animation:blinker 1.5s linear infinite;color:red}.card,.ripple:after{width:100%;height:100%}.card{display:flex;justify-content:center}.page{background-color:var(--remote-color);height:100%;display:inline-block;flex-direction:row;border:var(--main-border-width) solid var(--main-border-color);border-radius:calc(var(--remotewidth)/7.5);padding:calc(var(--remotewidth)/37.5) calc(var(--remotewidth)/15.2) calc(var(--remotewidth)/11)}.grid-container-power{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr;background-color:transparent;overflow:hidden;width:var(--remotewidth);height:calc(var(--remotewidth)/3)}.grid-container-cursor,.grid-container-keypad{display:grid;grid-template-columns:1fr 1fr 1fr;overflow:hidden;height:var(--remotewidth)}.grid-container-cursor{grid-template-rows:1fr 1fr 1fr;width:var(--remotewidth);grid-template-areas:"sound up input""left ok right""back down exit"}.grid-container-keypad{grid-template-rows:1fr 1fr 1fr 1fr;background-color:transparent;background-color:var(--remote-button-color);border-radius:35px;width:calc(var(--remotewidth) - 10%);margin:auto}.grid-container-input,.grid-container-sound{display:grid;background-color:transparent;overflow:hidden;width:var(--remotewidth)}.grid-container-input{grid-template-columns:1fr 1fr 1fr;grid-template-rows:calc(var(--remotewidth)/2) calc(var(--remotewidth)/.5115)}.grid-container-sound{grid-template-columns:1fr 1fr;grid-template-rows:28% 6% 16% 16% 16% 16% 6%;height:var(--remotewidth);grid-template-areas:"bnt title"". .""tv tv-opt""tv-phone opt""hdmi line""phone bluetooth"}.grid-container-color_btn,.grid-container-source{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:auto;background-color:transparent;width:calc(var(--remotewidth)/1.03);overflow:hidden;margin:auto}.grid-container-color_btn{height:calc(var(--remotewidth)/10)}.grid-container-media-control,.grid-container-volume-channel-control{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;background-color:transparent;width:var(--remotewidth);height:calc(var(--remotewidth)/1.4);overflow:hidden;margin-top:calc(var(--remotewidth)/12)}.grid-container-media-control{grid-template-rows:1fr 1fr;height:calc(var(--remotewidth)/2.85)}.grid-item-input{grid-column-start:1;grid-column-end:4;grid-row-start:1;grid-row-end:3;display:grid;grid-template-columns:auto;background-color:var(--remote-button-color);margin:auto;margin-top:calc(var(--remotewidth)/2.6);overflow:scroll;height:calc(var(--remotewidth)*2.01);width:calc(var(--remotewidth) - 9%);border-radius:calc(var(--remotewidth)/12)}.grid-item-input::-webkit-scrollbar{display:none;-ms-overflow-style:none}.shape,.shape-input,.shape-sound,.source_text{grid-column-start:1;grid-column-end:4;grid-row-start:1}.shape{grid-row-end:4;padding:5px}.shape-input,.shape-sound,.source_text{grid-row-end:3}.shape-sound,.source_text{grid-column-end:5;grid-row-end:6}.source_text{grid-column-end:3;grid-row-end:2;text-align:center;margin-top:calc(var(--remotewidth)/6);font-size:calc(var(--remotewidth)/10);opacity:.3}.btn_soundoutput,.sound_icon_text{width:70%;height:70%;border-width:0;margin:auto auto 0 0;cursor:pointer;background-color:transparent;grid-area:title}.sound_icon_text{color:var(--remote-text-color);font-size:calc(var(--remotewidth)/18.75);overflow:hidden}.btn_soundoutput{font-size:calc(var(--remotewidth)/12.5);display:block;opacity:.4;color:var(--remote-text-color) font-weight: bold}.tv{grid-area:tv}.tv-opt{grid-area:tv-opt}.tv-phone{grid-area:tv-phone}.opt{grid-area:opt}.hdmi{grid-area:hdmi}.phone{grid-area:phone}.line{grid-area:line}.bluetooth{grid-area:bluetooth}.item_sound{grid-area:sound}.item_up{grid-area:up}.item_input{grid-area:input}.item_2_sx{grid-area:left}.item_2_c{grid-area:ok}.item_right{grid-area:right}.item_back{grid-area:back}.item_down{grid-area:down}.item_exit{grid-area:exit}ha-icon{width:calc(var(--remotewidth)/10.8);height:calc(var(--remotewidth)/10.8)}.bnt-input-back,.bnt-sound-back,.btn{font-size:calc(var(--remotewidth)/18.75);border-radius:50%;place-items:center;display:inline-block;cursor:pointer}.btn{background-color:var(--remote-button-color);color:var(--remote-text-color);width:70%;height:70%;border-width:0;margin:auto}.bnt-input-back,.bnt-sound-back{background-color:transparent;margin-top:calc(var(--remotewidth)/21)}.bnt-input-back{grid-column-start:3;grid-column-end:4;grid-row-start:1;grid-row-end:2;color:var(--remote-text-color);width:70%;height:50%;border-width:0;margin-left:calc(var(--remotewidth)/21)}.bnt-sound-back{margin-left:0;grid-area:bnt;width:45%;height:83%;margin-left:calc(var(--remotewidth)/18)}.bnt-sound-back,.btn-color,.btn-keypad,.btn_source{color:var(--remote-text-color);border-width:0}.btn-keypad{background-color:transparent;font-size:calc(var(--remotewidth)/10);width:100%;height:100%}.btn-color,.btn_source{background-color:var(--remote-button-color);border-radius:calc(var(--remotewidth)/10);place-items:center;cursor:pointer}.btn_source{width:calc(var(--remotewidth)/5.9);height:calc(var(--remotewidth)/8.125);margin:calc(var(--remotewidth)/18.57) auto calc(var(--remotewidth)/20)}.btn-color{width:70%;height:55%;margin:auto}.icon_source{height:100%;width:100%}.btn-input,.btn-input-on{font-size:calc(var(--remotewidth)/18.5);height:calc(var(--remotewidth)/7.2226);border-width:0;border-radius:calc(var(--remotewidth)/20);margin:calc(var(--remotewidth)/47);place-items:center;display:list-item;cursor:pointer}.btn-input{background-color:var(--remote-button-color);color:var(--remote-text-color);border:solid 2px var(--remote-color)}.btn-input-on{background-color:var(--primary-color);color:#fff}.bnt_sound_icon_width{width:calc(var(--remotewidth)/3)}.bnt_sound_text_width{width:calc(var(--remotewidth)/2.6)}.btn_sound_off,.btn_sound_on{font-size:calc(var(--remotewidth)/25);height:calc(var(--remotewidth)/9.3);border-width:0;border-radius:calc(var(--remotewidth)/20);margin:auto;display:block;cursor:pointer}.btn_sound_on{background-color:var(--primary-color);color:#fff}.btn_sound_off{background-color:var(--remote-button-color);color:var(--remote-text-color);border:solid 2px var(--remote-color)}.overlay{background-color:rgba(0,0,0,.02)}.flat-high{width:70%;height:37%}.flat-low{width:70%;height:65%}.btn-flat{background-color:var(--remote-button-color);color:var(--remote-text-color);font-size:calc(var(--remotewidth)/18.75);border-width:0;border-radius:calc(var(--remotewidth)/10);margin:auto;display:grid;place-items:center;display:inline-block;cursor:pointer}.bnt_ok{width:100%;height:100%;font-size:calc(var(--remotewidth)/16.6)}
+        @keyframes blinker {
+            50% {
+            opacity: 0;
+        }
+        }
+        .tv_title {
+            width: fit-content;
+            alig: -webkit-center;
+            display: block;
+            margin: auto;
+            padding: calc(var(--remotewidth)/52) calc(var(--remotewidth)/26);
+            border-radius: calc(var(--remotewidth)/10);
+            background-color: var(--remote-button-color);
+        }
+        button:focus {
+            outline: 0;
+        }
+        .ripple {
+            position: relative;
+            overflow: hidden;
+            transform: translate3d(0, 0, 0);
+        }
+        .ripple:after {
+            content: "";
+            display: block;
+            position: absolute;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #7a7f87 2%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+        .ripple:active:after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+        .blink {
+            animation: blinker 1.5s linear infinite;
+            color: red;
+        }
+        .card, .ripple:after {
+            width: 100%;
+            height: 100%}
+        .card {
+            display: flex;
+            justify-content: center;
+        }
+        .page {
+            background-color: var(--remote-color);
+            height: 100%;
+            display: inline-block;
+            flex-direction: row;
+            border: var(--main-border-width) solid var(--main-border-color);
+            border-radius: calc(var(--remotewidth)/7.5);
+            padding: calc(var(--remotewidth)/37.5) calc(var(--remotewidth)/15.2) calc(var(--remotewidth)/11);
+        }
+        .grid-container-power {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            background-color: transparent;
+            overflow: hidden;
+            width: var(--remotewidth);
+            height: calc(var(--remotewidth)/3);
+        }
+        .grid-container-cursor, .grid-container-keypad {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            overflow: hidden;
+            height: var(--remotewidth);
+        }
+        .grid-container-cursor {
+            grid-template-rows: 1fr 1fr 1fr;
+            width: var(--remotewidth);
+            grid-template-areas: "sound up input""left ok right""back down exit"}
+        .grid-container-keypad {
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            background-color: transparent;
+            background-color: var(--remote-button-color);
+            border-radius: 35px;
+            width: calc(var(--remotewidth) - 10%);
+            margin: auto;
+        }
+        .grid-container-input, .grid-container-sound {
+            display: grid;
+            background-color: transparent;
+            overflow: hidden;
+            width: var(--remotewidth);
+        }
+        .grid-container-input {
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: calc(var(--remotewidth)/2) calc(var(--remotewidth)/.5115);
+        }
+        .grid-container-sound {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 28% 6% 16% 16% 16% 16% 6%;
+            height: var(--remotewidth);
+            grid-template-areas: "bnt title"". .""tv tv-opt""tv-phone opt""hdmi line""phone bluetooth"}
+        .grid-container-color_btn, .grid-container-source {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto;
+            background-color: transparent;
+            width: calc(var(--remotewidth)/1.03);
+            overflow: hidden;
+            margin: auto;
+        }
+        .grid-container-color_btn {
+            height: calc(var(--remotewidth)/10);
+        }
+        .grid-container-media-control, .grid-container-volume-channel-control {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            background-color: transparent;
+            width: var(--remotewidth);
+            height: calc(var(--remotewidth)/1.4);
+            overflow: hidden;
+            margin-top: calc(var(--remotewidth)/12);
+        }
+        .grid-container-media-control {
+            grid-template-rows: 1fr 1fr;
+            height: calc(var(--remotewidth)/2.85);
+        }
+        .grid-item-input {
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 3;
+            display: grid;
+            grid-template-columns: auto;
+            background-color: var(--remote-button-color);
+            margin: auto;
+            margin-top: calc(var(--remotewidth)/2.6);
+            overflow: scroll;
+            height: calc(var(--remotewidth)*2.01);
+            width: calc(var(--remotewidth) - 9%);
+            border-radius: calc(var(--remotewidth)/12);
+        }
+        .grid-item-input::-webkit-scrollbar {
+            display: none;
+            -ms-overflow-style: none;
+        }
+        .shape, .shape-input, .shape-sound, .source_text {
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 1;
+        }
+        .shape {
+            grid-row-end: 4;
+            padding: 5px;
+        }
+        .shape-input, .shape-sound, .source_text {
+            grid-row-end: 3;
+        }
+        .shape-sound, .source_text {
+            grid-column-end: 5;
+            grid-row-end: 6;
+        }
+        .source_text {
+            grid-column-end: 3;
+            grid-row-end: 2;
+            text-align: center;
+            margin-top: calc(var(--remotewidth)/6);
+            font-size: calc(var(--remotewidth)/10);
+            opacity: .3;
+        }
+        .btn_soundoutput, .sound_icon_text {
+            width: 70%;
+            height: 70%;
+            border-width: 0;
+            margin: auto auto 0 0;
+            cursor: pointer;
+            background-color: transparent;
+            grid-area: title;
+        }
+        .sound_icon_text {
+            color: var(--remote-text-color);
+            font-size: calc(var(--remotewidth)/18.75);
+            overflow: hidden;
+        }
+        .btn_soundoutput {
+            font-size: calc(var(--remotewidth)/12.5);
+            display: block;
+            opacity: .4;
+            color: var(--remote-text-color) font-weight: bold;
+        }
+        .tv {
+            grid-area: tv;
+        }
+        .tv-opt {
+            grid-area: tv-opt;
+        }
+        .tv-phone {
+            grid-area: tv-phone;
+        }
+        .opt {
+            grid-area: opt;
+        }
+        .hdmi {
+            grid-area: hdmi;
+        }
+        .phone {
+            grid-area: phone;
+        }
+        .line {
+            grid-area: line;
+        }
+        .bluetooth {
+            grid-area: bluetooth;
+        }
+        .item_sound {
+            grid-area: sound;
+        }
+        .item_up {
+            grid-area: up;
+        }
+        .item_input {
+            grid-area: input;
+        }
+        .item_2_sx {
+            grid-area: left;
+        }
+        .item_2_c {
+            grid-area: ok;
+        }
+        .item_right {
+            grid-area: right;
+        }
+        .item_back {
+            grid-area: back;
+        }
+        .item_down {
+            grid-area: down;
+        }
+        .item_exit {
+            grid-area: exit;
+        }
+        ha-icon {
+            width: calc(var(--remotewidth)/10.8);
+            height: calc(var(--remotewidth)/10.8);
+        }
+        .bnt-input-back, .bnt-sound-back, .btn {
+            font-size: calc(var(--remotewidth)/18.75);
+            border-radius: 50%;
+            place-items: center;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .btn {
+            background-color: var(--remote-button-color);
+            color: var(--remote-text-color);
+            width: 70%;
+            height: 70%;
+            border-width: 0;
+            margin: auto;
+        }
+        .bnt-input-back, .bnt-sound-back {
+            background-color: transparent;
+            margin-top: calc(var(--remotewidth)/21);
+        }
+        .bnt-input-back {
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
+            color: var(--remote-text-color);
+            width: 70%;
+            height: 50%;
+            border-width: 0;
+            margin-left: calc(var(--remotewidth)/21);
+        }
+        .bnt-sound-back {
+            margin-left: 0;
+            grid-area: bnt;
+            width: 45%;
+            height: 83%;
+            margin-left: calc(var(--remotewidth)/18);
+        }
+        .bnt-sound-back, .btn-color, .btn-keypad, .btn_source {
+            color: var(--remote-text-color);
+            border-width: 0;
+        }
+        .btn-keypad {
+            background-color: transparent;
+            font-size: calc(var(--remotewidth)/10);
+            width: 100%;
+            height: 100%}
+        .btn-color, .btn_source {
+            background-color: var(--remote-button-color);
+            border-radius: calc(var(--remotewidth)/10);
+            place-items: center;
+            cursor: pointer;
+        }
+        .btn_source {
+            width: calc(var(--remotewidth)/5.9);
+            height: calc(var(--remotewidth)/8.125);
+            margin: calc(var(--remotewidth)/18.57) auto calc(var(--remotewidth)/20);
+        }
+        .btn-color {
+            width: 70%;
+            height: 55%;
+            margin: auto;
+        }
+        .icon_source {
+            height: 100%;
+            width: 100%}
+        .btn-input, .btn-input-on {
+            font-size: calc(var(--remotewidth)/18.5);
+            height: calc(var(--remotewidth)/7.2226);
+            border-width: 0;
+            border-radius: calc(var(--remotewidth)/20);
+            margin: calc(var(--remotewidth)/47);
+            place-items: center;
+            display: list-item;
+            cursor: pointer;
+        }
+        .btn-input {
+            background-color: var(--remote-button-color);
+            color: var(--remote-text-color);
+            border: solid 2px var(--remote-color);
+        }
+        .btn-input-on {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .bnt_sound_icon_width {
+            width: calc(var(--remotewidth)/3);
+        }
+        .bnt_sound_text_width {
+            width: calc(var(--remotewidth)/2.6);
+        }
+        .btn_sound_off, .btn_sound_on {
+            font-size: calc(var(--remotewidth)/25);
+            height: calc(var(--remotewidth)/9.3);
+            border-width: 0;
+            border-radius: calc(var(--remotewidth)/20);
+            margin: auto;
+            display: block;
+            cursor: pointer;
+        }
+        .btn_sound_on {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .btn_sound_off {
+            background-color: var(--remote-button-color);
+            color: var(--remote-text-color);
+            border: solid 2px var(--remote-color);
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, .02);
+        }
+        .flat-high {
+            width: 70%;
+            height: 37%}
+        .flat-low {
+            width: 70%;
+            height: 65%}
+        .btn-flat {
+            background-color: var(--remote-button-color);
+            color: var(--remote-text-color);
+            font-size: calc(var(--remotewidth)/18.75);
+            border-width: 0;
+            border-radius: calc(var(--remotewidth)/10);
+            margin: auto;
+            display: grid;
+            place-items: center;
+            display: inline-block;
+            cursor: pointer;
+        }
+      
+
+        .ok_button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: solid 3px var(--ha-card-background);
+            border-radius: 100%;
+            font-size: calc(var(--remotewidth)/16.6);
+            cursor: pointer;
+
+        }
+
+        .vol_text_value {
+            // width: 40px;
+            background-color: transparent;
+            border: none;
+            text-align: center;
+            color: var(--primary-text-color);
+            font-size: calc(var(--remotewidth)/14);
 
   `;
     }

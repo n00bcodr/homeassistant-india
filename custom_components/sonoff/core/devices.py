@@ -35,6 +35,7 @@ from ..light import (
     XLightGroup,
     XLightL1,
     XLightL3,
+    XT5Light,
 )
 from ..number import XPulseWidth
 from ..remote import XRemote
@@ -50,6 +51,8 @@ from ..sensor import (
     XWiFiDoorBattery,
     XEnergySensorDualR3,
     XEnergySensorPOWR3,
+    XEnergyTotal,
+    XT5Action,
 )
 from ..switch import (
     XSwitch,
@@ -58,6 +61,7 @@ from ..switch import (
     XToggle,
     XZigbeeSwitches,
     XSwitchPOWR3,
+    XDetach,
 )
 
 # supported custom device_class
@@ -191,7 +195,7 @@ DEVICES = {
     44: [XLightD1, RSSI],  # Sonoff D1
     57: [XLight57, RSSI],  # Mosquito Killer Lamp
     59: [XLightL1, RSSI],  # Sonoff LED (only cloud)
-    66: [RSSI],  # ZigBee Bridge
+    66: [RSSI, LED, spec(XBinarySensor, param="zled", enabled=False)],  # ZigBee Bridge
     77: SPEC_1CH,  # Sonoff Micro
     78: SPEC_1CH,  # https://github.com/AlexxIT/SonoffLAN/issues/615
     81: SPEC_1CH,
@@ -287,7 +291,13 @@ DEVICES = {
     136: [spec(XLightB05B, min_ct=0, max_ct=100), RSSI],  # Sonoff B05-BL
     137: [XLightL1, RSSI],
     # https://github.com/AlexxIT/SonoffLAN/issues/623#issuecomment-1365841454
-    138: SPEC_1CH,  # MINIR3
+    138: [
+        Switch1,
+        LED,
+        RSSI,
+        XDetach,
+        spec(XRemoteButton, param="action"),
+    ],  # MINIR3, MINIR4
     # https://github.com/AlexxIT/SonoffLAN/issues/808
     154: [XWiFiDoor, Battery, RSSI],  # DW2-Wi-Fi-L
     162: SPEC_3CH,  # https://github.com/AlexxIT/SonoffLAN/issues/659
@@ -320,8 +330,10 @@ DEVICES = {
         spec(XSensor100, param="current"),
         spec(XSensor100, param="power"),
         spec(XSensor100, param="voltage"),
-        spec(XSensor100, param="dayKwh", uid="energy_day"),
-        spec(XSensor100, param="monthKwh", uid="energy_month"),
+        spec(XEnergyTotal, param="dayKwh", uid="energy_day", multiply=0.01, round=2),
+        spec(
+            XEnergyTotal, param="monthKwh", uid="energy_month", multiply=0.01, round=2
+        ),
         spec(
             XEnergySensorPOWR3,
             param="hoursKwhData",
@@ -329,6 +341,12 @@ DEVICES = {
             get_params={"getHoursKwh": {"start": 0, "end": 24 * 30 - 1}},
         ),
     ],  # Sonoff POWR3
+    # https://github.com/AlexxIT/SonoffLAN/issues/984
+    195: [XTemperatureTH],  # NSPanel Pro
+    # https://github.com/AlexxIT/SonoffLAN/issues/1183
+    209: [Switch1, XT5Light, XT5Action],  # T5-1C-86
+    210: [Switch1, Switch2, XT5Light, XT5Action],  # T5-2C-86
+    211: [Switch1, Switch2, Switch3, XT5Light, XT5Action],  # T5-3C-86
     1000: [XRemoteButton, Battery],  # zigbee_ON_OFF_SWITCH_1000
     1256: [spec(XSwitch, base="light")],  # ZCL_HA_DEVICEID_ON_OFF_LIGHT
     1257: [spec(XLightD1, base="light")],  # ZigbeeWhiteLight
@@ -361,6 +379,15 @@ DEVICES = {
         spec(XZigbeeSwitches, channel=2, uid="3"),
         spec(XZigbeeSwitches, channel=3, uid="4"),
     ],
+    7000: [
+        XRemoteButton,
+        Battery,
+    ],
+    7014: [
+        spec(XSensor100, param="temperature"),
+        spec(XSensor100, param="humidity"),
+        Battery,
+    ],  # https://github.com/AlexxIT/SonoffLAN/issues/1166
 }
 
 
@@ -461,7 +488,7 @@ DIY = {
     # DIY type, UIID, Brand, Model/Name
     "plug": [1, None, "Single Channel DIY"],  # POWR316
     "strip": [4, None, "Multi Channel DIY"],  # 4CHPROR3
-    "diy_plug": [138, "SONOFF", "MINI DIY"],
+    "diy_plug": [1, "SONOFF", "MINI DIY"],
     "enhanced_plug": [5, "SONOFF", "POW DIY"],  # POWR2
     "th_plug": [15, "SONOFF", "TH DIY"],  # TH16R2
     "rf": [28, "SONOFF", "RFBridge DIY"],
@@ -474,8 +501,14 @@ DIY = {
 
 
 def setup_diy(device: dict) -> XDevice:
+    ltype = device["localtype"]
     try:
-        uiid, brand, model = DIY[device["localtype"]]
+        uiid, brand, model = DIY[ltype]
+        # https://github.com/AlexxIT/SonoffLAN/issues/1136
+        # https://github.com/AlexxIT/SonoffLAN/issues/1156
+        if ltype == "diy_plug" and "switches" in device["params"]:
+            uiid = 77
+            model = "MINI R3 DIY"
         device["name"] = model
         device["brandName"] = brand
         device["extra"] = {"uiid": uiid}
@@ -483,6 +516,6 @@ def setup_diy(device: dict) -> XDevice:
     except Exception:
         device["name"] = "Unknown DIY"
         device["extra"] = {"uiid": 0}
-        device["productModel"] = device["localtype"]
+        device["productModel"] = ltype
     # device["online"] = False
     return device

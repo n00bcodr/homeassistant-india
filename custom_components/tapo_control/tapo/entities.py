@@ -7,8 +7,10 @@ from homeassistant.components.update import UpdateEntity
 from homeassistant.components.light import LightEntity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.number import NumberEntity
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.util import slugify
 
 from ..const import BRAND, LOGGER, DOMAIN
 from ..utils import build_device_info
@@ -40,8 +42,7 @@ class TapoEntity(Entity):
     @property
     def unique_id(self) -> str:
         id_suffix = "".join(self._name_suffix.split())
-
-        return "{}-{}".format(self._name, id_suffix).lower()
+        return "{}-{}-{}".format(self._attributes["mac"], self._name, id_suffix).lower()
 
     @property
     def model(self):
@@ -137,6 +138,7 @@ class TapoSensorEntity(SensorEntity, TapoEntity):
         self._hass = hass
         self._attr_icon = icon
         self._attr_device_class = device_class
+        self._config_entry = config_entry
         entry["entities"].append({"entity": self, "entry": entry})
 
         TapoEntity.__init__(self, entry, name_suffix)
@@ -162,6 +164,8 @@ class TapoButtonEntity(ButtonEntity, TapoEntity):
         self._hass = hass
         self._attr_icon = icon
         self._attr_device_class = device_class
+        entry["entities"].append({"entity": self, "entry": entry})
+        self.updateTapo(entry["camData"])
 
         TapoEntity.__init__(self, entry, name_suffix)
         ButtonEntity.__init__(self)
@@ -248,6 +252,40 @@ class TapoSelectEntity(SelectEntity, TapoEntity):
         TapoEntity.__init__(self, entry, name_suffix)
         LOGGER.debug(f"Tapo {name_suffix} - init - SelectEntity")
         SelectEntity.__init__(self)
+        LOGGER.debug(f"Tapo {name_suffix} - init - end")
+
+    @property
+    def entity_category(self):
+        return EntityCategory.CONFIG
+
+    @property
+    def state(self):
+        return self._attr_state
+
+
+class TapoNumberEntity(NumberEntity, TapoEntity):
+    def __init__(
+        self,
+        name_suffix,
+        entry: dict,
+        hass: HomeAssistant,
+        config_entry,
+        icon=None,
+        device_class=None,
+    ):
+        LOGGER.debug(f"Tapo {name_suffix} - init - start")
+        self._hass = hass
+        self._attr_icon = icon
+        self._attr_device_class = device_class
+        LOGGER.debug(f"Tapo {name_suffix} - init - append")
+        entry["entities"].append({"entity": self, "entry": entry})
+        LOGGER.debug(f"Tapo {name_suffix} - init - update")
+        self.updateTapo(entry["camData"])
+
+        LOGGER.debug(f"Tapo {name_suffix} - init - TapoEntity")
+        TapoEntity.__init__(self, entry, name_suffix)
+        LOGGER.debug(f"Tapo {name_suffix} - init - NumberEntity")
+        NumberEntity.__init__(self)
         LOGGER.debug(f"Tapo {name_suffix} - init - end")
 
     @property

@@ -10,6 +10,9 @@ from ..core_exceptions import InvalidRequestError
 from ..core_util import TempUnitConversion
 from ..device import Device, DeviceStatus
 from ..device_info import DeviceInfo
+from ..model_info import TYPE_RANGE
+
+AWHP_MODEL_TYPE = ["AWHP", "SAC_AWHP"]
 
 SUPPORT_OPERATION_MODE = ["SupportOpMode", "support.airState.opMode"]
 SUPPORT_WIND_STRENGTH = ["SupportWindStrength", "support.airState.windStrength"]
@@ -61,6 +64,7 @@ STATE_HUMIDITY = ["SensorHumidity", "airState.humidity.current"]
 STATE_MODE_AIRCLEAN = ["AirClean", "airState.wMode.airClean"]
 STATE_MODE_JET = ["Jet", "airState.wMode.jet"]
 STATE_LIGHTING_DISPLAY = ["DisplayControl", "airState.lightingState.displayControl"]
+STATE_RESERVATION_SLEEP_TIME = ["SleepTime", "airState.reservation.sleepTime"]
 
 FILTER_TYPES = [
     [
@@ -87,16 +91,17 @@ CMD_STATE_DUCT_ZONES = [CTRL_MISC, "Set", [DUCT_ZONE_V1, "airState.ductZone.cont
 CMD_STATE_MODE_AIRCLEAN = [CTRL_BASIC, "Set", STATE_MODE_AIRCLEAN]
 CMD_STATE_MODE_JET = [CTRL_BASIC, "Set", STATE_MODE_JET]
 CMD_STATE_LIGHTING_DISPLAY = [CTRL_BASIC, "Set", STATE_LIGHTING_DISPLAY]
+CMD_RESERVATION_SLEEP_TIME = [CTRL_BASIC, "Set", STATE_RESERVATION_SLEEP_TIME]
 
 # AWHP Section
 STATE_WATER_IN_TEMP = ["WaterInTempCur", "airState.tempState.inWaterCurrent"]
 STATE_WATER_OUT_TEMP = ["WaterTempCur", "airState.tempState.outWaterCurrent"]
-STATE_WATER_MIN_TEMP = ["WaterHeatMinTemp", "airState.tempState.waterTempCoolMin"]
-STATE_WATER_MAX_TEMP = ["WaterHeatMaxTemp", "airState.tempState.waterTempHeatMax"]
+STATE_WATER_MIN_TEMP = ["WaterTempCoolMin", "airState.tempState.waterTempCoolMin"]
+STATE_WATER_MAX_TEMP = ["WaterTempHeatMax", "airState.tempState.waterTempHeatMax"]
 STATE_HOT_WATER_TEMP = ["HotWaterTempCur", "airState.tempState.hotWaterCurrent"]
 STATE_HOT_WATER_TARGET_TEMP = ["HotWaterTempCfg", "airState.tempState.hotWaterTarget"]
-STATE_HOT_WATER_MIN_TEMP = ["HotWaterMinTemp", "airState.tempState.hotWaterTempMin"]
-STATE_HOT_WATER_MAX_TEMP = ["HotWaterMaxTemp", "airState.tempState.hotWaterTempMax"]
+STATE_HOT_WATER_MIN_TEMP = ["HotWaterTempMin", "airState.tempState.hotWaterTempMin"]
+STATE_HOT_WATER_MAX_TEMP = ["HotWaterTempMax", "airState.tempState.hotWaterTempMax"]
 STATE_HOT_WATER_MODE = ["HotWater", "airState.miscFuncState.hotWater"]
 STATE_MODE_AWHP_SILENT = ["SilentMode", "airState.miscFuncState.silentAWHP"]
 
@@ -249,6 +254,11 @@ class JetModeSupport(Enum):
     BOTH = 3
 
 
+def _remove_duplicated(elem: list) -> list:
+    """Remove duplicated values from a list."""
+    return list(dict.fromkeys(elem))
+
+
 class AirConditionerDevice(Device):
     """A higher-level interface for a AC."""
 
@@ -276,6 +286,7 @@ class AirConditionerDevice(Device):
         self._supported_vertical_steps = None
         self._supported_mode_jet = None
         self._temperature_range = None
+        self._sleep_time_range = None
         self._hot_water_temperature_range = None
         self._temperature_step = TEMP_STEP_WHOLE
         self._duct_zones = {}
@@ -524,7 +535,7 @@ class AirConditionerDevice(Device):
         if self._is_air_to_water is None:
             if not self.model_info:
                 return False
-            self._is_air_to_water = self.model_info.model_type == "AWHP"
+            self._is_air_to_water = self.model_info.model_type in AWHP_MODEL_TYPE
         return self._is_air_to_water
 
     @property
@@ -573,16 +584,15 @@ class AirConditionerDevice(Device):
             self._supported_horizontal_steps = []
             if not self._is_mode_supported(SUPPORT_VANE_HSTEP):
                 return []
-
             key = self._get_state_key(STATE_WDIR_HSTEP)
-            values = self.model_info.value(key)
-            if not hasattr(values, "options"):
+            if not self.model_info.is_enum_type(key):
                 return []
 
-            mapping = values.options
+            options = self.model_info.value(key).options
+            mapping = _remove_duplicated(list(options.values()))
             mode_list = [e.value for e in ACHStepMode]
             self._supported_horizontal_steps = [
-                ACHStepMode(o).name for o in mapping.values() if o in mode_list
+                ACHStepMode(o).name for o in mapping if o in mode_list
             ]
         return self._supported_horizontal_steps
 
@@ -593,16 +603,15 @@ class AirConditionerDevice(Device):
             self._supported_vertical_steps = []
             if not self._is_mode_supported(SUPPORT_VANE_VSTEP):
                 return []
-
             key = self._get_state_key(STATE_WDIR_VSTEP)
-            values = self.model_info.value(key)
-            if not hasattr(values, "options"):
+            if not self.model_info.is_enum_type(key):
                 return []
 
-            mapping = values.options
+            options = self.model_info.value(key).options
+            mapping = _remove_duplicated(list(options.values()))
             mode_list = [e.value for e in ACVStepMode]
             self._supported_vertical_steps = [
-                ACVStepMode(o).name for o in mapping.values() if o in mode_list
+                ACVStepMode(o).name for o in mapping if o in mode_list
             ]
         return self._supported_vertical_steps
 
@@ -866,6 +875,44 @@ class AirConditionerDevice(Device):
             self._filter_status_supported = False
             return None
 
+    @property
+    def sleep_time_range(self) -> list[int]:
+        """Return valid range for sleep time."""
+        if self._sleep_time_range is None:
+            key = self._get_state_key(STATE_RESERVATION_SLEEP_TIME)
+            if (range_val := self.model_info.value(key, TYPE_RANGE)) is None:
+                self._sleep_time_range = [0, 420]
+            else:
+                self._sleep_time_range = [range_val.min, range_val.max]
+        return self._sleep_time_range
+
+    @property
+    def is_reservation_sleep_time_available(self) -> bool:
+        """Return if reservation sleep time is available."""
+        if (status := self._status) is None:
+            return False
+        if (
+            status.device_features.get(AirConditionerFeatures.RESERVATION_SLEEP_TIME)
+            is None
+        ):
+            return False
+        return status.is_on and (
+            status.operation_mode
+            in [ACMode.ACO.name, ACMode.FAN.name, ACMode.COOL.name, ACMode.DRY.name]
+        )
+
+    async def set_reservation_sleep_time(self, value: int):
+        """Set the device sleep time reservation in minutes."""
+        if not self.is_reservation_sleep_time_available:
+            raise ValueError("Reservation sleep time is not available")
+        valid_range = self.sleep_time_range
+        if not (valid_range[0] <= value <= valid_range[1]):
+            raise ValueError(
+                f"Invalid sleep time value. Valid range: {valid_range[0]} - {valid_range[1]}"
+            )
+        keys = self._get_cmd_keys(CMD_RESERVATION_SLEEP_TIME)
+        await self.set(keys[0], keys[1], key=keys[2], value=str(value))
+
     async def set(
         self, ctrl_key, command, *, key=None, value=None, data=None, ctrl_path=None
     ):
@@ -945,6 +992,8 @@ class AirConditionerDevice(Device):
 
 class AirConditionerStatus(DeviceStatus):
     """Higher-level information about a AC's current status."""
+
+    _device: AirConditionerDevice
 
     def __init__(self, device: AirConditionerDevice, data: dict | None = None):
         """Initialize device status."""
@@ -1133,6 +1182,10 @@ class AirConditionerStatus(DeviceStatus):
         key = self._get_state_key(STATE_HUMIDITY)
         if (value := self.to_int_or_none(self.lookup_range(key))) is None:
             return None
+        # some V1 device return humidity with value = 0
+        # when humidity sensor is not available
+        if not self.is_info_v2 and value == 0:
+            return None
         if value >= 100:
             value = value / 10
         return self._update_feature(AirConditionerFeatures.HUMIDITY, value, False)
@@ -1197,7 +1250,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def water_in_current_temp(self):
         """Return AWHP in water current temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_air_to_water:
             return None
         key = self._get_state_key(STATE_WATER_IN_TEMP)
         value = self._str_to_temp(self._data.get(key))
@@ -1206,7 +1259,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def water_out_current_temp(self):
         """Return AWHP out water current temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_air_to_water:
             return None
         key = self._get_state_key(STATE_WATER_OUT_TEMP)
         value = self._str_to_temp(self._data.get(key))
@@ -1215,7 +1268,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def water_target_min_temp(self):
         """Return AWHP water target minimum allowed temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_air_to_water:
             return None
         key = self._get_state_key(STATE_WATER_MIN_TEMP)
         return self._str_to_temp(self._data.get(key))
@@ -1223,7 +1276,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def water_target_max_temp(self):
         """Return AWHP water target maximun allowed temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_air_to_water:
             return None
         key = self._get_state_key(STATE_WATER_MAX_TEMP)
         return self._str_to_temp(self._data.get(key))
@@ -1231,7 +1284,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def mode_awhp_silent(self):
         """Return AWHP silent mode status."""
-        if not self.is_info_v2:
+        if not (self._device.is_air_to_water and self.is_info_v2):
             return None
         key = self._get_state_key(STATE_MODE_AWHP_SILENT)
         if (value := self.lookup_enum(key, True)) is None:
@@ -1244,7 +1297,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def hot_water_current_temp(self):
         """Return AWHP hot water current temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_water_heater_supported:
             return None
         key = self._get_state_key(STATE_HOT_WATER_TEMP)
         value = self._str_to_temp(self._data.get(key))
@@ -1253,7 +1306,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def hot_water_target_temp(self):
         """Return AWHP hot water target temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_water_heater_supported:
             return None
         key = self._get_state_key(STATE_HOT_WATER_TARGET_TEMP)
         return self._str_to_temp(self._data.get(key))
@@ -1261,7 +1314,7 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def hot_water_target_min_temp(self):
         """Return AWHP hot water target minimum allowed temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_water_heater_supported:
             return None
         key = self._get_state_key(STATE_HOT_WATER_MIN_TEMP)
         return self._str_to_temp(self._data.get(key))
@@ -1269,10 +1322,20 @@ class AirConditionerStatus(DeviceStatus):
     @property
     def hot_water_target_max_temp(self):
         """Return AWHP hot water target maximun allowed temperature."""
-        if not self.is_info_v2:
+        if not self._device.is_water_heater_supported:
             return None
         key = self._get_state_key(STATE_HOT_WATER_MAX_TEMP)
         return self._str_to_temp(self._data.get(key))
+
+    @property
+    def reservation_sleep_time(self):
+        """Return reservation sleep time in minutes."""
+        key = self._get_state_key(STATE_RESERVATION_SLEEP_TIME)
+        if (value := self.to_int_or_none(self.lookup_range(key))) is None:
+            return None
+        return self._update_feature(
+            AirConditionerFeatures.RESERVATION_SLEEP_TIME, value, False
+        )
 
     def _update_features(self):
         _ = [
@@ -1287,4 +1350,5 @@ class AirConditionerStatus(DeviceStatus):
             self.water_out_current_temp,
             self.mode_awhp_silent,
             self.hot_water_current_temp,
+            self.reservation_sleep_time,
         ]

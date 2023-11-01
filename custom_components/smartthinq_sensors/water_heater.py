@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from homeassistant.components.water_heater import (
     STATE_ECO,
@@ -111,11 +112,13 @@ class LGEWaterHeater(CoordinatorEntity, WaterHeaterEntity):
 class LGEWHWaterHeater(LGEWaterHeater):
     """LGE AWHP water heater."""
 
+    _attr_has_entity_name = True
+    _attr_name = None
+
     def __init__(self, api: LGEDevice) -> None:
         """Initialize the device."""
         super().__init__(api)
         self._device: WaterHeaterDevice = api.device
-        self._attr_name = f"{api.name}"
         self._attr_unique_id = f"{api.unique_id}-WH"
         self._supported_features = None
         self._modes_lookup = None
@@ -178,6 +181,14 @@ class LGEWHWaterHeater(LGEWaterHeater):
         await self._device.set_op_mode(new_mode)
         self._api.async_set_updated()
 
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the water heater on."""
+        await self.async_set_operation_mode(STATE_HEAT_PUMP)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the water heater off."""
+        await self.async_set_operation_mode(STATE_OFF)
+
     @property
     def current_temperature(self) -> float | None:
         """Return the current temperature."""
@@ -206,11 +217,13 @@ class LGEWHWaterHeater(LGEWaterHeater):
 class LGEACWaterHeater(LGEWaterHeater):
     """LGE AWHP water heater AC device based."""
 
+    _attr_has_entity_name = True
+    _attr_name = "Water Heater"
+
     def __init__(self, api: LGEDevice) -> None:
         """Initialize the device."""
         super().__init__(api)
         self._device: AirConditionerDevice = api.device
-        self._attr_name = f"{api.name} Water Heater"
         self._attr_unique_id = f"{api.unique_id}-AC-WH"
         self._attr_supported_features = LGEAC_SUPPORT_FLAGS
         self._attr_operation_list = [STATE_OFF, STATE_HEAT_PUMP]
@@ -244,6 +257,14 @@ class LGEACWaterHeater(LGEWaterHeater):
             return
         await self._device.hot_water_mode(operation_mode == STATE_HEAT_PUMP)
         self._api.async_set_updated()
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the water heater on."""
+        await self.async_set_operation_mode(STATE_HEAT_PUMP)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the water heater off."""
+        await self.async_set_operation_mode(STATE_OFF)
 
     @property
     def current_temperature(self) -> float | None:
