@@ -21,7 +21,7 @@ from .ewelink import XDevice
 from ..binary_sensor import XBinarySensor, XWiFiDoor, XZigbeeMotion
 from ..climate import XClimateNS, XClimateTH, XThermostat
 from ..core.entity import XEntity
-from ..cover import XCover, XCoverDualR3, XZigbeeCover
+from ..cover import XCover, XCoverDualR3, XZigbeeCover, XCover91
 from ..fan import XDiffuserFan, XFan, XToggleFan, XFanDualR3
 from ..light import (
     XDiffuserLight,
@@ -35,7 +35,9 @@ from ..light import (
     XLightGroup,
     XLightL1,
     XLightL3,
+    XOnOffLight,
     XT5Light,
+    XZigbeeLight,
 )
 from ..number import XPulseWidth
 from ..remote import XRemote
@@ -68,11 +70,18 @@ from ..switch import (
 DEVICE_CLASS = {
     "binary_sensor": (XEntity, BinarySensorEntity),
     "fan": (XToggleFan,),  # using custom class for overriding is_on function
-    "dualfan": (XFanDualR3,),
-    "light": (XEntity, LightEntity),
+    "light": (XOnOffLight,),  # fix color modes support
     "sensor": (XEntity, SensorEntity),
     "switch": (XEntity, SwitchEntity),
 }
+
+
+def unwrap_cached_properties(attrs: dict):
+    """Fix metaclass CachedProperties problem in latest Hass."""
+    for k, v in list(attrs.items()):
+        if k.startswith("_attr_") and f"_{k}" in attrs and isinstance(v, property):
+            attrs[k] = attrs.pop(f"_{k}")
+    return attrs
 
 
 def spec(cls, base: str = None, enabled: bool = None, **kwargs) -> type:
@@ -84,10 +93,11 @@ def spec(cls, base: str = None, enabled: bool = None, **kwargs) -> type:
     if enabled is not None:
         kwargs["_attr_entity_registry_enabled_default"] = enabled
     if base:
-        bases = cls.__mro__[-len(XSwitch.__mro__) :: -1]
-        bases = {k: v for b in bases for k, v in b.__dict__.items()}
-        return type(cls.__name__, DEVICE_CLASS[base], {**bases, **kwargs})
-    return type(cls.__name__, (cls,), {**cls.__dict__, **kwargs})
+        attrs = cls.__mro__[-len(XSwitch.__mro__) :: -1]
+        attrs = {k: v for b in attrs for k, v in b.__dict__.items()}
+        attrs = unwrap_cached_properties({**attrs, **kwargs})
+        return type(cls.__name__, DEVICE_CLASS[base], attrs)
+    return type(cls.__name__, (cls,), kwargs)
 
 
 Switch1 = spec(XSwitches, channel=0, uid="1")
@@ -101,9 +111,9 @@ Battery = spec(XSensor, param="battery")
 LED = spec(XToggle, param="sledOnline", uid="led", enabled=False)
 RSSI = spec(XSensor, param="rssi", enabled=False)
 PULSE = spec(XToggle, param="pulse", enabled=False)
-PULSEWIDTH = spec(XPulseWidth, param="pulseWidth", enabled=False)
+ZRSSI = spec(XSensor, param="subDevRssi", uid="rssi", enabled=False)
 
-SPEC_SWITCH = [XSwitch, LED, RSSI, PULSE, PULSEWIDTH]
+SPEC_SWITCH = [XSwitch, LED, RSSI, PULSE, XPulseWidth]
 SPEC_1CH = [Switch1, LED, RSSI]
 SPEC_2CH = [Switch1, Switch2, LED, RSSI]
 SPEC_3CH = [Switch1, Switch2, Switch3, LED, RSSI]
@@ -202,6 +212,7 @@ DEVICES = {
     82: SPEC_2CH,
     83: SPEC_3CH,
     84: SPEC_4CH,
+    91: [XCover91],
     102: [XWiFiDoor, XWiFiDoorBattery, RSSI],  # Sonoff DW2 Door/Window sensor
     103: [XLightB02, RSSI],  # Sonoff B02 CCT bulb
     104: [XLightB05B, RSSI],  # Sonoff B05-B RGB+CCT color bulb
@@ -262,13 +273,13 @@ DEVICES = {
         ),
         spec(
             XEnergySensorDualR3,
-            param="kwhHistories_01",
+            param="kwhHistories_02",
             uid="energy_3",
             get_params={"getKwh_02": 2},
         ),
         spec(
             XEnergySensorDualR3,
-            param="kwhHistories_01",
+            param="kwhHistories_03",
             uid="energy_4",
             get_params={"getKwh_03": 2},
         ),
@@ -347,9 +358,12 @@ DEVICES = {
     209: [Switch1, XT5Light, XT5Action],  # T5-1C-86
     210: [Switch1, Switch2, XT5Light, XT5Action],  # T5-2C-86
     211: [Switch1, Switch2, Switch3, XT5Light, XT5Action],  # T5-3C-86
+    # https://github.com/AlexxIT/SonoffLAN/issues/1251
+    212: [Switch1, Switch2, Switch3, Switch4, XT5Light, XT5Action],  # T5-4C-86
     1000: [XRemoteButton, Battery],  # zigbee_ON_OFF_SWITCH_1000
-    1256: [spec(XSwitch, base="light")],  # ZCL_HA_DEVICEID_ON_OFF_LIGHT
-    1257: [spec(XLightD1, base="light")],  # ZigbeeWhiteLight
+    # https://github.com/AlexxIT/SonoffLAN/issues/1195
+    1256: [spec(XSwitch)],  # ZCL_HA_DEVICEID_ON_OFF_LIGHT
+    1257: [XLightD1],  # ZigbeeWhiteLight
     # https://github.com/AlexxIT/SonoffLAN/issues/972
     1514: [XZigbeeCover, spec(XSensor, param="battery", multiply=2)],
     1770: [
@@ -369,6 +383,8 @@ DEVICES = {
         spec(XBinarySensor, param="lock", uid="", default_class="door"),
         Battery,
     ],
+    # https://github.com/AlexxIT/SonoffLAN/issues/1265
+    3258: [XZigbeeLight],  # ZigbeeColorTunableWhiteLight
     4026: [
         spec(XBinarySensor, param="water", uid="", default_class="moisture"),
         Battery,
@@ -383,11 +399,16 @@ DEVICES = {
         XRemoteButton,
         Battery,
     ],
+    # https://github.com/AlexxIT/SonoffLAN/issues/1398
+    7004: [XSwitch, ZRSSI],  # ZBMINIL2
+    # https://github.com/AlexxIT/SonoffLAN/issues/1283
+    7006: [XZigbeeCover, spec(XSensor, param="battery")],
     7014: [
         spec(XSensor100, param="temperature"),
         spec(XSensor100, param="humidity"),
         Battery,
     ],  # https://github.com/AlexxIT/SonoffLAN/issues/1166
+    7016: [ZRSSI],  # SNZB-06P
 }
 
 
@@ -406,7 +427,7 @@ def get_spec(device: dict) -> list:
     # DualR3 in cover mode
     if uiid in [126, 165] and device["params"].get("workMode") == 2:
         classes = [cls for cls in classes if XSwitches not in cls.__bases__]
-        classes.insert(0, XCoverDualR3)
+        classes = [XCoverDualR3, XFanDualR3] + classes
 
     # NSPanel Climate disable without switch configuration
     if uiid in [133] and not device["params"].get("HMI_ATCDevice"):
@@ -495,6 +516,7 @@ DIY = {
     "fan_light": [34, "SONOFF", "iFan DIY"],
     "light": [44, "SONOFF", "D1 DIY"],  # don't know if light exist
     "diylight": [44, "SONOFF", "D1 DIY"],
+    "diy_light": [136, "SONOFF", "B0x-BL DIY"],
     "switch_radar": [77, "SONOFF", "Micro DIY"],  # Micro
     "multifun_switch": [126, "SONOFF", "DualR3 DIY"],
 }
@@ -517,5 +539,4 @@ def setup_diy(device: dict) -> XDevice:
         device["name"] = "Unknown DIY"
         device["extra"] = {"uiid": 0}
         device["productModel"] = ltype
-    # device["online"] = False
     return device

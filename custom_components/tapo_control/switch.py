@@ -86,6 +86,17 @@ async def async_setup_entry(
             LOGGER.debug("Adding tapoRichNotificationsSwitch...")
             switches.append(tapoRichNotificationsSwitch)
 
+        tapoAutoUpgradeSwitch = await check_and_create(
+            entry,
+            hass,
+            TapoAutoUpgradeSwitch,
+            "getFirmwareAutoUpgradeConfig",
+            config_entry,
+        )
+        if tapoAutoUpgradeSwitch:
+            LOGGER.debug("Adding tapoAutoUpgradeSwitch...")
+            switches.append(tapoAutoUpgradeSwitch)
+
         tapoRecordingPlanSwitch = await check_and_create(
             entry,
             hass,
@@ -96,6 +107,36 @@ async def async_setup_entry(
         if tapoRecordingPlanSwitch:
             LOGGER.debug("Adding tapoRecordingPlanSwitch...")
             switches.append(tapoRecordingPlanSwitch)
+
+        if (
+            "microphoneMute" in entry["camData"]
+            and entry["camData"]["microphoneMute"] is not None
+        ):
+            tapoMicrophoneMuteSwitch = await check_and_create(
+                entry,
+                hass,
+                TapoMicrophoneMuteSwitch,
+                "getAudioConfig",
+                config_entry,
+            )
+            if tapoMicrophoneMuteSwitch:
+                LOGGER.debug("Adding tapoMicrophoneMuteSwitch...")
+                switches.append(tapoMicrophoneMuteSwitch)
+
+        if (
+            "microphoneNoiseCancelling" in entry["camData"]
+            and entry["camData"]["microphoneNoiseCancelling"] is not None
+        ):
+            tapoMicrophoneNoiseCancellationSwitch = await check_and_create(
+                entry,
+                hass,
+                TapoMicrophoneNoiseCancellationSwitch,
+                "getAudioConfig",
+                config_entry,
+            )
+            if tapoMicrophoneNoiseCancellationSwitch:
+                LOGGER.debug("Adding tapoMicrophoneNoiseCancellationSwitch...")
+                switches.append(tapoMicrophoneNoiseCancellationSwitch)
 
         return switches
 
@@ -153,6 +194,93 @@ class TapoRecordingPlanSwitch(TapoSwitchEntity):
             self._attr_state = "on" if self._attr_is_on else "off"
 
 
+class TapoMicrophoneMuteSwitch(TapoSwitchEntity):
+    def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
+        TapoSwitchEntity.__init__(
+            self,
+            "Microphone - Mute",
+            entry,
+            hass,
+            config_entry,
+            "mdi:microphone-off",
+        )
+
+    async def async_update(self) -> None:
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_on(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setMicrophone,
+            None,
+            True,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_off(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setMicrophone,
+            None,
+            False,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "off"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    def updateTapo(self, camData):
+        if not camData or "microphoneMute" not in camData:
+            self._attr_state = STATE_UNAVAILABLE
+        else:
+            self._attr_is_on = camData["microphoneMute"] == "on"
+            self._attr_state = "on" if self._attr_is_on else "off"
+
+
+class TapoMicrophoneNoiseCancellationSwitch(TapoSwitchEntity):
+    def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
+        TapoSwitchEntity.__init__(
+            self,
+            "Microphone - Noise Cancellation",
+            entry,
+            hass,
+            config_entry,
+            "mdi:microphone-settings",
+        )
+
+    async def async_update(self) -> None:
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_on(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setMicrophone, None, None, True
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_off(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setMicrophone,
+            None,
+            None,
+            False,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "off"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    def updateTapo(self, camData):
+        if not camData or "microphoneNoiseCancelling" not in camData:
+            self._attr_state = STATE_UNAVAILABLE
+        else:
+            self._attr_is_on = camData["microphoneNoiseCancelling"] == "on"
+            self._attr_state = "on" if self._attr_is_on else "off"
+
+
 class TapoNotificationsSwitch(TapoSwitchEntity):
     def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
         TapoSwitchEntity.__init__(
@@ -192,6 +320,48 @@ class TapoNotificationsSwitch(TapoSwitchEntity):
             self._attr_state = STATE_UNAVAILABLE
         else:
             self._attr_is_on = camData["notifications"] == "on"
+            self._attr_state = "on" if self._attr_is_on else "off"
+
+
+class TapoAutoUpgradeSwitch(TapoSwitchEntity):
+    def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
+        TapoSwitchEntity.__init__(
+            self,
+            "Automatically Upgrade Firmware",
+            entry,
+            hass,
+            config_entry,
+            "mdi:cloud-download",
+        )
+
+    async def async_update(self) -> None:
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_on(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setFirmwareAutoUpgradeConfig,
+            True,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_off(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setFirmwareAutoUpgradeConfig,
+            False,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "off"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    def updateTapo(self, camData):
+        if not camData:
+            self._attr_state = STATE_UNAVAILABLE
+        else:
+            self._attr_is_on = camData["autoUpgradeEnabled"] == "on"
             self._attr_state = "on" if self._attr_is_on else "off"
 
 

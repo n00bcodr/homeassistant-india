@@ -2,6 +2,7 @@
 
 ICON_AUDIO = "mdi:ear-hearing"
 ICON_AUDIO_OFF = "mdi:ear-hearing-off"
+ICON_PTZ_AUTOTRACKER = "mdi:cctv"
 ICON_BICYCLE = "mdi:bicycle"
 ICON_CAR = "mdi:car"
 ICON_CAT = "mdi:cat"
@@ -18,6 +19,7 @@ ICON_OTHER = "mdi:shield-alert"
 ICON_PERSON = "mdi:human"
 ICON_SERVER = "mdi:server"
 ICON_SPEEDOMETER = "mdi:speedometer"
+ICON_WAVEFORM = "mdi:waveform"
 
 ICON_DEFAULT_ON = "mdi:home"
 
@@ -49,6 +51,8 @@ def get_icon_from_switch(switch_type: str) -> str:
         return ICON_CONTRAST
     if switch_type == "audio":
         return ICON_AUDIO
+    if switch_type == "ptz_autotracker":
+        return ICON_PTZ_AUTOTRACKER
 
     return ICON_MOTION_SENSOR
 

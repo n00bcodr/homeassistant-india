@@ -164,6 +164,11 @@ def get_zones(config: dict[str, Any]) -> set[str]:
     return cameras_zones
 
 
+def decode_if_necessary(data: str | bytes) -> str:
+    """Decode a string if necessary."""
+    return data.decode("utf-8") if isinstance(data, bytes) else data
+
+
 async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     """Set up this integration using YAML is not supported."""
     integration = await async_get_integration(hass, DOMAIN)
@@ -265,6 +270,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entity_id = entity_registry.async_get_entity_id(
             "binary_sensor", DOMAIN, unique_id
         )
+        if entity_id:
+            entity_registry.async_remove(entity_id)
+
+    # Cleanup camera snapshot entities (replaced with image entities).
+    for cam_name, obj_name in get_cameras_and_objects(config, False):
+        unique_id = get_frigate_entity_unique_id(
+            entry.entry_id,
+            "camera_snapshots",
+            f"{cam_name}_{obj_name}",
+        )
+        entity_id = entity_registry.async_get_entity_id("camera", DOMAIN, unique_id)
         if entity_id:
             entity_registry.async_remove(entity_id)
 
@@ -463,5 +479,5 @@ class FrigateMQTTEntity(FrigateEntity):
     @callback  # type: ignore[misc]
     def _availability_message_received(self, msg: ReceiveMessage) -> None:
         """Handle a new received MQTT availability message."""
-        self._available = msg.payload == "online"
+        self._available = decode_if_necessary(msg.payload) == "online"
         self.async_write_ha_state()

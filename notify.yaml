@@ -1,6 +1,5 @@
 - name: all_phones
   platform: group
   services:
-    - service: mobile_app_murthy_nord2
-    - service: mobile_app_nord2
+    - service: mobile_app_cph2613
     - service: mobile_app_lenovo_tab

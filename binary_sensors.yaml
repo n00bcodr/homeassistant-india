@@ -1,11 +1,5 @@
 - platform: template
   sensors:
-    hall_motion:
-      friendly_name: Hall Motion
-      device_class: motion
-      value_template: >-
-        {{ is_state('binary_sensor.hall_camera_1_motion', 'on') or is_state('binary_sensor.hall_camera_2_motion', 'on') }}
-
     downstairs_power_failed:
       friendly_name: "Downstairs Power"
       value_template: >-
@@ -15,7 +9,7 @@
     upstairs_power_failed:
       friendly_name: "Upstairs Power"
       value_template: >-
-        {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r_socket_1', 'unavailable') and is_state('media_player.friday', 'unavailable'))) }}
+        {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r_socket_1', 'unavailable'))) }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     # True if there's an update available for supervisor

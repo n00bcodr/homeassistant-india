@@ -3,8 +3,10 @@ For non DIY devices data will be encrypted with devicekey. The registry cannot
 decode such messages by itself because it does not manage the list of known
 devices and their devicekey.
 """
+
 import asyncio
 import base64
+import errno
 import ipaddress
 import json
 import logging
@@ -96,7 +98,9 @@ class XRegistryLocal(XRegistryBase):
         state_change: ServiceStateChange,
     ):
         """Step 1. Receive change event from zeroconf."""
-        if state_change == ServiceStateChange.Removed:
+        # accept: eWeLink_1000xxxxxx.local.
+        # skip: ihost-1001xxxxxx.local.
+        if state_change == ServiceStateChange.Removed or not name.startswith("eWeLink"):
             return
 
         asyncio.create_task(self._handler2(zeroconf, service_type, name))
@@ -162,6 +166,7 @@ class XRegistryLocal(XRegistryBase):
         command: str = None,
         sequence: str = None,
         timeout: int = 5,
+        cre_retry_counter: int = 10,
     ):
         # known commands for DIY: switch, startup, pulse, sledonline
         # other commands: switch, switches, transmit, dimmable, light, fan
@@ -172,7 +177,7 @@ class XRegistryLocal(XRegistryBase):
             command = next(iter(params))
 
         payload = {
-            "sequence": sequence or self.sequence(),
+            "sequence": sequence or await self.sequence(),
             "deviceid": device["deviceid"],
             "selfApikey": "123",
             "data": params or {},
@@ -231,8 +236,31 @@ class XRegistryLocal(XRegistryBase):
             _LOGGER.debug(f"{log} !! Can't connect: {e}")
             return "E#CON"
 
+        except aiohttp.ClientOSError as e:
+            if e.errno != errno.ECONNRESET:
+                _LOGGER.debug(log, exc_info=e)
+                return "E#COE"  # ClientOSError
+
+            # This happens because the device's web server is not multi-threaded
+            # and can only process one request at a time. Therefore, if the
+            # device is busy processing another request, it will close the
+            # connection for the new request and we will get this error.
+            #
+            # It appears that the device takes some time to process a new request
+            # after the previous one was closed, which caused a locking approach
+            # to not work across different devices. Simply retrying on this error
+            # a few times seems to fortunately work reliably, so we'll do that.
+
+            _LOGGER.debug(f"{log} !! ConnectionResetError")
+            if cre_retry_counter > 0:
+                await asyncio.sleep(0.1)
+                return await self.send(
+                    device, params, command, sequence, timeout, cre_retry_counter - 1
+                )
+
+            return "E#CRE"  # ConnectionResetError
+
         except (
-            aiohttp.ClientOSError,
             aiohttp.ServerDisconnectedError,
             asyncio.CancelledError,
         ) as e:
@@ -249,4 +277,6 @@ class XRegistryLocal(XRegistryBase):
         # Fix Sonoff RF Bridge sintax bug
         if data and data.startswith(b'{"rf'):
             data = data.replace(b'"="', b'":"')
+        # fix https://github.com/AlexxIT/SonoffLAN/issues/1160
+        data = data.rstrip(b"\x02")
         return json.loads(data)

@@ -1,12 +1,11 @@
 from homeassistant.components.fan import (
-    SUPPORT_PRESET_MODE,
-    SUPPORT_SET_SPEED,
     FanEntity,
+    FanEntityFeature,
 )
 
 from .core.const import DOMAIN
 from .core.entity import XEntity
-from .core.ewelink import SIGNAL_ADD_ENTITIES, XRegistry
+from .core.ewelink import SIGNAL_ADD_ENTITIES, XRegistry, XDevice
 
 PARALLEL_UPDATES = 0  # fix entity_platform parallel_updates Semaphore
 
@@ -23,14 +22,21 @@ SPEED_OFF = "off"
 SPEED_LOW = "low"
 SPEED_MEDIUM = "medium"
 SPEED_HIGH = "high"
+MODES = [SPEED_OFF, SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH]
 
 
 # noinspection PyAbstractClass
 class XFan(XEntity, FanEntity):
     params = {"switches", "fan"}
     _attr_speed_count = 3
-    _attr_supported_features = SUPPORT_SET_SPEED | SUPPORT_PRESET_MODE
-    _attr_preset_modes = [SPEED_OFF, SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH]
+    _attr_supported_features = FanEntityFeature.SET_SPEED
+
+    def __init__(self, ewelink: XRegistry, device: XDevice) -> None:
+        super().__init__(ewelink, device)
+
+        if device.get("preset_mode", True):
+            self._attr_preset_modes = MODES
+            self._attr_supported_features |= FanEntityFeature.PRESET_MODE
 
     def set_state(self, params: dict):
         mode = None
@@ -56,9 +62,7 @@ class XFan(XEntity, FanEntity):
                 mode = SPEED_HIGH
 
         self._attr_percentage = int(
-            self._attr_preset_modes.index(mode or SPEED_OFF)
-            / self._attr_speed_count
-            * 100
+            MODES.index(mode or SPEED_OFF) / self._attr_speed_count * 100
         )
         self._attr_preset_mode = mode
 
@@ -133,6 +137,7 @@ class XDiffuserFan(XFan):
 # noinspection PyAbstractClass
 class XFanDualR3(XFan):
     params = {"motorTurn"}
+    _attr_entity_registry_enabled_default = False
     _attr_speed_count = 2
     _attr_preset_modes = [SPEED_OFF, SPEED_LOW, SPEED_HIGH]
 

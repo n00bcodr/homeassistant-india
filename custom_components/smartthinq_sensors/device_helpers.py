@@ -6,7 +6,24 @@ from homeassistant.const import STATE_OFF, STATE_ON, UnitOfTemperature
 from homeassistant.util.dt import utcnow
 
 from . import LGEDevice
-from .const import DEFAULT_SENSOR
+from .const import (
+    ATTR_CURRENT_COURSE,
+    ATTR_DOOR_OPEN,
+    ATTR_END_TIME,
+    ATTR_ERROR_STATE,
+    ATTR_FREEZER_TEMP,
+    ATTR_FRIDGE_TEMP,
+    ATTR_INITIAL_TIME,
+    ATTR_OVEN_LOWER_TARGET_TEMP,
+    ATTR_OVEN_TEMP_UNIT,
+    ATTR_OVEN_UPPER_TARGET_TEMP,
+    ATTR_REMAIN_TIME,
+    ATTR_RESERVE_TIME,
+    ATTR_RUN_COMPLETED,
+    ATTR_START_TIME,
+    ATTR_TEMP_UNIT,
+    DEFAULT_SENSOR,
+)
 from .wideq import WM_DEVICE_TYPES, DeviceType, StateOptions, TemperatureUnit
 
 STATE_LOOKUP = {
@@ -20,13 +37,17 @@ TEMP_UNIT_LOOKUP = {
 }
 
 DEVICE_ICONS = {
-    DeviceType.WASHER: "mdi:washing-machine",
-    DeviceType.DRYER: "mdi:tumble-dryer",
-    DeviceType.STYLER: "mdi:palette-swatch-outline",
     DeviceType.DISHWASHER: "mdi:dishwasher",
+    DeviceType.DRYER: "mdi:tumble-dryer",
+    DeviceType.HOOD: "mdi:scent-off",
     DeviceType.MICROWAVE: "mdi:microwave",
-    DeviceType.REFRIGERATOR: "mdi:fridge-outline",
     DeviceType.RANGE: "mdi:stove",
+    DeviceType.REFRIGERATOR: "mdi:fridge-outline",
+    DeviceType.STYLER: "mdi:palette-swatch-outline",
+    DeviceType.TOWER_DRYER: "mdi:tumble-dryer",
+    DeviceType.TOWER_WASHER: "mdi:washing-machine",
+    DeviceType.TOWER_WASHERDRYER: "mdi:washing-machine",
+    DeviceType.WASHER: "mdi:washing-machine",
 }
 
 WASH_DEVICE_TYPES = [
@@ -36,17 +57,7 @@ WASH_DEVICE_TYPES = [
 ]
 
 
-def get_multiple_devices_types(lge_devices: dict, dev_types: list) -> list:
-    """Return a list of devices of multiple types."""
-    return [
-        dev
-        for dev_type, devices in lge_devices.items()
-        for dev in devices
-        if dev_type in dev_types
-    ]
-
-
-def get_entity_name(device: LGEDevice, ent_key: str) -> str:
+def get_entity_name(device: LGEDevice, ent_key: str) -> str | None:
     """Get the name for the entity"""
     if ent_key == DEFAULT_SENSOR:
         return None
@@ -62,7 +73,7 @@ def get_entity_name(device: LGEDevice, ent_key: str) -> str:
 class LGEBaseDevice:
     """A wrapper to monitor LGE devices"""
 
-    def __init__(self, api_device):
+    def __init__(self, api_device: LGEDevice):
         """Initialize the device."""
         self._api = api_device
 
@@ -118,21 +129,25 @@ class LGEBaseDevice:
             ret_val[feat_name] = states.get(feat_key)
         return ret_val
 
+    @property
+    def extra_state_attributes(self):
+        """Return the optional state attributes."""
+        return self.get_features_attributes()
+
 
 class LGEWashDevice(LGEBaseDevice):
     """A wrapper to monitor LGE Wash devices"""
 
-    def __init__(self, api_device):
+    def __init__(self, api_device: LGEDevice):
         """Initialize the device."""
         super().__init__(api_device)
         self._start_time: datetime | None = None
 
     @property
     def run_completed(self):
-        """Return the state on/off for run completed."""
-        if self._api.state:
-            if self._api.state.is_run_completed:
-                return STATE_ON
+        """Return the state on/off for device run completed."""
+        if self._api.device.is_run_completed:
+            return STATE_ON
         return STATE_OFF
 
     @property
@@ -216,6 +231,24 @@ class LGEWashDevice(LGEBaseDevice):
                     return smart_course
         return "-"
 
+    @property
+    def extra_state_attributes(self):
+        """Return the optional state attributes."""
+        data = {
+            ATTR_RUN_COMPLETED: self.run_completed,
+            ATTR_ERROR_STATE: self.error_state,
+            ATTR_START_TIME: self.start_time,
+            ATTR_END_TIME: self.end_time,
+            ATTR_INITIAL_TIME: self.initial_time,
+            ATTR_REMAIN_TIME: self.remain_time,
+            ATTR_RESERVE_TIME: self.reserve_time,
+            ATTR_CURRENT_COURSE: self.current_course,
+        }
+        features = super().extra_state_attributes
+        data.update(features)
+
+        return data
+
 
 class LGERefrigeratorDevice(LGEBaseDevice):
     """A wrapper to monitor LGE Refrigerator devices"""
@@ -249,6 +282,20 @@ class LGERefrigeratorDevice(LGEBaseDevice):
             state = self._api.state.door_opened_state
             return STATE_LOOKUP.get(state, STATE_OFF)
         return STATE_OFF
+
+    @property
+    def extra_state_attributes(self):
+        """Return the optional state attributes."""
+        data = {
+            ATTR_FRIDGE_TEMP: self.temp_fridge,
+            ATTR_FREEZER_TEMP: self.temp_freezer,
+            ATTR_TEMP_UNIT: self.temp_unit,
+            ATTR_DOOR_OPEN: self.dooropen_state,
+        }
+        features = super().extra_state_attributes
+        data.update(features)
+
+        return data
 
 
 class LGETempDevice(LGEBaseDevice):
@@ -301,3 +348,33 @@ class LGERangeDevice(LGEBaseDevice):
             unit = self._api.state.oven_temp_unit
             return TEMP_UNIT_LOOKUP.get(unit, UnitOfTemperature.CELSIUS)
         return UnitOfTemperature.CELSIUS
+
+    @property
+    def extra_state_attributes(self):
+        """Return the optional state attributes."""
+        data = {
+            ATTR_OVEN_LOWER_TARGET_TEMP: self.oven_lower_target_temp,
+            ATTR_OVEN_UPPER_TARGET_TEMP: self.oven_upper_target_temp,
+            ATTR_OVEN_TEMP_UNIT: self.oven_temp_unit,
+        }
+        features = super().extra_state_attributes
+        data.update(features)
+
+        return data
+
+
+def get_wrapper_device(
+    lge_device: LGEDevice, dev_type: DeviceType
+) -> LGEBaseDevice | None:
+    """Return a wrapper device for specific device type."""
+    if dev_type in WASH_DEVICE_TYPES:
+        return LGEWashDevice(lge_device)
+    if dev_type == DeviceType.REFRIGERATOR:
+        return LGERefrigeratorDevice(lge_device)
+    if dev_type == DeviceType.RANGE:
+        return LGERangeDevice(lge_device)
+    if dev_type in (DeviceType.AC, DeviceType.WATER_HEATER):
+        return LGETempDevice(lge_device)
+    if dev_type in (DeviceType.HOOD, DeviceType.MICROWAVE):
+        return LGEBaseDevice(lge_device)
+    return None

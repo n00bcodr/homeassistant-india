@@ -1,4 +1,5 @@
 """Platform for LGE humidifier integration."""
+
 from __future__ import annotations
 
 import logging
@@ -47,15 +48,11 @@ async def async_setup_entry(
         if not lge_devices:
             return
 
-        lge_humidifier = []
-
         # DeHumidifier devices
-        lge_humidifier.extend(
-            [
-                LGEDeHumidifier(lge_device)
-                for lge_device in lge_devices.get(DeviceType.DEHUMIDIFIER, [])
-            ]
-        )
+        lge_humidifier = [
+            LGEDeHumidifier(lge_device)
+            for lge_device in lge_devices.get(DeviceType.DEHUMIDIFIER, [])
+        ]
 
         async_add_entities(lge_humidifier)
 
@@ -111,11 +108,11 @@ class LGEDeHumidifier(LGEBaseHumidifier):
             self._use_fan_modes = True
 
     @property
-    def supported_features(self) -> int:
+    def supported_features(self) -> HumidifierEntityFeature:
         """Return the list of supported features."""
         if self.available_modes:
             return HumidifierEntityFeature.MODES
-        return 0
+        return HumidifierEntityFeature(0)
 
     @property
     def extra_state_attributes(self):

@@ -48,9 +48,12 @@ class XRegistry(XRegistryBase):
                 _LOGGER.debug(f"{did} UIID {uiid:04} | %s", device["params"])
 
                 if parentid := device["params"].get("parentid"):
-                    device["parent"] = next(
-                        d for d in devices if d["deviceid"] == parentid
-                    )
+                    try:
+                        device["parent"] = next(
+                            d for d in devices if d["deviceid"] == parentid
+                        )
+                    except StopIteration:
+                        pass
 
                 # at this moment entities can catch signals with device_id and
                 # update their states, but they can be added to hass later
@@ -98,18 +101,19 @@ class XRegistry(XRegistryBase):
           ignored if params empty
         :param timeout_lan: optional custom LAN timeout
         """
-        seq = self.sequence()
+        seq = await self.sequence()
 
         if "parent" in device:
             main_device = device["parent"]
-            if not params_lan:
+            if params_lan is None and params is not None:
                 params_lan = params.copy()
-            params_lan["subDevId"] = device["deviceid"]
+            if params_lan:
+                params_lan["subDevId"] = device["deviceid"]
         else:
             main_device = device
 
-        can_local = self.local.online and main_device.get("local")
-        can_cloud = self.cloud.online and main_device.get("online")
+        can_local = self.can_local(device)
+        can_cloud = self.can_cloud(device)
 
         if can_local and can_cloud:
             # try to send a command locally (wait no more than a second)
@@ -154,15 +158,18 @@ class XRegistry(XRegistryBase):
                         break
                 else:
                     device["params_bulk"]["switches"].append(new)
-            return
+        else:
+            device["params_bulk"] = params
 
-        device["params_bulk"] = params
         await asyncio.sleep(0.1)
 
-        return await self.send(device, device.pop("params_bulk"))
+        # this can be called from different threads/loops
+        # https://github.com/AlexxIT/SonoffLAN/issues/1368
+        if params := device.pop("params_bulk", None):
+            return await self.send(device, params)
 
     async def send_cloud(self, device: XDevice, params: dict = None, query=True):
-        if not self.cloud.online or not device.get("online"):
+        if not self.can_cloud(device):
             return
         ok = await self.cloud.send(device, params)
         if ok == "online" and query and params:
@@ -322,25 +329,24 @@ class XRegistry(XRegistryBase):
         # [5] POW, [32] POWR2, [182] S40, [190] POWR3 - one channel, only cloud update
         # [181] THR316D/THR320D
         if uiid in (5, 32, 182, 190, 181):
-            if self.cloud.online and device.get("online"):
+            if self.can_cloud(device):
                 params = {"uiActive": 60}
                 asyncio.create_task(self.cloud.send(device, params, timeout=0))
 
         # DUALR3 - two channels, local and cloud update
         elif uiid == 126:
-            if self.local.online and device.get("local"):
+            if self.can_local(device):
                 # empty params is OK
                 asyncio.create_task(self.local.send(device, command="statistics"))
-            elif self.cloud.online and device.get("online"):
+            elif self.can_cloud(device):
                 params = {"uiActive": {"all": 1, "time": 60}}
                 asyncio.create_task(self.cloud.send(device, params, timeout=0))
 
         # SPM-4Relay - four channels, separate update for each channel
         elif uiid == 130:
-            if self.local.online and device.get("local"):
-                asyncio.create_task(self.update_spm_pow(device, False))
-            if self.cloud.online and device.get("online"):
-                asyncio.create_task(self.update_spm_pow(device, True))
+            # https://github.com/AlexxIT/SonoffLAN/issues/1366
+            if self.can_cloud(device):
+                asyncio.create_task(self.update_spm_pow(device))
 
         # checks if device still available via LAN
         if "local_ts" not in device or device["local_ts"] > time.time():
@@ -349,12 +355,21 @@ class XRegistry(XRegistryBase):
         if self.local.online:
             asyncio.create_task(self.check_offline(device))
 
-    async def update_spm_pow(self, device: XDevice, cloud_mode: bool):
+    async def update_spm_pow(self, device: XDevice):
         for i in range(4):
             if i > 0:
                 await asyncio.sleep(5)
             params = {"uiActive": {"outlet": i, "time": 60}}
-            if cloud_mode:
-                await self.cloud.send(device, params, timeout=0)
-            else:
-                await self.local.send(device, params, command="statistics")
+            await self.cloud.send(device, params, timeout=0)
+
+    def can_cloud(self, device: XDevice) -> bool:
+        if not self.cloud.online:
+            return False
+        return device.get("online")
+
+    def can_local(self, device: XDevice) -> bool:
+        if not self.local.online:
+            return False
+        if "parent" in device:
+            return device["parent"].get("local")
+        return device.get("local")

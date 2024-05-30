@@ -163,8 +163,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     deco_coordinator = data[COORDINATOR_DECOS_KEY]
 
     for platform in PLATFORMS:
-        hass.async_add_job(
-            hass.config_entries.async_forward_entry_setup(config_entry, platform)
+        config_entry.async_create_task(
+            hass, hass.config_entries.async_forward_entry_setup(config_entry, platform)
         )
 
     async def async_reboot_deco(service: ServiceCall) -> None:
@@ -262,6 +262,10 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
         new[CONF_CLIENT_POSTFIX] = ""
         new[CONF_DECO_PREFIX] = ""
         new[CONF_DECO_POSTFIX] = DEFAULT_DECO_POSTFIX
+
+    if config_entry.version == 5:
+        config_entry.version = 6
+        new[CONF_HOST] = f"http://{new[CONF_HOST]}"
 
     hass.config_entries.async_update_entry(config_entry, data=new)
 

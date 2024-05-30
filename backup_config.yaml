@@ -1,0 +1,112 @@
+mqtt:
+    host: 192.168.68.168
+    port: 1883
+    user: mqtt-user
+    password: homeassistant
+    topic_prefix: frigate
+    
+birdseye:
+  enabled: false
+
+timestamp_style:
+  position: "tr"
+  format: "%d-%b-%Y %I:%M:%S %p"
+  thickness: 2
+
+record:
+  enabled: false
+  retain:
+    days: 2
+    mode: motion
+  events:
+    retain:
+      default: 2
+snapshots:
+  enabled: false
+  retain:
+    default: 2
+
+cameras:
+  # hall_camera:
+  #   mqtt:
+  #     quality: 100
+  #   ffmpeg:
+  #     inputs:
+  #       - path: rtsp://homeassistant:homeassistant123@192.168.68.172/stream1
+  #         roles:
+  #           - detect
+  #           - rtmp
+  #   detect:
+  #     width: 1920
+  #     height: 1080
+  #     fps: 5
+  #   motion:
+  #     mask:
+  #       - 0,0,0,73,642,63,642,0
+  front_yard_camera:
+    mqtt:
+      quality: 100
+    ffmpeg:
+      inputs:
+        - path: rtsp://homeassistant:homeassistant123@192.168.68.184:554/Streaming/Channels/101
+          roles:
+            - detect
+            - rtmp
+    detect:
+      width: 1920
+      height: 1080
+      fps: 5
+    zones:
+      steps:
+        coordinates: 36,97,243,87,473,751,512,652,493,597,551,523,530,472,581,399,574,350,622,291,618,238,657,175,653,128,696,82,687,33,710,0,1489,0,1433,183,1082,146,1052,288,1411,324,1440,0,1920,0,1920,0,1920,1080,340,1080
+      zone_1:
+        coordinates: 1061,263,1079,168,1419,212,1417,301
+  second_floor_camera:
+    mqtt:
+      quality: 100
+    ffmpeg:
+      inputs:
+        - path: rtsp://homeassistant:homeassistant123@192.168.68.184:554/Streaming/Channels/201
+          roles:
+            - detect
+            - rtmp
+    detect:
+      width: 1920
+      height: 1080
+      fps: 5
+  entrance_camera:
+    mqtt:
+      quality: 100
+    ffmpeg:
+      inputs:
+        - path: rtsp://homeassistant:homeassistant123@192.168.68.184:554/Streaming/Channels/301
+          roles:
+            - detect
+            - rtmp
+    detect:
+      width: 1920
+      height: 1080
+      fps: 5
+  driveway_camera:
+    mqtt:
+      quality: 100
+    ffmpeg:
+      inputs:
+        - path: rtsp://homeassistant:homeassistant123@192.168.68.184:554/Streaming/Channels/401
+          roles:
+            - detect
+            - rtmp
+    detect:
+      width: 1920
+      height: 1080
+      fps: 5
+
+detectors:
+  cpu1:
+    type: cpu
+  cpu2:
+    type: cpu
+  cpu3:
+    type: cpu
+  cpu4:
+    type: cpu

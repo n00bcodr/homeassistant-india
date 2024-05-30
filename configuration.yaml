@@ -11,7 +11,6 @@ logger:
   default: critical
 
 ffmpeg:
-python_script:
 
 stream:
   ll_hls: true
@@ -35,7 +34,6 @@ binary_sensor: !include binary_sensors.yaml
 input_select: !include input_select.yaml
 sensor: !include sensor.yaml
 notify: !include notify.yaml
-rest_command: !include rest_commands.yaml
 template: !include template.yaml
 command_line: !include command_line.yaml
 
@@ -86,5 +84,3 @@ shell_command:
   git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
   git_status: echo -e -n "$(git status)" >/config/www/git_status.txt
   git_hacs_update: bash /config/tools/hacs_updates_push.sh
-  apt_upgrade: !secret apt_upgrade #bash /config/tools/apt_upgrade.sh "##password##"
-  reboot_server: !secret reboot_server #bash /config/tools/reboot_server.sh '##password##'

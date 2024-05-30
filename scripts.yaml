@@ -1,279 +1,255 @@
 cctv:
   alias: Switch to CCTV
   sequence:
-    - service: media_player.select_source
-      data:
-        source: HDMI 1
-      target:
-        entity_id: media_player.sony_bravia_tv
+  - service: media_player.select_source
+    data:
+      source: HDMI 1
+    target:
+      entity_id: media_player.sony_bravia_tv
   mode: single
   icon: mdi:cctv
 set_top_box_volume_up:
   alias: Set Top Box Volume +
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBQAAABI5QSOBITERQRFBITEhMSExITEjgSExI4EjgSOBE5ETkROBI4EhMSExMSExMRFBE4EjkSEhM3EjgSOBI4EjgTEhITEgAFFwABJ0sSAA0FAAAAAAAAAAA=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBQAAABI5QSOBITERQRFBITEhMSExITEjgSExI4EjgSOBE5ETkROBI4EhMSExMSExMRFBE4EjkSEhM3EjgSOBI4EjgTEhITEgAFFwABJ0sSAA0FAAAAAAAAAAA=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 10
 set_top_box_volume_down:
   alias: Set Top Box Volume -
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBQAAABIpUROREUERQRFBEUERQSExITETkRFBI4ETkTNxE4EjgSOhA5ERMSExI4EjgRFBEUEjgRFBE5ETkRFBEUETkROREUEQAFFwABJ0sSAA0FAAAAAAAAAAA=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBQAAABIpUROREUERQRFBEUERQSExITETkRFBI4ETkTNxE4EjgSOhA5ERMSExI4EjgRFBEUEjgRFBE5ETkRFBEUETkROREUEQAFFwABJ0sSAA0FAAAAAAAAAAA=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 10
 set_top_box_program_up:
   alias: Set Top Box Program Up
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBQAAABJJIVNRUQFREUERQRFBEUERQRFDYUERQ2FDYUNRU1FTUVNBUREzcUERM3FBEUERY0FDYUNhMSFDYUERM3EzYUEhQRFAAFFAABKUkTAA0FAAAAAAAAAAA=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBQAAABJJIVNRUQFREUERQRFBEUERQRFDYUERQ2FDYUNRU1FTUVNBUREzcUERM3FBEUERY0FDYUNhMSFDYUERM3EzYUEhQRFAAFFAABKUkTAA0FAAAAAAAAAAA=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 10
 set_top_box_program_down:
   alias: Set Top Box Program Down
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABIpUSOBITExITEhITEhMSExIUETgSExI4EzcTNxI4EjgROREUETkRFBEUETkRFBE5EzYSNxMTEjgSOBITEjgSExITEgAFGQABJUsRAAxVAAEjSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABIpUSOBITExITEhITEhMSExIUETgSExI4EzcTNxI4EjgROREUETkRFBEUETkRFBE5EzYSNxMTEjgSOBITEjgSExITEgAFGQABJUsRAAxVAAEjSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 10
 set_top_box_power:
   alias: Set Top Box Power
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABI5QSOBITEhMSExITEhMTExETEjgSExI4EjgSOBI4EjgSOBITEhMSOBI3EzcTEhM3EzcTNxM3EhMSExITEzcSExITEwAFFgABKEoSAAxSAAEmSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABI5QSOBITEhMSExITEhMTExETEjgSExI4EjgSOBI4EjgSOBITEhMSOBI3EzcTEhM3EzcTNxM3EhMSExITEzcSExITEwAFFgABKEoSAAxSAAEmSxIADQU=
+    entity_id: remote.rm4_remote
   mode: single
 tv_power:
   alias: TV Power
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBIAAABIJUTEhAVEjcSExIUDxQSExEUEjcRORAVEzYRORA5EDkTNxMSEBURExE5EhIRFRETERQSOBA5EDkRFBE4ETkQORI4EwANBQ==
-      target:
-        entity_id:
-          - remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBIAAABIJUTEhAVEjcSExIUDxQSExEUEjcRORAVEzYRORA5EDkTNxMSEBURExE5EhIRFRETERQSOBA5EDkRFBE4ETkQORI4EwANBQ==
+    target:
+      entity_id:
+      - remote.rm4_remote
   mode: queued
   max: 10
 set_top_box_one:
   alias: Set Top Box 1
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABIZQTNxAVExISFBIUEBQSExEUEjgSExE5ETgTNxI4EzcSOBITEjgSExEUETkSExEUEjgSOBITEjgSNxIUEjcSOBITEwAFFwABJksSAAxRAAEmSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABIZQTNxAVExISFBIUEBQSExEUEjgSExE5ETgTNxI4EzcSOBITEjgSExEUETkSExEUEjgSOBITEjgSNxIUEjcSOBITEwAFFwABJksSAAxRAAEmSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_two:
   alias: Set Top Box 2
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABJZIUNhQRExITEhMSExITEhQRFDYUERM3EzcUNRQ2FTUUNhQ2EzcTEhMSFDYTEhMSEzcTEhMSEzcTNxMSEzcTNxMSEwAFFQABKUkUAAxPAAEpSBUADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABJZIUNhQRExITEhMSExITEhQRFDYUERM3EzcUNRQ2FTUUNhQ2EzcTEhMSFDYTEhMSEzcTEhMSEzcTNxMSEzcTNxMSEwAFFQABKUkUAAxPAAEpSBUADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_three:
   alias: Set Top Box 3
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABJJMTNxMSEhMTEhITEhMTEhITEjgSExM3EjgSOBI3EzcTNxMSExITNxM3EhMSExM3EjgSOBI4EhMSExI4EjcTEhMTEgAFFwABKEkSAAxRAAEnShMADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABJJMTNxMSEhMTEhITEhMTEhITEjgSExM3EjgSOBI3EzcTNxMSExITNxM3EhMSExM3EjgSOBI4EhMSExI4EjcTEhMTEgAFFwABKEkSAAxRAAEnShMADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_four:
   alias: Set Top Box 4
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABJJMTNxMSExITEhITEhMSExMSEzcSExM3EzcTNxM3EzcTNhQSEzYUNhU1ExITEhMSEzcUNhMSExITEhQ2EzcTNxITEwAFFgABKEkUAAxRAAEnSBQADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABJJMTNxMSExITEhITEhMSExMSEzcSExM3EzcTNxM3EzcTNhQSEzYUNhU1ExITEhMSEzcUNhMSExITEhQ2EzcTNxITEwAFFgABKEkUAAxRAAEnSBQADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_five:
   alias: Set Top Box 5
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABIpQSOBITEhMSExITEhMTEhMSEzcTEhM3EjgSOBI4EjgSNxM3EzcTNxI4EhMSExITEjgSExITEhMSExM3EjgSOBITEgAFFwABJ0oTAAxRAAEoSRQADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABIpQSOBITEhMSExITEhMTEhMSEzcTEhM3EjgSOBI4EjgSNxM3EzcTNxI4EhMSExITEjgSExITEhMSExM3EjgSOBITEgAFFwABJ0oTAAxRAAEoSRQADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_six:
   alias: Set Top Box 6
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABI5QSOBITEhMSExITEhMSExITEjgSExI4EjcTNxM3EzcSOBITEhMSExI4EhMSExI4EjgSOBI3EzcTEhM3EzcSExITEgAFGgABJEoTAAxQAAEmSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABI5QSOBITEhMSExITEhMSExITEjgSExI4EjcTNxM3EzcSOBITEhMSExI4EhMSExI4EjgSOBI3EzcTEhM3EzcSExITEgAFGgABJEoTAAxQAAEmSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_seven:
   alias: Set Top Box 7
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABI5QTNxITEhMTEhMSExITEhMSEzcTEhM3EjgSOBI4EjgSNxMTEjcTEhM3ExITEhMSEzcTNxMSEzcSExI4EjgSOBITEgAFFgABJ0sSAAxSAAEkSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABI5QTNxITEhMTEhMSExITEhMSEzcTEhM3EjgSOBI4EjgSNxMTEjcTEhM3ExITEhMSEzcTNxMSEzcSExI4EjgSOBITEgAFFgABJ0sSAAxSAAEkSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_eight:
   alias: Set Top Box 8
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABJJMTNxITEhMTEhITEhMSExITEjgSExI4EjgSNxM3EzcTNxI4EjgSExI4EhMSExITEjgSExITEjgSExI4EjcTNxMSEwAFFwABJksSAAxRAAEmSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABJJMTNxITEhMTEhITEhMSExITEjgSExI4EjgSNxM3EzcTNxI4EjgSExI4EhMSExITEjgSExITEjgSExI4EjcTNxMSEwAFFwABJksSAAxRAAEmSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_nine:
   alias: Set Top Box 9
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABJJMTNxMSFBETEhQRFBETEhMSEzcTEhM3EzYUNhQ2FDYUNhMSFBEUNhMSExITEhQ2EzcTNxM2FBEUNhQ2EzcTEhMSFAAFFQABJ0oTAAxPAAEoSRMADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABJJMTNxMSFBETEhQRFBETEhMSEzcTEhM3EzYUNhQ2FDYUNhMSFBEUNhMSExITEhQ2EzcTNxM2FBEUNhQ2EzcTEhMSFAAFFQABJ0oTAAxPAAEoSRMADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_zero:
   alias: Set Top Box 0
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABI5QSOBITEhMSExITEhMTEhITEjgSExI4EjgSOBI3EzcTNxM3EjgSOBITEhMSExITEjgSExITEhMSOBI4EjgSOBITEgAFFgABKEoTAAxRAAEmSxIADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABI5QSOBITEhMSExITEhMTEhITEjgSExI4EjgSOBI3EzcTNxM3EjgSOBITEhMSExITEjgSExITEhMSOBI4EjgSOBITEgAFFgABKEoTAAxRAAEmSxIADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box_mute:
   alias: Set Top Box Mute
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABIZUTNxMSExITEhMSExITEhMSFDYTEhQ2EzcTNxM3EzcTNhQRFBITNhQ2FDYTEhMSEzcTNxM3ExITEhMSEzcTNxMSEwAFFwABJ0kUAAxQAAEnSRQADQU=
-      entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABIZUTNxMSExITEhMSExITEhMSFDYTEhQ2EzcTNxM3EzcTNhQRFBITNhQ2FDYTEhMSEzcTNxM3ExITEhMSEzcTNxMSEwAFFwABJ0kUAAxQAAEnSRQADQU=
+    entity_id: remote.rm4_remote
   mode: queued
   max: 3
 hdmi_one:
   alias: HDMI 1
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBQAAABH5QSFBMTExMUEhIUEhQSExMTEzgTOBM4EjkSOBM4EzgTOBM4EhQSFBI4EhQTExIUEhQSFBI5EjgUEhM4EzgROhM3EgAFCgABJEsRAA0FAAAAAAAAAAA=
-      target:
-        entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBQAAABH5QSFBMTExMUEhIUEhQSExMTEzgTOBM4EjkSOBM4EzgTOBM4EhQSFBI4EhQTExIUEhQSFBI5EjgUEhM4EzgROhM3EgAFCgABJEsRAA0FAAAAAAAAAAA=
+    target:
+      entity_id: remote.rm4_remote
   mode: queued
   max: 3
 hdmi_two:
   alias: HDMI 2
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBQAAABIJUTExEVERQSFBMTEhQSFBMSFDcTOBM4ETkTOBM4EjgSORIUEjkSExM4ExMSFBEVEhMSORMTEjkSExM4EzgSORI4EgAFCwABJkoQAA0FAAAAAAAAAAA=
-      target:
-        entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBQAAABIJUTExEVERQSFBMTEhQSFBMSFDcTOBM4ETkTOBM4EjgSORIUEjkSExM4ExMSFBEVEhMSORMTEjkSExM4EzgSORI4EgAFCwABJkoQAA0FAAAAAAAAAAA=
+    target:
+      entity_id: remote.rm4_remote
   mode: queued
   max: 3
 hdmi_three:
   alias: HDMI 3
   sequence:
-    - service: remote.send_command
-      data:
-        command: b64:JgBYAAABIpQSFBMSFBIUEhQSExMTExMSFDcUNxM4EzcUNxQ3EzgTNxI5EzgTExM3FBIUEhMTExMTEhQSFDcTExM3FDcUNxM4EwAFCQABJUkRAAxNAAEkSxMADQU=
-      target:
-        entity_id: remote.rm4_remote
+  - service: remote.send_command
+    data:
+      command: b64:JgBYAAABIpQSFBMSFBIUEhQSExMTExMSFDcUNxM4EzcUNxQ3EzgTNxI5EzgTExM3FBIUEhMTExMTEhQSFDcTExM3FDcUNxM4EwAFCQABJUkRAAxNAAEkSxMADQU=
+    target:
+      entity_id: remote.rm4_remote
   mode: queued
   max: 3
 set_top_box:
   alias: Set Top Box
   sequence:
-    - service: media_player.select_source
-      data:
-        source: Set-top Box
-      entity_id: media_player.lg_tv
+  - service: media_player.select_source
+    data:
+      source: Set-top Box
+    entity_id: media_player.lg_tv
   mode: single
 chromecast:
   alias: Chromecast
   sequence:
-    - service: media_player.select_source
-      data:
-        source: Chromecast
-      target:
-        entity_id: media_player.lg_tv
-  mode: single
-led_strip_random:
-  alias: LED Strip RANDOM
-  sequence:
-    - service: light.turn_on
-      target:
-        entity_id: light.led_strip_tv
-      data:
-        effect: random
-    - service: light.turn_on
-      target:
-        entity_id: light.led_strip_tv
-      data:
-        brightness: 255
-    - service: light.turn_on
-      target:
-        entity_id: light.led_strip_tv
-      data:
-        rgbw_color:
-          - "{{ state_attr('light.led_strip_tv','rgbw_color')[0] }}"
-          - "{{ state_attr('light.led_strip_tv','rgbw_color')[1] }}"
-          - "{{ state_attr('light.led_strip_tv','rgbw_color')[2] }}"
-          - 0
+  - service: media_player.select_source
+    data:
+      source: Chromecast
+    target:
+      entity_id: media_player.lg_tv
   mode: single
 hall_tubelight_white:
   alias: Hall Tubelight White
   sequence:
-    - service: light.turn_on
-      data:
-        color_temp: 153
-        brightness: 255
-        transition: 4
-      target:
-        entity_id: light.hall_tube_light
+  - service: light.turn_on
+    data:
+      color_temp: 153
+      brightness: 255
+      transition: 4
+    target:
+      entity_id: light.hall_tube_light
   mode: single
 update_all_phone_sensors:
   alias: Update all phone sensors
   sequence:
-    - service: notify.all_phones
-      data:
-        message: command_update_sensors
+  - service: notify.all_phones
+    data:
+      message: command_update_sensors
   mode: single
   icon: mdi:cellphone-arrow-down
 git_push:
   alias: Git Push
   sequence:
-    - service: shell_command.git_commit_push
-      data: {}
+  - service: shell_command.git_commit_push
+    data: {}
   mode: single
   icon: mdi:git
 git_push_ha_version:
   alias: Git Push - Core Update
   sequence:
-    - service: shell_command.git_core_update_push
-      data: {}
+  - service: shell_command.git_core_update_push
+    data: {}
   mode: single
   icon: mdi:git
 git_commit_copy:
   alias: Git Commit Message Copy
   sequence:
-    - service: input_text.set_value
-      data:
-        value:
-          "\U0001F4C1 files on {{ now().timestamp() | timestamp_custom('%b %d,
-          %Y - %-I:%M %p') }}"
-      target:
-        entity_id: input_text.git_commit_message
+  - service: input_text.set_value
+    data:
+      value: "\U0001F4C1 files on {{ now().timestamp() | timestamp_custom('%b %d,
+        %Y - %-I:%M %p') }}"
+    target:
+      entity_id: input_text.git_commit_message
   mode: single
   icon: fas:paste

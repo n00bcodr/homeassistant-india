@@ -6,16 +6,16 @@
   "codeowners": [
     "@JurajNyiri"
   ],
-  "version": "5.2.4",
+  "version": "5.4.13",
   "requirements": [
-    "pytapo==3.2.18"
+    "pytapo==3.3.21"
   ],
   "dependencies": [
     "ffmpeg",
     "onvif"
   ],
   "config_flow": true,
-  "homeassistant": "2023.4.5",
+  "homeassistant": "2024.1.0",
   "dhcp": [
     {
       "hostname": "c200_*",

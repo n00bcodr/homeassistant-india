@@ -22,7 +22,7 @@
       "new_item": true,
       "item": "Integrations",
       "href": "/config/integrations",
-      "icon": "fas:cogs",
+      "icon": "mdi:cogs",
       "bottom": true
     },
     {
@@ -51,16 +51,32 @@
       "bottom": true
     },
     {
+      "item": "map",
+      "hide": true
+    },
+    {
+      "item": "To-do lists",
+      "hide": true
+    },    
+    {
+      "item": "Logbook",
+      "hide": true
+    },
+    {
+      "item": "History",
+      "hide": true
+    },
+    {
+      "item": "Shopping List",
+      "hide": true
+    },
+    {
       "item": "snapshots",
       "bottom": true
     },
     {
       "item": "backups",
       "bottom": true
-    },
-    {
-      "item": "map",
-      "hide": true
     },
     {
       "item": "energy",

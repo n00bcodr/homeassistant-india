@@ -31,7 +31,7 @@
           transparency: 20%
           position: top-right
           fontsize: medium
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         message: Turning on the front yard lights.
         title: "Good Evening \U0001F307"
@@ -63,12 +63,12 @@
             'on')) or (is_state('light.second_floor_light', 'on') or is_state('light.second_floor_stairway',
             'on'))) }}"
       then:
-        - service: notify.mobile_app_nord2
+        - service: notify.mobile_app_cph2613
           data:
             message: clear_notification
             data:
               tag: sunset
-        - service: notify.mobile_app_nord2
+        - service: notify.mobile_app_cph2613
           data:
             title: Not all lights are turned on
             message: "\U0001F504 Retrying...."
@@ -94,12 +94,12 @@
             'on')) or (is_state('light.second_floor_light', 'on') or is_state('light.second_floor_stairway',
             'on'))) }}"
       then:
-        - service: notify.mobile_app_nord2
+        - service: notify.mobile_app_cph2613
           data:
             message: clear_notification
             data:
               tag: sunset
-        - service: notify.mobile_app_nord2
+        - service: notify.mobile_app_cph2613
           data:
             title: ⚠️ Retry Failed ⚠️
             message: Supervision Needed!
@@ -114,18 +114,6 @@
                   title: Open Tuya
                   uri: app://com.tuya.smart
               icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/warning_26a0-fe0f.png
-  mode: single
-- id: wash_cycle
-  alias: "\U0001F9FAWash Cycle"
-  description: Start Washing Machine Cycle when I scan the tag
-  trigger:
-    - platform: tag
-      tag_id: 9b36ba3c-2409-44f2-8b08-aff1f687258f
-  condition: []
-  action:
-    - service: switch.turn_on
-      data: {}
-      entity_id: switch.washing_machine_socket_1
   mode: single
 - id: power_outage_lights_restore_downstairs
   alias: "\U0001F4A1Restore Lights after a power outage"
@@ -198,7 +186,7 @@
           color: blue
           transparency: 50%
           interrupt: 1
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         message: Turning off Motor
         title: "\U0001F4A7 Tank Full"
@@ -223,10 +211,12 @@
   description: Tuns of both motors when tank is full.
   trigger:
     - platform: state
-      entity_id: switch.downstairs_motor_switch_1
+      entity_id:
+        - switch.downstairs_motor_switch_1
       to: "on"
     - platform: state
-      entity_id: switch.upstairs_motor
+      entity_id:
+        - switch.upstairs_motor
       to: "on"
   condition:
     - condition: state
@@ -255,7 +245,7 @@
   description: Turns off the front yard lights at 9:30 PM and turns on the rice lights
   trigger:
     - platform: time
-      at: "21:30:00"
+      at: "21:00:00"
   condition: []
   action:
     - service: notify.sony_tv
@@ -266,6 +256,7 @@
           transparency: 20%
           position: top-right
           fontsize: medium
+      enabled: false
     - service: homeassistant.turn_off
       target:
         entity_id:
@@ -280,7 +271,7 @@
         entity_id:
           - switch.rice_string_1_socket_1
           - switch.rice_string_2_socket_1
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         message: Turning off front yard lights.
         title: "Good Night \U0001F4A4"
@@ -302,53 +293,6 @@
           - switch.rice_string_2_socket_1
           - switch.rice_string_1_socket_1
   mode: single
-- id: hall_lights_motion
-  alias: "\U0001F4A1Hall Lights on when Motion detected"
-  description: ""
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.hall_motion
-      to: "on"
-  condition:
-    - condition: not
-      conditions:
-        - condition: state
-          entity_id: switch.rice_lights_r_socket_1
-          state: "on"
-    - condition: not
-      conditions:
-        - condition: state
-          entity_id: switch.rice_lights_l
-          state: "on"
-    - condition: time
-      after: "18:30:00"
-      before: 05:30:00
-  action:
-    - service: homeassistant.turn_on
-      data: {}
-      target:
-        entity_id:
-          - switch.rice_lights_l
-          - switch.rice_lights_r_socket_1
-    - service: light.turn_on
-      target:
-        entity_id: light.hall_tube_light
-      data:
-        brightness_pct: 39
-        color_temp: 370
-    - delay:
-        hours: 0
-        minutes: 1
-        seconds: 5
-        milliseconds: 0
-    - service: homeassistant.turn_off
-      target:
-        entity_id:
-          - switch.rice_lights_r_socket_1
-          - switch.rice_lights_l
-          - light.hall_tube_light
-      data: {}
-  mode: single
 - id: daytime_frontyard_off
   alias: "\U0001F4A1Turn off Front yard lights during the day"
   description: Does not turn on front yard lights during the day time.
@@ -367,39 +311,6 @@
         entity_id:
           - light.front_yard_lights_group
   mode: single
-- id: washing_machine_off
-  alias: "\U0001F9FA Second Floor Wash Cycle"
-  description: ""
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.washing_machine_power
-      for:
-        hours: 0
-        minutes: 4
-        seconds: 0
-      below: "1"
-  condition:
-    - condition: state
-      entity_id: switch.washing_machine_socket_1
-      state: "on"
-      for:
-        hours: 0
-        minutes: 5
-        seconds: 0
-  action:
-    - service: notify.mobile_app_nord2
-      data:
-        title: 2️⃣ Floor Wash Cycle Complete
-        message: Turning off the Washing Machine.
-        data:
-          notification_icon: mdi:washing-machine
-          icon_url: https://www.flaticon.com/free-icon/washing-machine_3003984
-    - service: switch.turn_off
-      target:
-        entity_id: switch.washing_machine_socket_1
-      data: {}
-  mode: single
-  max: 10
 - id: fill_the_tank
   alias: "\U0001F4A7Fill the tank"
   description: ""
@@ -437,7 +348,7 @@
       data:
         filename: /config/www/cam_captures/frontyard.jpg
       target:
-        entity_id: camera.front_yard_camera_person
+        entity_id: image.front_yard_camera_person
     - service: notify.sony_tv
       data:
         title: Person Detected
@@ -450,24 +361,6 @@
           image:
             path: /config/www/cam_captures/frontyard.jpg
   mode: single
-- id: "1635179073792"
-  alias: ⚙️Camera Motion - Send Notification Snapshot - Frigate
-  trigger:
-    - platform: mqtt
-      topic: frigate/events
-  action:
-    - service: notify.mobile_app_oneplus10pro
-      data_template:
-        message: A {{trigger.payload_json["after"]["label"]}} was detected at {{trigger.payload_json["after"]["camera"]}}.
-        data:
-          image: http://192.168.68.168:8123/api/frigate/notifications/{{trigger.payload_json["after"]["id"]}}/thumbnail.jpg?format=android
-          tag: '{{trigger.payload_json["after"]["id"]}}'
-          when: '{{trigger.payload_json["after"]["start_time"]|int}}'
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 5
-        milliseconds: 0
 - id: "1636974013216"
   alias: ⚙️Lovelace Reload
   description: ""
@@ -529,10 +422,6 @@
               target:
                 entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
               data: {}
-            - service: pyscript.f1constructorstandings
-              data: {}
-            - service: pyscript.f1driverstandings
-              data: {}
       default: []
   mode: single
 - id: "1643198275646"
@@ -556,7 +445,7 @@
         minutes: 2
         seconds: 0
   action:
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         message: clear_notification
         data:
@@ -565,7 +454,7 @@
       target:
         entity_id: switch.downstairs_geyser
       data: {}
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         title: Hot Water Ready!
         message: " "
@@ -639,7 +528,7 @@
       data: {}
   mode: single
 - id: "1659929141343"
-  alias: "\U0001F4A7Turn Motor Off when tank full "
+  alias: "\U0001F4A7Turn Motor Off when tank full"
   description: Turns both motors off if the tank becomes full
   trigger:
     - platform: state
@@ -663,73 +552,13 @@
           - switch.downstairs_motor_switch_1
           - switch.upstairs_motor
   mode: single
-- id: "1663912645183"
-  alias: Nest Hub Max - Notifications
-  description: ""
-  trigger:
-    - platform: device
-      device_id: 580f52bf416b0d96387578c4bdc244d7
-      domain: nest
-      type: camera_motion
-      id: motion
-      enabled: false
-    - platform: device
-      device_id: 580f52bf416b0d96387578c4bdc244d7
-      domain: nest
-      type: camera_person
-      id: person
-    - platform: device
-      device_id: 580f52bf416b0d96387578c4bdc244d7
-      domain: nest
-      type: camera_sound
-      id: sound
-      enabled: false
-  condition: []
-  action:
-    - choose:
-        - conditions:
-            - condition: trigger
-              id: motion
-          sequence:
-            - service: notify.mobile_app_oneplus10pro
-              data:
-                message: Living Room Motion
-                title: Living Room Motion
-                data:
-                  image:
-                    /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
-                    }}/thumbnail
-        - conditions:
-            - condition: trigger
-              id: person
-          sequence:
-            - service: notify.mobile_app_oneplus10pro
-              data:
-                message: Living Room Person
-                title: Living Room Person
-                data:
-                  image:
-                    /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
-                    }}/thumbnail
-        - conditions:
-            - condition: trigger
-              id: sound
-          sequence:
-            - service: notify.mobile_app_oneplus10pro
-              data:
-                message: Living Room Sound
-                title: Living Room Sound
-                data:
-                  image:
-                    /api/nest/event_media/{{ trigger.event.data.device_id }}/{{ trigger.event.data.nest_event_id
-                    }}/thumbnail
-  mode: single
 - id: "1667015304798"
   alias: "\U0001F9FA First Floor Wash Cycle"
   description: ""
   trigger:
     - platform: numeric_state
-      entity_id: sensor.washing_machine_1_power
+      entity_id:
+        - sensor.washing_machine_power
       for:
         hours: 0
         minutes: 4
@@ -737,14 +566,14 @@
       below: "1"
   condition:
     - condition: state
-      entity_id: switch.washing_machine_1_socket_1
+      entity_id: switch.washing_machine
       state: "on"
       for:
         hours: 0
         minutes: 5
         seconds: 0
   action:
-    - service: notify.mobile_app_nord2
+    - service: notify.mobile_app_cph2613
       data:
         title: 1️⃣ Floor Wash Cycle Complete
         message: Washing Machine Turned Off
@@ -754,7 +583,7 @@
     - service: switch.turn_off
       target:
         entity_id:
-          - switch.washing_machine_1_socket_1
+          - switch.washing_machine
       data: {}
   mode: single
   max: 10
