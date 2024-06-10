@@ -1,8 +1,8 @@
-[![My HA Version](https://img.shields.io/github/v/tag/n00bcodr/homeassistant?color=d42a1e&label=My%20HA%20Version&logo=homeassistant&logoColor=white&?cacheSeconds=600)](https://github.com/n00bcodr/homeassistant/blob/master/.HA_VERSION)
+[![My HA Version](https://img.shields.io/github/v/tag/n00bcodr/homeassistant-india?color=d42a1e&label=My%20HA%20Version&logo=homeassistant&logoColor=white&?cacheSeconds=600)](https://github.com/n00bcodr/homeassistant-india/blob/master/.HA_VERSION)
 [![Latest HA Release](https://img.shields.io/github/v/release/home-assistant/home-assistant?include_prereleases&label=Latest%20HA%20Release&logo=home-assistant)](https://github.com/home-assistant/home-assistant/releases/latest)
 [![Years Badge](https://badges.strrl.dev/years/n00bcodr?color=darkgreen)](https://github.com/n00bcodr)
-![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant?color=f58153&?cacheSeconds=600)
-[![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant?color=purple)](https://github.com/n00bcodr/homeassistant/commits/master)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/n00bcodr/homeassistant-india?color=f58153&?cacheSeconds=600)
+[![Last Commit](https://img.shields.io/github/last-commit/n00bcodr/homeassistant-india?color=purple)](https://github.com/n00bcodr/homeassistant-india/commits/master)
 
 ---
 
@@ -139,28 +139,28 @@ No specific climate devices but two IR Blasters used to control ACs  using [Smar
 
 Personal Dashboard
 
-![Personal Dashboard](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/PersonalDashboard.png?raw=true "Personal Dashboard")
+![Personal Dashboard](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/PersonalDashboard.png?raw=true "Personal Dashboard")
 
 ---
 
 Main Dashboard
 
-![Main Dashboard 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_1.jpeg?raw=true "Main Dashboard 1")
-![Main Dashboard 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_2.jpeg?raw=true "Main Dashboard 2")
-![Main Dashboard 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_3.jpeg?raw=true "Main Dashboard 3")
-![Main Dashboard 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/MainDashboard_4.jpeg?raw=true "Main Dashboard 4")
+![Main Dashboard 1](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/MainDashboard_1.jpeg?raw=true "Main Dashboard 1")
+![Main Dashboard 2](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/MainDashboard_2.jpeg?raw=true "Main Dashboard 2")
+![Main Dashboard 3](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/MainDashboard_3.jpeg?raw=true "Main Dashboard 3")
+![Main Dashboard 4](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/MainDashboard_4.jpeg?raw=true "Main Dashboard 4")
 ---
 Lovelace
 
-![Lovelace 1](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_1.png?raw=true "Lovelace 1")
-![Lovelace 2](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_2.png?raw=true "Lovelace 2")
-![Lovelace 3](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_3.png?raw=true "Lovelace 3")
-![Lovelace 4](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_4.png?raw=true "Lovelace 4")
-![Lovelace 5](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_5.png?raw=true "Lovelace 5")
-![Lovelace 6](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_6.png?raw=true "Lovelace 6")
-![Lovelace 7](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_7.png?raw=true "Lovelace 7")
-![Lovelace 8](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_8.png?raw=true "Lovelace 8")
-![Lovelace 9](https://github.com/n00bcodr/homeassistant/blob/master/Screenshots/Lovelace_9.png?raw=true "Lovelace 9")
+![Lovelace 1](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_1.png?raw=true "Lovelace 1")
+![Lovelace 2](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_2.png?raw=true "Lovelace 2")
+![Lovelace 3](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_3.png?raw=true "Lovelace 3")
+![Lovelace 4](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_4.png?raw=true "Lovelace 4")
+![Lovelace 5](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_5.png?raw=true "Lovelace 5")
+![Lovelace 6](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_6.png?raw=true "Lovelace 6")
+![Lovelace 7](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_7.png?raw=true "Lovelace 7")
+![Lovelace 8](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_8.png?raw=true "Lovelace 8")
+![Lovelace 9](https://github.com/n00bcodr/homeassistant-india/blob/master/Screenshots/Lovelace_9.png?raw=true "Lovelace 9")
 
 ---
 
