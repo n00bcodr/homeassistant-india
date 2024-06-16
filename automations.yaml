@@ -2,588 +2,550 @@
   alias: "\U0001F4A1Sunset"
   description: Turns on various lights at sunset.
   trigger:
-    - platform: sun
-      event: sunset
+  - platform: sun
+    event: sunset
   condition: []
   action:
-    - repeat:
-        count: "5"
-        sequence:
-          - service: homeassistant.turn_on
-            target:
-              entity_id:
-                - light.hall_tube_light
-                - switch.rice_lights_r_socket_1
-                - switch.rice_lights_l
-                - switch.laser
-                - light.first_floor_stairway
-                - light.first_floor_light
-                - light.first_floor_corner
-                - light.second_floor_stairway
-                - light.second_floor_light
-                - light.second_floor_corner
-            data: {}
-    - service: notify.sony_tv
+  - repeat:
+      count: '5'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id:
+          - light.hall_tube_light
+          - switch.rice_lights_r_socket_1
+          - switch.rice_lights_l
+          - switch.laser
+          - light.first_floor_stairway
+          - light.first_floor_light
+          - light.first_floor_corner
+          - light.second_floor_stairway
+          - light.second_floor_light
+          - light.second_floor_corner
+        data: {}
+  - service: notify.sony_tv
+    data:
+      message: "Turning on front yard lights \U0001F4A1"
+      title: "Good Evening \U0001F307"
       data:
-        message: "Turning on front yard lights \U0001F4A1"
-        title: "Good Evening \U0001F307"
-        data:
-          transparency: 20%
-          position: top-right
-          fontsize: medium
+        transparency: 20%
+        position: top-right
+        fontsize: medium
+  - service: notify.mobile_app_cph2613
+    data:
+      message: Turning on the front yard lights.
+      title: "Good Evening \U0001F307"
+      data:
+        tag: sunset
+        notification_icon: mdi:weather-sunset
+        color: '#f5c905'
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sunset_1f307.png
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - repeat:
+      count: '5'
+      sequence:
+      - service: homeassistant.turn_on
+        target:
+          entity_id:
+          - light.hall_tube_light
+          - switch.rice_lights_r_socket_1
+          - switch.rice_lights_l
+          - light.front_yard_lights_group
+        data: {}
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
     - service: notify.mobile_app_cph2613
       data:
-        message: Turning on the front yard lights.
-        title: "Good Evening \U0001F307"
+        message: clear_notification
         data:
           tag: sunset
-          notification_icon: mdi:weather-sunset
-          color: "#f5c905"
-          icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sunset_1f307.png
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 30
-        milliseconds: 0
+    - service: notify.mobile_app_cph2613
+      data:
+        title: Not all lights are turned on
+        message: "\U0001F504 Retrying...."
+        data:
+          tag: sunset
     - repeat:
-        count: "5"
+        count: '5'
         sequence:
-          - service: homeassistant.turn_on
-            target:
-              entity_id:
-                - light.hall_tube_light
-                - switch.rice_lights_r_socket_1
-                - switch.rice_lights_l
-                - light.front_yard_lights_group
-            data: {}
-    - if:
-        - condition: template
-          value_template:
-            "{{ not ((is_state('light.first_floor_light', 'on') or is_state('light.first_floor_stairway',
-            'on')) or (is_state('light.second_floor_light', 'on') or is_state('light.second_floor_stairway',
-            'on'))) }}"
-      then:
-        - service: notify.mobile_app_cph2613
-          data:
-            message: clear_notification
-            data:
-              tag: sunset
-        - service: notify.mobile_app_cph2613
-          data:
-            title: Not all lights are turned on
-            message: "\U0001F504 Retrying...."
-            data:
-              tag: sunset
-        - repeat:
-            count: "5"
-            sequence:
-              - service: homeassistant.turn_on
-                target:
-                  entity_id:
-                    - light.front_yard_lights_group
-                data: {}
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 15
-        milliseconds: 0
-    - if:
-        - condition: template
-          value_template:
-            "{{ not ((is_state('light.first_floor_light', 'on') or is_state('light.first_floor_stairway',
-            'on')) or (is_state('light.second_floor_light', 'on') or is_state('light.second_floor_stairway',
-            'on'))) }}"
-      then:
-        - service: notify.mobile_app_cph2613
-          data:
-            message: clear_notification
-            data:
-              tag: sunset
-        - service: notify.mobile_app_cph2613
-          data:
-            title: ⚠️ Retry Failed ⚠️
-            message: Supervision Needed!
-            data:
-              notification_icon: mdi:alert
-              persistent: true
-              actions:
-                - action: URI
-                  title: Open Lights
-                  uri: /lovelace-admin/front-yard
-                - action: URI
-                  title: Open Tuya
-                  uri: app://com.tuya.smart
-              icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/warning_26a0-fe0f.png
+        - service: homeassistant.turn_on
+          target:
+            entity_id:
+            - light.front_yard_lights_group
+          data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - if:
+    - condition: template
+      value_template: '{{ not ((is_state(''light.first_floor_light'', ''on'') or is_state(''light.first_floor_stairway'',
+        ''on'')) or (is_state(''light.second_floor_light'', ''on'') or is_state(''light.second_floor_stairway'',
+        ''on''))) }}'
+    then:
+    - service: notify.mobile_app_cph2613
+      data:
+        message: clear_notification
+        data:
+          tag: sunset
+    - service: notify.mobile_app_cph2613
+      data:
+        title: ⚠️ Retry Failed ⚠️
+        message: Supervision Needed!
+        data:
+          notification_icon: mdi:alert
+          persistent: true
+          actions:
+          - action: URI
+            title: Open Lights
+            uri: /lovelace-admin/front-yard
+          - action: URI
+            title: Open Tuya
+            uri: app://com.tuya.smart
+          icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/warning_26a0-fe0f.png
   mode: single
 - id: power_outage_lights_restore_downstairs
   alias: "\U0001F4A1Restore Lights after a power outage"
-  description:
-    turns off lights when the power is back on and if it not between 6
+  description: turns off lights when the power is back on and if it not between 6
     PM to 10 PM
   trigger:
-    - platform: state
-      entity_id: binary_sensor.downstairs_power_failed
-      to: "on"
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 0
-      from: "off"
-      id: downstairs
-    - platform: state
-      entity_id: binary_sensor.upstairs_power_failed
-      to: "on"
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 0
-      from: "off"
-      id: upstairs
-    - platform: state
-      entity_id: media_player.friday
-      from: unavailable
-      to: "off"
-      id: downstairs
+  - platform: state
+    entity_id: binary_sensor.downstairs_power_failed
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    from: 'off'
+    id: downstairs
+  - platform: state
+    entity_id: binary_sensor.upstairs_power_failed
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    from: 'off'
+    id: upstairs
+  - platform: state
+    entity_id: media_player.friday
+    from: unavailable
+    to: 'off'
+    id: downstairs
   condition:
-    - condition: time
-      after: "22:00:00"
-      before: "17:30:00"
+  - condition: time
+    after: '22:00:00'
+    before: '17:30:00'
   action:
-    - delay:
-        hours: 0
-        minutes: 1
-        seconds: 0
-        milliseconds: 0
-    - service: homeassistant.turn_off
-      data: {}
-      target:
-        entity_id:
-          - light.hall_tube_light
-          - light.rgb_1
-          - light.rgb_2
-          - light.first_floor_stairway
-          - light.second_floor_corner
-          - light.first_floor_corner
-          - light.second_floor_stairway
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.hall_tube_light
+      - light.rgb_1
+      - light.rgb_2
+      - light.first_floor_stairway
+      - light.second_floor_corner
+      - light.first_floor_corner
+      - light.second_floor_stairway
   mode: single
 - id: tankfull_notification
   alias: "\U0001F4A7Tank Full - Notification"
   description: Sends a notification on the TV when the tank is full
   trigger:
-    - platform: state
-      to: "on"
-      entity_id: switch.sonoff_1000f38ea4
-      from: "off"
+  - platform: state
+    to: 'on'
+    entity_id: switch.sonoff_1000f38ea4
+    from: 'off'
   condition: []
   action:
-    - service: notify.sony_tv
+  - service: notify.sony_tv
+    data:
+      title: "\U0001F4A7 Tank Full"
+      message: Turning off Motor
       data:
-        title: "\U0001F4A7 Tank Full"
-        message: Turning off Motor
-        data:
-          fontsize: small
-          duration: 5
-          color: blue
-          transparency: 50%
-          interrupt: 1
-    - service: notify.mobile_app_cph2613
+        fontsize: small
+        duration: 5
+        color: blue
+        transparency: 50%
+        interrupt: 1
+  - service: notify.mobile_app_cph2613
+    data:
+      message: Turning off Motor
+      title: "\U0001F4A7 Tank Full"
       data:
-        message: Turning off Motor
-        title: "\U0001F4A7 Tank Full"
-        data:
-          notification_icon: mdi:water-pump
-          color: blue
-          icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/droplet_1f4a7.png
-    - service: tts.google_translate_say
-      data:
-        entity_id: media_player.family_room_mini
-        message: ట్యాంక్ నిండింది
-        language: te
-    - service: tts.google_translate_say
-      data:
-        entity_id: media_player.akashavani
-        message: ట్యాంక్ నిండింది
-        language: te
+        notification_icon: mdi:water-pump
+        color: blue
+        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/droplet_1f4a7.png
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.family_room_mini
+      message: ట్యాంక్ నిండింది
+      language: te
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.akashavani
+      message: ట్యాంక్ నిండింది
+      language: te
   mode: restart
   max: 10
 - id: tankfull_motoroff
   alias: "\U0001F4A7If tank is full, don't turn on motor"
   description: Tuns of both motors when tank is full.
   trigger:
-    - platform: state
-      entity_id:
-        - switch.downstairs_motor_switch_1
-      to: "on"
-    - platform: state
-      entity_id:
-        - switch.upstairs_motor
-      to: "on"
+  - platform: state
+    entity_id:
+    - switch.downstairs_motor_switch_1
+    to: 'on'
+  - platform: state
+    entity_id:
+    - switch.upstairs_motor
+    to: 'on'
   condition:
-    - condition: state
-      entity_id: switch.sonoff_1000f38ea4
-      state: "on"
+  - condition: state
+    entity_id: switch.sonoff_1000f38ea4
+    state: 'on'
   action:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-          - switch.downstairs_motor_switch_1
-          - switch.upstairs_motor
-    - service: tts.google_translate_say
-      data:
-        entity_id: media_player.family_room_mini
-        message: ట్యాంక్ నిండుగ ఉంది
-        language: te
-    - service: tts.google_translate_say
-      data:
-        entity_id: media_player.akashavani
-        message: ట్యాంక్ నిండుగ ఉంది
-        language: te
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.downstairs_motor_switch_1
+      - switch.upstairs_motor
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.family_room_mini
+      message: ట్యాంక్ నిండుగ ఉంది
+      language: te
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.akashavani
+      message: ట్యాంక్ నిండుగ ఉంది
+      language: te
   mode: single
 - id: frontyard_off
   alias: "\U0001F4A1Front Yard lights - Turn off at 9:30 PM"
   description: Turns off the front yard lights at 9:30 PM and turns on the rice lights
   trigger:
-    - platform: time
-      at: "21:00:00"
+  - platform: time
+    at: '21:00:00'
   condition: []
   action:
-    - service: notify.sony_tv
+  - service: notify.sony_tv
+    data:
+      message: Turning off front yard lights.
+      title: "Good Night \U0001F4A4"
       data:
-        message: Turning off front yard lights.
-        title: "Good Night \U0001F4A4"
-        data:
-          transparency: 20%
-          position: top-right
-          fontsize: medium
-      enabled: false
-    - service: homeassistant.turn_off
-      target:
-        entity_id:
-          - light.front_yard_lights_group
-          - light.hall_tube_light
-          - switch.rice_lights_l
-          - switch.rice_lights_r_socket_1
-      data: {}
-    - service: switch.turn_on
-      data: {}
-      target:
-        entity_id:
-          - switch.rice_string_1_socket_1
-          - switch.rice_string_2_socket_1
-    - service: notify.mobile_app_cph2613
-      data:
-        message: Turning off front yard lights.
-        title: "Good Night \U0001F4A4"
-        icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sleeping-face_1f634.png
+        transparency: 20%
+        position: top-right
+        fontsize: medium
+    enabled: false
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.front_yard_lights_group
+      - light.hall_tube_light
+      - switch.rice_lights_l
+      - switch.rice_lights_r_socket_1
+    data: {}
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.rice_string_1_socket_1
+      - switch.rice_string_2_socket_1
+  - service: notify.mobile_app_cph2613
+    data:
+      message: Turning off front yard lights.
+      title: "Good Night \U0001F4A4"
+      icon_url: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/sleeping-face_1f634.png
   mode: single
 - id: frontyard_ricelights
   alias: "\U0001F4A1Front Yard Rice Lights - Turn off at Sunrise"
-  description: ""
+  description: ''
   trigger:
-    - platform: sun
-      event: sunrise
-      offset: -01:00:00
+  - platform: sun
+    event: sunrise
+    offset: -01:00:00
   condition: []
   action:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-          - switch.rice_string_2_socket_1
-          - switch.rice_string_1_socket_1
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.rice_string_2_socket_1
+      - switch.rice_string_1_socket_1
   mode: single
 - id: daytime_frontyard_off
   alias: "\U0001F4A1Turn off Front yard lights during the day"
   description: Does not turn on front yard lights during the day time.
   trigger:
-    - platform: state
-      entity_id: light.front_yard_lights_group
-      to: "on"
+  - platform: state
+    entity_id: light.front_yard_lights_group
+    to: 'on'
   condition:
-    - condition: time
-      before: "16:00:00"
-      after: 05:00:00
+  - condition: time
+    before: '16:00:00'
+    after: 05:00:00
   action:
-    - service: light.turn_off
-      data: {}
-      target:
-        entity_id:
-          - light.front_yard_lights_group
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.front_yard_lights_group
   mode: single
 - id: fill_the_tank
   alias: "\U0001F4A7Fill the tank"
-  description: ""
+  description: ''
   trigger:
-    - platform: state
-      entity_id: switch.upstairs_motor
-      from: "on"
-      to: "off"
+  - platform: state
+    entity_id: switch.upstairs_motor
+    from: 'on'
+    to: 'off'
   condition:
-    - condition: state
-      entity_id: switch.sonoff_1000f38ea4
-      state: "off"
-    - condition: time
-      after: 05:00:00
-      before: 09:00:00
+  - condition: state
+    entity_id: switch.sonoff_1000f38ea4
+    state: 'off'
+  - condition: time
+    after: 05:00:00
+    before: 09:00:00
   action:
-    - service: switch.turn_on
-      target:
-        entity_id: switch.downstairs_motor_switch_1
+  - service: switch.turn_on
+    target:
+      entity_id: switch.downstairs_motor_switch_1
   mode: single
-- id: "1634446057008"
+- id: '1634446057008'
   alias: ⚙️Front Door Motion Notification on TV
-  description: ""
+  description: ''
   trigger:
-    - platform: state
-      entity_id: binary_sensor.front_yard_camera_person_occupancy
-      to: "on"
-      from: "off"
+  - platform: state
+    entity_id: binary_sensor.front_yard_camera_person_occupancy
+    to: 'on'
+    from: 'off'
   condition:
-    - condition: state
-      entity_id: binary_sensor.steps_person_occupancy
-      state: "on"
+  - condition: state
+    entity_id: binary_sensor.steps_person_occupancy
+    state: 'on'
   action:
-    - service: camera.snapshot
+  - service: camera.snapshot
+    data:
+      filename: /config/www/cam_captures/frontyard.jpg
+    target:
+      entity_id: image.front_yard_camera_person
+  - service: notify.sony_tv
+    data:
+      title: Person Detected
+      message: at Front Door
       data:
-        filename: /config/www/cam_captures/frontyard.jpg
-      target:
-        entity_id: image.front_yard_camera_person
-    - service: notify.sony_tv
-      data:
-        title: Person Detected
-        message: at Front Door
-        data:
-          fontsize: small
-          duration: 8
-          color: black
-          transparency: 50%
-          image:
-            path: /config/www/cam_captures/frontyard.jpg
+        fontsize: small
+        duration: 8
+        color: black
+        transparency: 50%
+        image:
+          path: /config/www/cam_captures/frontyard.jpg
   mode: single
-- id: "1636974013216"
+- id: '1636974013216'
   alias: ⚙️Lovelace Reload
-  description: ""
+  description: ''
   trigger:
-    - platform: event
-      event_type: lovelace_updated
-      event_data:
-        url_path: lovelace-wallmount
-      id: wallmount
-    - platform: event
-      event_type: lovelace_updated
-      event_data:
-        url_path:
-      id: lovelace
+  - platform: event
+    event_type: lovelace_updated
+    event_data:
+      url_path: lovelace-wallmount
+    id: wallmount
+  - platform: event
+    event_type: lovelace_updated
+    event_data:
+      url_path:
+    id: lovelace
   condition: []
   action:
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 20
-        milliseconds: 0
-    - choose:
-        - conditions:
-            - condition: trigger
-              id: wallmount
-          sequence:
-            - service: browser_mod.refresh
-              data: {}
-              target:
-                device_id: 534f77b165463f8e653c72beaa4d9399
-      default: []
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: wallmount
+      sequence:
+      - service: browser_mod.refresh
+        data: {}
+        target:
+          device_id: 534f77b165463f8e653c72beaa4d9399
+    default: []
   mode: queued
-- id: "1638974963835"
+- id: '1638974963835'
   alias: ⚙️Homeassistant Start/Stop
   description: Runs various automations based on homeassistant starting or stopping.
   trigger:
-    - platform: homeassistant
-      event: shutdown
-      id: shutdown
-    - platform: homeassistant
-      event: start
-      id: start
+  - platform: homeassistant
+    event: shutdown
+    id: shutdown
+  - platform: homeassistant
+    event: start
+    id: start
   condition: []
   action:
-    - choose:
-        - conditions:
-            - condition: trigger
-              id: shutdown
-          sequence:
-            - service: switch.turn_on
-              target:
-                entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
-              data: {}
-        - conditions:
-            - condition: trigger
-              id: start
-          sequence:
-            - service: switch.turn_off
-              target:
-                entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
-              data: {}
-      default: []
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: shutdown
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: start
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.lenovo_tab_m10_hd_maintenance_mode
+        data: {}
+    default: []
   mode: single
-- id: "1643198275646"
+- id: '1643198275646'
   alias: ⚙️Turn off Downstairs Geyser
-  description: ""
+  description: ''
   trigger:
-    - platform: numeric_state
-      entity_id: switch.downstairs_geyser
-      below: "5"
-      for:
-        hours: 0
-        minutes: 1
-        seconds: 0
-      attribute: power
+  - platform: numeric_state
+    entity_id: switch.downstairs_geyser
+    below: '5'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    attribute: power
   condition:
-    - condition: state
+  - condition: state
+    entity_id: switch.downstairs_geyser
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  action:
+  - service: notify.mobile_app_cph2613
+    data:
+      message: clear_notification
+      data:
+        tag: hot_water
+  - service: switch.turn_off
+    target:
       entity_id: switch.downstairs_geyser
-      state: "on"
-      for:
-        hours: 0
-        minutes: 2
-        seconds: 0
-  action:
-    - service: notify.mobile_app_cph2613
+    data: {}
+  - service: notify.mobile_app_cph2613
+    data:
+      title: Hot Water Ready!
+      message: ' '
       data:
-        message: clear_notification
-        data:
-          tag: hot_water
-    - service: switch.turn_off
-      target:
-        entity_id: switch.downstairs_geyser
-      data: {}
-    - service: notify.mobile_app_cph2613
-      data:
-        title: Hot Water Ready!
-        message: " "
-        data:
-          tag: hot_water
-          notification_icon: mdi:water-boiler
-          color: "#ad0320"
-    - service: media_player.play_media
-      data:
-        media_content_id: /local/hot_water_ready.mp4
-        media_content_type: video
-      target:
-        entity_id: media_player.priyadarshini
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 20
-        milliseconds: 0
-    - service: homeassistant.turn_off
-      data: {}
-      target:
-        entity_id: media_player.priyadarshini
+        tag: hot_water
+        notification_icon: mdi:water-boiler
+        color: '#ad0320'
+  - service: media_player.play_media
+    data:
+      media_content_id: /local/hot_water_ready.mp4
+      media_content_type: video
+    target:
+      entity_id: media_player.priyadarshini
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - service: homeassistant.turn_off
+    data: {}
+    target:
+      entity_id: media_player.priyadarshini
   mode: single
-- id: "1646484182721"
-  alias: LED Strip follows TV
-  description: ""
-  trigger:
-    - platform: state
-      entity_id: remote.sony_bravia_tv
-      id: "Off"
-      to: "off"
-    - platform: state
-      entity_id: remote.sony_bravia_tv
-      id: "On"
-      to: "on"
-  condition: []
-  action:
-    - choose:
-        - conditions:
-            - condition: trigger
-              id: "Off"
-          sequence:
-            - service: homeassistant.turn_off
-              data: {}
-              target:
-                entity_id:
-                  - light.led_strip_tv
-        - conditions:
-            - condition: trigger
-              id: "On"
-          sequence:
-            - service: homeassistant.turn_on
-              data: {}
-              target:
-                entity_id:
-                  - light.led_strip_tv
-      default: []
-  mode: single
-- id: "1654855874344"
+- id: '1654855874344'
   alias: ⚙️Convert Lovelace configuration to yaml
-  description: ""
+  description: ''
   trigger:
-    - platform: event
-      event_type: lovelace_updated
-      event_data: {}
+  - platform: event
+    event_type: lovelace_updated
+    event_data: {}
   condition: []
   action:
-    - service: shell_command.lovelace_default_convert
-      data: {}
-    - service: shell_command.lovelace_wallmount_convert
-      data: {}
+  - service: shell_command.lovelace_default_convert
+    data: {}
+  - service: shell_command.lovelace_wallmount_convert
+    data: {}
   mode: single
-- id: "1659929141343"
+- id: '1659929141343'
   alias: "\U0001F4A7Turn Motor Off when tank full"
   description: Turns both motors off if the tank becomes full
   trigger:
-    - platform: state
-      entity_id:
-        - switch.sonoff_1000f38ea4
-      to: "on"
+  - platform: state
+    entity_id:
+    - switch.sonoff_1000f38ea4
+    to: 'on'
   condition:
-    - condition: or
-      conditions:
-        - condition: state
-          entity_id: switch.downstairs_motor_switch_1
-          state: "on"
-        - condition: state
-          entity_id: switch.upstairs_motor
-          state: "on"
-  action:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-          - switch.downstairs_motor_switch_1
-          - switch.upstairs_motor
-  mode: single
-- id: "1667015304798"
-  alias: "\U0001F9FA First Floor Wash Cycle"
-  description: ""
-  trigger:
-    - platform: numeric_state
-      entity_id:
-        - sensor.washing_machine_power
-      for:
-        hours: 0
-        minutes: 4
-        seconds: 0
-      below: "1"
-  condition:
+  - condition: or
+    conditions:
     - condition: state
-      entity_id: switch.washing_machine
-      state: "on"
-      for:
-        hours: 0
-        minutes: 5
-        seconds: 0
+      entity_id: switch.downstairs_motor_switch_1
+      state: 'on'
+    - condition: state
+      entity_id: switch.upstairs_motor
+      state: 'on'
   action:
-    - service: notify.mobile_app_cph2613
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.downstairs_motor_switch_1
+      - switch.upstairs_motor
+  mode: single
+- id: '1667015304798'
+  alias: "\U0001F9FA First Floor Wash Cycle"
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.washing_machine_power
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+    below: '1'
+  condition:
+  - condition: state
+    entity_id: switch.washing_machine
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  action:
+  - service: notify.mobile_app_cph2613
+    data:
+      title: 1️⃣ Floor Wash Cycle Complete
+      message: Washing Machine Turned Off
       data:
-        title: 1️⃣ Floor Wash Cycle Complete
-        message: Washing Machine Turned Off
-        data:
-          notification_icon: mdi:washing-machine
-          icon_url: https://www.flaticon.com/free-icon/washing-machine_3003984
-    - service: switch.turn_off
-      target:
-        entity_id:
-          - switch.washing_machine
-      data: {}
+        notification_icon: mdi:washing-machine
+        icon_url: https://www.flaticon.com/free-icon/washing-machine_3003984
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.washing_machine
+    data: {}
   mode: single
   max: 10
