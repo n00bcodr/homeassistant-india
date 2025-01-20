@@ -9,10 +9,16 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
 )
 
-from homeassistant.const import STATE_ON
+from homeassistant.components.ffmpeg import (
+    FFmpegManager,
+    get_ffmpeg_manager,
+)
+
+from homeassistant.const import STATE_ON, STATE_OFF
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.util.enum import try_parse_enum
+from homeassistant.helpers.entity import EntityCategory
 
 from .const import (
     BRAND,
@@ -27,10 +33,6 @@ from .utils import build_device_info, getStreamSource
 from .tapo.entities import TapoBinarySensorEntity
 
 import haffmpeg.sensor as ffmpeg_sensor
-
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    return True
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -76,8 +78,10 @@ class TapoNoiseBinarySensor(TapoBinarySensorEntity):
         self._sound_detection_reset = config_entry.data.get(SOUND_DETECTION_RESET)
         self.latestCamData = entry["camData"]
 
+        manager = get_ffmpeg_manager(hass)
+
         self._noiseSensor = ffmpeg_sensor.SensorNoise(
-            self._ffmpeg.binary, self._noiseCallback
+            manager.binary, self._noiseCallback
         )
         self._noiseSensor.set_options(
             time_duration=int(self._sound_detection_duration),

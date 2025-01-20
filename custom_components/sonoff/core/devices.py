@@ -13,57 +13,67 @@ Developer can change global properties of existing classes via spec function.
 """
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.components.light import LightEntity
+from homeassistant.components.light import ColorMode, LightEntity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.switch import SwitchEntity
 
 from .ewelink import XDevice
-from ..binary_sensor import XBinarySensor, XWiFiDoor, XZigbeeMotion
+from ..binary_sensor import (
+    XBinarySensor,
+    XHumanSensor,
+    XLightSensor,
+    XWaterSensor,
+    XWiFiDoor,
+    XZigbeeMotion,
+)
+from ..button import XT5Button
 from ..climate import XClimateNS, XClimateTH, XThermostat
 from ..core.entity import XEntity
-from ..cover import XCover, XCoverDualR3, XZigbeeCover, XCover91
-from ..fan import XDiffuserFan, XFan, XToggleFan, XFanDualR3
+from ..cover import XCover, XCover91, XCoverDualR3, XZigbeeCover
+from ..fan import XDiffuserFan, XFan, XFanDualR3, XToggleFan
 from ..light import (
     XDiffuserLight,
     XDimmer,
     XFanLight,
     XLight57,
-    XLightB1,
     XLightB02,
     XLightB05B,
+    XLightB1,
     XLightD1,
     XLightGroup,
     XLightL1,
     XLightL3,
     XOnOffLight,
     XT5Light,
+    XZigbeeColorTemp,
     XZigbeeLight,
 )
-from ..number import XPulseWidth
+from ..number import XPulseWidth, XSensitivity
 from ..remote import XRemote
 from ..sensor import (
     XEnergySensor,
+    XEnergySensorDualR3,
+    XEnergySensorPOWR3,
+    XEnergyTotal,
     XHumidityTH,
     XOutdoorTempNS,
     XRemoteButton,
     XSensor,
+    XT5Action,
     XTemperatureNS,
     XTemperatureTH,
     XUnknown,
     XWiFiDoorBattery,
-    XEnergySensorDualR3,
-    XEnergySensorPOWR3,
-    XEnergyTotal,
-    XT5Action,
 )
 from ..switch import (
+    XBoolSwitch,
+    XDetach,
     XSwitch,
-    XSwitches,
+    XSwitchPOWR3,
     XSwitchTH,
+    XSwitches,
     XToggle,
     XZigbeeSwitches,
-    XSwitchPOWR3,
-    XDetach,
 )
 
 # supported custom device_class
@@ -138,6 +148,12 @@ EnergyPOW = spec(
     uid="energy",
     get_params={"hundredDaysKwh": "get"},
 )
+
+# backward compatibility for unique_id
+DoorLock = spec(XBinarySensor, param="lock", uid="", default_class="door")
+
+XT5Alarm = spec(XT5Button, soundAction=1, uid="alarm")
+XT5Bell = spec(XT5Button, soundAction=2, uid="bell")
 
 # https://github.com/CoolKit-Technologies/eWeLink-API/blob/main/en/UIIDProtocol.md
 DEVICES = {
@@ -311,7 +327,9 @@ DEVICES = {
     ],  # MINIR3, MINIR4
     # https://github.com/AlexxIT/SonoffLAN/issues/808
     154: [XWiFiDoor, Battery, RSSI],  # DW2-Wi-Fi-L
-    162: SPEC_3CH,  # https://github.com/AlexxIT/SonoffLAN/issues/659
+    160: SPEC_1CH,  # Sonoff SwitchMan M5-1C, https://github.com/AlexxIT/SonoffLAN/issues/1432
+    161: SPEC_2CH,  # Sonoff SwitchMan M5-2C, https://github.com/AlexxIT/SonoffLAN/issues/1432
+    162: SPEC_3CH,  # Sonoff SwitchMan M5-3C, https://github.com/AlexxIT/SonoffLAN/issues/659
     165: [Switch1, Switch2, RSSI],  # DualR3 Lite, without power consumption
     # https://github.com/AlexxIT/SonoffLAN/issues/857
     168: [RSSI],  # new ZBBridge-P
@@ -355,15 +373,42 @@ DEVICES = {
     # https://github.com/AlexxIT/SonoffLAN/issues/984
     195: [XTemperatureTH],  # NSPanel Pro
     # https://github.com/AlexxIT/SonoffLAN/issues/1183
-    209: [Switch1, XT5Light, XT5Action],  # T5-1C-86
-    210: [Switch1, Switch2, XT5Light, XT5Action],  # T5-2C-86
-    211: [Switch1, Switch2, Switch3, XT5Light, XT5Action],  # T5-3C-86
+    209: [Switch1, XT5Light, XT5Action, XT5Alarm, XT5Bell],  # T5-1C-86
+    210: [Switch1, Switch2, XT5Light, XT5Action, XT5Alarm, XT5Bell],  # T5-2C-86
+    211: [
+        Switch1,
+        Switch2,
+        Switch3,
+        XT5Light,
+        XT5Action,
+        XT5Alarm,
+        XT5Bell,
+    ],  # T5-3C-86
     # https://github.com/AlexxIT/SonoffLAN/issues/1251
-    212: [Switch1, Switch2, Switch3, Switch4, XT5Light, XT5Action],  # T5-4C-86
+    212: [
+        Switch1,
+        Switch2,
+        Switch3,
+        Switch4,
+        XT5Light,
+        XT5Action,
+        XT5Alarm,
+        XT5Bell,
+    ],  # T5-4C-86
+    226: [
+        XBoolSwitch,
+        LED,
+        RSSI,
+        spec(XSensor, param="phase_0_c", uid="current"),
+        spec(XSensor, param="phase_0_p", uid="power"),
+        spec(XSensor, param="phase_0_v", uid="voltage"),
+        spec(XEnergyTotal, param="totalPower", uid="energy"),
+    ],  # CK-BL602-W102SW18-01(226)
     1000: [XRemoteButton, Battery],  # zigbee_ON_OFF_SWITCH_1000
     # https://github.com/AlexxIT/SonoffLAN/issues/1195
     1256: [spec(XSwitch)],  # ZCL_HA_DEVICEID_ON_OFF_LIGHT
     1257: [XLightD1],  # ZigbeeWhiteLight
+    1258: [XZigbeeColorTemp],  # https://github.com/AlexxIT/SonoffLAN/issues/1557
     # https://github.com/AlexxIT/SonoffLAN/issues/972
     1514: [XZigbeeCover, spec(XSensor, param="battery", multiply=2)],
     1770: [
@@ -377,12 +422,7 @@ DEVICES = {
         Battery,
     ],  # https://github.com/AlexxIT/SonoffLAN/issues/1150
     2026: [XZigbeeMotion, Battery],  # ZIGBEE_MOBILE_SENSOR
-    # ZIGBEE_DOOR_AND_WINDOW_SENSOR
-    3026: [
-        # backward compatibility for unique_id
-        spec(XBinarySensor, param="lock", uid="", default_class="door"),
-        Battery,
-    ],
+    3026: [DoorLock, Battery],  # ZIGBEE_DOOR_AND_WINDOW_SENSOR
     # https://github.com/AlexxIT/SonoffLAN/issues/1265
     3258: [XZigbeeLight],  # ZigbeeColorTunableWhiteLight
     4026: [
@@ -395,20 +435,66 @@ DEVICES = {
         spec(XZigbeeSwitches, channel=2, uid="3"),
         spec(XZigbeeSwitches, channel=3, uid="4"),
     ],
-    7000: [
-        XRemoteButton,
-        Battery,
-    ],
+    7000: [XRemoteButton, Battery],
+    # https://github.com/AlexxIT/SonoffLAN/issues/1435
+    7002: [XZigbeeMotion, XLightSensor, Battery, ZRSSI],  # SNZB-03P
+    # https://github.com/AlexxIT/SonoffLAN/issues/1439
+    7003: [DoorLock, Battery, ZRSSI],  # SNZB-04P
     # https://github.com/AlexxIT/SonoffLAN/issues/1398
     7004: [XSwitch, ZRSSI],  # ZBMINIL2
     # https://github.com/AlexxIT/SonoffLAN/issues/1283
-    7006: [XZigbeeCover, spec(XSensor, param="battery")],
+    7006: [XZigbeeCover, Battery],
+    # https://github.com/AlexxIT/SonoffLAN/issues/1456
+    7009: [XZigbeeLight],  # CK-BL702-AL-01(7009_Z102LG03-1)
     7014: [
         spec(XSensor100, param="temperature"),
         spec(XSensor100, param="humidity"),
         Battery,
     ],  # https://github.com/AlexxIT/SonoffLAN/issues/1166
-    7016: [ZRSSI],  # SNZB-06P
+    7016: [XHumanSensor, XLightSensor, XSensitivity, ZRSSI],  # SNZB-06P
+    7017: [
+        spec(XSensor, param="workMode", uid="work_mode"),
+        spec(XSensor, param="workState", uid="work_state"),
+        spec(XSensor, param="temperature", multiply=0.1),
+        spec(
+            XSensor,
+            param="manTargetTemp",
+            multiply=0.1,
+            uid="manual_target_temperature",
+        ),
+        spec(
+            XSensor,
+            param="autoTargetTemp",
+            multiply=0.1,
+            uid="auto_target_temperature",
+        ),
+        spec(
+            XSensor,
+            param="curTargetTemp",
+            multiply=0.1,
+            uid="current_target_temperature",
+        ),
+        spec(
+            XSensor,
+            param="ecoTargetTemp",
+            multiply=0.1,
+            uid="eco_target_temperature",
+        ),
+        spec(XBoolSwitch, param="childLock", uid="child_lock"),
+        spec(XBoolSwitch, param="windowSwitch", uid="window_switch"),
+        XSwitch,
+        Battery,
+        ZRSSI,
+    ],
+    # SNZB-05P https://github.com/AlexxIT/SonoffLAN/issues/1496
+    7019: [XWaterSensor, Battery],
+    # SWV https://github.com/AlexxIT/SonoffLAN/issues/1497
+    7027: [
+        XBoolSwitch,
+        Battery,
+        spec(XSensor, param="todayWaterUsage", uid="water"),
+        ZRSSI,
+    ],
 }
 
 
@@ -432,6 +518,10 @@ def get_spec(device: dict) -> list:
     # NSPanel Climate disable without switch configuration
     if uiid in [133] and not device["params"].get("HMI_ATCDevice"):
         classes = [cls for cls in classes if XClimateNS not in cls.__bases__]
+
+    # SNZB-06P has no battery
+    if uiid in [2026] and not device["params"].get("battery"):
+        classes = [cls for cls in classes if cls != Battery]
 
     if "device_class" in device:
         classes = get_custom_spec(classes, device["device_class"])
@@ -498,10 +588,12 @@ def get_spec_wrapper(func, sensors: list):
 
 
 def set_default_class(device_class: str):
-    XSwitch.__bases__ = XSwitches.__bases__ = (
-        XEntity,
-        LightEntity if device_class == "light" else SwitchEntity,
-    )
+    if device_class != "light":
+        return
+    for cls in (XSwitch, XSwitches):
+        cls.__bases__ = (XEntity, LightEntity)
+        cls._attr_color_mode = ColorMode.ONOFF
+        cls._attr_supported_color_modes = {ColorMode.ONOFF}
 
 
 # Cloud: NSPanel

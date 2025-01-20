@@ -1,16 +1,13 @@
 from homeassistant.core import HomeAssistant
 from homeassistant.const import STATE_UNAVAILABLE
+from homeassistant.helpers.storage import Store
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, LOGGER
+from .const import DOMAIN, LOGGER, ENABLE_MEDIA_SYNC, MEDIA_SYNC_HOURS
 from .tapo.entities import TapoSwitchEntity
-from .utils import check_and_create
-
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    return True
+from .utils import check_and_create, getColdDirPathForEntry, getEntryStorageFile
 
 
 async def async_setup_entry(
@@ -24,6 +21,8 @@ async def async_setup_entry(
     switches = []
 
     async def setupEntities(entry):
+        entry_storage = Store(hass, version=1, key=getEntryStorageFile(config_entry))
+        entry_stored_data = await entry_storage.async_load()
         switches = []
         tapoPrivacySwitch = await check_and_create(
             entry, hass, TapoPrivacySwitch, "getPrivacyMode", config_entry
@@ -31,6 +30,32 @@ async def async_setup_entry(
         if tapoPrivacySwitch:
             LOGGER.debug("Adding tapoPrivacySwitch...")
             switches.append(tapoPrivacySwitch)
+
+        if entry_stored_data is None or ENABLE_MEDIA_SYNC not in entry_stored_data:
+            await entry_storage.async_save({ENABLE_MEDIA_SYNC: False})
+            entry_stored_data = await entry_storage.async_load()
+
+        if (
+            "alert_event_types" in entry["camData"]
+            and entry["camData"]["alert_event_types"]
+        ):
+            for alertEventType in entry["camData"]["alert_event_types"]:
+                switches.append(
+                    TapoAlarmEventTypeSwitch(
+                        entry, hass, config_entry, alertEventType["name"]
+                    )
+                )
+
+        tapoEnableMediaSyncSwitch = TapoEnableMediaSyncSwitch(
+            entry,
+            hass,
+            config_entry,
+            entry_storage,
+            entry_stored_data[ENABLE_MEDIA_SYNC],
+        )
+        if tapoEnableMediaSyncSwitch:
+            LOGGER.debug("Adding TapoEnableMediaSyncSwitch...")
+            switches.append(tapoEnableMediaSyncSwitch)
 
         tapoLensDistortionCorrectionSwitch = await check_and_create(
             entry,
@@ -138,6 +163,30 @@ async def async_setup_entry(
                 LOGGER.debug("Adding tapoMicrophoneNoiseCancellationSwitch...")
                 switches.append(tapoMicrophoneNoiseCancellationSwitch)
 
+        if (
+            "videoCapability" in entry["camData"]
+            and entry["camData"]["videoCapability"] is not None
+            and entry["camData"]["videoCapability"] is not False
+            and "video_capability" in entry["camData"]["videoCapability"]
+            and "main" in entry["camData"]["videoCapability"]["video_capability"]
+            and "hdrs"
+            in entry["camData"]["videoCapability"]["video_capability"]["main"]
+            and "videoQualities" in entry["camData"]
+            and "video" in entry["camData"]["videoQualities"]
+            and "main" in entry["camData"]["videoQualities"]["video"]
+            and "hdr" in entry["camData"]["videoQualities"]["video"]["main"]
+        ):
+            tapoHDRSwitch = await check_and_create(
+                entry,
+                hass,
+                TapoHDRSwitch,
+                "getVideoQualities",
+                config_entry,
+            )
+            if tapoHDRSwitch:
+                LOGGER.debug("Adding tapoHDRSwitch...")
+                switches.append(tapoHDRSwitch)
+
         return switches
 
     switches = await setupEntities(entry)
@@ -150,6 +199,94 @@ async def async_setup_entry(
         async_add_entities(switches)
     else:
         LOGGER.debug("No switch entities available.")
+
+
+class TapoEnableMediaSyncSwitch(TapoSwitchEntity):
+    def __init__(
+        self,
+        entry: dict,
+        hass: HomeAssistant,
+        config_entry,
+        entry_storage: Store,
+        savedValue: bool,
+    ):
+        self._attr_extra_state_attributes = {}
+        TapoSwitchEntity.__init__(
+            self,
+            "Media Sync",
+            entry,
+            hass,
+            config_entry,
+            "mdi:sync",
+        )
+        self._entry_storage = entry_storage
+        self._attr_state = "on" if savedValue else "off"
+        hass.data[DOMAIN][config_entry.entry_id][ENABLE_MEDIA_SYNC] = savedValue
+
+    async def async_turn_on(self) -> None:
+        await self._entry_storage.async_save({ENABLE_MEDIA_SYNC: True})
+        self._hass.data[DOMAIN][self._config_entry.entry_id][ENABLE_MEDIA_SYNC] = True
+        self._attr_state = "on"
+
+    async def async_turn_off(self) -> None:
+        await self._entry_storage.async_save({ENABLE_MEDIA_SYNC: False})
+        self._hass.data[DOMAIN][self._config_entry.entry_id][ENABLE_MEDIA_SYNC] = False
+        self._attr_state = "off"
+
+    def updateTapo(self, camData):
+        mediaSyncHours = self._config_entry.data.get(MEDIA_SYNC_HOURS)
+        self._attr_extra_state_attributes["sync_hours"] = mediaSyncHours
+        self._attr_extra_state_attributes["storage_path"] = getColdDirPathForEntry(
+            self._hass, self._config_entry.entry_id
+        )
+
+
+class TapoHDRSwitch(TapoSwitchEntity):
+    def __init__(self, entry: dict, hass: HomeAssistant, config_entry):
+        TapoSwitchEntity.__init__(
+            self,
+            "HDR",
+            entry,
+            hass,
+            config_entry,
+            "mdi:hdr",
+        )
+
+    async def async_update(self) -> None:
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_on(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setHDR,
+            True,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_off(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setHDR,
+            False,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "off"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    def updateTapo(self, camData):
+        if (
+            not camData
+            or "videoQualities" not in camData
+            or "video" not in camData["videoQualities"]
+            or "main" not in camData["videoQualities"]["video"]
+            or "hdr" not in camData["videoQualities"]["video"]["main"]
+        ):
+            self._attr_state = STATE_UNAVAILABLE
+        else:
+            self._attr_is_on = camData["videoQualities"]["video"]["main"]["hdr"] == "1"
+            self._attr_state = "on" if self._attr_is_on else "off"
 
 
 class TapoRecordingPlanSwitch(TapoSwitchEntity):
@@ -406,6 +543,54 @@ class TapoRichNotificationsSwitch(TapoSwitchEntity):
             self._attr_state = STATE_UNAVAILABLE
         else:
             self._attr_is_on = camData["rich_notifications"] == "on"
+            self._attr_state = "on" if self._attr_is_on else "off"
+
+
+class TapoAlarmEventTypeSwitch(TapoSwitchEntity):
+    def __init__(self, entry: dict, hass: HomeAssistant, config_entry, eventType: str):
+        self.eventType = eventType
+        TapoSwitchEntity.__init__(
+            self,
+            f"Trigger alarm on {eventType}",
+            entry,
+            hass,
+            config_entry,
+            "mdi:exclamation",
+        )
+
+    async def async_update(self) -> None:
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_on(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setAlertEventType,
+            self.eventType,
+            True,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    async def async_turn_off(self) -> None:
+        result = await self._hass.async_add_executor_job(
+            self._controller.setAlertEventType,
+            self.eventType,
+            False,
+        )
+        if "error_code" not in result or result["error_code"] == 0:
+            self._attr_state = "on"
+        self.async_write_ha_state()
+        await self._coordinator.async_request_refresh()
+
+    def updateTapo(self, camData):
+        if not camData:
+            self._attr_state = STATE_UNAVAILABLE
+        else:
+            if "alert_event_types" in camData and camData["alert_event_types"]:
+                for alertEventType in camData["alert_event_types"]:
+                    if alertEventType["name"] == self.eventType:
+                        self._attr_is_on = alertEventType["enabled"] == "on"
             self._attr_state = "on" if self._attr_is_on else "off"
 
 

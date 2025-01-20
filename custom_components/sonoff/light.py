@@ -1,5 +1,6 @@
 import time
 
+import homeassistant.util.color as color_util
 from homeassistant.components.light import (
     ColorMode,
     LightEntity,
@@ -136,6 +137,18 @@ class XLight(XEntity, LightEntity):
             )
 
         await self.async_turn_on(br1, ct1, rgb1)
+
+    @property
+    def color_temp_kelvin(self) -> int | None:
+        return color_util.color_temperature_mired_to_kelvin(self.color_temp)
+
+    @property
+    def min_color_temp_kelvin(self) -> int:
+        return color_util.color_temperature_mired_to_kelvin(self.max_mireds)
+
+    @property
+    def max_color_temp_kelvin(self) -> int:
+        return color_util.color_temperature_mired_to_kelvin(self.min_mireds)
 
 
 # noinspection PyAbstractClass, UIID36
@@ -752,6 +765,14 @@ class XLightL3(XLightL1):
                 None,
             )
 
+    def get_params(self, brightness, color_temp, rgb_color, effect) -> dict:
+        # fix https://github.com/AlexxIT/SonoffLAN/issues/1394
+        if brightness is not None and rgb_color is None:
+            rgb_color = self.rgb_color
+        if brightness is None and rgb_color is not None:
+            brightness = self.brightness
+        return super().get_params(brightness, color_temp, rgb_color, effect)
+
 
 B02_MODE_PAYLOADS = {
     "nightLight": {"br": 5, "ct": 0},
@@ -984,6 +1005,49 @@ class XZigbeeLight(XLight):
         await self.ewelink.send(self.device, params)
 
 
+class XZigbeeColorTemp(XLight):
+    params = {"switch", "brightness", "colorTemp"}
+
+    _attr_max_mireds = int(1000000 / 2200)
+    _attr_min_mireds = int(1000000 / 4000)
+
+    _attr_color_mode = ColorMode.ONOFF
+    _attr_supported_color_modes = {ColorMode.COLOR_TEMP}
+
+    def set_state(self, params: dict):
+        XLight.set_state(self, params)
+
+        if "brightness" in params:
+            self._attr_brightness = conv(params["brightness"], 0, 100, 1, 255)
+
+        if "colorTemp" in params:
+            self._attr_color_temp = conv(
+                params["colorTemp"],
+                0,
+                100,
+                self._attr_max_mireds,
+                self._attr_min_mireds,
+            )
+
+    async def async_turn_on(
+        self,
+        brightness: int = None,
+        color_temp: int = None,
+        **kwargs,
+    ) -> None:
+        params = {self.param: "on"}
+
+        if brightness is not None:
+            params["brightness"] = conv(brightness, 1, 255, 0, 100)
+
+        if color_temp is not None:
+            params["colorTemp"] = conv(
+                color_temp, self._attr_max_mireds, self._attr_min_mireds, 0, 100
+            )
+
+        await self.ewelink.send(self.device, params)
+
+
 ###############################################################################
 # Category 3. Other
 ###############################################################################
@@ -1137,19 +1201,24 @@ class XDiffuserLight(XOnOffLight):
         await self.ewelink.send(self.device, {"lightswitch": 0})
 
 
+T5_EFFECTS = {
+    "Night Light": 0,
+    "Party": 1,
+    "Leisure": 2,
+    "Color": 3,
+    "Childhood": 4,
+    "Wiper": 5,
+    "Fairy": 6,
+    "Starburst": 7,
+    "DIY 1": 101,
+    "DIY 2": 102,
+}
+
+
 class XT5Light(XOnOffLight):
     params = {"lightSwitch", "lightMode"}
 
-    _attr_effect_list = [
-        "Night Light",
-        "Party",
-        "Leisure",
-        "Color",
-        "Childhood",
-        "Wiper",
-        "Fairy",
-        "Starburst",
-    ]
+    _attr_effect_list = list(T5_EFFECTS.keys())
     _attr_supported_features = LightEntityFeature.EFFECT
 
     def set_state(self, params: dict):
@@ -1157,9 +1226,8 @@ class XT5Light(XOnOffLight):
             self._attr_is_on = params["lightSwitch"] == "on"
 
         if "lightMode" in params:
-            i = int(params["lightMode"])
-            self._attr_effect = (
-                self._attr_effect_list[i] if i < len(self._attr_effect_list) else None
+            self._attr_effect = next(
+                (k for k, v in T5_EFFECTS.items() if v == params["lightMode"]), None
             )
 
     async def async_turn_on(
@@ -1167,8 +1235,8 @@ class XT5Light(XOnOffLight):
     ) -> None:
         params = {}
 
-        if effect:
-            params["lightMode"] = self._attr_effect_list.index(effect)
+        if effect and effect in T5_EFFECTS:
+            params["lightMode"] = T5_EFFECTS[effect]
 
         if not params:
             params["lightSwitch"] = "on"

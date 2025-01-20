@@ -3,7 +3,7 @@ from homeassistant.components.climate.const import (
     ClimateEntityFeature,
     HVACMode,
 )
-from homeassistant.const import UnitOfTemperature, MAJOR_VERSION, MINOR_VERSION
+from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, UnitOfTemperature
 
 from .core.const import DOMAIN
 from .core.entity import XEntity
@@ -28,7 +28,7 @@ class XClimateTH(XEntity, ClimateEntity):
     _attr_hvac_mode = None
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.HEAT, HVACMode.COOL, HVACMode.DRY]
     _attr_max_temp = 99
-    _attr_min_temp = 1
+    _attr_min_temp = -40
     _attr_target_temperature_high = None
     _attr_target_temperature_low = None
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
@@ -154,7 +154,7 @@ class XClimateNS(XEntity, ClimateEntity):
     _attr_max_temp = 31
     _attr_min_temp = 16
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
-    _attr_target_temperature_step = 1
+    _attr_target_temperature_step = 0.5
 
     # https://developers.home-assistant.io/blog/2024/01/24/climate-climateentityfeatures-expanded
     if (MAJOR_VERSION, MINOR_VERSION) >= (2024, 2):
@@ -203,7 +203,7 @@ class XClimateNS(XEntity, ClimateEntity):
     def set_hvac_attr(self, hvac_mode: str) -> None:
         if hvac_mode == HVACMode.AUTO:
             self._attr_hvac_mode = hvac_mode
-            self._attr_supported_features = 0
+            self._attr_supported_features = ClimateEntityFeature(0)
         elif hvac_mode == HVACMode.OFF:
             self._attr_hvac_mode = hvac_mode
             self._attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE

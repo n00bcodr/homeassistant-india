@@ -71,6 +71,33 @@ class XZigbeeMotion(XBinarySensor):
             self._attr_is_on = False
 
 
+class XHumanSensor(XEntity, BinarySensorEntity):
+    param = "human"
+    uid = "occupancy"
+    _attr_device_class = BinarySensorDeviceClass.OCCUPANCY
+
+    def set_state(self, params: dict):
+        self._attr_is_on = params[self.param] == 1
+
+
+class XLightSensor(XEntity, BinarySensorEntity):
+    param = "brState"
+    uid = "light"
+    _attr_device_class = BinarySensorDeviceClass.LIGHT
+
+    def set_state(self, params: dict):
+        self._attr_is_on = params[self.param] == "brighter"
+
+
+class XWaterSensor(XEntity, BinarySensorEntity):
+    param = "water"
+    uid = "moisture"
+    _attr_device_class = BinarySensorDeviceClass.MOISTURE
+
+    def set_state(self, params: dict):
+        self._attr_is_on = params[self.param] == 1
+
+
 # noinspection PyAbstractClass
 class XRemoteSensor(BinarySensorEntity, RestoreEntity):
     _attr_is_on = False

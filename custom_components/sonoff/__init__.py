@@ -3,10 +3,10 @@ import logging
 
 import voluptuous as vol
 from homeassistant.components import zeroconf
-from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
+from homeassistant.config_entries import ConfigEntry, SOURCE_IMPORT
 from homeassistant.const import (
-    CONF_DEVICE_CLASS,
     CONF_DEVICES,
+    CONF_DEVICE_CLASS,
     CONF_MODE,
     CONF_NAME,
     CONF_PASSWORD,
@@ -21,7 +21,6 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import async_get as device_registry
 from homeassistant.helpers.storage import Store
 
@@ -30,6 +29,7 @@ from .core import devices as core_devices
 from .core.const import (
     CONF_APPID,
     CONF_APPSECRET,
+    CONF_COUNTRY_CODE,
     CONF_DEFAULT_CLASS,
     CONF_DEVICEKEY,
     CONF_RFBRIDGE,
@@ -38,6 +38,7 @@ from .core.const import (
 from .core.ewelink import SIGNAL_ADD_ENTITIES, SIGNAL_CONNECTED, XRegistry
 from .core.ewelink.camera import XCameras
 from .core.ewelink.cloud import APP, AuthError
+from .core.xutils import create_clientsession
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ UNIQUE_DEVICES = {}
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    if (MAJOR_VERSION, MINOR_VERSION) < (2023, 1):
+    if (MAJOR_VERSION, MINOR_VERSION) < (2023, 2):
         raise Exception("unsupported hass version")
 
     # init storage for registries
@@ -106,12 +107,13 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     if DOMAIN in config:
         XRegistry.config = conf = config[DOMAIN]
         if CONF_APPID in conf and CONF_APPSECRET in conf:
-            APP[0] = (conf[CONF_APPID], conf[CONF_APPSECRET])
+            APP[0] = conf[CONF_APPID]
+            APP.append(conf[CONF_APPSECRET])
         if CONF_DEFAULT_CLASS in conf:
-            core_devices.set_default_class(conf.pop(CONF_DEFAULT_CLASS))
+            core_devices.set_default_class(conf.get(CONF_DEFAULT_CLASS))
         if CONF_SENSORS in conf:
             core_devices.get_spec = core_devices.get_spec_wrapper(
-                core_devices.get_spec, conf.pop(CONF_SENSORS)
+                core_devices.get_spec, conf.get(CONF_SENSORS)
             )
 
     # cameras starts only on first command to it
@@ -171,15 +173,22 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     registry: XRegistry = hass.data[DOMAIN].get(config_entry.entry_id)
     if not registry:
-        session = async_get_clientsession(hass)
+        session = create_clientsession(hass)
         hass.data[DOMAIN][config_entry.entry_id] = registry = XRegistry(session)
 
     mode = config_entry.options.get(CONF_MODE, "auto")
+    data = config_entry.data
 
     # if has cloud password and not auth
-    if not registry.cloud.auth and config_entry.data.get(CONF_PASSWORD):
+    if not registry.cloud.auth and data.get(CONF_PASSWORD):
         try:
-            await registry.cloud.login(**config_entry.data)
+            await registry.cloud.login(**data)
+            # store country_code for future requests optimisation
+            if not data.get(CONF_COUNTRY_CODE):
+                hass.config_entries.async_update_entry(
+                    config_entry,
+                    data={**data, CONF_COUNTRY_CODE: registry.cloud.country_code},
+                )
         except Exception as e:
             _LOGGER.warning(f"Can't login in {mode} mode: {repr(e)}")
             if mode == "cloud":
