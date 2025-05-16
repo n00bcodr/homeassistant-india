@@ -1,0 +1,10 @@
+{
+    "domain": "f1_sensor",
+    "name": "F1 Sensor",
+    "codeowners": ["@Nicxe"],
+    "config_flow": true,
+    "documentation": "https://github.com/Nicxe/f1_sensor",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/Nicxe/f1_sensor/issues",
+    "version": "0.1.1"
+  }

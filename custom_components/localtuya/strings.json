@@ -1,7 +1,7 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Device has already been configured.",
+            "already_configured": "This Account ID has already been configured.",
             "unsupported_device_type": "Unsupported device type!"
         },
         "error": {
@@ -23,7 +23,7 @@
             },
             "power_outlet": {
                 "title": "Add subswitch",
-                "description": "You are about to add subswitch number `{number}`. If you want to add another, tick `Add another switch` before continuing.",
+		"description": "You are about to add subswitch number `{number}`. If you want to add another, tick `Add another switch` before continuing.",
                 "data": {
                     "id": "ID",
                     "name": "Name",
@@ -96,12 +96,14 @@
                     "color_temp_max_kelvin": "Maximum Color Temperature in K",
                     "music_mode": "Music mode available",
                     "scene": "Scene",
+                    "scene_values": "Scene values, separate entries by a ;",
+                    "scene_values_friendly": "User friendly scene values, separate entries by a ;",
                     "fan_speed_control": "Fan Speed Control dps",
                     "fan_oscillating_control": "Fan Oscillating Control dps",
                     "fan_speed_min": "minimum fan speed integer",
                     "fan_speed_max": "maximum fan speed integer",
                     "fan_speed_ordered_list": "Fan speed modes list (overrides speed min/max)",
-                    "fan_direction": "fan direction dps",
+                    "fan_direction":"fan direction dps",
                     "fan_direction_forward": "forward dps string",
                     "fan_direction_reverse": "reverse dps string",
                     "fan_dps_type": "DP value type",
