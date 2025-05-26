@@ -11,24 +11,32 @@ class F1FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-            # Create the configuration entry
             return self.async_create_entry(
-                title=user_input["sensor_name"],  # Title shown in HA
-                data=user_input                   # Store the entire user_input in entry.data
+                title=user_input["sensor_name"],
+                data=user_input
             )
 
-        # Show form to enter sensor name and enabled sensors
         data_schema = vol.Schema({
             vol.Required("sensor_name", default="F1"): cv.string,
             vol.Required(
                 "enabled_sensors",
-                default=["next_race"]
+                default=[
+                    "next_race",
+                    "current_season",
+                    "driver_standings",
+                    "constructor_standings",
+                    "weather",
+                    "last_race_results",
+                    "season_results",
+                ]
             ): cv.multi_select({
                 "next_race": "Next race",
                 "current_season": "Current season",
                 "driver_standings": "Driver standings",
                 "constructor_standings": "Constructor standings",
-                "weather": "Weather"
+                "weather": "Weather",
+                "last_race_results": "Last race results",
+                "season_results": "Season results",
             }),
         })
 
@@ -39,33 +47,41 @@ class F1FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_reconfigure(self, user_input=None):
-        """Allow reconfiguration of the integration."""
         errors = {}
-        # If user submitted the form, update the entry and reload
+
         if user_input is not None:
             entry = self._get_reconfigure_entry()
             return self.async_update_reload_and_abort(
                 entry,
                 data_updates=user_input,
             )
-        # Show the form pre-filled with existing settings
+
         entry = self._get_reconfigure_entry()
         current = entry.data
         data_schema = vol.Schema({
             vol.Required("sensor_name", default=current.get("sensor_name", "F1")): cv.string,
-            vol.Required("enabled_sensors", default=current.get("enabled_sensors", [
-                "next_race",
-                "current_season",
-                "driver_standings",
-                "constructor_standings"
-            ])): cv.multi_select({
+            vol.Required(
+                "enabled_sensors",
+                default=current.get("enabled_sensors", [
+                    "next_race",
+                    "current_season",
+                    "driver_standings",
+                    "constructor_standings",
+                    "weather",
+                    "last_race_results",
+                    "season_results",
+                ])
+            ): cv.multi_select({
                 "next_race": "Next race",
                 "current_season": "Current season",
                 "driver_standings": "Driver standings",
                 "constructor_standings": "Constructor standings",
-                "weather": "Weather"
+                "weather": "Weather",
+                "last_race_results": "Last race results",
+                "season_results": "Season results",
             }),
         })
+
         return self.async_show_form(
             step_id="reconfigure",
             data_schema=data_schema,
