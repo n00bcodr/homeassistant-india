@@ -1,16 +1,22 @@
 - platform: template
   sensors:
-    downstairs_power_failed:
+    downstairs_power:
       friendly_name: "Downstairs Power"
+      unique_id: downstairs_power
       value_template: >-
-        {{ not  ((is_state('switch.upstairs_motor', 'unavailable') and is_state('switch.downstairs_motor_switch_1', 'unavailable')) or ( is_state('media_player.family_room_mini', 'unavailable') and is_state('switch.downstairs_geyser', 'unavailable')) or ( is_state('fan.livingroom_wall_fan', 'unavailable') and is_state('media_player.akashavani', 'unavailable') )) }}
-      icon_template: "{{ iif(is_state('binary_sensor.downstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
+        {{ expand([
+          'switch.upstairs_motor', 'switch.downstairs_motor_switch_1',
+          'light.pooja_light', 'switch.downstairs_geyser',
+          'fan.livingroom_wall_fan', 'light.first_floor_corner', 'switch.washing_machine_1_switch_1'
+          ]) | selectattr('state', '==', 'unavailable') | list | count < 5 }}
+      icon_template: "{{ iif(is_state('binary_sensor.downstairs_power', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
-    upstairs_power_failed:
+    upstairs_power:
       friendly_name: "Upstairs Power"
+      unique_id: upstairs_power
       value_template: >-
-        {{ not ((is_state('switch.front_down_light', 'unavailable') and is_state('switch.den_wall_fan', 'unavailable')) or (is_state('switch.rice_lights_l', 'unavailable') and is_state('switch.rice_lights_r_socket_1', 'unavailable'))) }}
-      icon_template: "{{ iif(is_state('binary_sensor.upstairs_power_failed', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
+        {{ expand(['light.second_floor_stairway', 'light.second_floor_corner', 'switch.washing_machine_2_switch_1']) | selectattr('state', '==', 'unavailable') | list | count < 2 }}
+      icon_template: "{{ iif(is_state('binary_sensor.upstairs_power', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     # True if there's an update available for supervisor
     updater_supervisor:
@@ -19,16 +25,41 @@
       value_template: "{{ state_attr('sensor.supervisor_updates', 'update_available') }}"
       availability_template: "{{ states('sensor.supervisor_updates') | int(-1) > -1 }}"
 
-# True if there's updates available for any HACS components or Addons
-- platform: threshold
-  name: Updater HACS
-  entity_id: sensor.hacs
-  upper: 0.5
+    # True if there's updates available for any HACS components or Addons
+    hacs_updates:
+      friendly_name: "HACS Updates"
+      unique_id: hacs_updates
+      icon_template: mdi:package-up
+      device_class: update
+      value_template: >-
+        {% set updates = states.update | selectattr('state', 'eq', 'on') | selectattr('entity_id', 'in', integration_entities('hacs')) | list %}
+        {{ updates | count }}
+      availability_template: >-
+        {{ updates | count > 0 }}
 
-- platform: threshold
-  name: Updater Addons
-  entity_id: sensor.supervisor_updates
-  upper: 0.5
+    addon_updates:
+      friendly_name: "Add-on Updates"
+      unique_id: addon_updates
+      icon_template: mdi:package-up
+      device_class: update
+      value_template: >-
+        {% set updates = states.update | selectattr('state', 'eq', 'on') | selectattr('entity_id', 'in', integration_entities('hassio')) | rejectattr('entity_id', 'eq', 'update.home_assistant_core_update') | list %}
+        {{ updates | count }}
+      availability_template: >-
+        {{ updates | count > 0 }}
+
+    other_updates:
+      friendly_name: "Other Updates"
+      unique_id: other_updates
+      icon_template: mdi:package-up
+      device_class: update
+      value_template: >-
+        {% set updates = states.update | selectattr('state', 'eq', 'on')
+          | rejectattr('entity_id', 'in', integration_entities('hassio'))
+          | rejectattr('entity_id', 'in', integration_entities('hacs')) | list %}
+        {{ updates | count }}
+      availability_template: >-
+        {{ updates | count > 0 }}
 
 - platform: hikvision
   host: !secret hikvision_ip

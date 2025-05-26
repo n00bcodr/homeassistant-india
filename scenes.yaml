@@ -1,12 +1,1 @@
-- id: "1613729241622"
-  name: Top Light White
-  entities:
-    light.top_light:
-      min_mireds: 153
-      max_mireds: 370
-      brightness: 255
-      color_temp: 125
-      friendly_name: Tube Light
-      icon: mdi:white-balance-iridescent
-      supported_features: 191
-      state: "on"
+[]

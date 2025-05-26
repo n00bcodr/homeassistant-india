@@ -1,147 +1,4 @@
 button_card_templates:
-  animate:
-    extra_styles: "[[[\n  if (entity) {\n    let hs = entity.attributes.hs_color ==\
-      \ undefined,\n      h = hs || entity.attributes.hs_color[0],\n      s = hs ||\
-      \ entity.attributes.hs_color[1],\n      l_min = 28,\n      l_max = 48,\n   \
-      \   l_calc = \n        entity.attributes.brightness / 2.54 * (l_max - l_min)\
-      \ / 100 + l_min;\n    var light_color = \n      entity.attributes.color_mode\
-      \ === 'color_temp'\n        ? `hsl(204, 58%, ${l_calc}%);`\n        : `hsl(${h},\
-      \ ${s}%, ${l_calc}%);`;\n  }\n  return `\n    svg {\n      --light-color:\n\
-      \      ${ variables.state === 'on' && entity.attributes.brightness != undefined\n\
-      \          ? light_color\n          : variables.state === 'on' && entity.attributes.brightness\
-      \ == undefined\n          ? 'var(--state-icon-active-color);'\n          : 'var(--state-icon-color);'\n\
-      \      }\n    }\n    #container {\n      text-align: left !important;\n    }\n\
-      \    #name, #state {\n      font-size: 1.34vw;\n      letter-spacing: 0.05vw;\n\
-      \    }\n    /* portrait */\n    @media screen and (max-width: 1200px) {\n  \
-      \    #name, #state {\n        font-size: 2vw;\n        letter-spacing: 0.05vw;\n\
-      \      }\n    }\n    /* phone */\n    @media screen and (max-width: 800px) {\n\
-      \      #name, #state {\n        font-size: 3.1vw;\n        letter-spacing: 0.12vw;\n\
-      \      }\n    }\n    @keyframes card_bounce {\n      0% {\n        transform:\
-      \ scale(1);\n      }\n      15% {\n        transform: scale(0.9);\n      }\n\
-      \      25% {\n        transform: scale(1);\n      }\n      30% {\n        transform:\
-      \ scale(0.98);\n      }\n      100% {\n        transform: scale(1);\n      }\n\
-      \    }\n  `\n]]]\n"
-    tap_action:
-      animation_card: "[[[\n  let time = 900;\n  this.shadowRoot.getElementById('card').style.animation\
-        \ =\n    `card_bounce ${time}ms cubic-bezier(0.22, 1, 0.36, 1)`,\n    window.setTimeout(()\
-        \ => {\n      this.shadowRoot.getElementById('card').style.animation = 'none'\n\
-        \    }, time);\n]]]\n"
-    variables:
-      consider_on: '[[[ return [''on'', ''home'', ''cool'', ''fan_only'', ''playing''].indexOf(entity
-        === undefined || entity.state) !== -1; ]]]
-
-        '
-      state: '[[[ return entity === undefined || entity.state; ]]]
-
-        '
-      timeout: '[[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed);
-        ]]]
-
-        '
-  base:
-    aspect_ratio: 1/1
-    custom_fields:
-      bright: "[[[\n  var b = entity.attributes.brightness;\n  return parseInt(b ?\
-        \ b/2.55 : '0') + '%';\n]]]\t\t\n"
-      cl:
-        card:
-          icon: mdi:palette
-          name: false
-          show_entity_picture: true
-          show_name: false
-          styles:
-            card:
-            - background-color: '#242e42'
-            - height: 25px
-            - width: 25px
-            - margin: 0px -5px
-            icon:
-            - width: 25px
-          type: custom:button-card
-    show_icon: true
-    show_state: true
-    state:
-    - styles:
-        card:
-        - background-color: '#2a5629'
-        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
-      value: 'on'
-    - styles:
-        card:
-        - background-color: transparent
-        custom_fields:
-          bright:
-          - opacity: 0
-          cl:
-          - opacity: 0
-        icon:
-        - opacity: 0.2
-        name:
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: 'off'
-    - styles:
-        card:
-        - background-color: grey
-        custom_fields:
-          bright:
-          - opacity: 0
-          cl:
-          - opacity: 0
-        icon:
-        - opacity: 0.2
-        name:
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: unavailable
-    styles:
-      card:
-      - border-radius: 10%
-      - padding: 12%
-      - color: ivory
-      - font-size: 10px
-      - text-shadow: 0px 0px 5px black
-      - text-transform: capitalize
-      custom_fields:
-        bright:
-        - align-self: start
-        - justify-self: end
-        - border-radius: 20px
-        - border-style: solid
-        - border-width: 1px
-        - font-size: 10px
-        - font-weight: 300
-        - box-shadow: 2px 2px rgba(0,0,0,0.7)
-        - border-color: '#67727e'
-        - padding: 15%
-        cl:
-        - align-self: start
-        - justify-self: end
-      grid:
-      - grid-template-areas: '"i bright" "n cl" "s cl"'
-      - grid-template-columns: 1fr min-content
-      - grid-template-rows: 1fr min-content min-content
-      icon:
-      - width: 60%
-      - color: white
-      img_cell:
-      - justify-content: start
-      - align-items: start
-      - margin: none
-      name:
-      - font-weight: 300
-      - font-size: 10px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-      state:
-      - font-weight: bold
-      - font-size: 9px
-      - color: white
-      - align-self: middle
-      - justify-self: start
   blank_button:
     aspect_ratio: 4/3
     color_type: icon
@@ -169,79 +26,6 @@ button_card_templates:
       - color: var(--secondary-text-color)
     tap_action:
       action: none
-  fan_button:
-    aspect_ratio: 1/1
-    show_icon: false
-    show_state: true
-    state:
-    - styles:
-        card:
-        - background-color: grey
-        - color: grey
-        - opacity: 0.5
-        name:
-        - font-weight: 300
-        - font-size: 10px
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: unavailable
-    - styles:
-        card:
-        - background-color: transparent
-        - opacity: 0.5
-        name:
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: 'off'
-    - styles:
-        card:
-        - background-color: '#2a5629'
-        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
-      value: 'on'
-    state_display: '[[[ if (variables.state === true) return ''null''; ]]]
-
-      '
-    styles:
-      card:
-      - border-radius: 10%
-      - padding: 12%
-      - color: ivory
-      - font-size: 10px
-      - text-shadow: 0px 0px 5px black
-      - text-transform: capitalize
-      grid:
-      - grid-template-areas: '"icon  icon"
-
-          "n     n"
-
-          "s     s"
-
-          '
-      - grid-template-columns: repeat(2, 1fr)
-      - grid-template-rows: auto repeat(2, min-content)
-      - gap: 2%
-      - align-items: start
-      name:
-      - font-weight: 400
-      - font-size: 11px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-      state:
-      - font-weight: bold
-      - font-size: 9px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-    tap_action:
-      action: toggle
-    template:
-    - tap_audio
-    - animate
-    - icon_fan
-    - loader
   icon_button:
     aspect_ratio: 4/3
     color_type: card
@@ -269,221 +53,6 @@ button_card_templates:
       - color: var(--secondary-text-color)
     tap_action:
       action: call-service
-  icon_fan:
-    custom_fields:
-      icon: "[[[\n  let path = `\n    <circle cx=\"25\" cy=\"25\" r=\"6.6\"/>\n  \
-        \  <path d=\"M31.9 30.4c-.5.6-1.1 1.1-1.7 1.5-1.4 1.1-3.2 1.7-5.2 1.7-2.3\
-        \ 0-4.5-.9-6-2.4-.9 1.1-1.6 2.3-2.3 3.2l-4.9 5.4c-1.8 2.7.3 5.6 2.5 7 3.9\
-        \ 2.4 9.8 3.1 14.1 1.9 4.6-1.3 7.9-4.7 7.4-9.7-.2-3.4-1.9-6-3.9-8.6zM17 28.3c-.4-1-.6-2.1-.6-3.3a8.7\
-        \ 8.7 0 0 1 6.4-8.4l-1.6-3.5L19 6.2c-1.5-2.8-5-2.5-7.3-1.2-4 2.2-7.5 6.9-8.7\
-        \ 11.3-1.2 4.6.2 9.2 4.7 11.3 3.1 1.3 6.1 1.2 9.3.7zm26.9-17.6c-3.3-3.4-8-4.6-12.1-1.8-2.8\
-        \ 1.8-4.2 4.6-5.5 7.5 4.2.6 7.4 4.2 7.4 8.6 0 .9-.1 1.7-.4 2.5 1.3.2 2.8.3\
-        \ 3.8.4 2.3.4 4.7 1.3 7.1 1.7 3.2.3 4.7-3 4.8-5.6.3-4.6-1.9-10.1-5.1-13.3z\"\
-        />\n  `,\n  style = `\n    <svg viewBox=\"0 0 50 50\">\n      <style>\n  \
-        \      @keyframes rotate {\n          0% {\n            visibility: visible;\n\
-        \            transform: rotate(0deg) translateZ(0);\n          }\n       \
-        \   100% {\n            transform: rotate(1080deg) translateZ(0);\n      \
-        \    }\n        }\n        .start {\n          animation: rotate 2.8s ease-in;\n\
-        \          transform-origin: center;\n          fill: #72b6e8;\n         \
-        \ visibility: hidden;\n          will-change: transform;\n        }\n    \
-        \    .on {\n          animation: rotate 1.8s linear infinite;\n          transform-origin:\
-        \ center;\n          fill: #e4e9ed;\n          animation-delay: 2.8s;\n  \
-        \        visibility: hidden;\n          will-change: transform;\n        }\n\
-        \        .end {\n          animation: rotate 2.8s;\n          transform-origin:\
-        \ center;\n          fill: #737678;\n          animation-timing-function:\
-        \ cubic-bezier(0.61, 1, 0.88, 1);\n          will-change: transform;\n   \
-        \     }\n        .start_timeout {\n          animation: rotate 1.8s linear\
-        \ infinite;\n          transform-origin: center;\n          fill: #e4e9ed;\n\
-        \          visibility: hidden;\n          will-change: transform;\n      \
-        \  }\n        .end_timeout {\n          fill: #4f5254;\n        }\n      </style>\n\
-        \  `;\n  if (variables.state === 'on' && variables.timeout < 2000) {\n   \
-        \ return `${style}<g class=\"start\">${path}</g><g class=\"on\">${path}</g></svg>`;\n\
-        \  }\n  if (variables.state === 'off' && variables.timeout < 2000) {\n   \
-        \ return `${style}<g class=\"end\">${path}</g></svg>`;\n  }\n  if (variables.state\
-        \ === 'on' && variables.timeout > 2000) {\n    return `${style}<g class=\"\
-        start_timeout\">${path}</g></svg>`;\n  } else {\n    return `${style}<g class=\"\
-        end_timeout\">${path}</g></svg>`;\n  }\n]]]\n"
-    styles:
-      custom_fields:
-        icon:
-        - width: 65%
-        - margin-left: -3%
-  icon_name:
-    color: '#9da0a2'
-    size: 1.4em
-    styles:
-      card:
-      - color: '#9da0a2'
-      - border-radius: 0.6em
-      - padding: 1em 1.4em 1em 1.2em
-      - width: max-content
-      - font-size: 1.06em
-      - font-weight: 500
-      - letter-spacing: 0.015em
-      - background: '#FFFFFF10'
-      grid:
-      - grid-template-areas: '"i n"'
-      - grid-column-gap: 0.3em
-      name:
-      - font-size: 1.06em
-      - letter-spacing: 0.015em
-  icon_tv:
-    custom_fields:
-      icon: "[[[\n  let style = `\n    <style>\n      @keyframes on {\n        from\
-        \ {\n          transform: scaleY(0);\n        }\n        to {\n          transform:\
-        \ scaleY(1);\n        }\n      }\n      .on {\n        animation: on 1s;\n\
-        \        transform-origin: -100% 46%;\n        animation-fill-mode: forwards;\n\
-        \      }\n      @keyframes off {\n        from {\n          transform: scaleY(1);\n\
-        \        }\n        to {\n          transform: scaleY(0);\n        }\n   \
-        \   }\n      .off {\n        animation: off 1s;\n        transform-origin:\
-        \ -100% 46%;\n        animation-fill-mode: forwards;\n      }\n    </style>\n\
-        \  `,\n    path = `\n      <path d=\"M46 9.2v27.5H4.1V9.2H46m2.4-2.4H1.6v32.3h46.7c.1\
-        \ 0 .1-32.3.1-32.3zM11.9 43.2h26.3c.6 0 1.1-.4 1.1-1v-.3c0-.6-.4-1.1-1-1.1H11.9c-.6\
-        \ 0-1.1.4-1.1 1v.3a1.11 1.11 0 0 0 1.1 1.1z\"/>\n    `,\n    gradient = `\n\
-        \      <linearGradient id=\"A\" gradientUnits=\"userSpaceOnUse\" x1=\"5.401\"\
-        \ y1=\"34.714\" x2=\"43.817\" y2=\"11.74\">\n        <stop offset=\"0\" stop-color=\"\
-        #64acb7\"/>\n        <stop offset=\"1\" stop-color=\"#7fdbe9\"/>\n      </linearGradient>\n\
-        \    `;\n  if (variables.state === 'on' && variables.timeout < 2000 || variables.state\
-        \ === 'playing' && variables.timeout < 2000) {\n    return `\n      <svg viewBox=\"\
-        0 0 50 50\"> ${style} ${gradient} \n        <path d=\"M2.9,8h44.3v29.9H2.9V8z\"\
-        \ fill=\"#20262890\"/>\n        <path class=\"on\" d=\"M2.9,8h44.3v29.9H2.9V8z\"\
-        \ fill=\"url(#A)\"/> ${path} \n      </svg>\n    `;\n  }\n  if (variables.state\
-        \ === 'on' && variables.timeout > 2000 || variables.state === 'playing' &&\
-        \ variables.timeout > 2000) {\n    return `\n      <svg viewBox=\"0 0 50 50\"\
-        > ${gradient} \n        <path d=\"M2.9,8h44.3v29.9H2.9V8z\" fill=\"#20262890\"\
-        />\n        <path class=\"on\" d=\"M2.9,8h44.3v29.9H2.9V8z\" fill=\"url(#A)\"\
-        /> ${path} \n      </svg>\n    `;\n  }\n  if (variables.state === 'off' &&\
-        \ variables.timeout < 2000) {\n    return `\n      <svg viewBox=\"0 0 50 50\"\
-        > ${style} ${gradient} \n        <path class=\"off\" d=\"M2.9,8h44.3v29.9H2.9V8z\"\
-        \ fill=\"url(#A)\"/> ${path} \n      </svg>\n    `;\n  } else {\n    return\
-        \ `\n      <svg viewBox=\"0 0 50 50\"> ${style} \n        ${path}\n      </svg>\n\
-        \    `;\n  }\n]]]\n"
-    styles:
-      custom_fields:
-        icon:
-        - width: 80%
-        - margin-top: -7%
-        - margin-left: 1%
-        - fill: "[[[\n  return variables.state === 'on' || variables.state === 'playing'\
-            \ ? '#616161' : '#9da0a2';\n]]]\n"
-  light_button_no_brightness:
-    aspect_ratio: 1/1
-    hold_action:
-      action: more-info
-    show_icon: true
-    show_state: true
-    state:
-    - styles:
-        card:
-        - background-color: grey
-        - border-radius: 10%
-        - padding: 12%
-        - color: grey
-        - opacity: 0.5
-        - font-size: 10px
-        - text-shadow: 0px 0px 5px black
-        - text-transform: capitalize
-        grid:
-        - grid-template-areas: '"i i" "n n" "s s"'
-        - grid-template-columns: 1fr 1fr
-        - grid-template-rows: 1fr min-content min-content
-        icon:
-        - width: 100%
-        - opacity: 0.2
-        - color: white
-        img_cell:
-        - justify-content: start
-        - align-items: start
-        - margin: none
-        name:
-        - font-weight: 300
-        - font-size: 10px
-        - opacity: 0.5
-        - color: white
-        - align-self: middle
-        - justify-self: start
-        state:
-        - font-weight: bold
-        - opacity: 0.5
-        - font-size: 9px
-        - color: white
-        - align-self: middle
-        - justify-self: start
-      value: unavailable
-    - styles:
-        card:
-        - background-color: transparent
-        - border-radius: 10%
-        - padding: 12%
-        - color: ivory
-        - opacity: 0.5
-        - font-size: 10px
-        - text-shadow: 0px 0px 5px black
-        - text-transform: capitalize
-        grid:
-        - grid-template-areas: '"i i" "n n" "s s"'
-        - grid-template-columns: 1fr 1fr
-        - grid-template-rows: 1fr min-content min-content
-        icon:
-        - width: 100%
-        - color: white
-        - opacity: 0.2
-        img_cell:
-        - justify-content: start
-        - align-items: start
-        - margin: none
-        name:
-        - font-weight: 300
-        - font-size: 10px
-        - color: white
-        - opacity: 0.5
-        - align-self: middle
-        - justify-self: start
-        state:
-        - font-weight: bold
-        - font-size: 9px
-        - opacity: 0.5
-        - color: white
-        - align-self: middle
-        - justify-self: start
-      value: 'off'
-    - styles:
-        card:
-        - background-color: '#2a5629'
-        - border-radius: 10%
-        - padding: 12%
-        - color: ivory
-        - font-size: 10px
-        - text-shadow: 0px 0px 5px black
-        - text-transform: capitalize
-        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
-        grid:
-        - grid-template-areas: '"i i" "n n" "s s"'
-        - grid-template-columns: 1fr 1fr
-        - grid-template-rows: 1fr min-content min-content
-        icon:
-        - width: 100%
-        - color: white
-        img_cell:
-        - justify-content: start
-        - align-items: start
-        - margin: none
-        name:
-        - font-weight: 300
-        - font-size: 10px
-        - color: white
-        - align-self: middle
-        - justify-self: start
-        state:
-        - font-weight: bold
-        - font-size: 9px
-        - color: white
-        - align-self: middle
-        - justify-self: start
-      value: 'on'
-    template:
-    - tap_audio
-    - animate
   list_button:
     aspect_ratio: 5/1
     color_type: icon
@@ -508,30 +77,6 @@ button_card_templates:
       - color: var(--secondary-text-color)
     tap_action:
       action: call-service
-  loader:
-    custom_fields:
-      loader: '<img src="/local/icons/loader.svg" width="100%">
-
-        '
-    styles:
-      custom_fields:
-        loader:
-        - display: none
-        - top: 3%
-        - left: 60%
-        - width: 37%
-        - position: absolute
-        - opacity: 0.5
-        - filter: '[[[ return variables.state === ''off'' ? ''invert(1)'' : ''none'';
-            ]]]
-
-            '
-    tap_action:
-      loader: "[[[\n  if (entity) {\n    let elt = this.shadowRoot,\n      loader\
-        \ = (id, style, timeout) => {\n        elt.getElementById(id) && (elt.getElementById(id).style.display\
-        \ = style,\n          window.setTimeout(() => {\n            elt.getElementById(id).style.display\
-        \ = timeout\n          }, 20000))\n      };\n    loader('circle', 'none',\
-        \ 'initial'),\n    loader('loader', 'initial', 'none');\n  }\n]]]\n"
   logo_button:
     aspect_ratio: 21/9
     color: rgb(255,255,255)
@@ -587,315 +132,37 @@ button_card_templates:
       - color: var(--secondary-text-color)
     tap_action:
       action: call-service
-  rgb_light_button:
-    custom_fields:
-      cl:
-        card:
-          entity_picture: /local/icons/multic.png
-    hold_action:
-      action: fire-dom-event
-      browser_mod:
-        data:
-          browser_id: THIS
-          content:
-            brightness_icon: brightness-7
-            entity: '[[[ return entity.entity_id ]]]
-
-              '
-            hide_header: false
-            show_slider_percent: true
-            type: custom:light-entity-card
-        service: browser_mod.popup
-    template:
-    - base
-    - tap_audio
-    - animate
-  tap_audio:
-    tap_action:
-      action: toggle
-      ui_sound_tablet: "[[[\n  let screensaver = states['sensor.lenovo_tab_m10_hd_foreground_app']\
-        \ === undefined || \n    states['sensor.lenovo_tab_m10_hd_foreground_app'].state;\n\
-        \  if (variables.state === 'off' && screensaver != 'com.tblenovo.launcher')\
-        \ {\n    hass.callService('media_player', 'play_media', {\n      entity_id:\
-        \ 'media_player.lenovo_fk',\n      media_content_id: '/local/sound/on.m4a',\n\
-        \      media_content_type: 'music'\n    });\n  }\n  if (variables.state ===\
-        \ 'on' && screensaver != 'com.tblenovo.launcher') {\n    hass.callService('media_player',\
-        \ 'play_media', {\n      entity_id: 'media_player.lenovo_fk',\n      media_content_id:\
-        \ '/local/sound/off.m4a',\n      media_content_type: 'music'\n    });\n  }\n\
-        ]]]\n"
-  tv_button:
-    aspect_ratio: 1/1
-    show_icon: false
-    show_state: true
-    state:
-    - styles:
-        card:
-        - background-color: grey
-        - color: grey
-        - opacity: 0.5
-        name:
-        - font-weight: 300
-        - font-size: 10px
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: unavailable
-    - styles:
-        card:
-        - background-color: transparent
-        - opacity: 0.5
-        name:
-        - opacity: 0.5
-        state:
-        - opacity: 0.5
-      value: 'off'
-    - styles:
-        card:
-        - background-color: '#2a5629'
-        - box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px
-      value: 'on'
-    state_display: '[[[ if (variables.state === true) return ''null''; ]]]
-
-      '
-    styles:
-      card:
-      - border-radius: 10%
-      - padding: 12%
-      - color: ivory
-      - font-size: 10px
-      - text-shadow: 0px 0px 5px black
-      - text-transform: capitalize
-      grid:
-      - grid-template-areas: '"icon  icon"
-
-          "n     n"
-
-          "s     s"
-
-          '
-      - grid-template-columns: repeat(2, 1fr)
-      - grid-template-rows: auto repeat(2, min-content)
-      - gap: 2%
-      - align-items: start
-      name:
-      - font-weight: 400
-      - font-size: 11px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-      state:
-      - font-weight: bold
-      - font-size: 9px
-      - color: white
-      - align-self: middle
-      - justify-self: start
-    tap_action:
-      action: toggle
-    template:
-    - tap_audio
-    - animate
-    - icon_tv
-    - loader
-  ww_light_button:
-    custom_fields:
-      cl:
-        card:
-          entity_picture: /local/icons/ww.png
-    hold_action:
-      action: fire-dom-event
-      browser_mod:
-        data:
-          browser_id: THIS
-          content:
-            brightness_icon: brightness-7
-            consolidate_entities: true
-            entity: '[[[ return entity.entity_id ]]]
-
-              '
-            hide_header: false
-            show_slider_percent: true
-            type: custom:light-entity-card
-        service: browser_mod.popup
-    template:
-    - base
-    - tap_audio
-    - animate
 kiosk_mode:
-  non_admin_settings:
-    hide_header: false
-    hide_sidebar: true
+  admin_settings:
+    ignore_entity_settings: true
+  entity_settings:
+  - entity:
+      input_boolean.kiosk_mode: 'on'
+    kiosk: true
 views:
 - cards: []
+  icon: mdi:home
   max_columns: 3
   path: '0'
   sections:
   - cards:
     - cards:
       - aspect_ratio: 1/1
-        camera_view: live
         entity: person.murthy
         image: /local/images/murthy.jpg
         name: Murthy
         show_name: false
-        show_state: true
+        show_state: false
         state_filter:
-          not_home: brightness(60%) grayscale(80%) blur(1px)
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            data:
-              browser_id: THIS
-              content:
-                cards:
-                - card_mod:
-                    class: content
-                  entities:
-                  - entity: person.murthy
-                    secondary_info: last-changed
-                  type: entities
-                - entities:
-                  - entity: person.murthy
-                  type: history-graph
-                - entities:
-                  - entity: sensor.murthy_nord2_battery_level
-                    name: Battery
-                  - entity: binary_sensor.murthy_nord2_is_charging
-                    name: Charging?
-                    style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
-                      \ 'off') else '#3c3f3f' }};\n}\n"
-                  - entity: binary_sensor.murthy_nord2_wifi_state
-                    name: Wi-Fi
-                    style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
-                      \ 'off') else '#3c3f3f' }};\n}\n"
-                  - entity: binary_sensor.murthy_nord2_bluetooth_state
-                    name: Bluetooth
-                    style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
-                      \ 'off') else '#3c3f3f' }};\n}\n"
-                  - entity: binary_sensor.murthy_nord2_mobile_data
-                    name: Data
-                    style: "state-badge {\n  color: {{ '#3182b7' if is_state(entity,\
-                      \ 'off') else '#3c3f3f' }};\n}\n"
-                  show_state: true
-                  type: glance
-                - icon: mdi:volume-high
-                  name: Find Phone
-                  styles:
-                    card:
-                    - margin: 0px 180px
-                  tap_action:
-                    action: call-service
-                    service: notify.mobile_app_murthy_nord2
-                    service_data:
-                      data:
-                        channel: alarm_stream
-                        priority: high
-                        ttl: 0
-                      message: ''
-                      title: Find My Phone
-                  template: icon_name
-                  type: custom:button-card
-                - dark_mode: true
-                  default_zoom: 15
-                  entities:
-                  - entity: device_tracker.murthy_nord2
-                  - entity: device_tracker.life360_murthy_upadrasta
-                  hours_to_show: 24
-                  type: map
-                type: vertical-stack
-              style:
-                hui-vertical-stack-card:
-                  $: "button-card {\n  align-self: center;\n  padding: .2em 0 2em\
-                    \ 0;\n}\nhui-history-graph-card {\n  padding: 0 1em 0 1em;\n}\n"
-                  $hui-entities-card$: "#states {\n  padding-left: 2em;\n  padding-bottom:\
-                    \ .9em;\n}\n"
-                  $hui-glance-card$: ".entities {\n  padding: 12px 29px 4px 26px !important;\n\
-                    }\n"
-                  $hui-map-card:
-                    $: "#root {\n  height: 25em;\n  padding-bottom: 0 !important;\n\
-                      }\nha-icon-button {\n  color: var(--primary-color);\n  zoom:\
-                      \ 140%;\n  margin-left: -0.2em;\n}\nha-card {\n  border-top:\
-                      \ 2px solid #1a1a1a;\n  border-radius: 0;\n  transition: none;\n\
-                      }\n"
-                    $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n\
-                      .leaflet-control-attribution {\n  display: none;\n}\n.leaflet-bar\
-                      \ a {\n  background-color: rgba(115, 123, 124, 0.2) !important;\n\
-                      \  color: #9da0a2 !important;\n  backdrop-filter: blur(0.25em);\n\
-                      \  zoom: 140%;\n}\na.leaflet-control-zoom-in {\n  border-bottom:\
-                      \ 1px solid #181818 !important;\n}\n.leaflet-pane.leaflet-tile-pane\
-                      \ {\n  filter: invert(0.95) grayscale(0.95) contrast(95%);\n\
-                      }\n"
-            service: browser_mod.popup
+          not_home: brightness(60%) grayscale(90%) blur(2px)
         type: picture-entity
       - aspect_ratio: 1/1
         entity: person.kameswari
         image: /local/images/kameswari.jpg
         show_name: false
+        show_state: false
         state_filter:
-          not_home: brightness(60%) grayscale(80%) blur(1px)
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            data:
-              browser_id: THIS
-              content:
-                cards:
-                - card_mod:
-                    class: content
-                  entities:
-                  - entity: person.kameswari
-                    secondary_info: last-changed
-                  type: entities
-                - entities:
-                  - entity: person.kameswari
-                  type: history-graph
-                - icon: mdi:volume-high
-                  name: Find Phone
-                  styles:
-                    card:
-                    - margin: 0px 180px
-                  tap_action:
-                    action: call-service
-                    service: notify.mobile_app_cph2613
-                    service_data:
-                      data:
-                        channel: alarm_stream
-                        priority: high
-                        ttl: 0
-                      message: ''
-                      title: Find My Phone
-                  template: icon_name
-                  type: custom:button-card
-                - dark_mode: true
-                  default_zoom: 16
-                  entities:
-                  - entity: device_tracker.kameswari_nord
-                  - entity: device_tracker.life360_kameswari_upadrasta
-                  hours_to_show: 24
-                  type: map
-                type: vertical-stack
-              style:
-                hui-vertical-stack-card:
-                  $: "button-card {\n  align-self: center;\n  padding: .2em 0 2em\
-                    \ 0;\n}\nhui-history-graph-card {\n  padding: 0 1em 0 1em;\n}\n"
-                  $hui-entities-card$: "#states {\n  padding-left: 2em;\n  padding-bottom:\
-                    \ .9em;\n}\n"
-                  $hui-glance-card$: ".entities {\n  padding: 12px 29px 4px 26px !important;\n\
-                    }\n"
-                  $hui-map-card:
-                    $: "#root {\n  height: 25em;\n  padding-bottom: 0 !important;\n\
-                      }\nha-icon-button {\n  color: var(--primary-color);\n  zoom:\
-                      \ 140%;\n  margin-left: -0.2em;\n}\nha-card {\n  border-top:\
-                      \ 2px solid #1a1a1a;\n  border-radius: 0;\n  transition: none;\n\
-                      }\n"
-                    $ha-map$: "#map {\n  background-color: #191919 !important;\n}\n\
-                      .leaflet-control-attribution {\n  display: none;\n}\n.leaflet-bar\
-                      \ a {\n  background-color: rgba(115, 123, 124, 0.2) !important;\n\
-                      \  color: #9da0a2 !important;\n  backdrop-filter: blur(0.25em);\n\
-                      \  zoom: 140%;\n}\na.leaflet-control-zoom-in {\n  border-bottom:\
-                      \ 1px solid #181818 !important;\n}\n.leaflet-pane.leaflet-tile-pane\
-                      \ {\n  filter: invert(0.95) grayscale(0.95) contrast(95%);\n\
-                      }\n"
-            service: browser_mod.popup
+          not_home: brightness(60%) grayscale(90%) blur(2px)
         type: picture-entity
       type: horizontal-stack
     - cards:
@@ -914,9 +181,8 @@ views:
         color_type: icon
         entity: sensor.motor_state
         entity_picture: true
-        extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
-
-          '
+        extra_styles: "@keyframes wave {\n  0%   { background-position-x: 0; }\n \
+          \ 100% { background-position-x: -100%; }\n}\n"
         hold_action:
           action: navigate
           navigation_path: /lovelace-wallmount/motors
@@ -925,25 +191,28 @@ views:
         show_name: true
         size: 70%
         state:
-        - color: blue
+        - color: dodgerblue
           name: Upstairs
           value: Upstairs
-        - color: blue
+        - color: dodgerblue
           name: Downstairs
           value: Downstairs
         - color: lightgrey
           icon: mdi:water-pump-off
           name: ' '
           value: MotorsOff
-        - color: var(--disabled-text-color)
+        - color: black
           icon: mdi:water-pump
           name: ' '
           value: TankFull
         styles:
           card:
-          - animation: '[[[ if (entity.state == "TankFull") return "bgswap 1000s linear
-              infinite"; else return " " ]]]'
           - background-size: cover
+          - border-radius: 25px
+          - background-image: '[[[ if (entity.state == "TankFull") return ''url("/local/icons/wave.png")'';
+              else return '' '' ]]] '
+          - animation: wave 1s linear infinite
+          - background-size: 80% 100%;
           - border-radius: 25px
         tap_action:
           action: navigate
@@ -981,7 +250,7 @@ views:
           card:
           - height: 100px
           - width: 100px
-          - margin: 0px 180px
+          - margin: 0px 150px
           - padding: 0px 0px
           - color: ivory
           - border-radius: 100px
@@ -1017,899 +286,817 @@ views:
           show_state: false
           type: picture-entity
         type: horizontal-stack
-      - cards:
-        - camera_view: live
-          entity: image.entrance_camera_person
-          show_state: false
-          type: picture-entity
-        - camera_view: live
-          entity: image.driveway_camera_person
-          show_name: true
-          show_state: false
-          type: picture-entity
-        type: horizontal-stack
       mode: vertical
       type: custom:stack-in-card
+    - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.ireland_time'')
+        else ''grey'' }}'
+      badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.ireland_time'')
+        else ''mdi:weather-night'' }}'
+      card_mod:
+        style:
+          .: "ha-card {\n  --card-primary-font-size: 30px;\n  margin-right: -10px\
+            \ !important;\n  background: transparent !important;\n}\nmushroom-badge-icon\
+            \ {\n  --badge-icon-size: 15px;\n  --badge-size: 20px;\n}\n"
+          mushroom-shape-avatar$: ".container {\n  --icon-size: 50px;\n  margin: -5px\
+            \ !important;\n  margin-right: 5px !important;\n  \n}\n"
+      double_tap_action:
+        action: none
+      fill_container: true
+      grid_options:
+        columns: 6
+        rows: 3
+      hold_action:
+        action: none
+      icon: ''
+      layout: vertical
+      multiline_secondary: false
+      picture: /local/icons/ire.png
+      primary: '{{states.sensor.ireland_time.state}}'
+      tap_action:
+        action: none
+      type: custom:mushroom-template-card
+    - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.canada_time'')
+        else ''grey'' }}'
+      badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.canada_time'')
+        else ''mdi:weather-night'' }}'
+      card_mod:
+        style:
+          .: "ha-card {\n  --card-primary-font-size: 30px;\n  margin-right: -10px\
+            \ !important;\n  background: transparent !important;\n}\nmushroom-badge-icon\
+            \ {\n  --badge-icon-size: 15px;\n  --badge-size: 20px;\n}\n"
+          mushroom-shape-avatar$: ".container {\n  --icon-size: 50px;\n  margin: -5px\
+            \ !important;\n  margin-right: 5px !important;\n  \n}\n"
+      double_tap_action:
+        action: none
+      fill_container: true
+      grid_options:
+        columns: 6
+        rows: 3
+      hold_action:
+        action: none
+      icon: ''
+      layout: vertical
+      multiline_secondary: false
+      picture: /local/icons/can.png
+      primary: '{{states.sensor.canada_time.state}}'
+      tap_action:
+        action: none
+      type: custom:mushroom-template-card
     type: grid
   - cards:
     - cards:
-      - cards:
-        - cards:
-          - color_type: blank-card
-            styles:
-              card:
-              - width: 10px
-            type: custom:button-card
-          - color: transparent
-            color_type: label-card
-            entity: input_select.room_select
-            name: Living Room
-            show_name: true
-            state:
-            - icon: mdi:television
-              styles:
-                icon:
-                - color: white
-                - width: 50px
-                name:
-                - color: white
-                - font-size: 12px
-                - padding-top: 5px
-              value: LivingRoom
-            - icon: mdi:television
-              operator: default
-              styles:
-                icon:
-                - color: white
-                - opacity: 0.2
-                - width: 45px
-                name:
-                - color: white
-                - font-size: 12px
-                - padding-top: 5px
-            tap_action:
-              action: call-service
-              service: input_select.select_option
-              service_data:
-                entity_id: input_select.room_select
-                option: LivingRoom
-            type: custom:button-card
-          - color: transparent
-            color_type: label-card
-            entity: input_select.room_select
-            name: Front Yard
-            show_name: true
-            state:
-            - icon: mdi:lightbulb-group
-              styles:
-                icon:
-                - color: white
-                - width: 50px
-                name:
-                - color: white
-                - font-size: 12px
-                - padding-top: 5px
-              value: FrontYard
-            - icon: mdi:lightbulb-group-outline
-              operator: default
-              styles:
-                icon:
-                - color: white
-                - opacity: 0.2
-                - width: 45px
-                name:
-                - color: white
-                - font-size: 12px
-                - padding-top: 5px
-            styles:
-              icon: null
-            tap_action:
-              action: call-service
-              service: input_select.select_option
-              service_data:
-                entity_id: input_select.room_select
-                option: FrontYard
-            type: custom:button-card
-          - color_type: blank-card
-            styles:
-              card:
-              - width: 10px
-            type: custom:button-card
-          type: horizontal-stack
-        type: horizontal-stack
-      - entity: input_select.room_select
-        states:
-          FrontYard:
-            cards:
-            - cards:
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 90px
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              consolidate_entities: true
-                              entity: light.front_yard_lights_group
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.front_yard_lights_group
-                icon: mdi:lightbulb-group-outline
-                template: ww_light_button
-                type: custom:button-card
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 90px
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.first_floor_light
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.first_floor_light
-                icon: mdi:lightbulb-outline
-                template: ww_light_button
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.first_floor_stairway
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.first_floor_stairway
-                icon: mdi:lightbulb-outline
-                template: ww_light_button
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.first_floor_corner
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.first_floor_corner
-                icon: mdi:lightbulb-outline
-                name: First Floor Corner
-                template: ww_light_button
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.second_floor_light
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.second_floor_light
-                icon: mdi:lightbulb-outline
-                template: ww_light_button
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.second_floor_stairway
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.second_floor_stairway
-                icon: mdi:lightbulb-outline
-                template: ww_light_button
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.second_floor_corner
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.second_floor_corner
-                icon: mdi:lightbulb-outline
-                template: ww_light_button
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 50px
-                type: custom:button-card
-              - entity: switch.rice_string_1_socket_1
-                icon: mdi:string-lights
-                name: Rice String 1
-                template: light_button_no_brightness
-                type: custom:button-card
-              - entity: switch.rice_string_2_socket_1
-                icon: mdi:string-lights
-                name: Rice String 2
-                template: light_button_no_brightness
-                type: custom:button-card
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 50px
-                type: custom:button-card
-              type: horizontal-stack
-            type: vertical-stack
-          LivingRoom:
-            cards:
-            - cards:
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 100px
-                  - height: 100px
-                type: custom:button-card
-              - custom_fields:
-                  cl:
-                    card:
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          data:
-                            content:
-                              brightness_icon: brightness-7
-                              entity: light.living_room_light
-                              hide_header: true
-                              show_slider_percent: true
-                              type: custom:light-entity-card
-                          service: browser_mod.popup
-                entity: light.living_room_light
-                icon: mdi:lightbulb-fluorescent-tube-outline
-                name: Light
-                template: ww_light_button
-                type: custom:button-card
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 100px
-                type: custom:button-card
-              type: horizontal-stack
-            - cards:
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 30px
-                  - height: 10px
-                type: custom:button-card
-              - entity: fan.living_room_fan
-                hold_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    data:
-                      content:
-                        action_button:
-                          icon: mdi:power
-                          mode: toggle
-                          show: false
-                          show_spinner: true
-                          tap_action:
-                            action: toggle
-                        compact: false
-                        entity: fan.living_room_fan
-                        icon:
-                          icon: ''
-                          show: false
-                          tap_action:
-                            action: none
-                          use_state_color: false
-                        name: Speed
-                        show_name: true
-                        show_state: true
-                        slider:
-                          background: gradient
-                          direction: left-right
-                          force_square: false
-                          show_track: true
-                          toggle_on_click: false
-                          use_percentage_bg_opacity: false
-                          use_state_color: false
-                        type: custom:slider-button-card
-                    service: browser_mod.popup
-                name: Fan
-                template: fan_button
-                type: custom:button-card
-              - entity: fan.livingroom_wall_fan
-                template: fan_button
-                type: custom:button-card
-              - color_type: blank-card
-                styles:
-                  card:
-                  - width: 30px
-                  - height: 10px
-                type: custom:button-card
-              type: horizontal-stack
-            - collapsible_controls: false
-              entity: light.top_light
-              icon: mdi:light-flood-up
-              name: Top Light
-              show_brightness_control: true
-              show_color_control: true
-              show_color_temp_control: true
-              type: custom:mushroom-light-card
-              use_light_color: true
-            - entity: fan.mi_air_purifier
-              show_percentage_control: true
-              type: custom:mushroom-fan-card
-            type: vertical-stack
-        type: custom:state-switch
-      type: vertical-stack
-    type: grid
-  - cards:
-    - cards:
-      - color_type: card
-        entity: input_select.remote
-        icon: "[[[\n  if (states['input_select.remote'].state == 'TV')\n    return\
-          \ \"mdi:television\";\n  else\n    return \"mdi:set-top-box\";\n]]]\n"
-        label: "[[[\n  return states['input_select.remote'].state + ' Remote';\n]]]\n"
-        layout: icon_label
-        show_label: true
-        show_name: false
+      - color_type: blank-card
         styles:
           card:
-          - height: 60px
-          - --mdc-ripple-color: green
-          label:
-          - color: black
-          - font-size: 20px
-          - font-weight: bold
-          - justify-self: start
-          - padding: 10px 0px
+          - width: 10px
+        type: custom:button-card
+      - color: transparent
+        color_type: label-card
+        entity: input_select.room_select
+        name: Living Room
+        show_name: true
+        state:
+        - icon: mdi:television
+          styles:
+            icon:
+            - color: white
+            - width: 50px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+          value: LivingRoom
+        - icon: mdi:television
+          operator: default
+          styles:
+            icon:
+            - color: white
+            - opacity: 0.2
+            - width: 45px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
         tap_action:
           action: call-service
-          service: input_select.select_next
+          service: input_select.select_option
           service_data:
-            entity_id: input_select.remote
+            entity_id: input_select.room_select
+            option: LivingRoom
         type: custom:button-card
-      - entity: input_select.remote
-        states:
-          Set-Top Box:
-            entities:
-            - card_type: horizontal-stack
-              cards:
-              - color: red
-                entity: remote.sony_bravia_tv
-                icon: mdi:power
-                name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
-                styles:
-                  icon:
-                  - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
-                      "green"]]]
-
-                      '
-                tap_action:
-                  service: script.set_top_box_power
-                template: menu_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:video-input-component
-                name: Input
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Input
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 3/2
-                template: blank_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                entity: remote.sony_bravia_tv
-                icon: mdi:chevron-up-circle-outline
-                name: Channel Up
-                tap_action:
-                  service: script.set_top_box_program_up
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                template: blank_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 3/2
-                entity: remote.sony_bravia_tv
-                icon: mdi:volume-minus
-                name: Volume Down
-                tap_action:
-                  service: script.set_top_box_volume_down
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                entity: remote.sony_bravia_tv
-                icon: mdi:volume-off
-                name: Mute
-                styles:
-                  card:
-                  - background: var(--secondary-background-color-alpha)
-                tap_action:
-                  service: script.set_top_box_mute
-                template: icon_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                entity: remote.sony_bravia_tv
-                icon: mdi:volume-plus
-                name: Volume Up
-                tap_action:
-                  service: script.set_top_box_volume_up
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 3/2
-                template: blank_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                entity: remote.sony_bravia_tv
-                icon: mdi:chevron-down-circle-outline
-                name: Program Down
-                tap_action:
-                  service: script.set_top_box_program_down
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 3/2
-                template: blank_button
-                type: custom:button-card
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-1-box
-                name: 1
-                tap_action:
-                  service: script.set_top_box_one
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-2-box
-                name: 2
-                tap_action:
-                  service: script.set_top_box_two
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-3-box
-                name: 3
-                tap_action:
-                  service: script.set_top_box_three
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-4-box
-                name: 4
-                tap_action:
-                  service: script.set_top_box_four
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-5-box
-                name: 5
-                tap_action:
-                  service: script.set_top_box_five
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-6-box
-                name: 6
-                tap_action:
-                  service: script.set_top_box_six
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-7-box
-                name: 7
-                tap_action:
-                  service: script.set_top_box_seven
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-8-box
-                name: 8
-                tap_action:
-                  service: script.set_top_box_eight
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-9-box
-                name: 9
-                tap_action:
-                  service: script.set_top_box_nine
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 21/9
-                template: blank_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:numeric-0-box
-                name: 0
-                tap_action:
-                  service: script.set_top_box_zero
-                template: menu_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                template: blank_button
-                type: custom:button-card
-              type: custom:hui-element
-            show_header_toggle: false
-            type: entities
-          TV:
-            entities:
-            - card_type: horizontal-stack
-              cards:
-              - color: red
-                entity: remote.sony_bravia_tv
-                icon: mdi:power
-                name: "[[[ var pow = entity.state\n  return 'Power ' + (pow)\n]]]\n"
-                styles:
-                  icon:
-                  - color: '[[[ if (entity.state == ''off'' ) return "red"; else return
-                      "green"]]]
-
-                      '
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: TvPower
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:video-input-component
-                name: Input
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Input
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/netflix.png
-                show_entity_picture: true
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Netflix
-                    entity_id: remote.sony_bravia_tv
-                template: logo_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/prime.png
-                show_entity_picture: true
-                tap_action:
-                  service: media_player.select_source
-                  service_data:
-                    entity_id: media_player.sony_bravia_tv
-                    source: Prime Video
-                template: logo_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/youtube.png
-                show_entity_picture: true
-                tap_action:
-                  service: media_player.select_source
-                  service_data:
-                    entity_id: media_player.sony_bravia_tv
-                    source: YouTube
-                template: logo_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/disney.png
-                show_entity_picture: true
-                tap_action:
-                  service: media_player.select_source
-                  service_data:
-                    entity_id: media_player.sony_bravia_tv
-                    source: Hotstar
-                template: logo_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/aha.png
-                show_entity_picture: true
-                tap_action:
-                  service: media_player.select_source
-                  service_data:
-                    entity_id: media_player.sony_bravia_tv
-                    source: aha
-                template: logo_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                entity_picture: /local/icons/zee5.png
-                show_entity_picture: true
-                tap_action:
-                  service: media_player.select_source
-                  service_data:
-                    entity_id: media_player.sony_bravia_tv
-                    source: ZEE5
-                template: logo_button
-                type: custom:button-card
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - entity: media_player.sony_bravia_tv
-              fill_container: false
-              icon_type: none
-              primary_info: none
-              secondary_info: none
-              show_volume_level: true
-              type: custom:mushroom-media-player-card
-              use_media_info: false
-              volume_controls:
-              - volume_set
-              - volume_mute
-            - row_type: section
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - entity: remote.sony_bravia_tv
-                icon: mdi:subtitles-outline
-                name: SubTitle
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Info
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:arrow-up-bold
-                name: Up
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Up
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:cog
-                name: Settings
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Options
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - entity: remote.sony_bravia_tv
-                icon: mdi:volume-off
-                name: Mute
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Mute
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:arrow-left-bold
-                name: Left
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Left
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:circle
-                name: Ok
-                styles:
-                  card:
-                  - background: var(--secondary-background-color-alpha)
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: DpadCenter
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                hold_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Right
-                    entity_id: remote.sony_bravia_tv
-                icon: mdi:arrow-right-bold
-                name: Right
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Right
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - entity: remote.sony_bravia_tv
-                icon: mdi:keyboard-return
-                name: Return
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Return
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:arrow-down-bold
-                name: Down
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Down
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - template: blank_button
-                type: custom:button-card
-              - entity: remote.sony_bravia_tv
-                icon: mdi:home
-                name: Home
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Home
-                    entity_id: remote.sony_bravia_tv
-                template: menu_button
-                type: custom:button-card
-              type: custom:hui-element
-            - row_type: section
-              type: custom:hui-element
-            - card_type: horizontal-stack
-              cards:
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:rewind
-                name: Rewind
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Rewind
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:play-pause
-                name: Play/Pause
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Pause
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              - aspect_ratio: 21/9
-                entity: remote.sony_bravia_tv
-                icon: mdi:fast-forward
-                name: Forward
-                tap_action:
-                  service: remote.send_command
-                  service_data:
-                    command: Forward
-                    entity_id: remote.sony_bravia_tv
-                template: icon_button
-                type: custom:button-card
-              type: custom:hui-element
-            show_header_toggle: false
-            type: entities
-        type: custom:state-switch
+      - color: transparent
+        color_type: label-card
+        entity: input_select.room_select
+        name: Front Yard
+        show_name: true
+        state:
+        - icon: mdi:lightbulb-group
+          styles:
+            icon:
+            - color: white
+            - width: 50px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+          value: FrontYard
+        - icon: mdi:lightbulb-group-outline
+          operator: default
+          styles:
+            icon:
+            - color: white
+            - opacity: 0.2
+            - width: 45px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+        styles:
+          icon: null
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.room_select
+            option: FrontYard
+        type: custom:button-card
+      type: horizontal-stack
+    - grid_options:
+        columns: 3
+        rows: 1
+      type: custom:mushroom-empty-card
+    - card_mod:
+        style: "ha-card {\n  height: 200px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung;\n  {%else%}\n\
+              \    color: grey;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung-off;\n\
+              \  {% endif %}\n}\nha-card {\n  {% if is_state(config.entity, 'on')\
+              \ %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+              \ none !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n\
+              }\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.front_yard_lights_group
+        hold_action:
+          action: toggle
+        name: Front Yard Lights
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 6
+        rows: 200px
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.first_floor_light
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.first_floor_stairway
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.first_floor_corner
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.second_floor_light
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.second_floor_stairway
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 150px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
+              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
+              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.second_floor_corner
+        hold_action:
+          action: toggle
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 4
+      type: custom:stack-in-card
+    column_span: 1
+    type: grid
+    visibility:
+    - condition: state
+      entity: input_select.room_select
+      state: FrontYard
+  - cards:
+    - cards:
+      - color_type: blank-card
+        styles:
+          card:
+          - width: 10px
+        type: custom:button-card
+      - color: transparent
+        color_type: label-card
+        entity: input_select.room_select
+        name: Living Room
+        show_name: true
+        state:
+        - icon: mdi:television
+          styles:
+            icon:
+            - color: white
+            - width: 50px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+          value: LivingRoom
+        - icon: mdi:television
+          operator: default
+          styles:
+            icon:
+            - color: white
+            - opacity: 0.2
+            - width: 45px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.room_select
+            option: LivingRoom
+        type: custom:button-card
+      - color: transparent
+        color_type: label-card
+        entity: input_select.room_select
+        name: Front Yard
+        show_name: true
+        state:
+        - icon: mdi:lightbulb-group
+          styles:
+            icon:
+            - color: white
+            - width: 50px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+          value: FrontYard
+        - icon: mdi:lightbulb-group-outline
+          operator: default
+          styles:
+            icon:
+            - color: white
+            - opacity: 0.2
+            - width: 45px
+            name:
+            - color: white
+            - font-size: 12px
+            - padding-top: 5px
+        styles:
+          icon: null
+        tap_action:
+          action: call-service
+          service: input_select.select_option
+          service_data:
+            entity_id: input_select.room_select
+            option: FrontYard
+        type: custom:button-card
+      type: horizontal-stack
+    - grid_options:
+        columns: 3
+        rows: 1
+      type: custom:mushroom-empty-card
+    - card_mod:
+        style: "ha-card {\n  height: 200px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube;\n  {%else%}\n\
+              \    color: grey;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube-outline;\n\
+              \  {% endif %}\n}\nha-card {\n  {% if is_state(config.entity, 'on')\
+              \ %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+              \ none !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n\
+              }\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+        double_tap_action:
+          action: toggle
+        entity: light.living_room_light
+        hold_action:
+          action: toggle
+        name: Light
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      grid_options:
+        columns: 6
+        rows: 200px
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 200px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n {% if is_state(config.entity, 'on') %}\n    color:\
+              \ white !important;\n  {%else%}\n    color: disabled !important;\n \
+              \ {% endif %}\n}\nha-card {\n{% if is_state(config.entity, 'on') %}\n\
+              \  background: #2a5629 !important;\n{%else%}\n   background: disabled\
+              \ !important;\n{% endif %}\n \n}\n:host {\n  --mush-icon-size: 180px;\n\
+              }\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+        entity: fan.living_room_fan
+        fill_container: true
+        icon_animation: true
+        name: Fan
+        type: custom:mushroom-fan-card
+      grid_options:
+        columns: 6
+        rows: 200px
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card {\n  height: 200px !important;\n}\n"
+      cards:
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n{% if is_state(config.entity, 'on') %}\n  color:\
+              \ white !important;\n{%else%}\n   color: disabled !important;\n{% endif\
+              \ %}\n}\nha-card {\n{% if is_state(config.entity, 'on') %}\n  background:\
+              \ #2a5629 !important;\n{%else%}\n   background: disabled !important;\n\
+              {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n}\n"
+            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
+              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
+            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+        entity: fan.livingroom_wall_fan
+        fill_container: true
+        icon_animation: true
+        name: Wall Fan
+        type: custom:mushroom-fan-card
+      grid_options:
+        columns: 6
+        rows: 200px
+      type: custom:stack-in-card
+    - card_mod:
+        style: "ha-card h2{\n  font-size: 25px;\n  border: none !important;\n}\nha-card\
+          \ {\n  font-size: 13px;\n  border: none !important;\n  height: 280px !important;\n\
+          \  border-style: dashed;\n  border-width: 2px;\n}\n"
+      card_type: countdown
+      countdown_type:
+      - qualifying
+      - sprint
+      - race
+      date_locale: in
+      grid_options:
+        columns: 12
+        rows: 5
+      image_clickable: true
+      show_flag: false
+      show_raceinfo: false
+      type: custom:formulaone-card
+    type: grid
+    visibility:
+    - condition: state
+      entity: input_select.room_select
+      state: LivingRoom
+  - cards:
+    - color: rgb(255,255,255)
+      color_type: card
+      icon: mdi:television
+      label: TV Remote
+      layout: icon_label
+      show_label: true
+      show_name: false
+      styles:
+        card:
+        - height: 60px
+        - --mdc-ripple-color: green
+        label:
+        - color: black
+        - font-size: 20px
+        - font-weight: bold
+        - justify-self: start
+        - padding: 10px 0px
+      type: custom:button-card
+    - cards:
+      - custom_actions:
+        - icon: mdi:power
+          label: Power
+          name: power
+          styles: ":host {\n  --icon-color: crimson;\n  --label-color: crimson;\n}"
+          tap_action:
+            action: key
+            key: POWER
+          type: button
+        - icon: mdi:home
+          label: Home
+          name: home
+          styles: ":host {\n  --icon-color: dodgerblue;\n}"
+          tap_action:
+            action: key
+            key: HOME
+          type: button
+        - autofill_entity_id: true
+          haptics: false
+          label: '{{ (value * 100) | round(0, ''ceil'') if value is defined else ''''
+            }}'
+          name: slider
+          range:
+          - 0
+          - 1
+          step: 0.01
+          styles: ":host {\n  height: 20px;\n  border-radius: 20px;  \n  --color:\
+            \ #4285F4;\n  --background-height: 15px;\n  --thumb-border-radius: 10px;\n\
+            }\n.icon {\n  display: none;\n}\n.label {\n  {% if not is_state(config.entity,\
+            \ 'on') %}\n  display: none;\n  {% endif %}\n  transform: var(--icon-transform);\n\
+            \  font-size: 14px;\n  color: var(--primary-text-color);\n}\n.tooltip\
+            \ {\n  display: none;\n}"
+          tap_action:
+            action: perform-action
+            data:
+              is_volume_muted: true
+            perform_action: media_player.volume_mute
+            target:
+              entity_id: media_player.sony_tv_remote
+          type: slider
+          value_attribute: volume_level
+          value_from_hass_delay: 10
+          vertical: false
+        custom_icons: []
+        keyboard_id: media_player.sony_tv
+        media_player_id: media_player.sony_tv
+        remote_id: remote.sony_tv_remote
+        rows:
+        - - power
+          - home
+        - - volume_down
+          - slider
+          - volume_up
+        styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
+          }\n"
+        type: custom:android-tv-card
+      - entities:
+        - card_type: horizontal-stack
+          cards:
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/netflix.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 80%
+            tap_action:
+              service: remote.turn_on
+              service_data:
+                activity: Netflix
+                entity_id: remote.sony_tv_remote
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/prime.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 80%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                entity_id: media_player.sony_bravia_tv
+                media_content_id: Prime Video
+                media_content_type: app
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/youtube.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 70%
+            tap_action:
+              service: remote.turn_on
+              service_data:
+                activity: YouTube
+                entity_id: remote.sony_tv_remote
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/hotstar.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 70%
+            tap_action:
+              service: remote.turn_on
+              service_data:
+                activity: Hotstar
+                entity_id: remote.sony_tv_remote
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/aha.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 60%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                entity_id: media_player.sony_bravia_tv
+                media_content_id: Aha
+                media_content_type: app
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/zee5.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 40%
+            tap_action:
+              service: remote.turn_on
+              service_data:
+                activity: Zee5
+                entity_id: remote.sony_tv_remote
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        - card_type: horizontal-stack
+          cards:
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/JioCinema.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 85%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                entity_id: media_player.sony_bravia_tv
+                media_content_id: JioCinema
+                media_content_type: app
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/jellyfin.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 80%
+            tap_action:
+              service: remote.turn_on
+              service_data:
+                activity: Jellyfin
+                entity_id: remote.sony_tv_remote
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/sonyliv.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 40%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                entity_id: media_player.sony_bravia_tv
+                media_content_id: Sony Liv
+                media_content_type: app
+            template: logo_button
+            type: custom:button-card
+          type: custom:hui-element
+        show_header_toggle: false
+        type: entities
+      - custom_actions:
+        - icon: mdi:checkbox-blank-circle
+          name: center
+          styles: ":host {\n  --icon-color: rgb(94, 94, 94);\n  --size: 50px;\n  background:\
+            \ grey;\n  border-radius: 100px;\n  margin: -60px;\n  padding: 50px;\n\
+            }"
+          tap_action:
+            action: key
+            key: DPAD_CENTER
+          type: button
+        - hold_action:
+            action: repeat
+          icon: mdi:chevron-up
+          name: up
+          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+            \ 2;\n  top: 45px;\n  height: 30px;\n}"
+          tap_action:
+            action: key
+            key: DPAD_UP
+          type: button
+        - hold_action:
+            action: repeat
+          icon: mdi:chevron-down
+          name: down
+          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+            \ 2;\n  bottom: 45px;\n  height: 30px;\n}"
+          tap_action:
+            action: key
+            key: DPAD_DOWN
+          type: button
+        - hold_action:
+            action: repeat
+          icon: mdi:chevron-left
+          name: left
+          styles: ":host {\n  --icon-color:  var(--primary-text-color);\n  z-index:\
+            \ 2;\n  left: 20px;\n  width: 90px;\n}"
+          tap_action:
+            action: key
+            key: DPAD_LEFT
+          type: button
+        - hold_action:
+            action: repeat
+          icon: mdi:chevron-right
+          name: right
+          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+            \ 2;\n  right: 20px;\n  height: 170px;\n  width: 90px;\n}"
+          tap_action:
+            action: key
+            key: DPAD_RIGHT
+          type: button
+        keyboard_id: media_player.sony_tv
+        media_player_id: media_player.sony_tv
+        remote_id: remote.sony_tv_remote
+        rows:
+        - - back
+          - keyboard
+          - settings
+        - - '{{ "navigation_buttons" if match_media("(min-width: 768px)") else "touchpad"
+            }}'
+          - - captions
+            - null
+            - audio_track
+            - null
+            - info
+        - - previous
+          - play_pause
+          - next
+        styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
+          }\n#row-1 {\n  justify-content: justify;\n}\n#row-2 {\n  justify-content:\
+          \ justify;\n}\n#row-3 {\n  justify-content: justify;\n}\n#row-4 {\n  justify-content:\
+          \ justify;\n}\n#row-5 {\n  justify-content: justify;\n}\n"
+        type: custom:android-tv-card
       type: vertical-stack
     type: grid
   title: home
@@ -1920,145 +1107,133 @@ views:
     camera_view: live
     entities:
     - entity: image.front_yard_camera_person
+    fit_mode: cover
     tap_action:
       action: more-info
     type: picture-glance
   icon: mdi:cctv
   title: ''
   type: panel
-- badges: []
-  cards:
-  - cards:
-    - entity: switch.upstairs_motor
-      name: Upstairs Motor
-      show_state: true
-      size: 70%
-      state:
-      - color: dodgerblue
-        icon: mdi:water-pump
-        styles:
-          state:
-          - opacity: 0.8
-        value: 'on'
-      - color: var(--disabled-text-color)
-        icon: mdi:water-pump-off
-        styles:
-          state:
-          - opacity: 0.2
-        value: 'off'
-      styles:
-        card:
-        - border-radius: 40px
-        - width: 350px
-        - height: 350px
-        name:
-        - justify-self: middle
-        - font-size: 25px
-        - color: var(--secondary-text-color)
-        state:
-        - font-weight: bold
-        - font-size: 20px
-        - color: white
-      template:
-      - tap_audio
-      - animate
-      type: custom:button-card
-    - entity: switch.downstairs_motor_switch_1
-      name: Downstairs Motor
-      show_state: true
-      size: 70%
-      state:
-      - color: dodgerblue
-        icon: mdi:water-pump
-        styles:
-          state:
-          - opacity: 0.8
-        value: 'on'
-      - color: var(--disabled-text-color)
-        icon: mdi:water-pump-off
-        styles:
-          state:
-          - opacity: 0.2
-        value: 'off'
-      styles:
-        card:
-        - border-radius: 40px
-        - width: 350px
-        - height: 350px
-        name:
-        - justify-self: middle
-        - font-size: 25px
-        - color: var(--secondary-text-color)
-        state:
-        - font-weight: bold
-        - font-size: 20px
-        - color: white
-      template:
-      - tap_audio
-      - animate
-      type: custom:button-card
-    type: vertical-stack
-  - type: custom:layout-break
-  - card:
-      color_type: card
-      entity: switch.sonoff_1000f38ea4
-      extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
-
-        '
-      icon: mdi:water
-      name: Tank Full
-      show_label: true
-      show_state: false
-      styles:
-        card:
-        - height: 80px
-        - animation: '[[[ if (entity.state == "on") return "bgswap 1000s linear infinite";
-            else return " " ]]]'
-        - background-size: 20%
-        - border-radius: 25px
-        grid:
-        - grid-template-areas: '"i n" "i n" "i l"'
-        - grid-template-columns: .5fr 1fr
-        - grid-template-rows: min-content min-content min-content
-        icon:
-        - width: 50px
-        - align-self: start
-        - text-align: start
-        - color: black
-        img_cell:
-        - align-self: start
-        - text-align: start
-        label:
-        - justify-self: start
-        - font-size: 16px
-        - font-weight: 500
-        - color: black
-        name:
-        - justify-self: start
-        - font-size: 30px
-        - font-weight: 500
-        - color: black
-      type: custom:button-card
-    conditions:
-    - entity: switch.sonoff_1000f38ea4
-      state: 'on'
-    type: conditional
-  - entities:
-    - entity: switch.upstairs_motor
-    - entity: switch.downstairs_motor_switch_1
-    hours_to_show: 6
-    refresh_interval: 1
-    title: History
-    type: history-graph
-  - entities:
-    - switch.downstairs_motor_switch_1
-    - switch.upstairs_motor
-    hours_to_show: 24
-    type: logbook
-  - type: custom:layout-break
+- cards: []
   icon: mdi:water-pump
-  layout:
-    max_cols: 2
-  path: motors
-  title: Motors
-  type: custom:vertical-layout
+  max_columns: 4
+  sections:
+  - cards:
+    - cards:
+      - entity: switch.upstairs_motor
+        name: Upstairs Motor
+        show_state: true
+        size: 70%
+        state:
+        - color: dodgerblue
+          icon: mdi:water-pump
+          styles:
+            state:
+            - opacity: 0.8
+          value: 'on'
+        - color: var(--disabled-text-color)
+          icon: mdi:water-pump-off
+          styles:
+            state:
+            - opacity: 0.2
+          value: 'off'
+        styles:
+          card:
+          - border-radius: 40px
+          - width: 350px
+          - height: 350px
+          name:
+          - justify-self: middle
+          - font-size: 25px
+          - color: var(--secondary-text-color)
+          state:
+          - font-weight: bold
+          - font-size: 20px
+          - color: white
+        type: custom:button-card
+      - entity: switch.downstairs_motor_switch_1
+        name: Downstairs Motor
+        show_state: true
+        size: 70%
+        state:
+        - color: dodgerblue
+          icon: mdi:water-pump
+          styles:
+            state:
+            - opacity: 0.8
+          value: 'on'
+        - color: var(--disabled-text-color)
+          icon: mdi:water-pump-off
+          styles:
+            state:
+            - opacity: 0.2
+          value: 'off'
+        styles:
+          card:
+          - border-radius: 40px
+          - width: 350px
+          - height: 350px
+          name:
+          - justify-self: middle
+          - font-size: 25px
+          - color: var(--secondary-text-color)
+          state:
+          - font-weight: bold
+          - font-size: 20px
+          - color: white
+        type: custom:button-card
+      type: vertical-stack
+    - card:
+        color_type: card
+        entity: switch.sonoff_1000f38ea4
+        extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
+
+          '
+        icon: mdi:water
+        name: Tank Full
+        show_label: true
+        show_state: false
+        styles:
+          card:
+          - height: 80px
+          - animation: '[[[ if (entity.state == "on") return "bgswap 1000s linear
+              infinite"; else return " " ]]]'
+          - background-size: 20%
+          - border-radius: 25px
+          grid:
+          - grid-template-areas: '"i n" "i n" "i l"'
+          - grid-template-columns: .5fr 1fr
+          - grid-template-rows: min-content min-content min-content
+          icon:
+          - width: 50px
+          - align-self: start
+          - text-align: start
+          - color: black
+          img_cell:
+          - align-self: start
+          - text-align: start
+          label:
+          - justify-self: start
+          - font-size: 16px
+          - font-weight: 500
+          - color: black
+          name:
+          - justify-self: start
+          - font-size: 30px
+          - font-weight: 500
+          - color: black
+        type: custom:button-card
+      conditions:
+      - entity: switch.sonoff_1000f38ea4
+        state: 'on'
+      type: conditional
+    type: grid
+  - cards:
+    - entities:
+      - switch.downstairs_motor_switch_1
+      - switch.upstairs_motor
+      hours_to_show: 24
+      type: logbook
+    type: grid
+  title: Pump
+  type: sections
