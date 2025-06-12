@@ -1,0 +1,11 @@
+{
+  "domain": "smartir",
+  "name": "SmartIR",
+  "codeowners": ["@litinoveweedle"],
+  "dependencies": [],
+  "documentation": "https://github.com/litinoveweedle/SmartIR",
+  "iot_class": "assumed_state",
+  "issue_tracker": "https://github.com/litinoveweedle/SmartIR/issues",
+  "requirements": [],
+  "version": "1.19.1"
+}

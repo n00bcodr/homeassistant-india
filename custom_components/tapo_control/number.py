@@ -1,3 +1,4 @@
+import json
 from homeassistant.core import HomeAssistant
 
 from homeassistant.components.number import RestoreNumber
@@ -649,8 +650,29 @@ class TapoSpotlightIntensity(TapoNumberEntity):
         LOGGER.debug("TapoSpotlightIntensity - init - start")
         self._attr_min_value = 1
         self._attr_native_min_value = 1
-        self._attr_max_value = 100
-        self._attr_native_max_value = int(entry["camData"]["smartwtl_digital_level"])
+
+        if "ldcStyle" in entry["camData"] and entry["camData"]["ldcStyle"]:
+            if entry["camData"]["ldcStyle"] == "standard":
+                LOGGER.debug(
+                    "Determining maximum range for TapoSpotlightIntensity: standard"
+                )
+                self._attr_max_value = 5
+                self._attr_native_max_value = 5
+            else:
+                LOGGER.debug(
+                    "Determining maximum range for TapoSpotlightIntensity: "
+                    + entry["camData"]["ldcStyle"]
+                )
+                self._attr_max_value = int(entry["camData"]["smartwtl_digital_level"])
+                self._attr_native_max_value = int(
+                    entry["camData"]["smartwtl_digital_level"]
+                )
+        else:
+            LOGGER.debug(
+                "Determining maximum range for TapoSpotlightIntensity: Default to 100 because of missing style."
+            )
+            self._attr_max_value = 100
+            self._attr_native_max_value = 100
         self._attr_step = 1
         self._hass = hass
         self._attr_native_value = entry["camData"]["whitelampConfigIntensity"]

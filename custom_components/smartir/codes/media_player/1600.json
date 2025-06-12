@@ -1,0 +1,27 @@
+{
+  "manufacturer": "i-CAN",
+  "supportedModels": ["4000S"],
+  "supportedController": "Broadlink",
+  "commandsEncoding": "Base64",
+  "commands": {
+    "off": "JgBgAB4cPBweOTwcHhwfHB4cHjoeHDwcHgALgR4cPBweOTwcHhwfHB4cHjoeHDwcHgALgR4cPBweOTwcHhwfHB4cHzkeHDwcHgALgR4cPBweOTwcHhwfHB4cHjoeHDwcHgANBQAAAAAAAAAA",
+    "on": "JgBgAB4cPBweOTwcHhwfHB4cHjoeHDwcHgALgR4cPBweOTwcHhwfHB4cHjoeHDwcHgALgR4cPBweOTwcHhwfHB4cHzkeHDwcHgALgR4cPBweOTwcHhwfHB4cHjoeHDwcHgANBQAAAAAAAAAA",
+    "previousChannel": "JgBIAB4cHh07OTwcHhwfOTscHxweHB85HgALZx8cHhw8OTwcHhweOjscHxweHB46HgALZx8cHhw8OTscHxweOTwcHhwfHB45HwANBQ==",
+    "nextChannel": "JgBIAB8cOx0eOTwcHhweOjscHxweHB4cHwALgB8cOxwfOTwcHhweOjscHxweHB4cHwALgB4cPBweOjscHxweOTwcHhweHB8cHgANBQ==",
+    "volumeDown": "JgBIAB4cHxw7OjscHh0eHB45HxweHDwcHgALgR4cHxw7OjscHxweHB46HhweHDwcHgALgR4cHxw7OTwcHhwfHB45HxweHDwcHgANBQ==",
+    "volumeUp": "JgBIAB8cOxwfOTsdHhweHB85Hhw8OR4cHwALZx4dOxweOjscHh0eHB46Hhw7Oh4cHgALaB4cPBweOTwcHhwfHB45Hxw7Oh4cHgANBQ==",
+    "mute": "JgBIAB4cHxs8OTwcHhwfHB4cHjoeHDw5HgALZx8cHhw8OTwcHhweHB8cHjkfHDs5HwALZx8cHhw8OTscHxweHB8cHjkfHDs5HwANBQ==",
+    "sources": {
+      "Channel 0": "JgBoAB8cOxwfOTsdHhweHB8cHhweHR4cHhwfAAuAHh07HB46OxwfHB4cHh0eHB4cHxweHB4AC4EeHDwcHjk8HB4cHxweHB4dHhweHB8cHgALgB8cOx0eOTsdHhweHB8cHhweHR4cHhwfAA0F",
+      "Channel 1": "JgBoAB4cHh07OTwcHhwfHB4cHh0eHB4cHzkeAAtoHhweHTs5PBweHB8cHhweHR4cHhweOh4AC2geHB4cPDk8HB4cHh0eHB4cHxweHB46HgALZx8cHhw8OTsdHhweHB8cHhweHR4cHjkfAA0F",
+      "Channel 2": "JgBgAB8cHhw8OTscHxweHB8cHhweHB85OwALgR8cHhw8OTscHxweHB4cHxweHB85OwALgR4cHxw7OTwcHhwfHB4cHxweHB45PAALgB8cHhw8OTsdHhweHB8cHhweHB85PAANBQAAAAAAAAAA",
+      "Channel 3": "JgBoAB4dOxweOjscHh0eHB4cHxweHB46HhweAAtoHhw8HB45PBweHB4dHhweHB8cHjkfHB4AC2cfHDscHjo7HB8cHhweHR4cHhwfOR4cHwALZx4cPBweOTwcHhwfHB4cHh0eHB45HxweAA0F",
+      "Channel 4": "JgBgAB8cOxweOjscHxweHB4dHhweOTwcHgALgR4cPBweOTwcHhwfHB4cHh0eOTwcHgALgB8cOxwfOTsdHhweHB8cHhweOjscHwALgB4cPBweOTwcHhweHR4cHhwfOTsdHgANBQAAAAAAAAAA",
+      "Channel 5": "JgBgAB8cHhw8OTsdHhweHB8cHhweOjs5HwALZx4dHhw7OjscHh0eHB4dHhweOTw5HgALaB4cHh07OTwcHhweHR4cHhwfOTs6HgALZx4dHhw7OjscHxweHB4dHhweOTw5HgANBQAAAAAAAAAA",
+      "Channel 6": "JgBgAB4cPBwfOTscHxweHB4cHxweOR8cOwALgR4cPBweOTwcHhwfHB4cHh0eOR4dOwALgR4cPBweOTwcHhwfHB4cHhwfOR4cPAALgB8cOxwfOTsdHhweHB8cHhweOh4cPAANBQAAAAAAAAAA",
+      "Channel 7": "JgBoAB4cHxw7OjscHh0eHB4cHxweOR8cHhweAAtoHhwfHDs6OxweHR4cHhweHR45Hh0eHB4AC2geHB4dOzk8HB4cHxweHB4dHjkeHR4cHgALaB4cHh07OTwcHhweHR4cHh0eOR4dHhweAA0F",
+      "Channel 8": "JgBgAB4dOxweOjsdHhweHB4dHjk8HB4cHgALgR4dOxweOjscHxweHB4dHjk8HB4cHgALgR8cOxweOjscHxweHB4dHjk8HB4cHgALgR4dOxweOjscHh0eHB4dHjk7HR4cHgANBQAAAAAAAAAA",
+      "Channel 9": "JgBgAB4cHh07OTwcHhwfHB4cHjo7HB85HgALaB4cHh07OjscHhwfHB4cHjo7HB85HgALaB4cHhw8OTwcHhweHR4cHjk8HB46HgALZx4dHhw7OjscHxweHB4dHjk8HB45HgANBQAAAAAAAAAA"
+    }
+  }
+}

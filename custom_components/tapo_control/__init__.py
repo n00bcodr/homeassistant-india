@@ -47,6 +47,10 @@ from .const import (
     SOUND_DETECTION_DURATION,
     SOUND_DETECTION_PEAK,
     SOUND_DETECTION_RESET,
+    TIME_SYNC_DST,
+    TIME_SYNC_DST_DEFAULT,
+    TIME_SYNC_NDST,
+    TIME_SYNC_NDST_DEFAULT,
     TIME_SYNC_PERIOD,
     UPDATE_CHECK_PERIOD,
     PYTAPO_REQUIRED_VERSION,
@@ -358,6 +362,13 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
             # Retry for anything else
             raise ConfigEntryNotReady
 
+    if config_entry.version == 21:
+        new = {**config_entry.data}
+        new[TIME_SYNC_DST] = TIME_SYNC_DST_DEFAULT
+        new[TIME_SYNC_NDST] = TIME_SYNC_NDST_DEFAULT
+
+        hass.config_entries.async_update_entry(config_entry, data=new, version=22)
+
     LOGGER.info("Migration to version %s successful", config_entry.version)
 
     return True
@@ -387,7 +398,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             async with asyncio.timeout(3):
                 await hass.data[DOMAIN][entry.entry_id]["events"].async_stop()
         except TimeoutError:
-            LOGGER.warn("Timed out waiting for onvif connection to close, proceeding.")
+            LOGGER.warning(
+                "Timed out waiting for onvif connection to close, proceeding."
+            )
         LOGGER.debug("Events stopped.")
 
     return True
@@ -407,7 +420,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
         LOGGER.debug("Deleting cold storage files for entity " + entry_id + "...")
         await deleteDir(hass, coldDirPath)
     else:
-        LOGGER.warn(
+        LOGGER.warning(
             "No cold storage path found for entity"
             + entry_id
             + ". Not deleting anything."
@@ -418,7 +431,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
         LOGGER.debug("Deleting hot storage files for entity " + entry_id + "...")
         await deleteDir(hass, hotDirPath)
     else:
-        LOGGER.warn(
+        LOGGER.warning(
             "No hot storage path found for entity"
             + entry_id
             + ". Not deleting anything."
@@ -455,6 +468,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     cloud_password = entry.data.get(CLOUD_PASSWORD)
     updateIntervalMain = entry.data.get(UPDATE_INTERVAL_MAIN)
     updateIntervalBattery = entry.data.get(UPDATE_INTERVAL_BATTERY)
+    timeSyncDST = entry.data.get(TIME_SYNC_DST)
+    timeSyncNDST = entry.data.get(TIME_SYNC_NDST)
 
     if entry.entry_id not in hass.data[DOMAIN]:
         hass.data[DOMAIN][entry.entry_id] = {}
@@ -553,7 +568,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                         and motionSensor
                     ):
                         LOGGER.debug(
-                            "Setting up subcription to motion sensor events..."
+                            "Setting up subscription to motion sensor events..."
                         )
                         # retry if subscription to events failed
                         try:
@@ -824,7 +839,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             update_method=async_update_data,
         )
 
-        LOGGER.debug("Retriving initial device data.")
+        LOGGER.debug("Retrieving initial device data.")
 
         camData = await getCamData(hass, tapoController)
         LOGGER.debug("Retrieved initial device data.")
@@ -836,12 +851,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             cameraTS = cameraTime["timestamp"]
         LOGGER.debug("Retrieved camera time.")
         currentTS = dt.as_timestamp(dt.now())
+        timezoneOffset = cameraTS - currentTS
+
+        LOGGER.debug(f"Timezone offset is {timezoneOffset}.")
 
         LOGGER.debug("Setting up entry data.")
         hass.data[DOMAIN][entry.entry_id] = {
             "setup_retries": 0,
             "reauth_retries": 0,
             "runningMediaSync": False,
+            TIME_SYNC_DST: timeSyncDST,
+            TIME_SYNC_NDST: timeSyncNDST,
             "controller": tapoController,
             "entry": entry,
             "usingCloudPassword": cloud_password != "",
@@ -892,7 +912,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             "mediaSyncAvailable": True,
             "initialMediaScanRunning": False,
             "mediaScanResult": {},  # keeps track of all videos currently on camera
-            "timezoneOffset": cameraTS - currentTS,
+            "timezoneOffset": timezoneOffset,
             "refreshEnabled": True,
         }
         LOGGER.debug("Entry data has been set up.")
@@ -985,7 +1005,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                 "device_mgmt"
             ]
             if motionSensor:
-                LOGGER.debug("Seting up motion sensor for the first time.")
+                LOGGER.debug("Setting up motion sensor for the first time.")
                 await setupOnvif(hass, entry)
             else:
                 debugMsg = "Motion sensor is disabled."

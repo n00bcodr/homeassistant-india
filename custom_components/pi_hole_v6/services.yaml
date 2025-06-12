@@ -1,0 +1,17 @@
+disable:
+  target:
+    entity:
+      integration: pi_hole_v6
+      domain: switch
+  fields:
+    duration:
+      required: false
+      example: "00:05:15"
+      selector:
+        text:
+enable:
+  target:
+    entity:
+      integration: pi_hole_v6
+      domain: switch
+

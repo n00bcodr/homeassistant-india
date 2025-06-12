@@ -1,0 +1,173 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Le service est déjà configuré.",
+            "reauth_successful": "La réauthentification a réussi."
+        },
+        "error": {
+            "incorrect_data_expected": "Échec de la récupération des données dans la structure attendue.",
+            "cannot_connect": "Échec de la connexion au serveur. Assurez-vous que l'adresse du serveur et le port sont corrects.",
+            "invalid_auth": "Mot de passe invalide fourni. Assurez-vous que votre mot de passe est correct.",
+            "invalid_path": "Chemin d'API invalide spécifié. Veuillez vérifier l'URL du point de terminaison."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "Nom",
+                    "password": "Mot de passe",
+                    "url": "Adresse"
+                },
+                "data_description": {
+                    "password": "Mot de passe à utiliser pour la connexion",
+                    "url": "URL ou adresse de votre Pi-hole (ex: https://pi.hole:443/api)"
+                },
+                "description": "Cette intégration permet de récupérer des statistiques et d'interagir avec un système Pi-hole V6.",
+                "title": "Pi-hole V6"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Mot de passe"
+                },
+                "data_description": {
+                    "password": "Mot de passe à utiliser pour la connexion"
+                },
+                "description": "A partir de cet écran, vous pouvez modifier le mot de passe pour accéder à l'instance  Pi-hole.",
+                "title": "Pi-hole V6"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "update_interval": "Fréquence de rafraîchissement des données (secondes)"
+                },
+                "description": "Après avoir modifié une de ces options, il est nécessaire de recharger le service ou de redémarrer Home Assistant.",
+                "title": "Pi-hole V6"
+            }
+        },
+        "error": {
+            "invalid_update_interval": "Fréquence de rafraîchissement des données invalide. Doit être supérieure à 1 seconde et inférieure à 3600 secondes."
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "status": {
+                "name": "Statut"
+            }
+        },
+        "button": {
+            "action_flush_arp": {
+                "name": "Vider la table réseau"
+            },
+            "action_flush_logs": {
+                "name": "Vider les logs DNS"
+            },
+            "action_gravity": {
+                "name": "Exécuter gravity"
+            },
+            "action_restartdns": {
+                "name": "Redémarrer pihole-FTL"
+            },
+            "action_refresh_data": {
+                "name": "Rafraîchir les données"
+            },
+            "action_ftl_purge_diagnosis_messages": {
+                "name": "Purger les messages de diagnostic FTL"
+            }
+        },
+        "sensor": {
+            "ads_blocked_today": {
+                "name": "Publicités bloquées durant les 24 dernières heures",
+                "unit_of_measurement": "publicités"
+            },
+            "ads_percentage_blocked_today": {
+                "name": "Pourcentage de publicités bloquées durant les 24 dernières heures"
+            },
+            "seen_clients": {
+                "name": "Clients vus",
+                "unit_of_measurement": "clients"
+            },
+            "dns_queries_today": {
+                "name": "Requêtes DNS durant les 24 dernières heures",
+                "unit_of_measurement": "requêtes"
+            },
+            "domains_blocked": {
+                "name": "Domaines bloqués",
+                "unit_of_measurement": "domaines"
+            },
+            "dns_queries_cached": {
+                "name": "Requêtes DNS mises en cache",
+                "unit_of_measurement": "requêtes"
+            },
+            "dns_queries_forwarded": {
+                "name": "Requêtes DNS transférées",
+                "unit_of_measurement": "requêtes"
+            },
+            "dns_unique_clients": {
+                "name": "Clients DNS uniques",
+                "unit_of_measurement": "clients"
+            },
+            "dns_unique_domains": {
+                "name": "Domaines DNS uniques",
+                "unit_of_measurement": "domaines"
+            },
+            "remaining_until_blocking_mode": {
+                "name": "Temps restant avant le mode de blocage"
+            },
+            "latest_data_refresh": {
+                "name": "Dernière actualisation des données"
+            },
+            "cpu_use": {
+                "name": "Utilisation du processeur"
+            },
+            "memory_use": {
+                "name": "Utilisation de la mémoire"
+            },
+            "ftl_info_message_count": {
+                "name": "Nombre de messages de diagnostic FTL",
+                "unit_of_measurement": "messages"
+            }
+        },
+        "switch": {
+            "group": {
+                "name": "Groupe {group_name}"
+            }
+        },
+        "update": {
+            "core_update_available": {
+                "name": "Mise à jour Core"
+            },
+            "docker_update_available": {
+                "name": "Mise à jour Docker"
+            },
+            "ftl_update_available": {
+                "name": "Mise à jour FTL"
+            },
+            "web_update_available": {
+                "name": "Mise à jour Web interface"
+            }
+        }
+    },
+    "services": {
+        "disable": {
+            "name": "Désactiver",
+            "description": "Désactive le service Pi-hole configuré pendant une certaine durée.",
+            "fields": {
+                "duration": {
+                    "description": "Durée pendant laquelle le Pi-hole doit être désactivé.",
+                    "name": "Durée"
+                }
+            }
+        },
+        "enable": {
+            "name": "Activer",
+            "description": "Active le service Pi-hole configuré."
+        }
+    },
+    "exceptions": {
+        "unable_to_launch_action": {
+            "message": "Impossible de lancer l'action *{action}* : {exception}."
+        }
+    }
+}
