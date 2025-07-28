@@ -1,3 +1,4 @@
+---
 button_card_templates:
   blank_button:
     aspect_ratio: 4/3
@@ -166,139 +167,92 @@ views:
         type: picture-entity
       type: horizontal-stack
     - cards:
-      - aspect_ratio: 1/1
+      - card_mod:
+          style:
+            .: "ha-state-icon {\n  animation: scan 5s ease-in-out infinite;\n  transform-origin:\
+              \ 70% 70%\n}\n@keyframes scan {\n  0%, 100% { transform: rotate(10deg);\
+              \ }\n  50% { transform: rotate(-10deg); }\n}\n"
+            mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
+              \ 120px;\n  }\n"
         icon: mdi:cctv
-        size: 70%
-        styles:
-          card:
-          - border-radius: 25px
-        tap_action:
-          action: navigate
-          navigation_path: /lovelace-wallmount/cameras
-        tooltip: Tap to open Cameras
-        type: custom:button-card
-      - aspect_ratio: 1/1
-        color_type: icon
+        icon_color: blue-grey
+        type: custom:mushroom-template-card
+      - card_mod:
+          style:
+            .: "ha-card {\n  {% if is_state(config.entity, 'TankFull') %}\n  background:\
+              \ url('/local/icons/wave.png');\n  background-size: 80% 100%;\n  background-repeat:\
+              \ repeat-x;\n  animation: bgScroll 1s linear infinite;\n  {% endif %}\n\
+              }\n@keyframes bgScroll {\n  from {\n    background-position: 0 0;\n\
+              \  }\n  to {\n    background-position: -100% 0%;\n  }\n}\n"
+            mushroom-shape-icon$: ".shape {\n  {% if is_state(config.entity, 'TankFull')\
+              \ %}\n  --icon-symbol-size: 90px;\n  --icon-size: 0px; \n  {% else %}\n\
+              \  --icon-symbol-size: 80px;\n  --icon-size: 100px; \n  {% endif %}\n\
+              }\n"
+            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+              }\n"
         entity: sensor.motor_state
-        entity_picture: true
-        extra_styles: "@keyframes wave {\n  0%   { background-position-x: 0; }\n \
-          \ 100% { background-position-x: -100%; }\n}\n"
+        fill_container: true
         hold_action:
           action: navigate
           navigation_path: /lovelace-wallmount/motors
-        icon: mdi:water-pump
-        show_label: false
-        show_name: true
-        size: 70%
-        state:
-        - color: dodgerblue
-          name: Upstairs
-          value: Upstairs
-        - color: dodgerblue
-          name: Downstairs
-          value: Downstairs
-        - color: lightgrey
-          icon: mdi:water-pump-off
-          name: ' '
-          value: MotorsOff
-        - color: black
-          icon: mdi:water-pump
-          name: ' '
-          value: TankFull
-        styles:
-          card:
-          - background-size: cover
-          - border-radius: 25px
-          - background-image: '[[[ if (entity.state == "TankFull") return ''url("/local/icons/wave.png")'';
-              else return '' '' ]]] '
-          - animation: wave 1s linear infinite
-          - background-size: 80% 100%;
-          - border-radius: 25px
+        icon: "{% if is_state(config.entity, 'Upstairs') %}\n  mdi:numeric-2-box-outline\n\
+          {% elif is_state(config.entity, 'Downstairs') %}\n  mdi:numeric-1-box-outline\n\
+          {% elif is_state(config.entity, 'MotorsOff') %}\n  mdi:water-pump-off\n\
+          {% elif is_state(config.entity, 'TankFull') %}\n  mdi:water-pump\n{% endif\
+          \ %}"
+        icon_color: "{% if is_state(config.entity, 'Upstairs') %}\n  blue\n{% elif\
+          \ is_state(config.entity, 'Downstairs') %}\n  pink\n{% elif is_state(config.entity,\
+          \ 'MotorsOff') %}\n  lightgrey\n{% elif is_state(config.entity, 'TankFull')\
+          \ %}\n  black\n{% endif %}"
+        layout: vertical
+        primary: "{% if is_state(config.entity, 'Upstairs') %}\n  Upstairs\n{% elif\
+          \ is_state(config.entity, 'Downstairs') %}\n  Downstairs\n{% else %}\n{%\
+          \ endif %}"
         tap_action:
           action: navigate
           navigation_path: /lovelace-wallmount/motors
-        type: custom:button-card
-      - aspect_ratio: 1/1
-        color: auto
+        type: custom:mushroom-template-card
+      - card_mod:
+          style:
+            .: ":host {\n  --mush-icon-size: 100px;\n}\n"
+            mushroom-shape-avatar$: ".picture {\n  {% if is_state(config.entity, 'on')\
+              \ %}\n  filter: brightness(1) contrast(3);\n  {% else %}\n  filter:\
+              \ grayscale(50%) opacity(40%);\n  {% endif %}        \n}\n"
+            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+              }\n"
         entity: switch.downstairs_geyser
-        entity_picture: /local/icons/geyser.png
-        hold_action:
-          action: more-info
-        show_entity_picture: true
-        show_name: false
-        size: 70%
-        state:
-        - styles:
-            icon:
-            - filter: grayscale(50%) opacity(40%)
-          value: 'off'
-        - styles:
-            icon:
-            - filter: grayscale(100%) opacity(10%)
-          value: unavailable
-        styles:
-          card:
-          - border-radius: 25px
-        type: custom:button-card
+        fill_container: true
+        icon_color: ''
+        layout: vertical
+        picture: /local/icons/geyser.png
+        primary: "{% if is_state(config.entity, 'on') %}\n  On\n{% else %}\n{% endif\
+          \ %}"
+        tap_action:
+          action: toggle
+        type: custom:mushroom-template-card
       type: horizontal-stack
     - cards:
-      - entity: sensor.moon_phase
-        show_entity_picture: true
-        show_name: false
-        size: 100%
-        styles:
-          card:
-          - height: 100px
-          - width: 100px
-          - margin: 0px 150px
-          - padding: 0px 0px
-          - color: ivory
-          - border-radius: 100px
-        type: custom:button-card
-      - card:
-          entity: device_tracker.phone_prasad_redmi9i
-          entity_picture: /local/images/prasad.jpg
-          show_entity_picture: true
-          show_name: false
-          size: 200%
-          styles:
-            card:
-            - position: absolute
-            - left: -150px
-            - height: 100px
-            - width: 100px
-            - color: ivory
-          type: custom:button-card
-        conditions:
-        - entity: device_tracker.phone_prasad_redmi9i
-          state: home
-        type: conditional
+      - camera_view: live
+        entity: image.front_yard_camera_person
+        show_state: false
+        type: picture-entity
+      - camera_view: live
+        entity: image.second_floor_camera_person
+        show_name: true
+        show_state: false
+        type: picture-entity
       type: horizontal-stack
-    - cards:
-      - cards:
-        - camera_view: live
-          entity: image.front_yard_camera_person
-          show_state: false
-          type: picture-entity
-        - camera_view: live
-          entity: image.second_floor_camera_person
-          show_name: true
-          show_state: false
-          type: picture-entity
-        type: horizontal-stack
-      mode: vertical
-      type: custom:stack-in-card
     - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.ireland_time'')
         else ''grey'' }}'
       badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.ireland_time'')
         else ''mdi:weather-night'' }}'
       card_mod:
         style:
-          .: "ha-card {\n  --card-primary-font-size: 30px;\n  margin-right: -10px\
-            \ !important;\n  background: transparent !important;\n}\nmushroom-badge-icon\
-            \ {\n  --badge-icon-size: 15px;\n  --badge-size: 20px;\n}\n"
-          mushroom-shape-avatar$: ".container {\n  --icon-size: 50px;\n  margin: -5px\
-            \ !important;\n  margin-right: 5px !important;\n  \n}\n"
+          .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
+            \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
+            \  --badge-size: 25px;\n}\n"
+          mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
+          mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
       double_tap_action:
         action: none
       fill_container: true
@@ -321,11 +275,11 @@ views:
         else ''mdi:weather-night'' }}'
       card_mod:
         style:
-          .: "ha-card {\n  --card-primary-font-size: 30px;\n  margin-right: -10px\
-            \ !important;\n  background: transparent !important;\n}\nmushroom-badge-icon\
-            \ {\n  --badge-icon-size: 15px;\n  --badge-size: 20px;\n}\n"
-          mushroom-shape-avatar$: ".container {\n  --icon-size: 50px;\n  margin: -5px\
-            \ !important;\n  margin-right: 5px !important;\n  \n}\n"
+          .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
+            \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
+            \  --badge-size: 25px;\n}\n"
+          mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
+          mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
       double_tap_action:
         action: none
       fill_container: true
@@ -426,204 +380,187 @@ views:
         rows: 1
       type: custom:mushroom-empty-card
     - card_mod:
-        style: "ha-card {\n  height: 200px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung;\n  {%else%}\n\
-              \    color: grey;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung-off;\n\
-              \  {% endif %}\n}\nha-card {\n  {% if is_state(config.entity, 'on')\
-              \ %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
-              \ none !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n\
-              }\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
-              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.front_yard_lights_group
-        hold_action:
-          action: toggle
-        name: Front Yard Lights
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung;\n  {%else%}\n\
+            \    color: grey;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung-off;\n\
+            \  {% endif %}\n}\nha-card {\n  height: 200px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 180px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -20px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+            \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.front_yard_lights_group
       grid_options:
         columns: 6
         rows: 200px
-      type: custom:stack-in-card
+      hold_action:
+        action: toggle
+      name: Front Yard Lights
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.first_floor_light
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\n  height: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.first_floor_light
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+        rows: 150px
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.first_floor_stairway
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\nheight: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.first_floor_stairway
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.first_floor_corner
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\n  height: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.first_floor_corner
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+        rows: 150px
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.second_floor_light
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\n  height: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.second_floor_light
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+        rows: 150px
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.second_floor_stairway
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\n  height: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.second_floor_stairway
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+        rows: 150px
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 150px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n \
-              \   color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
-              \ %}\n}\nha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
-              \ #2a5629 !important;\n  {%else%}\n     background: none !important;\n\
-              \  {% endif %}\n}\n:host {\n  --mush-icon-size: 150px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -30px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
-              \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.second_floor_corner
-        hold_action:
-          action: toggle
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: hue:bulb-sultan-hung;\n  {%else%}\n   \
+            \ color: grey;\n    --card-mod-icon: hue:bulb-sultan-off;\n  {% endif\
+            \ %}\n}\nha-card {\n  height: 150px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 150px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -30px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 12px !important;\n  position:\
+            \ relative;\n  top: 40px;\n  left: -140px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 8px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 40px;\n  left: -140px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.second_floor_corner
       grid_options:
         columns: 4
-      type: custom:stack-in-card
+        rows: 150px
+      hold_action:
+        action: toggle
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     column_span: 1
     type: grid
     visibility:
@@ -713,91 +650,80 @@ views:
         rows: 1
       type: custom:mushroom-empty-card
     - card_mod:
-        style: "ha-card {\n  height: 200px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube;\n  {%else%}\n\
-              \    color: grey;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube-outline;\n\
-              \  {% endif %}\n}\nha-card {\n  {% if is_state(config.entity, 'on')\
-              \ %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
-              \ none !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n\
-              }\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
-              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
-        double_tap_action:
-          action: toggle
-        entity: light.living_room_light
-        hold_action:
-          action: toggle
-        name: Light
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
+        style:
+          .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube;\n  {%else%}\n\
+            \    color: grey;\n    --card-mod-icon: mdi:lightbulb-fluorescent-tube-outline;\n\
+            \  {% endif %}\n}\nha-card {\n  height: 200px !important;\n  {% if is_state(config.entity,\
+            \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
+            \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
+            \ 180px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -20px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+            \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+      double_tap_action:
+        action: toggle
+      entity: light.living_room_light
       grid_options:
         columns: 6
         rows: 200px
-      type: custom:stack-in-card
+      hold_action:
+        action: toggle
+      name: Light
+      tap_action:
+        action: toggle
+      type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  height: 200px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n {% if is_state(config.entity, 'on') %}\n    color:\
-              \ white !important;\n  {%else%}\n    color: disabled !important;\n \
-              \ {% endif %}\n}\nha-card {\n{% if is_state(config.entity, 'on') %}\n\
-              \  background: #2a5629 !important;\n{%else%}\n   background: disabled\
-              \ !important;\n{% endif %}\n \n}\n:host {\n  --mush-icon-size: 180px;\n\
-              }\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
-              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
-        entity: fan.living_room_fan
-        fill_container: true
-        icon_animation: true
-        name: Fan
-        type: custom:mushroom-fan-card
+        style:
+          .: "ha-state-icon {\n {% if is_state(config.entity, 'on') %}\n    color:\
+            \ white !important;\n  {%else%}\n    color: disabled !important;\n  {%\
+            \ endif %}\n}\nha-card {\n{% if is_state(config.entity, 'on') %}\n  background:\
+            \ #2a5629 !important;\n{%else%}\n   background: disabled !important;\n\
+            {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -20px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+            \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+      entity: fan.living_room_fan
+      fill_container: true
       grid_options:
         columns: 6
         rows: 200px
-      type: custom:stack-in-card
+      icon_animation: true
+      name: Fan
+      type: custom:mushroom-fan-card
     - card_mod:
-        style: "ha-card {\n  height: 200px !important;\n}\n"
-      cards:
-      - card_mod:
-          style:
-            .: "ha-state-icon {\n{% if is_state(config.entity, 'on') %}\n  color:\
-              \ white !important;\n{%else%}\n   color: disabled !important;\n{% endif\
-              \ %}\n}\nha-card {\n{% if is_state(config.entity, 'on') %}\n  background:\
-              \ #2a5629 !important;\n{%else%}\n   background: disabled !important;\n\
-              {% endif %}\n}\n:host {\n  --mush-icon-size: 180px;\n}\n"
-            mushroom-shape-icon$: ".shape {\n  position: relative;\n  background:\
-              \ none !important;\n  top: -30px;\n  left: -20px;\n}\n"
-            mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
-              \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
-              }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
-              \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
-        entity: fan.livingroom_wall_fan
-        fill_container: true
-        icon_animation: true
-        name: Wall Fan
-        type: custom:mushroom-fan-card
+        style:
+          .: "ha-state-icon {\n{% if is_state(config.entity, 'on') %}\n  color: white\
+            \ !important;\n{%else%}\n   color: disabled !important;\n{% endif %}\n\
+            }\nha-card {\n{% if is_state(config.entity, 'on') %}\n  background: #2a5629\
+            \ !important;\n{%else%}\n   background: disabled !important;\n{% endif\
+            \ %}\n}\n:host {\n  --mush-icon-size: 180px;\n}\n"
+          mushroom-shape-icon$: ".shape {\n  position: relative;\n  background: none\
+            \ !important;\n  top: -30px;\n  left: -20px;\n}\n"
+          mushroom-state-info$: ".primary {\n  font-size: 20px !important;\n  position:\
+            \ relative;\n  top: 60px;\n  left: -180px;\n  overflow: visible !important;\n\
+            }\n.secondary {\n  font-size: 12px !important;\n  position: relative;\n\
+            \  overflow: visible !important;\n  top: 70px;\n  left: -180px;\n}\n"
+      entity: fan.livingroom_wall_fan
+      fill_container: true
       grid_options:
         columns: 6
         rows: 200px
-      type: custom:stack-in-card
+      icon_animation: true
+      name: Wall Fan
+      type: custom:mushroom-fan-card
     - card_mod:
-        style: "ha-card h2{\n  font-size: 25px;\n  border: none !important;\n}\nha-card\
-          \ {\n  font-size: 13px;\n  border: none !important;\n  height: 280px !important;\n\
-          \  border-style: dashed;\n  border-width: 2px;\n}\n"
+        style: "ha-card h2, h1{\n  font-size: 25px;\n  border: none !important;\n\
+          \  color: white !important;\n  text-align: center;\n}\ntr:nth-child(2n)\
+          \ {\n  background-color: none;\n}\nha-card {\n  font-size: 12px;      \n\
+          \  font-color: white !important;\n  border: none !important;\n  background:\
+          \ none !important;\n}\n"
       card_type: countdown
       countdown_type:
       - qualifying
@@ -817,84 +743,86 @@ views:
       entity: input_select.room_select
       state: LivingRoom
   - cards:
-    - color: rgb(255,255,255)
-      color_type: card
-      icon: mdi:television
-      label: TV Remote
-      layout: icon_label
-      show_label: true
-      show_name: false
-      styles:
-        card:
-        - height: 60px
-        - --mdc-ripple-color: green
-        label:
-        - color: black
-        - font-size: 20px
-        - font-weight: bold
-        - justify-self: start
-        - padding: 10px 0px
-      type: custom:button-card
     - cards:
-      - custom_actions:
-        - icon: mdi:power
-          label: Power
-          name: power
-          styles: ":host {\n  --icon-color: crimson;\n  --label-color: crimson;\n}"
-          tap_action:
-            action: key
-            key: POWER
-          type: button
-        - icon: mdi:home
-          label: Home
-          name: home
-          styles: ":host {\n  --icon-color: dodgerblue;\n}"
-          tap_action:
-            action: key
-            key: HOME
-          type: button
-        - autofill_entity_id: true
-          haptics: false
-          label: '{{ (value * 100) | round(0, ''ceil'') if value is defined else ''''
-            }}'
-          name: slider
-          range:
-          - 0
-          - 1
-          step: 0.01
-          styles: ":host {\n  height: 20px;\n  border-radius: 20px;  \n  --color:\
-            \ #4285F4;\n  --background-height: 15px;\n  --thumb-border-radius: 10px;\n\
-            }\n.icon {\n  display: none;\n}\n.label {\n  {% if not is_state(config.entity,\
-            \ 'on') %}\n  display: none;\n  {% endif %}\n  transform: var(--icon-transform);\n\
-            \  font-size: 14px;\n  color: var(--primary-text-color);\n}\n.tooltip\
-            \ {\n  display: none;\n}"
-          tap_action:
-            action: perform-action
-            data:
-              is_volume_muted: true
-            perform_action: media_player.volume_mute
-            target:
-              entity_id: media_player.sony_tv_remote
-          type: slider
-          value_attribute: volume_level
-          value_from_hass_delay: 10
-          vertical: false
-        custom_icons: []
-        keyboard_id: media_player.sony_tv
-        media_player_id: media_player.sony_tv
-        remote_id: remote.sony_tv_remote
-        rows:
-        - - power
-          - home
-        - - volume_down
-          - slider
-          - volume_up
-        styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
-          }\n"
-        type: custom:android-tv-card
-      - entities:
-        - card_type: horizontal-stack
-          cards:
+      - color: rgb(255,255,255)
+        color_type: card
+        icon: mdi:television
+        label: TV Remote
+        layout: icon_label
+        show_label: true
+        show_name: false
+        styles:
+          card:
+          - height: 60px
+          - --mdc-ripple-color: green
+          label:
+          - color: black
+          - font-size: 20px
+          - font-weight: bold
+          - justify-self: start
+          - padding: 10px 0px
+        type: custom:button-card
+      - cards:
+        - custom_actions:
+          - icon: mdi:power
+            label: Power
+            name: power
+            styles: ":host {\n  --icon-color: crimson;\n  --label-color: crimson;\n\
+              \  {% if is_state(config.entity, 'off') %}\n  --size: 50px;\n  {% endif\
+              \ %}\n}"
+            tap_action:
+              action: key
+              key: POWER
+            type: button
+          - icon: mdi:home
+            label: Home
+            name: home
+            styles: ":host {\n  --icon-color: dodgerblue;\n  --label-color: dodgerblue;\n\
+              \  {% if is_state(config.entity, 'off') %}\n  --size: 50px;\n  {% endif\
+              \ %}\n}"
+            tap_action:
+              action: key
+              key: HOME
+            type: button
+          - autofill_entity_id: true
+            haptics: false
+            label: '{{ (value * 100) | round(0, ''ceil'') if value is defined else
+              '''' }}'
+            name: slider
+            range:
+            - 0
+            - 1
+            step: 0.01
+            styles: ":host {\n  height: 20px;\n  border-radius: 20px;  \n  --color:\
+              \ #4285F4;\n  --background-height: 15px;\n  --thumb-border-radius: 10px;\n\
+              }\n.icon {\n  display: none;\n}\n.label {\n  {% if not is_state(config.entity,\
+              \ 'on') %}\n  display: none;\n  {% endif %}\n  transform: var(--icon-transform);\n\
+              \  font-size: 14px;\n  color: var(--primary-text-color);\n}\n.tooltip\
+              \ {\n  display: none;\n}"
+            tap_action:
+              action: perform-action
+              data:
+                is_volume_muted: true
+              perform_action: media_player.volume_mute
+              target:
+                entity_id: media_player.sony_tv_remote
+            type: slider
+            value_attribute: volume_level
+            value_from_hass_delay: 10
+          custom_icons: []
+          keyboard_id: media_player.sony_tv
+          media_player_id: media_player.sony_tv
+          remote_id: remote.sony_tv_remote
+          rows:
+          - - power
+            - home
+          - - volume_down
+            - slider
+            - volume_up
+          styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
+            }\n"
+          type: custom:android-tv-card
+        - cards:
           - entity: remote.sony_tv_remote
             entity_picture: /local/icons/netflix.png
             show_entity_picture: true
@@ -902,10 +830,12 @@ views:
               entity_picture:
               - width: 80%
             tap_action:
-              service: remote.turn_on
+              service: media_player.play_media
               service_data:
-                activity: Netflix
-                entity_id: remote.sony_tv_remote
+                media_content_id: Netflix
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
           - entity: remote.sony_tv_remote
@@ -917,9 +847,10 @@ views:
             tap_action:
               service: media_player.play_media
               service_data:
-                entity_id: media_player.sony_bravia_tv
                 media_content_id: Prime Video
                 media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
           - entity: remote.sony_tv_remote
@@ -929,15 +860,14 @@ views:
               entity_picture:
               - width: 70%
             tap_action:
-              service: remote.turn_on
+              service: media_player.play_media
               service_data:
-                activity: YouTube
-                entity_id: remote.sony_tv_remote
+                media_content_id: Youtube
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
           - entity: remote.sony_tv_remote
             entity_picture: /local/icons/hotstar.png
             show_entity_picture: true
@@ -945,10 +875,12 @@ views:
               entity_picture:
               - width: 70%
             tap_action:
-              service: remote.turn_on
+              service: media_player.play_media
               service_data:
-                activity: Hotstar
-                entity_id: remote.sony_tv_remote
+                media_content_id: JioHotstar
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
           - entity: remote.sony_tv_remote
@@ -960,9 +892,10 @@ views:
             tap_action:
               service: media_player.play_media
               service_data:
-                entity_id: media_player.sony_bravia_tv
                 media_content_id: Aha
                 media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
           - entity: remote.sony_tv_remote
@@ -972,40 +905,27 @@ views:
               entity_picture:
               - width: 40%
             tap_action:
-              service: remote.turn_on
+              service: media_player.play_media
               service_data:
-                activity: Zee5
-                entity_id: remote.sony_tv_remote
+                media_content_id: Zee5
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
-          type: custom:hui-element
-        - card_type: horizontal-stack
-          cards:
           - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/JioCinema.png
+            entity_picture: /local/icons/etv.png
             show_entity_picture: true
             styles:
               entity_picture:
-              - width: 85%
+              - width: 40%
             tap_action:
               service: media_player.play_media
               service_data:
-                entity_id: media_player.sony_bravia_tv
-                media_content_id: JioCinema
+                media_content_id: Etv WIN
                 media_content_type: app
-            template: logo_button
-            type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/jellyfin.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 80%
-            tap_action:
-              service: remote.turn_on
-              service_data:
-                activity: Jellyfin
-                entity_id: remote.sony_tv_remote
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
           - entity: remote.sony_tv_remote
@@ -1017,87 +937,155 @@ views:
             tap_action:
               service: media_player.play_media
               service_data:
-                entity_id: media_player.sony_bravia_tv
-                media_content_id: Sony Liv
+                media_content_id: Sony LIV
                 media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
             template: logo_button
             type: custom:button-card
-          type: custom:hui-element
-        show_header_toggle: false
-        type: entities
-      - custom_actions:
-        - icon: mdi:checkbox-blank-circle
-          name: center
-          styles: ":host {\n  --icon-color: rgb(94, 94, 94);\n  --size: 50px;\n  background:\
-            \ grey;\n  border-radius: 100px;\n  margin: -60px;\n  padding: 50px;\n\
-            }"
-          tap_action:
-            action: key
-            key: DPAD_CENTER
-          type: button
-        - hold_action:
-            action: repeat
-          icon: mdi:chevron-up
-          name: up
-          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
-            \ 2;\n  top: 45px;\n  height: 30px;\n}"
-          tap_action:
-            action: key
-            key: DPAD_UP
-          type: button
-        - hold_action:
-            action: repeat
-          icon: mdi:chevron-down
-          name: down
-          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
-            \ 2;\n  bottom: 45px;\n  height: 30px;\n}"
-          tap_action:
-            action: key
-            key: DPAD_DOWN
-          type: button
-        - hold_action:
-            action: repeat
-          icon: mdi:chevron-left
-          name: left
-          styles: ":host {\n  --icon-color:  var(--primary-text-color);\n  z-index:\
-            \ 2;\n  left: 20px;\n  width: 90px;\n}"
-          tap_action:
-            action: key
-            key: DPAD_LEFT
-          type: button
-        - hold_action:
-            action: repeat
-          icon: mdi:chevron-right
-          name: right
-          styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
-            \ 2;\n  right: 20px;\n  height: 170px;\n  width: 90px;\n}"
-          tap_action:
-            action: key
-            key: DPAD_RIGHT
-          type: button
-        keyboard_id: media_player.sony_tv
-        media_player_id: media_player.sony_tv
-        remote_id: remote.sony_tv_remote
-        rows:
-        - - back
-          - keyboard
-          - settings
-        - - '{{ "navigation_buttons" if match_media("(min-width: 768px)") else "touchpad"
-            }}'
-          - - captions
-            - null
-            - audio_track
-            - null
-            - info
-        - - previous
-          - play_pause
-          - next
-        styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
-          }\n#row-1 {\n  justify-content: justify;\n}\n#row-2 {\n  justify-content:\
-          \ justify;\n}\n#row-3 {\n  justify-content: justify;\n}\n#row-4 {\n  justify-content:\
-          \ justify;\n}\n#row-5 {\n  justify-content: justify;\n}\n"
-        type: custom:android-tv-card
-      type: vertical-stack
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/jellyfin.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 80%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                media_content_id: Dune
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/fancode.svg
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 100%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                media_content_id: Fancode
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/playstore.svg
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 100%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                media_content_id: Play Store
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
+            template: logo_button
+            type: custom:button-card
+          - entity: remote.sony_tv_remote
+            entity_picture: /local/icons/tailscale.png
+            show_entity_picture: true
+            styles:
+              entity_picture:
+              - width: 100%
+            tap_action:
+              service: media_player.play_media
+              service_data:
+                media_content_id: Tailscale
+                media_content_type: app
+              target:
+                entity_id: media_player.sony_bravia_tv
+            template: logo_button
+            type: custom:button-card
+          columns: 3
+          square: false
+          type: grid
+        - card:
+            custom_actions:
+            - icon: mdi:checkbox-blank-circle
+              name: center
+              styles: ":host {\n  --icon-color: rgb(94, 94, 94);\n  --size: 50px;\n\
+                \  background: grey;\n  border-radius: 100px;\n  margin: -60px;\n\
+                \  padding: 50px;\n}"
+              tap_action:
+                action: key
+                key: DPAD_CENTER
+              type: button
+            - hold_action:
+                action: repeat
+              icon: mdi:chevron-up
+              name: up
+              styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+                \ 2;\n  top: 45px;\n  height: 30px;\n}"
+              tap_action:
+                action: key
+                key: DPAD_UP
+              type: button
+            - hold_action:
+                action: repeat
+              icon: mdi:chevron-down
+              name: down
+              styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+                \ 2;\n  bottom: 45px;\n  height: 30px;\n}"
+              tap_action:
+                action: key
+                key: DPAD_DOWN
+              type: button
+            - hold_action:
+                action: repeat
+              icon: mdi:chevron-left
+              name: left
+              styles: ":host {\n  --icon-color:  var(--primary-text-color);\n  z-index:\
+                \ 2;\n  left: 20px;\n  width: 90px;\n}"
+              tap_action:
+                action: key
+                key: DPAD_LEFT
+              type: button
+            - hold_action:
+                action: repeat
+              icon: mdi:chevron-right
+              name: right
+              styles: ":host {\n  --icon-color: var(--primary-text-color);\n  z-index:\
+                \ 2;\n  right: 20px;\n  height: 170px;\n  width: 90px;\n}"
+              tap_action:
+                action: key
+                key: DPAD_RIGHT
+              type: button
+            keyboard_id: media_player.sony_tv
+            media_player_id: media_player.sony_tv
+            remote_id: remote.sony_tv_remote
+            rows:
+            - - back
+              - keyboard
+              - settings
+            - - touchpad
+              - - captions
+                - null
+                - audio_track
+                - null
+                - info
+            - - previous
+              - play_pause
+              - next
+            styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
+              }\n#row-1 {\n  justify-content: justify;\n}\n#row-2 {\n  justify-content:\
+              \ justify;\n}\n#row-3 {\n  justify-content: justify;\n}\n#row-4 {\n\
+              \  justify-content: justify;\n}\n#row-5 {\n  justify-content: justify;\n\
+              }\n"
+            type: custom:android-tv-card
+          conditions:
+          - condition: state
+            entity: remote.sony_tv_remote
+            state: 'on'
+          type: conditional
+        type: custom:vertical-stack-in-card
+      type: custom:vertical-stack-in-card
     type: grid
   title: home
   type: sections
@@ -1120,113 +1108,99 @@ views:
   sections:
   - cards:
     - cards:
-      - entity: switch.upstairs_motor
-        name: Upstairs Motor
-        show_state: true
-        size: 70%
-        state:
-        - color: dodgerblue
-          icon: mdi:water-pump
-          styles:
-            state:
-            - opacity: 0.8
-          value: 'on'
-        - color: var(--disabled-text-color)
-          icon: mdi:water-pump-off
-          styles:
-            state:
-            - opacity: 0.2
-          value: 'off'
-        styles:
-          card:
-          - border-radius: 40px
-          - width: 350px
-          - height: 350px
-          name:
-          - justify-self: middle
-          - font-size: 25px
-          - color: var(--secondary-text-color)
-          state:
-          - font-weight: bold
-          - font-size: 20px
-          - color: white
-        type: custom:button-card
-      - entity: switch.downstairs_motor_switch_1
-        name: Downstairs Motor
-        show_state: true
-        size: 70%
-        state:
-        - color: dodgerblue
-          icon: mdi:water-pump
-          styles:
-            state:
-            - opacity: 0.8
-          value: 'on'
-        - color: var(--disabled-text-color)
-          icon: mdi:water-pump-off
-          styles:
-            state:
-            - opacity: 0.2
-          value: 'off'
-        styles:
-          card:
-          - border-radius: 40px
-          - width: 350px
-          - height: 350px
-          name:
-          - justify-self: middle
-          - font-size: 25px
-          - color: var(--secondary-text-color)
-          state:
-          - font-weight: bold
-          - font-size: 20px
-          - color: white
-        type: custom:button-card
-      type: vertical-stack
-    - card:
-        color_type: card
-        entity: switch.sonoff_1000f38ea4
-        extra_styles: '@keyframes bgswap { 0% { background-image: url("/local/icons/waves.gif");}
+      - card_mod:
+          style:
+            mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
+              \ 150px;    \n  {% if is_state(config.entity, 'on') %}\n  border: 2px\
+              \ solid dodgerblue;\n  {% else %}\n  border: 2px solid grey;\n  {% endif\
+              \ %}\n}\n"
+            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+              }\n"
+        entity: switch.upstairs_motor
+        fill_container: true
+        icon: '{% if is_state(config.entity, ''on'') %}
 
-          '
-        icon: mdi:water
-        name: Tank Full
-        show_label: true
-        show_state: false
-        styles:
-          card:
-          - height: 80px
-          - animation: '[[[ if (entity.state == "on") return "bgswap 1000s linear
-              infinite"; else return " " ]]]'
-          - background-size: 20%
-          - border-radius: 25px
-          grid:
-          - grid-template-areas: '"i n" "i n" "i l"'
-          - grid-template-columns: .5fr 1fr
-          - grid-template-rows: min-content min-content min-content
-          icon:
-          - width: 50px
-          - align-self: start
-          - text-align: start
-          - color: black
-          img_cell:
-          - align-self: start
-          - text-align: start
-          label:
-          - justify-self: start
-          - font-size: 16px
-          - font-weight: 500
-          - color: black
-          name:
-          - justify-self: start
-          - font-size: 30px
-          - font-weight: 500
-          - color: black
-        type: custom:button-card
-      conditions:
-      - entity: switch.sonoff_1000f38ea4
-        state: 'on'
-      type: conditional
+          mdi:water-pump
+
+          {% else %}
+
+          mdi:water-pump-off
+
+          {% endif %}'
+        icon_color: '{% if is_state(config.entity, ''on'') %}
+
+          blue
+
+          {% else %}
+
+          grey
+
+          {% endif %}'
+        layout: vertical
+        primary: Upstairs Motor
+        secondary: ''
+        type: custom:mushroom-template-card
+      - card_mod:
+          style:
+            mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
+              \ 150px;    \n  {% if is_state(config.entity, 'on') %}\n  border: 2px\
+              \ solid dodgerblue;\n  {% else %}\n  border: 2px solid grey;\n  {% endif\
+              \ %}\n}\n"
+            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+              }\n"
+        entity: switch.downstairs_motor_switch_1
+        fill_container: true
+        grid_options:
+          columns: 6
+          rows: 4
+        icon: '{% if is_state(config.entity, ''on'') %}
+
+          mdi:water-pump
+
+          {% else %}
+
+          mdi:water-pump-off
+
+          {% endif %}'
+        icon_color: '{% if is_state(config.entity, ''on'') %}
+
+          blue
+
+          {% else %}
+
+          grey
+
+          {% endif %}'
+        layout: vertical
+        primary: Downstairs Motor
+        secondary: ''
+        tap_action:
+          action: toggle
+        type: custom:mushroom-template-card
+      type: vertical-stack
+    - card_mod:
+        style:
+          .: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
+            \ url('/local/icons/wave.png');\n    background-size: 80% 100%;\n    background-repeat:\
+            \ repeat-x;\n    animation: bgScroll 1s linear infinite;\n  {% endif %}\n\
+            }\n@keyframes bgScroll {\n  from {\n    background-position: 0 0;\n  }\n\
+            \  to {\n    background-position: -100% 0%;\n  }\n}\n"
+          mushroom-state-info$: ".container {\n --card-primary-font-size: 40px;\n\
+            \ --card-primary-color: black;\n align-items: center;\n}\n.primary {\n\
+            \ overflow: visible !important;\n font-weight: bolder !important;\n}\n"
+      entity: switch.sonoff_1000f38ea4
+      fill_container: true
+      grid_options:
+        columns: 12
+        rows: 2
+      primary: '{% if is_state(config.entity, ''on'') %}
+
+        💧Tank Full
+
+        {% endif %}'
+      tap_action:
+        action: none
+      type: custom:mushroom-template-card
     type: grid
   - cards:
     - entities:

@@ -6,7 +6,10 @@ mqtt:
   topic_prefix: frigate
 
 birdseye:
-  enabled: true
+  enabled: false
+
+ffmpeg:
+  hwaccel_args: auto
 
 timestamp_style:
   position: tr
@@ -16,40 +19,40 @@ timestamp_style:
 record:
   enabled: false
   retain:
-    days: 2
+    days: 1
     mode: motion
   alerts:
     retain:
-      days: 2
+      days: 1
   detections:
     retain:
-      days: 2
+      days: 1
 snapshots:
   enabled: true
   retain:
-    default: 2
+    default: 1
 
 cameras:
-  livingroom_camera:
-    snapshots:
-      enabled: true
-      retain:
-        default: 1
-    mqtt:
-      quality: 75
-    ffmpeg:
-      inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.171/stream1
-          roles:
-            - detect
-    detect:
-      width: 1920
-      height: 1080
-      fps: 25
-    motion:
-      contour_area: 50
-      mask:
-        - 0,0,0,73,642,63,642,0
+  # livingroom_camera:
+  #   snapshots:
+  #     enabled: true
+  #     retain:
+  #       default: 1
+  #   mqtt:
+  #     quality: 75
+  #   ffmpeg:
+  #     inputs:
+  #       - path: rtsp://homeassistant:homeassistant123@192.168.68.171/stream1
+  #         roles:
+  #           - detect
+  #   detect:
+  #     width: 1920
+  #     height: 1080
+  #     fps: 25
+  #   motion:
+  #     contour_area: 50
+  #     mask:
+  #       - 0,0,0,73,642,63,642,0
   hall_camera:
     snapshots:
       enabled: true
@@ -59,7 +62,7 @@ cameras:
       quality: 75
     ffmpeg:
       inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.172/stream1
+        - path: rtsp://homeassistant:homeassistant123@192.168.68.172/stream2
           roles:
             - detect
     detect:
@@ -68,8 +71,7 @@ cameras:
       fps: 25
     motion:
       contour_area: 50
-      mask:
-        - 0,0,0,73,642,63,642,0
+      mask: 0,0,0,0.068,0.359,0.06,0.358,0
   front_yard_camera:
     snapshots:
       enabled: true
@@ -78,7 +80,8 @@ cameras:
       quality: 80
     ffmpeg:
       inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/101
+        - path: 
+            rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/101
           roles:
             - detect
     detect:
@@ -88,14 +91,19 @@ cameras:
     zones:
       steps:
         coordinates: 
-          0.019,0.09,0.11,0.091,0.26,0.558,0.269,0.493,0.276,0.437,0.283,0.369,0.299,0.324,0.291,0.278,0.307,0.211,0.342,0.162,0.34,0.119,0.362,0.076,0.358,0.031,0.37,0,0.503,0,0.557,0,0.549,0.099,0.744,0.117,0.745,0,0.787,0,1,0,0.896,0.572,0.904,1,1,1,0.177,1
+          0,0,0.048,0,0.175,0.571,0.276,0,0.473,0,0.463,0.126,0.657,0.147,0.668,0,1,0,0.887,0.133,0.809,0.604,0.827,1,1,1,0.177,1,0.114,0.667,0,0.256
         inertia: 2
         loitering_time: 0
+        objects: person
     motion:
-      contour_area: 30
+      contour_area: 40
       improve_contrast: true
-      mask: 0.144,0.059,0.278,0.053,0.278,0.076,0.146,0.074
-      threshold: 20
+      mask:
+        - 0.144,0.059,0.278,0.053,0.278,0.076,0.146,0.074 #time
+        - 0,0,0.052,0.4,0.123,0.665,0.176,1,0,1 #plant
+        - 0.048,0,0.273,0,0.231,0.236,0.175,0.577,0.085,0.178 #steps outside
+        - 0.481,0,0.465,0.123,0.656,0.144,0.668,0 # other house
+      threshold: 30
     review:
       alerts:
         required_zones: steps
@@ -103,44 +111,48 @@ cameras:
         required_zones: steps
   second_floor_camera:
     mqtt:
-      quality: 1
+      quality: 80
     ffmpeg:
       inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/201
+        - path: 
+            rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/201
           roles:
             - detect
     detect:
       width: 1920
       height: 1080
-      fps: 1
+      fps: 10
     motion:
-      # threshold: 30
+      threshold: 30
       contour_area: 50
+      mask: 0.504,0,0.358,1,0,1,0,0
   entrance_camera:
     snapshots:
-      enabled: false  
+      enabled: false
     mqtt:
       quality: 70
     ffmpeg:
       inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/301
+        - path: 
+            rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/301
           roles:
             - detect
     detect:
       width: 1920
       height: 1080
-      fps: 25
+      fps: 5
     motion:
       threshold: 30
       contour_area: 60
   driveway_camera:
     snapshots:
-      enabled: false      
+      enabled: false
     mqtt:
       quality: 70
     ffmpeg:
       inputs:
-        - path: rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/401
+        - path: 
+            rtsp://homeassistant:homeassistant123@192.168.68.33:554/Streaming/Channels/401
           roles:
             - detect
     detect:

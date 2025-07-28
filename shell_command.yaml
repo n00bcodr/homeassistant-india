@@ -1,0 +1,5 @@
+convert_lovelace: "python /config/tools/convert_lovelace.py /config/.storage/lovelace /config/lovelace/lovelace_default.yaml"
+convert_lovelace_wallmount: "python /config/tools/convert_lovelace.py /config/.storage/lovelace.lovelace_wallmount /config/lovelace/lovelace_wallmount.yaml"
+git_core_update_push: bash /config/tools/git_core_update_push.sh
+git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
+git_hacs_update: bash /config/tools/hacs_updates_push.sh

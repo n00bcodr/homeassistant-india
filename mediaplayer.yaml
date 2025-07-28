@@ -1,0 +1,107 @@
+- platform: media_player_template
+  media_players:
+    sony_tv_unified:
+      friendly_name: Sony TV Unified
+      value_template: "{{ states('media_player.sony_tv_cast') }}"
+      current_source_template: "{{ state_attr('media_player.sony_tv_cast', 'app_name') }}"
+      current_volume_template: "{{ state_attr('media_player.sony_tv', 'volume_level') }}"
+      title_template: "{{ state_attr('media_player.sony_tv_cast', 'media_title') }}"
+      media_content_type_template: "{{ state_attr('media_player.sony_tv_cast', 'media_content_type') }}"
+      media_image_url_template: "{{ state_attr('media_player.sony_tv', 'entity_picture') }}"
+      media_duration_template: "{{ state_attr('media_player.sony_tv_cast', 'media_duration') }}"
+      # media_position_template: "{{ state_attr('media_player.sony_tv_cast', 'media_position') }}"
+      # media_position_updated_at_template: "{{ state_attr('media_player.sony_tv_cast', 'media_position_updated_at') }}"
+      artist_template: "{{ state_attr('media_player.sony_tv_cast', 'media_artist') }}"
+      turn_on:
+        action: media_player.turn_on
+        data:
+          entity_id: media_player.sony_tv_remote
+      turn_off:
+        action: media_player.turn_off
+        data:
+          entity_id: media_player.sony_tv_remote
+      play:
+        action: media_player.media_play
+        data_template:
+          entity_id: media_player.sony_tv_cast
+      stop:
+        action: media_player.media_stop
+        data_template:
+          entity_id: media_player.sony_tv_cast
+      pause:
+        action: media_player.media_pause
+        data_template:
+          entity_id: media_player.sony_tv_cast
+      next:
+        action: media_player.media_next_track
+        data_template:
+          entity_id: media_player.sony_tv_cast
+      previous:
+        action: media_player.media_previous_track
+        data_template:
+          entity_id: media_player.sony_tv_cast
+      seek:
+        action: media_player.media_seek
+        data_template:
+          entity_id: media_player.sony_tv_cast
+          seek_position: '10'
+      play_media:
+        action: media_player.play_media
+        data_template:
+          entity_id: media_player.sony_tv_cast
+          media_content_id: 101
+          media_content_type: episode
+      volume_up:
+        action: media_player.volume_up
+        data:
+          entity_id: media_player.sony_tv_remote
+      volume_down:
+        action: media_player.volume_down
+        data:
+          entity_id: media_player.sony_tv_remote
+      inputs:
+        YouTube:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "YouTube"
+        Netflix:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Netflix"
+        Prime Video:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Prime Video"
+        Play Store:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Play Store"
+        Spotify:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Spotify"
+        Express VPN:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Express VPN"
+        Google Cast:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "Google Cast"
+        Jellyfin:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "org.jellyfin.androidtv"
+        Home:
+          action: media_player.select_source
+          data_template:
+            entity_id: media_player.sony_tv
+            source: "com.sony.android.apps.tv.launcherx"

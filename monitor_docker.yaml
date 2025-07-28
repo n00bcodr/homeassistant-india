@@ -1,0 +1,29 @@
+- name: Docker
+  url: http://192.168.68.168:2375
+  switchname: "Monitor Docker {name}"
+  sensorname: "Monitor Docker {name} {sensor}"
+  buttonenabled: True
+  rename_entity: True
+  containers:
+    - broadlinkmanager
+    - portainer
+    - addon_core_samba
+    - addon_6b87c29e_speedtest_addon
+  rename:
+    wtchtowerrr: WatchTower
+    broadlinkmanager: Broadlink Manager
+    portainer: Portainer
+    addon_core_samba: Samba
+    addon_6b87c29e_speedtest_addon: SpeedTest Addon
+  monitored_conditions:
+    - version
+    - containers_running
+    - containers_total
+    - state
+    - status
+    - memory
+    - containers_cpu_percentage
+    - containers_1cpu_percentage
+    - cpu_percentage
+    - 1cpu_percentage
+    - allinone

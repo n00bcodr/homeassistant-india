@@ -8,34 +8,19 @@ homeassistant:
     - /media/
   whitelist_external_dirs:
     - "/share"
-  # external_url: !secret external_url
-  # internal_url: "http://192.168.68.168:8123"
 
 http:
   use_x_forwarded_for: true
   trusted_proxies:
     - !secret trusted_ip
 
+delete:
 logger:
   default: critical
   logs:
-   homeassistant.components.http: warning
    homeassistant.custom_components.tplink_router: debug
+   homeassistant.components.http: warning
 
-ffmpeg:
-
-stream:
-  ll_hls: true
-  part_duration: 0.5
-  segment_duration: 3
-
-folder_watcher:
-  - folder: /config/.storage
-
-tts:
-  - platform: google_translate
-
-wake_on_lan:
 
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -44,44 +29,23 @@ binary_sensor: !include binary_sensors.yaml
 input_select: !include input_select.yaml
 sensor: !include sensor.yaml
 notify: !include notify.yaml
+shell_command: !include shell_command.yaml
 template: !include template.yaml
 command_line: !include command_line.yaml
-
+media_player: !include mediaplayer.yaml
+monitor_docker: !include monitor_docker.yaml
+wake_on_lan:
+tts:
+  - platform: google_translate
+ffmpeg:
+stream:
+  ll_hls: true
+  part_duration: 0.5
+  segment_duration: 3
 frontend:
   themes: !include_dir_merge_named themes
 
-monitor_docker:
-  - name: Docker
-    url: http://192.168.68.168:2375
-    switchname: "Monitor Docker {name}"
-    sensorname: "Monitor Docker {name} {sensor}"
-    buttonenabled: True
-    rename_entity: True
-    containers:
-      - broadlinkmanager
-      - portainer
-      - addon_core_samba
-      - addon_6b87c29e_speedtest_addon
-    rename:
-      wtchtowerrr: WatchTower
-      broadlinkmanager: Broadlink Manager
-      portainer: Portainer
-      addon_core_samba: Samba
-      addon_6b87c29e_speedtest_addon: SpeedTest Addon
-    monitored_conditions:
-      - version
-      - containers_running
-      - containers_total
-      - state
-      - status
-      - memory
-      - containers_cpu_percentage
-      - containers_1cpu_percentage
-      - cpu_percentage
-      - 1cpu_percentage
-      - allinone
 
-#mariadb config
 recorder:
   db_url: !secret recorder_db_url
   purge_keep_days: 5
@@ -90,7 +54,6 @@ recorder:
       - update
     entity_globs:
       - sensor.weather_*
-      - sensor.time_date
       - sensor.sun*
       - sensor.moon*
       - sensor.count*
@@ -106,9 +69,17 @@ recorder:
       - sun.sun
       - sensor.f1_season_results
 
-shell_command:
-  lovelace_default_convert: python /config/tools/lovelace_default_convert.py
-  lovelace_wallmount_convert: python /config/tools/lovelace_wallmount_convert.py
-  git_core_update_push: bash /config/tools/git_core_update_push.sh
-  git_commit_push: bash /config/tools/ha_gitpush.sh "{{states.input_text.git_commit_message.state}}"
-  git_hacs_update: bash /config/tools/hacs_updates_push.sh
+
+
+climate:
+  - platform: smartir
+    name: Den AC
+    unique_id: den_ac
+    device_code: 3080
+    controller_data:
+      controller_type: Broadlink
+      remote_entity: remote.rm4_remote
+      delay_secs: 0.5
+      num_repeats: 1
+    temperature_sensor: sensor.rm4_temperature
+    humidity_sensor: sensor.rm4_humidity

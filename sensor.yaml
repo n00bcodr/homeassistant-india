@@ -1,10 +1,3 @@
-- platform: time_date
-  display_options:
-    - "time"
-    - "date"
-    - "date_time"
-    - "time_date"
-
 - platform: template
   sensors:
     motor_state:
@@ -19,47 +12,3 @@
         {% else %}
           MotorsOff
         {% endif %}
-
-    count_automations:
-      value_template: "{{ states.automation | count }}"
-    count_scripts:
-      value_template: "{{ states.script | count }}"
-    count_device_trackers:
-      value_template: "{{ states.device_tracker | count }}"
-    count_binary_sensors:
-      value_template: "{{ states.binary_sensor | count }}"
-    count_sensors:
-      value_template: "{{ states.sensor | count }}"
-    count_switches:
-      value_template: "{{ states.switch | count }}"
-    count_lights:
-      value_template: "{{ states.light | count }}"
-    count_fans:
-      value_template: "{{ states.fan | count }}"
-    count_zones:
-      value_template: "{{ states.zone | count }}"
-    count_scenes:
-      value_template: "{{ states.scene | count }}"
-    count_media_players:
-      value_template: "{{ states.media_player | count }}"
-    count_input_booleans:
-      value_template: "{{ states.input_boolean | count }}"
-
-    #----- Speedtest Download
-    download_speed:
-      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_download') | float) )}}"
-      friendly_name: "Download Speed"
-      unit_of_measurement: "Mbps"
-      icon_template: "mdi:download"
-
-    #----- Speedtest Upload
-    upload_speed:
-      value_template: "{{ float ('%.1f'%(states('sensor.speedtest_upload') | float) )}}"
-      friendly_name: "Upload Speed"
-      unit_of_measurement: "Mbps"
-      icon_template: "mdi:upload"
-
-    moon_phase:
-      friendly_name: "Moon Phase"
-      value_template: "{{ states.sensor.moon.state }}"
-      entity_picture_template: /local/moon_phases/{{ states.sensor.moon.state }}.png

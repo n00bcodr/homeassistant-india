@@ -7,7 +7,7 @@
         {{ expand([
           'switch.upstairs_motor', 'switch.downstairs_motor_switch_1',
           'light.pooja_light', 'switch.downstairs_geyser',
-          'fan.livingroom_wall_fan', 'light.first_floor_corner', 'switch.washing_machine_1_switch_1'
+          'fan.livingroom_wall_fan', 'light.first_floor_corner', 'switch.washing_machine_1_switch_1', 'fan.mi_air_purifier', 'media_player.family_room_mini'
           ]) | selectattr('state', '==', 'unavailable') | list | count < 5 }}
       icon_template: "{{ iif(is_state('binary_sensor.downstairs_power', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
@@ -15,13 +15,15 @@
       friendly_name: "Upstairs Power"
       unique_id: upstairs_power
       value_template: >-
-        {{ expand(['light.second_floor_stairway', 'light.second_floor_corner', 'switch.washing_machine_2_switch_1']) | selectattr('state', '==', 'unavailable') | list | count < 2 }}
+        {{ expand(['light.second_floor_stairway', 'light.second_floor_corner', 'switch.washing_machine_2_switch_1', 'switch.front_downlight', 'media_player.akashavani']) | selectattr('state', '==', 'unavailable') | list | count < 2 }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     # True if there's an update available for supervisor
     updater_supervisor:
       friendly_name: "Updater Supervisor"
-      device_class: problem
+      unique_id: supervisor_update
+      icon_template: mdi:package-up
+      device_class: update
       value_template: "{{ state_attr('sensor.supervisor_updates', 'update_available') }}"
       availability_template: "{{ states('sensor.supervisor_updates') | int(-1) > -1 }}"
 
@@ -31,35 +33,24 @@
       unique_id: hacs_updates
       icon_template: mdi:package-up
       device_class: update
-      value_template: >-
-        {% set updates = states.update | selectattr('state', 'eq', 'on') | selectattr('entity_id', 'in', integration_entities('hacs')) | list %}
-        {{ updates | count }}
-      availability_template: >-
-        {{ updates | count > 0 }}
+      value_template: "{{ states.update | selectattr('state', 'eq', 'on') |  selectattr('entity_id', 'in', integration_entities('hacs')) | map(attribute='name') | list | count }}"
+      availability_template: "{{ states.update | selectattr('state', 'eq', 'on') |  selectattr('entity_id', 'in', integration_entities('hacs')) | map(attribute='name') | list | count | int(-1) > -1 }}"
 
     addon_updates:
       friendly_name: "Add-on Updates"
       unique_id: addon_updates
       icon_template: mdi:package-up
       device_class: update
-      value_template: >-
-        {% set updates = states.update | selectattr('state', 'eq', 'on') | selectattr('entity_id', 'in', integration_entities('hassio')) | rejectattr('entity_id', 'eq', 'update.home_assistant_core_update') | list %}
-        {{ updates | count }}
-      availability_template: >-
-        {{ updates | count > 0 }}
+      value_template: "{{ states.update | selectattr('state', 'eq', 'on') |  selectattr('entity_id', 'in', integration_entities('hassio')) | rejectattr('entity_id', 'eq', 'update.home_assistant_core_update') | map(attribute='name') | list | count }}"
+      availability_template: "{{ states.update | selectattr('state', 'eq', 'on') |  selectattr('entity_id', 'in', integration_entities('hassio')) | rejectattr('entity_id', 'eq', 'update.home_assistant_core_update') | map(attribute='name') | list | count | int(-1) > -1 }}"
 
     other_updates:
       friendly_name: "Other Updates"
       unique_id: other_updates
       icon_template: mdi:package-up
       device_class: update
-      value_template: >-
-        {% set updates = states.update | selectattr('state', 'eq', 'on')
-          | rejectattr('entity_id', 'in', integration_entities('hassio'))
-          | rejectattr('entity_id', 'in', integration_entities('hacs')) | list %}
-        {{ updates | count }}
-      availability_template: >-
-        {{ updates | count > 0 }}
+      value_template: "{{ states.update | selectattr('state', 'eq', 'on') |  rejectattr('entity_id', 'in', integration_entities('hassio')) |  rejectattr('entity_id', 'in', integration_entities('hacs')) | map(attribute='name') | list | count }}"
+      availability_template: "{{ states.update | selectattr('state', 'eq', 'on') |  rejectattr('entity_id', 'in', integration_entities('hassio')) |  rejectattr('entity_id', 'in', integration_entities('hacs')) | map(attribute='name') | list | count | int(-1) > -1 }}"
 
 - platform: hikvision
   host: !secret hikvision_ip
