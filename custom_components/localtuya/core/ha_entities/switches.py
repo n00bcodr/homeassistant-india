@@ -494,6 +494,20 @@ SWITCHES: dict[str, tuple[LocalTuyaEntity, ...]] = {
             icon="mdi:human-greeting",
         ),
     ),
+    # EV Charcher
+    # https://developer.tuya.com/en/docs/iot/categoryqn?id=Kaiuz18kih0sm
+    "qccdz": (
+        LocalTuyaEntity(
+            id=DPCode.SWITCH,
+        ),
+    ),
+    "gcj": (
+        LocalTuyaEntity(
+            id=DPCode.MACHINERAINMODE,
+            name="Rain Mode",
+            icon="mdi:weather-rainy",
+        ),
+    ),
     # Unknown product with switch capabilities
     # Fond in some diffusers, plugs and PIR flood lights
     # Not documented

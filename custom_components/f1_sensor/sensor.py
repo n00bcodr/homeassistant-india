@@ -3,8 +3,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from .entity import F1BaseEntity
 import async_timeout
 import datetime
+from timezonefinder import TimezoneFinder
+from zoneinfo import ZoneInfo
 
 
 from .const import DOMAIN
@@ -67,27 +70,36 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         "weather": (F1WeatherSensor, data["race_coordinator"]),
         "last_race_results": (F1LastRaceSensor, data["last_race_coordinator"]),
         "season_results": (F1SeasonResultsSensor, data["season_results_coordinator"]),
-        # "last_qualifying": (F1LastQualifyingSensor, data["last_qualifying_coordinator"]),
-        "race_week": (F1RaceWeekSensor, data["race_coordinator"]),
     }
 
     sensors = []
     for key in enabled:
         cls, coord = mapping.get(key, (None, None))
         if cls and coord:
-            sensors.append(cls(coord, f"{base}_{key}"))
+            sensors.append(
+                cls(
+                    coord,
+                    f"{base}_{key}",
+                    f"{entry.entry_id}_{key}",
+                    entry.entry_id,
+                    base,
+                )
+            )
     async_add_entities(sensors, True)
 
 
-class F1NextRaceSensor(CoordinatorEntity, SensorEntity):
+class F1NextRaceSensor(F1BaseEntity, SensorEntity):
     """Sensor that returns date/time (ISO8601) for the next race in 'state'."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:flag-checkered"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
+        self._tf = None
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self._tf = await self.hass.async_add_executor_job(TimezoneFinder)
 
     def _get_next_race(self):
         data = self.coordinator.data
@@ -121,6 +133,23 @@ class F1NextRaceSensor(CoordinatorEntity, SensorEntity):
         except ValueError:
             return None
 
+    def _timezone_from_location(self, lat, lon):
+        if lat is None or lon is None or self._tf is None:
+            return None
+        try:
+            return self._tf.timezone_at(lat=float(lat), lng=float(lon))
+        except Exception:
+            return None
+
+    def _to_local(self, iso_ts, timezone):
+        if not iso_ts or not timezone:
+            return None
+        try:
+            dt = datetime.datetime.fromisoformat(iso_ts)
+            return dt.astimezone(ZoneInfo(timezone)).isoformat()
+        except Exception:
+            return None
+
     @property
     def state(self):
         next_race = self._get_next_race()
@@ -136,6 +165,7 @@ class F1NextRaceSensor(CoordinatorEntity, SensorEntity):
 
         circuit = race.get("Circuit", {})
         loc = circuit.get("Location", {})
+        timezone = self._timezone_from_location(loc.get("lat"), loc.get("long"))
 
         first_practice = race.get("FirstPractice", {})
         second_practice = race.get("SecondPractice", {})
@@ -143,6 +173,14 @@ class F1NextRaceSensor(CoordinatorEntity, SensorEntity):
         qualifying = race.get("Qualifying", {})
         sprint_qualifying = race.get("SprintQualifying", {})
         sprint = race.get("Sprint", {})
+
+        race_start = self.combine_date_time(race.get("date"), race.get("time"))
+        first_start = self.combine_date_time(first_practice.get("date"), first_practice.get("time"))
+        second_start = self.combine_date_time(second_practice.get("date"), second_practice.get("time"))
+        third_start = self.combine_date_time(third_practice.get("date"), third_practice.get("time"))
+        qual_start = self.combine_date_time(qualifying.get("date"), qualifying.get("time"))
+        sprint_quali_start = self.combine_date_time(sprint_qualifying.get("date"), sprint_qualifying.get("time"))
+        sprint_start = self.combine_date_time(sprint.get("date"), sprint.get("time"))
 
         return {
             "season": race.get("season"),
@@ -157,24 +195,30 @@ class F1NextRaceSensor(CoordinatorEntity, SensorEntity):
             "circuit_long": loc.get("long"),
             "circuit_locality": loc.get("locality"),
             "circuit_country": loc.get("country"),
+            "circuit_timezone": timezone,
 
-            "race_start": self.combine_date_time(race.get("date"), race.get("time")),
-            "first_practice_start": self.combine_date_time(first_practice.get("date"), first_practice.get("time")),
-            "second_practice_start": self.combine_date_time(second_practice.get("date"), second_practice.get("time")),
-            "third_practice_start": self.combine_date_time(third_practice.get("date"), third_practice.get("time")),
-            "qualifying_start": self.combine_date_time(qualifying.get("date"), qualifying.get("time")),
-            "sprint_qualifying_start": self.combine_date_time(sprint_qualifying.get("date"), sprint_qualifying.get("time")),
-            "sprint_start": self.combine_date_time(sprint.get("date"), sprint.get("time")),
+            "race_start": race_start,
+            "race_start_local": self._to_local(race_start, timezone),
+            "first_practice_start": first_start,
+            "first_practice_start_local": self._to_local(first_start, timezone),
+            "second_practice_start": second_start,
+            "second_practice_start_local": self._to_local(second_start, timezone),
+            "third_practice_start": third_start,
+            "third_practice_start_local": self._to_local(third_start, timezone),
+            "qualifying_start": qual_start,
+            "qualifying_start_local": self._to_local(qual_start, timezone),
+            "sprint_qualifying_start": sprint_quali_start,
+            "sprint_qualifying_start_local": self._to_local(sprint_quali_start, timezone),
+            "sprint_start": sprint_start,
+            "sprint_start_local": self._to_local(sprint_start, timezone),
         }
 
 
-class F1CurrentSeasonSensor(CoordinatorEntity, SensorEntity):
+class F1CurrentSeasonSensor(F1BaseEntity, SensorEntity):
     """Sensor showing number of races this season."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:calendar-month"
 
     @property
@@ -192,13 +236,11 @@ class F1CurrentSeasonSensor(CoordinatorEntity, SensorEntity):
         }
 
 
-class F1DriverStandingsSensor(CoordinatorEntity, SensorEntity):
+class F1DriverStandingsSensor(F1BaseEntity, SensorEntity):
     """Sensor for driver standings."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:account-multiple-check"
 
     @property
@@ -219,13 +261,11 @@ class F1DriverStandingsSensor(CoordinatorEntity, SensorEntity):
         }
 
 
-class F1ConstructorStandingsSensor(CoordinatorEntity, SensorEntity):
+class F1ConstructorStandingsSensor(F1BaseEntity, SensorEntity):
     """Sensor for constructor standings."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:factory"
 
     @property
@@ -246,13 +286,11 @@ class F1ConstructorStandingsSensor(CoordinatorEntity, SensorEntity):
         }
 
 
-class F1WeatherSensor(CoordinatorEntity, SensorEntity):
+class F1WeatherSensor(F1BaseEntity, SensorEntity):
     """Sensor for current and race-start weather."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:weather-partly-cloudy"
         self._current = {}
         self._race = {}
@@ -263,8 +301,40 @@ class F1WeatherSensor(CoordinatorEntity, SensorEntity):
         self.async_on_remove(removal)
         await self._update_weather()
 
+    def _get_next_race(self):
+        data = self.coordinator.data
+        if not data:
+            return None
+
+        races = data.get("MRData", {}).get("RaceTable", {}).get("Races", [])
+        now = datetime.datetime.now(datetime.timezone.utc)
+
+        for race in races:
+            date = race.get("date")
+            time = race.get("time") or "00:00:00Z"
+            dt_str = f"{date}T{time}".replace("Z", "+00:00")
+            try:
+                dt = datetime.datetime.fromisoformat(dt_str)
+            except ValueError:
+                continue
+            if dt > now:
+                return race
+        return None
+
+    def _combine_date_time(self, date_str, time_str):
+        if not date_str:
+            return None
+        if not time_str:
+            time_str = "00:00:00Z"
+        dt_str = f"{date_str}T{time_str}".replace("Z", "+00:00")
+        try:
+            dt = datetime.datetime.fromisoformat(dt_str)
+            return dt.isoformat()
+        except ValueError:
+            return None
+
     async def _update_weather(self):
-        race = F1NextRaceSensor(self.coordinator, "")._get_next_race()
+        race = self._get_next_race()
         loc = race.get("Circuit", {}).get("Location", {}) if race else {}
         lat, lon = loc.get("lat"), loc.get("long")
         if lat is None or lon is None:
@@ -290,7 +360,7 @@ class F1WeatherSensor(CoordinatorEntity, SensorEntity):
             .get("symbol_code")
         current_icon = SYMBOL_CODE_TO_MDI.get(current_symbol, self._attr_icon)
         self._attr_icon = current_icon
-        start_iso = F1NextRaceSensor(self.coordinator, "").combine_date_time(race.get("date"), race.get("time")) if race else None
+        start_iso = self._combine_date_time(race.get("date"), race.get("time")) if race else None
         self._race = {k: None for k in self._current}
         if start_iso:
             start_dt = datetime.datetime.fromisoformat(start_iso)
@@ -351,13 +421,11 @@ class F1WeatherSensor(CoordinatorEntity, SensorEntity):
         return attrs
 
 
-class F1LastRaceSensor(CoordinatorEntity, SensorEntity):
+class F1LastRaceSensor(F1BaseEntity, SensorEntity):
     """Sensor for results of the latest race."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:trophy"
 
     @property
@@ -402,13 +470,11 @@ class F1LastRaceSensor(CoordinatorEntity, SensorEntity):
         }
 
 
-class F1SeasonResultsSensor(CoordinatorEntity, SensorEntity):
+class F1SeasonResultsSensor(F1BaseEntity, SensorEntity):
     """Sensor for entire season's results."""
 
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
+    def __init__(self, coordinator, sensor_name, unique_id, entry_id, device_name):
+        super().__init__(coordinator, sensor_name, unique_id, entry_id, device_name)
         self._attr_icon = "mdi:podium"
 
     @property
@@ -449,58 +515,4 @@ class F1SeasonResultsSensor(CoordinatorEntity, SensorEntity):
         return {"races": cleaned}
 
 
-# --- F1RaceWeekSensor ---
-class F1RaceWeekSensor(CoordinatorEntity, SensorEntity):
-    """Sensor that returns True if it's race week, else False. Extra attribute: days until next race."""
-
-    def __init__(self, coordinator, sensor_name):
-        super().__init__(coordinator)
-        self._attr_name = sensor_name
-        self._attr_unique_id = f"{sensor_name}_unique"
-        self._attr_icon = "mdi:calendar-range"
-
-    def _get_next_race(self):
-        data = self.coordinator.data
-        if not data:
-            return None, None
-
-        races = data.get("MRData", {}).get("RaceTable", {}).get("Races", [])
-        now = datetime.datetime.now(datetime.timezone.utc)
-
-        for race in races:
-            date = race.get("date")
-            time = race.get("time") or "00:00:00Z"
-            dt_str = f"{date}T{time}".replace("Z", "+00:00")
-            try:
-                dt = datetime.datetime.fromisoformat(dt_str)
-            except ValueError:
-                continue
-            if dt > now:
-                return dt, race
-        return None, None
-
-    @property
-    def state(self):
-        next_race_dt, _ = self._get_next_race()
-        if not next_race_dt:
-            return False
-        now = datetime.datetime.now(datetime.timezone.utc)
-        start_of_week = now - datetime.timedelta(days=now.weekday())
-        end_of_week = start_of_week + datetime.timedelta(days=6, hours=23, minutes=59, seconds=59)
-        return start_of_week.date() <= next_race_dt.date() <= end_of_week.date()
-
-    @property
-    def extra_state_attributes(self):
-        next_race_dt, race = self._get_next_race()
-        now = datetime.datetime.now(datetime.timezone.utc)
-        days = None
-        race_name = None
-        if next_race_dt:
-            delta = next_race_dt.date() - now.date()
-            days = delta.days
-            race_name = race.get("raceName") if race else None
-        return {
-            "days_until_next_race": days,
-            "next_race_name": race_name
-        }
 

@@ -726,6 +726,111 @@ SENSORS: dict[str, tuple[LocalTuyaEntity, ...]] = {
         ),
         *BATTERY_SENSORS,
     ),
+    # EV Charcher
+    # https://developer.tuya.com/en/docs/iot/categoryqn?id=Kaiuz18kih0sm
+    "qccdz": (
+        LocalTuyaEntity(
+            id=DPCode.WORK_STATE,
+            name="Work state",
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICESTATE,
+            name="Device state",
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        LocalTuyaEntity(
+            id=DPCode.PHASEFLAG,
+            name="Phase Flag",
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICEMAXSETA,
+            name="Max Set Ampere",
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICEMAXSETA,
+            name="Max Set Ampere",
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICETEMP,
+            name="Device Temperature",
+            device_class=SensorDeviceClass.TEMPERATURE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfTemperature.CELSIUS, 0.1),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.BALANCE_ENERGY,
+            name="Energy Balance",
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL,
+            custom_configs=localtuya_sensor(UnitOfEnergy.KILO_WATT_HOUR, 0.001),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.CHARGE_ENERGY_ONCE,
+            name="Energy charge",
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL,
+            custom_configs=localtuya_sensor(UnitOfEnergy.KILO_WATT_HOUR, 0.01),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICEKW,
+            name="Device kW",
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfPower.KILO_WATT, 0.1),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.DEVICEKW,
+            name="Device kWh",
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL,
+            custom_configs=localtuya_sensor(UnitOfEnergy.KILO_WATT_HOUR, 0.01),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.A_VOLTAGE,
+            name="Voltage A",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.1),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.B_VOLTAGE,
+            name="Voltage B",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.1),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.C_VOLTAGE,
+            name="Voltage C",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.1),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.A_CURRENT,
+            name="Current A",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.01),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.B_CURRENT,
+            name="Current B",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.01),
+        ),
+        LocalTuyaEntity(
+            id=DPCode.C_CURRENT,
+            name="Current C",
+            device_class=SensorDeviceClass.VOLTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            custom_configs=localtuya_sensor(UnitOfElectricPotential.VOLT, 0.01),
+        ),
+    ),
     # Heater
     # https://developer.tuya.com/en/docs/iot/categoryqn?id=Kaiuz18kih0sm
     "qn": (
@@ -1755,6 +1860,26 @@ SENSORS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             icon="mdi:altimeter",
             custom_configs=localtuya_sensor(PERCENTAGE, 1),
         ),
+    ),
+    # Lawn mower
+    "gcj": (
+        LocalTuyaEntity(
+            id=DPCode.MACHINESTATUS,
+            name="State",
+        ),
+        LocalTuyaEntity(
+            id=DPCode.MACHINEPASSWORD,
+            name="Password",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            icon="mdi:lock-question-outline",
+        ),
+        LocalTuyaEntity(
+            id=DPCode.MACHINECOVER,
+            name="Cover",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            icon="mdi:shield-lock-outline",
+        ),
+        *BATTERY_SENSORS,
     ),
 }
 

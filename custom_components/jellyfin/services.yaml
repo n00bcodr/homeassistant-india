@@ -1,0 +1,26 @@
+broadcast_message:
+  name: Send Message to All Active Players
+  description: Send a message to all active Jellyfin media players
+  fields:
+    message:
+      name: Message
+      description: The message text to send
+      required: true
+      selector:
+        text:
+          multiline: true
+    header:
+      name: Header
+      description: The message header/title
+      default: "Home Assistant"
+      selector:
+        text:
+    timeout:
+      name: Timeout
+      description: Message timeout in milliseconds
+      default: 5000
+      selector:
+        number:
+          min: 1000
+          max: 30000
+          unit_of_measurement: "ms"

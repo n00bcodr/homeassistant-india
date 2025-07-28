@@ -267,9 +267,6 @@
         "name": "ad-off"
     },
     {
-        "name": "ad-units"
-    },
-    {
         "name": "adaptive-audio-mic"
     },
     {
@@ -372,9 +369,6 @@
         "name": "add-to-drive"
     },
     {
-        "name": "add-to-home-screen"
-    },
-    {
         "name": "add-to-queue"
     },
     {
@@ -456,7 +450,7 @@
         "name": "airport-shuttle"
     },
     {
-        "name": "airware"
+        "name": "airwave"
     },
     {
         "name": "alarm"
@@ -651,9 +645,6 @@
         "name": "animation"
     },
     {
-        "name": "aod"
-    },
-    {
         "name": "aod-tablet"
     },
     {
@@ -673,9 +664,6 @@
     },
     {
         "name": "app-badging"
-    },
-    {
-        "name": "app-blocking"
     },
     {
         "name": "app-promo"
@@ -1119,6 +1107,9 @@
         "name": "badge"
     },
     {
+        "name": "badminton"
+    },
+    {
         "name": "bakery-dining"
     },
     {
@@ -1155,6 +1146,9 @@
         "name": "batch-prediction"
     },
     {
+        "name": "bath-bedrock"
+    },
+    {
         "name": "bath-outdoor"
     },
     {
@@ -1162,6 +1156,9 @@
     },
     {
         "name": "bath-public-large"
+    },
+    {
+        "name": "bath-soak"
     },
     {
         "name": "bathroom"
@@ -1335,6 +1332,9 @@
         "name": "beenhere"
     },
     {
+        "name": "beer-meal"
+    },
+    {
         "name": "bento"
     },
     {
@@ -1462,9 +1462,6 @@
     },
     {
         "name": "book-6"
-    },
-    {
-        "name": "book-online"
     },
     {
         "name": "book-ribbon"
@@ -1731,6 +1728,9 @@
         "name": "calendar-clock"
     },
     {
+        "name": "calendar-meal"
+    },
+    {
         "name": "calendar-month"
     },
     {
@@ -1782,16 +1782,10 @@
         "name": "camera-enhance"
     },
     {
-        "name": "camera-front"
-    },
-    {
         "name": "camera-indoor"
     },
     {
         "name": "camera-outdoor"
-    },
-    {
-        "name": "camera-rear"
     },
     {
         "name": "camera-roll"
@@ -1845,7 +1839,10 @@
         "name": "car-defrost-low-right"
     },
     {
-        "name": "car-defrost-mid-low-left"
+        "name": "car-defrost-mid-left"
+    },
+    {
+        "name": "car-defrost-mid-low-right"
     },
     {
         "name": "car-defrost-mid-right"
@@ -1980,6 +1977,15 @@
         "name": "chair-alt"
     },
     {
+        "name": "chair-counter"
+    },
+    {
+        "name": "chair-fireplace"
+    },
+    {
+        "name": "chair-umbrella"
+    },
+    {
         "name": "chalet"
     },
     {
@@ -1990,9 +1996,6 @@
     },
     {
         "name": "charger"
-    },
-    {
-        "name": "charging-station"
     },
     {
         "name": "chart-data"
@@ -2032,6 +2035,9 @@
     },
     {
         "name": "check-circle"
+    },
+    {
+        "name": "check-circle-unread"
     },
     {
         "name": "check-in-out"
@@ -2841,9 +2847,6 @@
         "name": "developer-guide"
     },
     {
-        "name": "developer-mode"
-    },
-    {
         "name": "developer-mode-tv"
     },
     {
@@ -2854,9 +2857,6 @@
     },
     {
         "name": "device-thermostat"
-    },
-    {
-        "name": "device-unknown"
     },
     {
         "name": "devices"
@@ -2911,6 +2911,15 @@
     },
     {
         "name": "digital-wellbeing"
+    },
+    {
+        "name": "dine-heart"
+    },
+    {
+        "name": "dine-in"
+    },
+    {
+        "name": "dine-lamp"
     },
     {
         "name": "dining"
@@ -3244,12 +3253,6 @@
     },
     {
         "name": "eda"
-    },
-    {
-        "name": "edgesensor-high"
-    },
-    {
-        "name": "edgesensor-low"
     },
     {
         "name": "edit"
@@ -4410,10 +4413,16 @@
         "name": "garage"
     },
     {
+        "name": "garage-check"
+    },
+    {
         "name": "garage-door"
     },
     {
         "name": "garage-home"
+    },
+    {
+        "name": "garage-money"
     },
     {
         "name": "garden-cart"
@@ -4531,6 +4540,9 @@
     },
     {
         "name": "google-tv"
+    },
+    {
+        "name": "google-tv-remote"
     },
     {
         "name": "google-wifi"
@@ -4677,6 +4689,12 @@
         "name": "hand-gesture-off"
     },
     {
+        "name": "hand-meal"
+    },
+    {
+        "name": "hand-package"
+    },
+    {
         "name": "handheld-controller"
     },
     {
@@ -4812,6 +4830,9 @@
         "name": "heart-plus"
     },
     {
+        "name": "heart-smile"
+    },
+    {
         "name": "heat"
     },
     {
@@ -4852,6 +4873,9 @@
     },
     {
         "name": "hide-source"
+    },
+    {
+        "name": "high-chair"
     },
     {
         "name": "high-density"
@@ -5254,6 +5278,12 @@
     },
     {
         "name": "jamboard-kiosk"
+    },
+    {
+        "name": "japanese-curry"
+    },
+    {
+        "name": "japanese-flag"
     },
     {
         "name": "javascript"
@@ -5934,6 +5964,12 @@
         "name": "map"
     },
     {
+        "name": "map-pin-heart"
+    },
+    {
+        "name": "map-pin-review"
+    },
+    {
         "name": "map-search"
     },
     {
@@ -6052,6 +6088,9 @@
     },
     {
         "name": "menu-book"
+    },
+    {
+        "name": "menu-book-2"
     },
     {
         "name": "menu-open"
@@ -6252,9 +6291,6 @@
         "name": "mobile-rotate-lock"
     },
     {
-        "name": "mobile-screen-share"
-    },
-    {
         "name": "mobile-screensaver"
     },
     {
@@ -6292,6 +6328,9 @@
     },
     {
         "name": "mobile-vibrate"
+    },
+    {
+        "name": "mobile-wrench"
     },
     {
         "name": "mobiledata-off"
@@ -6381,6 +6420,9 @@
         "name": "moped"
     },
     {
+        "name": "moped-package"
+    },
+    {
         "name": "more"
     },
     {
@@ -6441,6 +6483,9 @@
         "name": "mountain-flag"
     },
     {
+        "name": "mountain-steam"
+    },
+    {
         "name": "mouse"
     },
     {
@@ -6499,6 +6544,9 @@
     },
     {
         "name": "movie-off"
+    },
+    {
+        "name": "movie-speaker"
     },
     {
         "name": "moving"
@@ -6642,6 +6690,21 @@
         "name": "nest-eco-leaf"
     },
     {
+        "name": "nest-farsight-cool"
+    },
+    {
+        "name": "nest-farsight-dual"
+    },
+    {
+        "name": "nest-farsight-eco"
+    },
+    {
+        "name": "nest-farsight-heat"
+    },
+    {
+        "name": "nest-farsight-seasonal"
+    },
+    {
         "name": "nest-farsight-weather"
     },
     {
@@ -6664,9 +6727,6 @@
     },
     {
         "name": "nest-protect"
-    },
-    {
-        "name": "nest-remote"
     },
     {
         "name": "nest-remote-comfort-sensor"
@@ -6978,10 +7038,10 @@
         "name": "offline-pin-off"
     },
     {
-        "name": "offline-share"
+        "name": "oil-barrel"
     },
     {
-        "name": "oil-barrel"
+        "name": "okonomiyaki"
     },
     {
         "name": "on-device-training"
@@ -7128,6 +7188,9 @@
         "name": "padding"
     },
     {
+        "name": "padel"
+    },
+    {
         "name": "page-control"
     },
     {
@@ -7188,6 +7251,15 @@
         "name": "park"
     },
     {
+        "name": "parking-meter"
+    },
+    {
+        "name": "parking-sign"
+    },
+    {
+        "name": "parking-valet"
+    },
+    {
         "name": "partly-cloudy-day"
     },
     {
@@ -7228,6 +7300,9 @@
     },
     {
         "name": "payment-arrow-down"
+    },
+    {
+        "name": "payment-card"
     },
     {
         "name": "payments"
@@ -7284,9 +7359,6 @@
         "name": "perm-data-setting"
     },
     {
-        "name": "perm-device-information"
-    },
-    {
         "name": "perm-media"
     },
     {
@@ -7333,6 +7405,9 @@
     },
     {
         "name": "person-edit"
+    },
+    {
+        "name": "person-heart"
     },
     {
         "name": "person-off"
@@ -7392,9 +7467,6 @@
         "name": "phishing"
     },
     {
-        "name": "phone-android"
-    },
-    {
         "name": "phone-bluetooth-speaker"
     },
     {
@@ -7416,9 +7488,6 @@
         "name": "phone-in-talk-watchface-indicator"
     },
     {
-        "name": "phone-iphone"
-    },
-    {
         "name": "phone-locked"
     },
     {
@@ -7428,19 +7497,7 @@
         "name": "phone-paused"
     },
     {
-        "name": "phonelink-erase"
-    },
-    {
         "name": "phonelink-lock"
-    },
-    {
-        "name": "phonelink-ring"
-    },
-    {
-        "name": "phonelink-ring-off"
-    },
-    {
-        "name": "phonelink-setup"
     },
     {
         "name": "photo-album"
@@ -7483,6 +7540,9 @@
     },
     {
         "name": "piano-off"
+    },
+    {
+        "name": "pickleball"
     },
     {
         "name": "picture-as-pdf"
@@ -7569,6 +7629,9 @@
         "name": "plagiarism"
     },
     {
+        "name": "plane-contrails"
+    },
+    {
         "name": "planet"
     },
     {
@@ -7603,6 +7666,12 @@
     },
     {
         "name": "play-shapes"
+    },
+    {
+        "name": "playground"
+    },
+    {
+        "name": "playground-2"
     },
     {
         "name": "playing-cards"
@@ -8394,19 +8463,7 @@
         "name": "screen-attention-off"
     },
     {
-        "name": "screen-lock-landscape"
-    },
-    {
-        "name": "screen-lock-portrait"
-    },
-    {
-        "name": "screen-lock-rotation"
-    },
-    {
         "name": "screen-record"
-    },
-    {
-        "name": "screen-rotation"
     },
     {
         "name": "screen-rotation-alt"
@@ -8514,12 +8571,6 @@
         "name": "security-pro-monitoring"
     },
     {
-        "name": "security-update-good"
-    },
-    {
-        "name": "security-update-warning"
-    },
-    {
         "name": "segment"
     },
     {
@@ -8563,9 +8614,6 @@
     },
     {
         "name": "send-time-extension"
-    },
-    {
-        "name": "send-to-mobile"
     },
     {
         "name": "sensor-door"
@@ -8668,9 +8716,6 @@
     },
     {
         "name": "settings-brightness"
-    },
-    {
-        "name": "settings-cell"
     },
     {
         "name": "settings-cinematic-blur"
@@ -8815,6 +8860,9 @@
     },
     {
         "name": "shield-spark"
+    },
+    {
+        "name": "shield-toggle"
     },
     {
         "name": "shield-watch"
@@ -9063,19 +9111,10 @@
         "name": "smart-outlet"
     },
     {
-        "name": "smart-screen"
-    },
-    {
         "name": "smart-toy"
     },
     {
         "name": "smart-ventilation"
-    },
-    {
-        "name": "smartphone"
-    },
-    {
-        "name": "smartphone-camera"
     },
     {
         "name": "smb-share"
@@ -9271,6 +9310,9 @@
     },
     {
         "name": "split-scene-left"
+    },
+    {
+        "name": "split-scene-right"
     },
     {
         "name": "split-scene-up"
@@ -9495,9 +9537,6 @@
         "name": "stateful"
     },
     {
-        "name": "stay-current-landscape"
-    },
-    {
         "name": "steering-wheel-heat"
     },
     {
@@ -9571,9 +9610,6 @@
     },
     {
         "name": "stream"
-    },
-    {
-        "name": "stream-apps"
     },
     {
         "name": "streetview"
@@ -9652,6 +9688,9 @@
     },
     {
         "name": "subway"
+    },
+    {
+        "name": "subway-walk"
     },
     {
         "name": "summarize"
@@ -9822,9 +9861,6 @@
         "name": "syringe"
     },
     {
-        "name": "system-update"
-    },
-    {
         "name": "system-update-alt"
     },
     {
@@ -9888,6 +9924,9 @@
         "name": "table-lamp"
     },
     {
+        "name": "table-large"
+    },
+    {
         "name": "table-restaurant"
     },
     {
@@ -9928,9 +9967,6 @@
     },
     {
         "name": "tamper-detection-on"
-    },
-    {
-        "name": "tap-and-play"
     },
     {
         "name": "tapas"
@@ -10140,6 +10176,9 @@
         "name": "timer"
     },
     {
+        "name": "timer-1"
+    },
+    {
         "name": "timer-10"
     },
     {
@@ -10147,6 +10186,9 @@
     },
     {
         "name": "timer-10-select"
+    },
+    {
+        "name": "timer-2"
     },
     {
         "name": "timer-3"
@@ -10656,9 +10698,6 @@
         "name": "vertical-split"
     },
     {
-        "name": "vibration"
-    },
-    {
         "name": "video-audio-call"
     },
     {
@@ -10909,6 +10948,9 @@
     },
     {
         "name": "wash"
+    },
+    {
+        "name": "washoku"
     },
     {
         "name": "watch"
@@ -11212,6 +11254,9 @@
     },
     {
         "name": "yard"
+    },
+    {
+        "name": "yoshoku"
     },
     {
         "name": "your-trips"
