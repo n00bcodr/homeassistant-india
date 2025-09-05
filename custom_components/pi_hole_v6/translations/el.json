@@ -71,6 +71,9 @@
             },
             "action_refresh_data": {
                 "name": "Ανανέωση δεδομένων"
+            },
+            "action_ftl_purge_diagnosis_messages": {
+                "name": "Εκκαθάριση μηνυμάτων διάγνωσης FTL"
             }
         },
         "sensor": {
@@ -88,6 +91,10 @@
             "dns_queries_today": {
                 "name": "Ερωτήματα DNS σήμερα",
                 "unit_of_measurement": "ερωτήματα"
+            },
+            "dns_queries_frequency": {
+                "name": "Average number of DNS queries",
+                "unit_of_measurement": "queries/min"
             },
             "domains_blocked": {
                 "name": "Τομείς που μπλοκαρίστηκαν",
@@ -114,6 +121,16 @@
             },
             "latest_data_refresh": {
                 "name": "Τελευταία ανανέωση δεδομένων"
+            },
+            "cpu_use": {
+                "name": "Χρήση CPU"
+            },
+            "memory_use": {
+                "name": "Χρήση μνήμης"
+            },
+            "ftl_info_message_count": {
+                "name": "Αριθμός μηνυμάτων διάγνωσης FTL",
+                "unit_of_measurement": "μηνύματα"
             }
         },
         "switch": {

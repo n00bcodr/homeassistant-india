@@ -745,7 +745,9 @@ class $19fe8e3abedf4df0$export$c7c07a37856565d extends HTMLElement {
             const t = i.getPropertyOptions(e), h = "function" == typeof t.converter ? {
                 fromAttribute: t.converter
             } : void 0 !== t.converter?.fromAttribute ? t.converter : $19fe8e3abedf4df0$export$7312b35fbf521afb;
-            this._$Em = e, this[e] = h.fromAttribute(s, t.type) ?? this._$Ej?.get(e) ?? null, this._$Em = null;
+            this._$Em = e;
+            const r = h.fromAttribute(s, t.type);
+            this[e] = r ?? this._$Ej?.get(e) ?? r, this._$Em = null;
         }
     }
     requestUpdate(t, s, i) {
@@ -820,7 +822,7 @@ $19fe8e3abedf4df0$export$c7c07a37856565d.elementStyles = [], $19fe8e3abedf4df0$e
     mode: "open"
 }, $19fe8e3abedf4df0$export$c7c07a37856565d[$19fe8e3abedf4df0$var$d("elementProperties")] = new Map, $19fe8e3abedf4df0$export$c7c07a37856565d[$19fe8e3abedf4df0$var$d("finalized")] = new Map, $19fe8e3abedf4df0$var$p?.({
     ReactiveElement: $19fe8e3abedf4df0$export$c7c07a37856565d
-}), ($19fe8e3abedf4df0$var$a.reactiveElementVersions ??= []).push("2.1.0");
+}), ($19fe8e3abedf4df0$var$a.reactiveElementVersions ??= []).push("2.1.1");
 
 
 /**
@@ -994,7 +996,7 @@ class $f58f44579a4747ac$var$R {
         e < i.length && (this._$AR(s && s._$AB.nextSibling, e), i.length = e);
     }
     _$AR(t = this._$AA.nextSibling, i) {
-        for(this._$AP?.(!1, !0, i); t && t !== this._$AB;){
+        for(this._$AP?.(!1, !0, i); t !== this._$AB;){
             const i = t.nextSibling;
             t.remove(), t = i;
         }
@@ -1084,7 +1086,7 @@ const $f58f44579a4747ac$export$8613d1ca9052b22e = {
     B: $f58f44579a4747ac$var$H,
     F: $f58f44579a4747ac$var$z
 }, $f58f44579a4747ac$var$j = $f58f44579a4747ac$var$t.litHtmlPolyfillSupport;
-$f58f44579a4747ac$var$j?.($f58f44579a4747ac$var$N, $f58f44579a4747ac$var$R), ($f58f44579a4747ac$var$t.litHtmlVersions ??= []).push("3.3.0");
+$f58f44579a4747ac$var$j?.($f58f44579a4747ac$var$N, $f58f44579a4747ac$var$R), ($f58f44579a4747ac$var$t.litHtmlVersions ??= []).push("3.3.1");
 const $f58f44579a4747ac$export$b3890eb0ae9dca99 = (t, i, s)=>{
     const e = s?.renderBefore ?? i;
     let h = e._$litPart$;
@@ -1140,7 +1142,7 @@ const $ab210b2da7b39b9d$export$f5c524615a7708d6 = {
     },
     _$AL: (t)=>t._$AL
 };
-($ab210b2da7b39b9d$var$s.litElementVersions ??= []).push("4.2.0");
+($ab210b2da7b39b9d$var$s.litElementVersions ??= []).push("4.2.1");
 
 
 /**
@@ -1251,99 +1253,6 @@ function $043ab5348dd51237$export$c0e85c3982a3daa6(stateObj, state) {
     }
     return true;
 }
-
-
-
-
-const $0cafd9360b3c4d75$export$1ca1ec8b29a4ce27 = (config, setup)=>{
-    const infoCount = setup.holes.reduce((acc, h)=>{
-        if (h.info_message_count && !Number.isNaN(Number(h.info_message_count.state))) return acc + Number(h.info_message_count.state);
-        return acc;
-    }, 0);
-    return infoCount === 0 ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<ha-icon icon="${config.icon ?? 'mdi:pi-hole'}"></ha-icon>` : (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<div class="warning-badge">${infoCount}</div>`;
-};
-
-
-
-const $409574f4dbacb1f1$export$c18c768bbe3223b7 = (hass, entity, className = '')=>(0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<state-display
-    .hass=${hass}
-    .stateObj=${entity}
-    class=${className}
-  ></state-display>`;
-
-
-const $a2b1c365027138cb$export$dfb737c0873de058 = (setup, hass, config)=>{
-    if (!(0, $81267a1185dd4399$export$57bf213be019eeb0)(config, 'header')) return 0, $f58f44579a4747ac$export$45b790e32b2810ee;
-    const primary = setup.holes[0];
-    const activeCount = setup.holes.map((h)=>h.status).filter((status)=>status !== undefined && (0, $043ab5348dd51237$export$c0e85c3982a3daa6)(status, status?.state)).length;
-    const mixedStatus = activeCount > 0 && activeCount < setup.holes.length;
-    // Check if we should display the remaining time
-    const hasRemainingTime = primary.remaining_until_blocking_mode && primary.remaining_until_blocking_mode.state !== '0' && primary.remaining_until_blocking_mode.state !== 'unavailable' && primary.remaining_until_blocking_mode.state !== 'unknown';
-    // Get status color based on active count and mixed status
-    const getStatusColor = ()=>{
-        if (mixedStatus) return 'var(--warning-color, orange)';
-        else if (activeCount > 0) return 'var(--success-color, green)';
-        else return 'var(--error-color, red)';
-    };
-    return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
-    <div class="card-header">
-      <div class="name">
-        ${(0, $0cafd9360b3c4d75$export$1ca1ec8b29a4ce27)(config, setup)}${config.title ?? 'Pi-hole'}
-        ${setup.holes.length > 1 ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="multi-status"
-              >(${activeCount}/${setup.holes.length})</span
-            >` : ''}
-      </div>
-      <div style="color: ${getStatusColor()}">
-        <ha-icon
-          icon="${activeCount > 0 ? 'mdi:check-circle' : 'mdi:close-circle'}"
-        ></ha-icon>
-        ${mixedStatus ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`Partial` : (0, $409574f4dbacb1f1$export$c18c768bbe3223b7)(hass, primary.status)}
-        ${activeCount <= 0 && hasRemainingTime ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`${(0, $409574f4dbacb1f1$export$c18c768bbe3223b7)(hass, primary.remaining_until_blocking_mode, 'remaining-time')}` : ''}
-      </div>
-    </div>
-  `;
-};
-
-
-const $313ad4784c1ca11f$export$7f14135d73b0f07a = (uniqueClientsCount)=>[
-        [
-            {
-                sensorKey: 'dns_queries_today',
-                title: 'card.stats.total_queries',
-                footer: {
-                    key: 'card.stats.active_clients',
-                    search: '{number}',
-                    replace: uniqueClientsCount
-                },
-                className: 'queries-box',
-                icon: 'mdi:earth'
-            },
-            {
-                sensorKey: 'ads_blocked_today',
-                title: 'card.stats.queries_blocked',
-                footer: 'card.stats.list_blocked_queries',
-                className: 'blocked-box',
-                icon: 'mdi:hand-back-right'
-            }
-        ],
-        [
-            {
-                sensorKey: 'ads_percentage_blocked_today',
-                title: 'card.stats.percentage_blocked',
-                footer: 'card.stats.list_all_queries',
-                className: 'percentage-box',
-                icon: 'mdi:chart-pie'
-            },
-            {
-                sensorKey: 'domains_blocked',
-                title: 'card.stats.domains_on_lists',
-                footer: 'card.stats.manage_lists',
-                className: 'domains-box',
-                icon: 'mdi:format-list-bulleted'
-            }
-        ]
-    ];
-
 
 
 
@@ -1483,6 +1392,172 @@ const $57febad8376708f1$export$3d3654ce4577c53d = (element, sectionConfig, entit
         }
     };
 };
+const $57febad8376708f1$export$b6152c9de20cf398 = (element, actionConfigs)=>{
+    return {
+        /**
+     * Handles an action event by creating and dispatching a 'hass-action' custom event.
+     * The event contains the entity configuration and the action type (tap, double_tap, hold).
+     *
+     * @param {ActionHandlerEvent} ev - The action handler event to process
+     */ handleEvent: (ev)=>{
+            // Extract action from event detail
+            const action = ev.detail?.action;
+            if (!action) return;
+            // Process each action configuration
+            actionConfigs.forEach((config)=>{
+                // @ts-ignore
+                (0, $9c83ab07519e6203$export$43835e9acf248a15)(element, 'hass-action', {
+                    config: config,
+                    action: action
+                });
+            });
+        }
+    };
+};
+
+
+
+const $0cafd9360b3c4d75$export$1ca1ec8b29a4ce27 = (element, config, setup)=>{
+    const infoCount = setup.holes.reduce((acc, h)=>{
+        if (h.info_message_count && !Number.isNaN(Number(h.info_message_count.state))) return acc + Number(h.info_message_count.state);
+        return acc;
+    }, 0);
+    // Create ActionConfigParams for each Pi-hole
+    const actionConfigs = setup.holes.map((h)=>{
+        // If user has custom badge config, apply it to all Pi-holes
+        if (config.badge) return {
+            entity: h.info_message_count?.entity_id ?? h.status?.entity_id ?? h.device_id,
+            ...config.badge
+        };
+        // Use config.badge if provided, otherwise create custom actions
+        const baseConfig = {
+            tap_action: {
+                action: 'more-info'
+            },
+            hold_action: {
+                action: 'more-info'
+            },
+            double_tap_action: {
+                action: 'more-info'
+            }
+        };
+        // Only setup default actions if the required entities exist
+        if (h.purge_diagnosis_messages && h.info_message_count) {
+            const purgeEntity = h.purge_diagnosis_messages;
+            const infoEntity = h.info_message_count;
+            return {
+                entity: infoEntity.entity_id,
+                ...baseConfig,
+                // Override tap_action for default behavior when info messages exist
+                tap_action: infoCount > 0 ? {
+                    action: 'call-service',
+                    perform_action: 'button.press',
+                    target: {
+                        entity_id: purgeEntity.entity_id
+                    }
+                } : {
+                    action: 'more-info'
+                }
+            };
+        }
+        // For Pi-holes without required entities, just use the base config
+        return {
+            entity: h.status?.entity_id ?? h.device_id,
+            ...baseConfig
+        };
+    });
+    return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<div
+    class="badge"
+    @action=${(0, $57febad8376708f1$export$b6152c9de20cf398)(element, actionConfigs)}
+    .actionHandler=${(0, $57febad8376708f1$export$8a44987212de21b)(actionConfigs[0])}
+  >
+    ${infoCount === 0 ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<ha-icon icon="${config.icon ?? 'mdi:pi-hole'}"></ha-icon>` : (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<div class="warning-badge">${infoCount}</div>`}
+  </div>`;
+};
+
+
+
+const $409574f4dbacb1f1$export$c18c768bbe3223b7 = (hass, entity, className = '')=>(0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<state-display
+    .hass=${hass}
+    .stateObj=${entity}
+    class=${className}
+  ></state-display>`;
+
+
+const $a2b1c365027138cb$export$dfb737c0873de058 = (element, setup, hass, config)=>{
+    if (!(0, $81267a1185dd4399$export$57bf213be019eeb0)(config, 'header')) return 0, $f58f44579a4747ac$export$45b790e32b2810ee;
+    const primary = setup.holes[0];
+    const activeCount = setup.holes.map((h)=>h.status).filter((status)=>status !== undefined && (0, $043ab5348dd51237$export$c0e85c3982a3daa6)(status, status?.state)).length;
+    const mixedStatus = activeCount > 0 && activeCount < setup.holes.length;
+    // Check if we should display the remaining time
+    const hasRemainingTime = primary.remaining_until_blocking_mode && primary.remaining_until_blocking_mode.state !== '0' && primary.remaining_until_blocking_mode.state !== 'unavailable' && primary.remaining_until_blocking_mode.state !== 'unknown';
+    // Get status color based on active count and mixed status
+    const getStatusColor = ()=>{
+        if (mixedStatus) return 'var(--warning-color, orange)';
+        else if (activeCount > 0) return 'var(--success-color, green)';
+        else return 'var(--error-color, red)';
+    };
+    return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+    <div class="card-header">
+      <div class="name">
+        ${(0, $0cafd9360b3c4d75$export$1ca1ec8b29a4ce27)(element, config, setup)}${config.title ?? 'Pi-hole'}
+        ${setup.holes.length > 1 ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="multi-status"
+              >(${activeCount}/${setup.holes.length})</span
+            >` : ''}
+      </div>
+      <div style="color: ${getStatusColor()}">
+        <ha-icon
+          icon="${activeCount > 0 ? 'mdi:check-circle' : 'mdi:close-circle'}"
+        ></ha-icon>
+        ${mixedStatus ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`Partial` : (0, $409574f4dbacb1f1$export$c18c768bbe3223b7)(hass, primary.status)}
+        ${activeCount <= 0 && hasRemainingTime ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`${(0, $409574f4dbacb1f1$export$c18c768bbe3223b7)(hass, primary.remaining_until_blocking_mode, 'remaining-time')}` : ''}
+      </div>
+    </div>
+  `;
+};
+
+
+const $313ad4784c1ca11f$export$7f14135d73b0f07a = (uniqueClientsCount)=>[
+        [
+            {
+                sensorKey: 'dns_queries_today',
+                title: 'card.stats.total_queries',
+                footer: {
+                    key: 'card.stats.active_clients',
+                    search: '{number}',
+                    replace: uniqueClientsCount
+                },
+                className: 'queries-box',
+                icon: 'mdi:earth'
+            },
+            {
+                sensorKey: 'ads_blocked_today',
+                title: 'card.stats.queries_blocked',
+                footer: 'card.stats.list_blocked_queries',
+                className: 'blocked-box',
+                icon: 'mdi:hand-back-right'
+            }
+        ],
+        [
+            {
+                sensorKey: 'ads_percentage_blocked_today',
+                title: 'card.stats.percentage_blocked',
+                footer: 'card.stats.list_all_queries',
+                className: 'percentage-box',
+                icon: 'mdi:chart-pie'
+            },
+            {
+                sensorKey: 'domains_blocked',
+                title: 'card.stats.domains_on_lists',
+                footer: 'card.stats.manage_lists',
+                className: 'domains-box',
+                icon: 'mdi:format-list-bulleted'
+            }
+        ]
+    ];
+
+
+
 
 
 /**
@@ -1562,11 +1637,11 @@ const $155ab9b902a30933$export$d5b7427e28c21e7b = (num, options)=>{
 
 
 var $9a28a77a5af263d9$exports = {};
-$9a28a77a5af263d9$exports = JSON.parse("{\"card\":{\"stats\":{\"total_queries\":\"Total queries\",\"active_clients\":\"{number} active clients\",\"queries_blocked\":\"Queries Blocked\",\"list_blocked_queries\":\"List blocked queries\",\"percentage_blocked\":\"Percentage Blocked\",\"list_all_queries\":\"List all queries\",\"domains_on_lists\":\"Domains on Lists\",\"manage_lists\":\"Manage lists\"},\"sections\":{\"pause\":\"Pause Ad-Blocking\",\"switches\":\"Switches\",\"actions\":\"Actions\"},\"units\":{\"seconds\":\"seconds\"}}}");
+$9a28a77a5af263d9$exports = JSON.parse("{\"card\":{\"stats\":{\"total_queries\":\"Total queries\",\"active_clients\":\"{number} active clients\",\"queries_blocked\":\"Queries Blocked\",\"list_blocked_queries\":\"List blocked queries\",\"percentage_blocked\":\"Percentage Blocked\",\"list_all_queries\":\"List all queries\",\"domains_on_lists\":\"Domains on Lists\",\"manage_lists\":\"Manage lists\"},\"sections\":{\"pause\":\"Pause Ad-Blocking\",\"switches\":\"Switches\",\"actions\":\"Actions\"},\"units\":{\"seconds\":\"seconds\",\"second\":\"second\",\"minutes\":\"minutes\",\"minute\":\"minute\",\"hours\":\"hours\",\"hour\":\"hour\"}}}");
 
 
 var $ac00f57d502abb29$exports = {};
-$ac00f57d502abb29$exports = JSON.parse("{\"card\":{\"stats\":{\"total_queries\":\"Peticiones totales\",\"active_clients\":\"{number} clientes activos\",\"queries_blocked\":\"Peticiones bloqueadas\",\"list_blocked_queries\":\"Listar peticiones bloqueadas\",\"percentage_blocked\":\"Porcentaje bloqueos\",\"list_all_queries\":\"Listar todas las peticiones\",\"domains_on_lists\":\"Dominios bloqueados\",\"manage_lists\":\"Gestionar listas\"},\"sections\":{\"pause\":\"Pausar Bloqueo de Anuncios\",\"switches\":\"Interruptores\",\"actions\":\"Acciones\"},\"units\":{\"seconds\":\"segundos\"}}}");
+$ac00f57d502abb29$exports = JSON.parse("{\"card\":{\"stats\":{\"total_queries\":\"Peticiones totales\",\"active_clients\":\"{number} clientes activos\",\"queries_blocked\":\"Peticiones bloqueadas\",\"list_blocked_queries\":\"Listar peticiones bloqueadas\",\"percentage_blocked\":\"Porcentaje bloqueos\",\"list_all_queries\":\"Listar todas las peticiones\",\"domains_on_lists\":\"Dominios bloqueados\",\"manage_lists\":\"Gestionar listas\"},\"sections\":{\"pause\":\"Pausar Bloqueo de Anuncios\",\"switches\":\"Interruptores\",\"actions\":\"Acciones\"},\"units\":{\"seconds\":\"segundos\",\"second\":\"segundo\",\"minutes\":\"minutos\",\"minute\":\"minuto\",\"hours\":\"horas\",\"hour\":\"hora\"}}}");
 
 
 // Import other languages as needed above this line and in order
@@ -1689,7 +1764,7 @@ const $e67ba06cac005a46$export$9c903d35b97d0190 = (config, section)=>!!config.co
 };
 const $18c1412eb38d120e$export$669170fc67fdedb7 = (element, config, entity, buttonClass)=>{
     const icon = $18c1412eb38d120e$var$actionIcon(entity);
-    const label = entity?.attributes.friendly_name.replace('Pihole- ', '').replace(' the ', ' ');
+    const label = entity?.attributes.friendly_name.replace('Pihole- ', '').replace('pihole-', '').replace(' the ', ' ');
     return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
     <mwc-button
       class="${buttonClass}"
@@ -1700,77 +1775,6 @@ const $18c1412eb38d120e$export$669170fc67fdedb7 = (element, config, entity, butt
       ${label}
     </mwc-button>
   `;
-};
-
-
-
-
-
-/**
- * Converts a number of seconds into a string formatted as "HH:MM:SS".
- *
- * @param totalSeconds - The total number of seconds to convert.
- * @returns A string representing the time in "HH:MM:SS" format, with each unit zero-padded to two digits.
- *
- * @example
- * ```typescript
- * formatSecondsToHHMMSS(3661); // Returns "01:01:01"
- * ```
- */ const $3a2fe8ac0aec50d1$export$7f8cebb87518d95 = (totalSeconds)=>{
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor(totalSeconds % 3600 / 60);
-    const seconds = totalSeconds % 60;
-    const paddedHours = String(hours).padStart(2, '0');
-    const paddedMinutes = String(minutes).padStart(2, '0');
-    const paddedSeconds = String(seconds).padStart(2, '0');
-    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
-};
-
-
-const $96d0f9845402cf42$export$5635d71bf4c61e2c = (hass, setup, seconds)=>{
-    return ()=>{
-        const domain = 'pi_hole_v6';
-        const service = 'disable';
-        setup.holes.forEach((hole)=>{
-            hass.callService(domain, service, {
-                device_id: hole.device_id,
-                duration: (0, $3a2fe8ac0aec50d1$export$7f8cebb87518d95)(seconds)
-            });
-        });
-    };
-};
-
-
-
-
-const $7a21f7a279e18689$export$229c72e5fdee233b = (hass, setup, config)=>{
-    if (!(0, $81267a1185dd4399$export$57bf213be019eeb0)(config, 'pause')) return 0, $f58f44579a4747ac$export$45b790e32b2810ee;
-    const pauseCollapsed = (0, $e67ba06cac005a46$export$9c903d35b97d0190)(config, 'pause');
-    const pauseDuration = config.pause_durations ?? [
-        60,
-        300,
-        900
-    ];
-    return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<div class="collapsible-section">
-    <div
-      class="section-header"
-      @click=${(e)=>(0, $993360189f76a862$export$b7c305685fc8cb26)(e, '.pause')}
-    >
-      <span>${(0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.sections.pause')}</span>
-      <ha-icon
-        class="caret-icon"
-        icon="mdi:chevron-${pauseCollapsed ? 'right' : 'down'}"
-      ></ha-icon>
-    </div>
-    <div class="pause ${pauseCollapsed ? 'hidden' : ''}">
-      ${pauseDuration.map((duration)=>{
-        return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<mwc-button
-          @click=${(0, $96d0f9845402cf42$export$5635d71bf4c61e2c)(hass, setup, duration)}
-          >${duration} ${(0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.seconds')}</mwc-button
-        >`;
-    })}
-    </div>
-  </div>`;
 };
 
 
@@ -1858,7 +1862,12 @@ const $6cbf4e557bc1fbf1$export$535a09426ee2ea59 = (hass, entity, className)=>(0,
 const $9369c7e3c6702a0b$export$85691f7dcbc38c10 = (element, hass, setup, device, config)=>{
     return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
     <div>
-      ${(0, $7a21f7a279e18689$export$229c72e5fdee233b)(hass, setup, config)}${$9369c7e3c6702a0b$var$controls(element, hass, device, config)}
+      <pause-component
+        .hass=${hass}
+        .setup=${setup}
+        .config=${config}
+      ></pause-component>
+      ${$9369c7e3c6702a0b$var$controls(element, hass, device, config)}
     </div>
   `;
 };
@@ -1949,7 +1958,7 @@ const $f5cecba293939c1a$export$569cbbd0d9d55043 = (element, hass, setup, config)
     const primary = setup.holes[0];
     return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
     <ha-card>
-      ${(0, $a2b1c365027138cb$export$dfb737c0873de058)(setup, hass, config)}
+      ${(0, $a2b1c365027138cb$export$dfb737c0873de058)(element, setup, hass, config)}
       <div class="card-content">
         ${(0, $b0d8503ad71f8731$export$ceaadd68dd4c5e98)(element, hass, primary, config)}
         ${(0, $f72adbed169bb149$export$f7d6b8c683630484)(element, hass, primary, config)}
@@ -2003,7 +2012,13 @@ const $7aa94e0bc82e2c26$export$51bb3e4a8dd2f2ff = (entity, device)=>{
         action_refresh_data: 'action_refresh_data',
         latest_data_refresh: 'latest_data_refresh',
         ftl_info_message_count: 'info_message_count',
-        status: 'status'
+        status: 'status',
+        action_ftl_purge_diagnosis_messages: 'purge_diagnosis_messages',
+        // backwards compatibility for HA integration
+        dns_queries: 'dns_queries_today',
+        ads_blocked: 'ads_blocked_today',
+        percent_ads_blocked: 'ads_percentage_blocked_today',
+        domains_being_blocked: 'domains_blocked'
     };
     const key = entity.translation_key;
     if (key && key in keyToPropertyMap) {
@@ -2120,7 +2135,11 @@ const $0544f6a0e4690d02$export$9093f1b96efd0145 = (hass, config)=>{
             // don't track entites that are not in the first device
             return {
                 device_id: hole.device_id,
+                // required for the setup state to work
                 status: hole.status,
+                // required for the badge actions to work
+                info_message_count: hole.info_message_count,
+                purge_diagnosis_messages: hole.purge_diagnosis_messages,
                 controls: [],
                 sensors: [],
                 switches: [],
@@ -2141,6 +2160,7 @@ const $0544f6a0e4690d02$export$9093f1b96efd0145 = (hass, config)=>{
         holes: holes
     };
 };
+
 
 
 
@@ -2334,7 +2354,38 @@ function $ed34c589b230c255$export$dcd0d083aa86c355(r) {
 
 
 
+const $13632afec4749c69$export$7d546b06e96d63cc = (0, $def2de46b9306e8a$export$dbf350e5966cf602)`
+  .collapsible-section {
+    margin: 0;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .section-header span {
+    font-weight: 500;
+  }
+
+  .caret-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .hidden {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+  }
+`;
 const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$dbf350e5966cf602)`
+  ${$13632afec4749c69$export$7d546b06e96d63cc}
+
   ha-card {
     overflow: hidden;
   }
@@ -2477,10 +2528,10 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    cursor: pointer;
   }
 
   .additional-stat {
+    cursor: pointer;
     display: flex;
     align-items: center;
     font-size: 0.9rem;
@@ -2498,42 +2549,19 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
     color: var(--secondary-text-color);
   }
 
-  /* Collapsible section styles */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 16px;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .section-header span {
-    font-weight: 500;
-  }
-
-  .caret-icon {
-    transition: transform 0.3s ease;
-  }
-
   .switches,
   .actions {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
-    transition:
-      max-height 0.3s ease,
-      opacity 0.3s ease;
     overflow: hidden;
-    max-height: 500px; /* Adjust as needed */
-    opacity: 1;
   }
 
-  .hidden {
-    max-height: 0;
-    opacity: 0;
-    margin: 0;
-    padding: 0;
+  .actions {
+    justify-content: space-around;
+  }
+
+  .switches {
+    justify-content: space-between;
   }
 
   /* Version information styles */
@@ -2569,6 +2597,7 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
   /* Click action button styles */
   mwc-button {
     margin: 4px;
+    cursor: pointer;
   }
 
   mwc-button.primary {
@@ -2581,6 +2610,26 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
 
   mwc-button ha-icon {
     margin-right: 3px;
+  }
+
+  /* Actions button hover effects */
+  .actions mwc-button {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease,
+      box-shadow 0.2s ease;
+    will-change: transform, filter;
+  }
+
+  .actions mwc-button:hover,
+  .actions mwc-button:focus-visible {
+    transform: translateY(-1px) scale(1.03);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--success-color);
   }
 
   /* Switch styles */
@@ -2631,14 +2680,6 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
     margin: 10px 16px;
   }
 
-  /* Pause buttons */
-  .pause {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
   /* Warning badge styles */
   .warning-badge {
     display: flex;
@@ -2654,6 +2695,24 @@ const $13632afec4749c69$export$9dd6ff9ea0189349 = (0, $def2de46b9306e8a$export$d
     margin-right: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     min-width: 25px;
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease,
+      box-shadow 0.2s ease;
+    will-change: transform, filter;
+  }
+
+  .warning-badge:hover,
+  .warning-badge:focus-visible {
+    transform: translateY(-1px) scale(1.06);
+    filter: brightness(1.05);
+    box-shadow:
+      0 6px 12px rgba(0, 0, 0, 0.25),
+      0 0 0 3px var(--warning-color, #ff9800);
+  }
+
+  .badge {
+    cursor: pointer;
   }
 `;
 
@@ -2709,6 +2768,10 @@ class $e4f1b26747081709$export$54063f5d55a7de84 extends (0, $ab210b2da7b39b9d$ex
         this._hass = hass;
         const setup = (0, $0544f6a0e4690d02$export$9093f1b96efd0145)(hass, this._config);
         if (setup && !$30856da572fd852b$exports(setup, this._setup)) this._setup = setup;
+        else // update children who are subscribed
+        (0, $9c83ab07519e6203$export$43835e9acf248a15)(this, 'hass-update', {
+            hass: hass
+        });
     }
     // card configuration
     static getConfigElement() {
@@ -2740,21 +2803,440 @@ class $e4f1b26747081709$export$54063f5d55a7de84 extends (0, $ab210b2da7b39b9d$ex
 
 
 
+const $216640a6cb8d8606$export$19efda5681568302 = (superClass)=>{
+    class HassUpdateClass extends superClass {
+        connectedCallback() {
+            super.connectedCallback();
+            window.addEventListener('hass-update', this._boundHassUpdateHandler);
+        }
+        disconnectedCallback() {
+            super.disconnectedCallback();
+            window.removeEventListener('hass-update', this._boundHassUpdateHandler);
+        }
+        _handleHassUpdate(event) {
+            const { detail: { hass: hass } } = event;
+            this.hass = hass;
+        }
+        constructor(...args){
+            super(...args), this._boundHassUpdateHandler = this._handleHassUpdate.bind(this);
+        }
+    }
+    (0, $24c52f343453d62d$export$29e00dfd3077644b)([
+        (0, $9cd908ed2625c047$export$d541bacb2bda4494)({
+            attribute: false
+        })
+    ], HassUpdateClass.prototype, "hass", void 0);
+    return HassUpdateClass;
+};
 
+
+
+
+const $3a2fe8ac0aec50d1$export$7f8cebb87518d95 = (totalSeconds)=>{
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor(totalSeconds % 3600 / 60);
+    const seconds = totalSeconds % 60;
+    const paddedHours = String(hours).padStart(2, '0');
+    const paddedMinutes = String(minutes).padStart(2, '0');
+    const paddedSeconds = String(seconds).padStart(2, '0');
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+};
+const $3a2fe8ac0aec50d1$export$24f99e1414c21927 = (input)=>{
+    if (typeof input === 'number') return input;
+    const str = input.toString().trim();
+    // Check if it's a plain number string
+    if (/^\d+$/.test(str)) return parseInt(str, 10);
+    // Handle complex format like "4h:20m:69s"
+    if (str.includes(':')) {
+        const parts = str.split(':');
+        let totalSeconds = 0;
+        for (const part of parts){
+            const match = part.match(/^(\d+)([hms]?)$/);
+            if (match && match[1]) {
+                const value = parseInt(match[1], 10);
+                const unit = match[2] || 's'; // default to seconds if no unit
+                switch(unit){
+                    case 'h':
+                        totalSeconds += value * 3600;
+                        break;
+                    case 'm':
+                        totalSeconds += value * 60;
+                        break;
+                    case 's':
+                        totalSeconds += value;
+                        break;
+                }
+            }
+        }
+        return totalSeconds;
+    }
+    // Handle simple format like "10s", "5m", "1h"
+    const match = str.match(/^(\d+)([hms])$/);
+    if (match && match[1] && match[2]) {
+        const value = parseInt(match[1], 10);
+        const unit = match[2];
+        switch(unit){
+            case 'h':
+                return value * 3600;
+            case 'm':
+                return value * 60;
+            case 's':
+                return value;
+        }
+    }
+    // If we get here, the input is invalid
+    return 0;
+};
+const $3a2fe8ac0aec50d1$export$12fa006f8c81adb2 = (seconds, hass)=>{
+    if (seconds === 0) return `0 ${(0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.seconds')}`;
+    // Hours - only if it divides evenly
+    if (seconds >= 3600 && seconds % 3600 === 0) {
+        const hours = seconds / 3600;
+        const unit = hours === 1 ? (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.hour') : (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.hours');
+        return hours === 1 ? `1 ${unit}` : `${hours} ${unit}`;
+    }
+    // Minutes - only if it divides evenly AND less than an hour, OR if it divides evenly and is a reasonable number of minutes
+    if (seconds >= 60 && seconds % 60 === 0 && seconds < 3600) {
+        const minutes = seconds / 60;
+        const unit = minutes === 1 ? (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.minute') : (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.minutes');
+        return minutes === 1 ? `1 ${unit}` : `${minutes} ${unit}`;
+    }
+    // Seconds - for everything else (including times that are many minutes but not whole hours)
+    const unit = seconds === 1 ? (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.second') : (0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(hass, 'card.units.seconds');
+    return seconds === 1 ? `1 ${unit}` : `${seconds} ${unit}`;
+};
+
+
+
+
+const $a64cd1666b27644b$export$805ddaeeece0413e = (config, feature)=>!config || config.features?.includes(feature) || false;
+
+
+
+const $96d0f9845402cf42$export$5635d71bf4c61e2c = (hass, setup, seconds, entityId)=>{
+    const domain = 'pi_hole_v6';
+    const service = 'disable';
+    if (entityId) // Use the new entity-based service call
+    hass.callService(domain, service, {
+        duration: (0, $3a2fe8ac0aec50d1$export$7f8cebb87518d95)(seconds),
+        entity_id: [
+            entityId
+        ]
+    });
+    else // Fall back to device-based service call for backward compatibility
+    setup.holes.forEach((hole)=>{
+        hass.callService(domain, service, {
+            device_id: hole.device_id,
+            duration: (0, $3a2fe8ac0aec50d1$export$7f8cebb87518d95)(seconds)
+        });
+    });
+};
+
+
+
+
+
+
+
+const $ec892128bde259e8$export$5f980015d61e7175 = (0, $def2de46b9306e8a$export$dbf350e5966cf602)`
+  ${(0, $13632afec4749c69$export$7d546b06e96d63cc)}
+
+  /* Pause section styles */
+  .pause {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pause-controls {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .pause-controls ha-select {
+    width: 95%;
+  }
+
+  .pause-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Button styles */
+  mwc-button {
+    margin: 4px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease,
+      box-shadow 0.2s ease;
+    will-change: transform, filter;
+  }
+
+  mwc-button.primary {
+    --mdc-theme-primary: var(--success-color);
+  }
+
+  mwc-button.warning {
+    --mdc-theme-primary: var(--warning-color);
+  }
+
+  mwc-button ha-icon {
+    margin-right: 3px;
+  }
+
+  /* Pause button hover effects */
+  .pause mwc-button:hover,
+  .pause mwc-button:focus-visible,
+  mwc-button:hover,
+  mwc-button:focus-visible {
+    transform: translateY(-1px) scale(1.03);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--success-color);
+  }
+`;
+
+
+class $2e202dca4c1e443f$export$6bb1cdd247a38e3e extends (0, $216640a6cb8d8606$export$19efda5681568302)((0, $ab210b2da7b39b9d$export$3f2f9f5909897157)) {
+    static get styles() {
+        return 0, $ec892128bde259e8$export$5f980015d61e7175;
+    }
+    get allSwitches() {
+        return this.setup.holes.flatMap((hole)=>hole.switches);
+    }
+    get pauseDurations() {
+        const durations = this.config.pause_durations ?? [
+            60,
+            300,
+            900
+        ];
+        return durations.map((0, $3a2fe8ac0aec50d1$export$24f99e1414c21927));
+    }
+    get isGroupPausingEnabled() {
+        return !(0, $a64cd1666b27644b$export$805ddaeeece0413e)(this.config, 'disable_group_pausing');
+    }
+    get pauseCollapsed() {
+        return (0, $e67ba06cac005a46$export$9c903d35b97d0190)(this.config, 'pause');
+    }
+    _handleSelectChange(e) {
+        this.selectedEntityId = e.target.value;
+    }
+    _renderPauseButtons() {
+        return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+      <div class="pause-buttons">
+        ${this.pauseDurations.map((seconds)=>(0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+            <mwc-button @click=${()=>this._handlePauseClick(seconds)}>
+              ${(0, $3a2fe8ac0aec50d1$export$12fa006f8c81adb2)(seconds, this.hass)}
+            </mwc-button>
+          `)}
+      </div>
+    `;
+    }
+    _renderSwitchSelector() {
+        if (!this.isGroupPausingEnabled || this.allSwitches.length === 0) return 0, $f58f44579a4747ac$export$45b790e32b2810ee;
+        // Set default selection if none is selected
+        if (!this.selectedEntityId && this.allSwitches.length > 0) this.selectedEntityId = this.allSwitches[0]?.entity_id || '';
+        return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+      <div class="pause-controls">
+        <ha-select
+          .label=${'Select Pi or Group'}
+          .value=${this.selectedEntityId}
+          @selected=${this._handleSelectChange}
+          fixedMenuPosition
+          naturalMenuWidth
+        >
+          ${this.allSwitches.map((switchEntity)=>(0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+              <ha-list-item .value=${switchEntity.entity_id}>
+                ${switchEntity.attributes.friendly_name || switchEntity.entity_id}
+              </ha-list-item>
+            `)}
+        </ha-select>
+      </div>
+    `;
+    }
+    render() {
+        if (!this.hass || !(0, $81267a1185dd4399$export$57bf213be019eeb0)(this.config, 'pause')) return 0, $f58f44579a4747ac$export$45b790e32b2810ee;
+        return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
+      <div class="collapsible-section">
+        <div
+          class="section-header"
+          @click=${(e)=>(0, $993360189f76a862$export$b7c305685fc8cb26)(e, '.pause')}
+        >
+          <span>${(0, $623ffaa3e77fea87$export$b3bd0bc58e36cd63)(this.hass, 'card.sections.pause')}</span>
+          <ha-icon
+            class="caret-icon"
+            icon="mdi:chevron-${this.pauseCollapsed ? 'right' : 'down'}"
+          ></ha-icon>
+        </div>
+        <div class="pause ${this.pauseCollapsed ? 'hidden' : ''}">
+          ${this._renderSwitchSelector()} ${this._renderPauseButtons()}
+        </div>
+      </div>
+    `;
+    }
+    constructor(...args){
+        super(...args), this.selectedEntityId = '', this._handlePauseClick = (seconds)=>{
+            const targetEntityId = this.isGroupPausingEnabled ? this.selectedEntityId : undefined;
+            (0, $96d0f9845402cf42$export$5635d71bf4c61e2c)(this.hass, this.setup, seconds, targetEntityId);
+        };
+    }
+}
+(0, $24c52f343453d62d$export$29e00dfd3077644b)([
+    (0, $9cd908ed2625c047$export$d541bacb2bda4494)({
+        attribute: false
+    })
+], $2e202dca4c1e443f$export$6bb1cdd247a38e3e.prototype, "setup", void 0);
+(0, $24c52f343453d62d$export$29e00dfd3077644b)([
+    (0, $9cd908ed2625c047$export$d541bacb2bda4494)({
+        attribute: false
+    })
+], $2e202dca4c1e443f$export$6bb1cdd247a38e3e.prototype, "config", void 0);
+(0, $24c52f343453d62d$export$29e00dfd3077644b)([
+    (0, $04c21ea1ce1f6057$export$ca000e230c0caa3e)()
+], $2e202dca4c1e443f$export$6bb1cdd247a38e3e.prototype, "selectedEntityId", void 0);
+
+
+
+
+
+
+// Constants for repeated patterns
+const $b642db848cc622aa$var$PI_HOLE_INTEGRATION_FILTER = [
+    {
+        integration: 'pi_hole_v6'
+    },
+    {
+        integration: 'pi_hole'
+    }
+];
+const $b642db848cc622aa$var$PI_HOLE_ENTITY_FILTER = [
+    {
+        integration: 'pi_hole_v6',
+        domain: [
+            'button',
+            'sensor',
+            'switch'
+        ]
+    },
+    {
+        integration: 'pi_hole',
+        domain: [
+            'button',
+            'sensor',
+            'switch'
+        ]
+    }
+];
+const $b642db848cc622aa$var$SWITCH_SPACING_OPTIONS = [
+    {
+        label: 'Flex (default)',
+        value: 'flex'
+    },
+    {
+        label: 'Space Around',
+        value: 'space-around'
+    },
+    {
+        label: 'Space Between',
+        value: 'space-between'
+    }
+];
+const $b642db848cc622aa$var$SECTION_EXCLUDE_OPTIONS = [
+    {
+        label: 'Actions',
+        value: 'actions'
+    },
+    {
+        label: 'Footer',
+        value: 'footer'
+    },
+    {
+        label: 'Header',
+        value: 'header'
+    },
+    {
+        label: 'Pause Buttons',
+        value: 'pause'
+    },
+    {
+        label: 'Statistics',
+        value: 'statistics'
+    },
+    {
+        label: 'Sensors',
+        value: 'sensors'
+    },
+    {
+        label: 'Switches',
+        value: 'switches'
+    }
+];
+const $b642db848cc622aa$var$COLLAPSED_SECTION_OPTIONS = [
+    {
+        label: 'Pause Buttons',
+        value: 'pause'
+    },
+    {
+        label: 'Switches',
+        value: 'switches'
+    },
+    {
+        label: 'Actions',
+        value: 'actions'
+    }
+];
+const $b642db848cc622aa$var$PAUSE_DURATION_OPTIONS = [
+    {
+        label: '60 seconds',
+        value: '60s'
+    },
+    {
+        label: '5 minutes',
+        value: '5m'
+    },
+    {
+        label: '15 minutes',
+        value: '15m'
+    }
+];
+const $b642db848cc622aa$var$ACTION_SCHEMA = [
+    {
+        name: 'tap_action',
+        label: 'Tap Action',
+        selector: {
+            ui_action: {}
+        }
+    },
+    {
+        name: 'hold_action',
+        label: 'Hold Action',
+        selector: {
+            ui_action: {}
+        }
+    },
+    {
+        name: 'double_tap_action',
+        label: 'Double Tap Action',
+        selector: {
+            ui_action: {}
+        }
+    }
+];
 const $b642db848cc622aa$var$SCHEMA = [
     {
         name: 'device_id',
         selector: {
             device: {
-                filter: [
-                    {
-                        integration: 'pi_hole_v6'
-                    },
-                    {
-                        integration: 'pi_hole'
-                    }
-                ],
-                multiple: true
+                filter: $b642db848cc622aa$var$PI_HOLE_INTEGRATION_FILTER
             }
         },
         required: true,
@@ -2802,36 +3284,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                     select: {
                         multiple: true,
                         mode: 'list',
-                        options: [
-                            {
-                                label: 'Actions',
-                                value: 'actions'
-                            },
-                            {
-                                label: 'Footer',
-                                value: 'footer'
-                            },
-                            {
-                                label: 'Header',
-                                value: 'header'
-                            },
-                            {
-                                label: 'Pause Buttons',
-                                value: 'pause'
-                            },
-                            {
-                                label: 'Statistics',
-                                value: 'statistics'
-                            },
-                            {
-                                label: 'Sensors',
-                                value: 'sensors'
-                            },
-                            {
-                                label: 'Switches',
-                                value: 'switches'
-                            }
-                        ]
+                        options: $b642db848cc622aa$var$SECTION_EXCLUDE_OPTIONS
                     }
                 }
             },
@@ -2843,20 +3296,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                     select: {
                         multiple: true,
                         mode: 'list',
-                        options: [
-                            {
-                                label: 'Pause Buttons',
-                                value: 'pause'
-                            },
-                            {
-                                label: 'Buttons',
-                                value: 'buttons'
-                            },
-                            {
-                                label: 'Actions',
-                                value: 'actions'
-                            }
-                        ]
+                        options: $b642db848cc622aa$var$COLLAPSED_SECTION_OPTIONS
                     }
                 }
             },
@@ -2868,20 +3308,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                     select: {
                         multiple: false,
                         mode: 'dropdown',
-                        options: [
-                            {
-                                label: 'Flex (default)',
-                                value: 'flex'
-                            },
-                            {
-                                label: 'Space Around',
-                                value: 'space-around'
-                            },
-                            {
-                                label: 'Space Between',
-                                value: 'space-between'
-                            }
-                        ]
+                        options: $b642db848cc622aa$var$SWITCH_SPACING_OPTIONS
                     }
                 }
             },
@@ -2892,14 +3319,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                 selector: {
                     entity: {
                         multiple: true,
-                        filter: [
-                            {
-                                integration: 'pi_hole_v6'
-                            },
-                            {
-                                integration: 'pi_hole'
-                            }
-                        ]
+                        filter: $b642db848cc622aa$var$PI_HOLE_INTEGRATION_FILTER
                     }
                 }
             },
@@ -2910,24 +3330,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                 selector: {
                     entity: {
                         multiple: true,
-                        filter: [
-                            {
-                                integration: 'pi_hole_v6',
-                                domain: [
-                                    'button',
-                                    'sensor',
-                                    'switch'
-                                ]
-                            },
-                            {
-                                integration: 'pi_hole',
-                                domain: [
-                                    'button',
-                                    'sensor',
-                                    'switch'
-                                ]
-                            }
-                        ]
+                        filter: $b642db848cc622aa$var$PI_HOLE_ENTITY_FILTER
                     }
                 }
             }
@@ -2948,20 +3351,7 @@ const $b642db848cc622aa$var$SCHEMA = [
                     select: {
                         multiple: false,
                         mode: 'dropdown',
-                        options: [
-                            {
-                                label: 'Flex (default)',
-                                value: 'flex'
-                            },
-                            {
-                                label: 'Space Around',
-                                value: 'space-around'
-                            },
-                            {
-                                label: 'Space Between',
-                                value: 'space-between'
-                            }
-                        ]
+                        options: $b642db848cc622aa$var$SWITCH_SPACING_OPTIONS
                     }
                 }
             }
@@ -2983,109 +3373,63 @@ const $b642db848cc622aa$var$SCHEMA = [
                         multiple: true,
                         custom_value: true,
                         mode: 'list',
-                        options: [
-                            {
-                                label: '60 seconds',
-                                value: '60'
-                            },
-                            {
-                                label: '5 minutes',
-                                value: '300'
-                            },
-                            {
-                                label: '15 minutes',
-                                value: '900'
-                            }
-                        ]
+                        options: $b642db848cc622aa$var$PAUSE_DURATION_OPTIONS
                     }
                 }
+            },
+            {
+                name: 'badge',
+                label: 'Badge',
+                type: 'expandable',
+                icon: 'mdi:badge-account-horizontal',
+                schema: $b642db848cc622aa$var$ACTION_SCHEMA
             },
             {
                 name: 'stats',
                 label: 'Statistics',
                 type: 'expandable',
                 icon: 'mdi:counter',
-                schema: [
-                    {
-                        name: 'tap_action',
-                        label: 'Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'hold_action',
-                        label: 'Hold Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'double_tap_action',
-                        label: 'Double Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    }
-                ]
+                schema: $b642db848cc622aa$var$ACTION_SCHEMA
             },
             {
                 name: 'info',
                 label: 'Information',
                 type: 'expandable',
                 icon: 'mdi:information-outline',
-                schema: [
-                    {
-                        name: 'tap_action',
-                        label: 'Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'hold_action',
-                        label: 'Hold Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'double_tap_action',
-                        label: 'Double Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    }
-                ]
+                schema: $b642db848cc622aa$var$ACTION_SCHEMA
             },
             {
                 name: 'controls',
                 label: 'Controls',
                 type: 'expandable',
                 icon: 'mdi:remote',
-                schema: [
-                    {
-                        name: 'tap_action',
-                        label: 'Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'hold_action',
-                        label: 'Hold Action',
-                        selector: {
-                            ui_action: {}
-                        }
-                    },
-                    {
-                        name: 'double_tap_action',
-                        label: 'Double Tap Action',
-                        selector: {
-                            ui_action: {}
-                        }
+                schema: $b642db848cc622aa$var$ACTION_SCHEMA
+            }
+        ]
+    },
+    {
+        name: 'features',
+        label: 'Features',
+        type: 'expandable',
+        flatten: true,
+        icon: 'mdi:list-box',
+        schema: [
+            {
+                name: 'features',
+                label: 'Features',
+                required: false,
+                selector: {
+                    select: {
+                        multiple: true,
+                        mode: 'list',
+                        options: [
+                            {
+                                label: 'Disable group pausing',
+                                value: 'disable_group_pausing'
+                            }
+                        ]
                     }
-                ]
+                }
             }
         ]
     }
@@ -3118,6 +3462,7 @@ class $b642db848cc622aa$export$45a407047dba884a extends (0, $ab210b2da7b39b9d$ex
         if (shouldDelete(config.stats)) delete config.stats;
         if (shouldDelete(config.info)) delete config.info;
         if (shouldDelete(config.controls)) delete config.controls;
+        if (shouldDelete(config.badge)) delete config.badge;
         if (!config.exclude_entities?.length) delete config.exclude_entities;
         if (!config.exclude_sections?.length) delete config.exclude_sections;
         if (!config.entity_order?.length) delete config.entity_order;
@@ -3134,12 +3479,13 @@ class $b642db848cc622aa$export$45a407047dba884a extends (0, $ab210b2da7b39b9d$ex
 
 
 var $b06602ab53bd58a3$exports = {};
-$b06602ab53bd58a3$exports = JSON.parse("{\"name\":\"pi-hole\",\"version\":\"0.12.1\",\"author\":\"Patrick Masters\",\"license\":\"ISC\",\"description\":\"UDPATE ME.\",\"source\":\"src/index.ts\",\"module\":\"dist/pi-hole-card.js\",\"targets\":{\"module\":{\"includeNodeModules\":true}},\"scripts\":{\"watch\":\"parcel watch\",\"build\":\"parcel build\",\"test\":\"TS_NODE_PROJECT='./tsconfig.test.json' mocha\",\"test:coverage\":\"nyc npm run test\",\"test:watch\":\"TS_NODE_PROJECT='./tsconfig.test.json' mocha --watch\",\"update\":\"npx npm-check-updates -u && npm i\"},\"devDependencies\":{\"@istanbuljs/nyc-config-typescript\":\"^1.0.2\",\"@open-wc/testing\":\"^4.0.0\",\"@parcel/transformer-inline-string\":\"^2.15.1\",\"@testing-library/dom\":\"^10.4.0\",\"@trivago/prettier-plugin-sort-imports\":\"^5.2.2\",\"@types/chai\":\"^5.2.2\",\"@types/jsdom\":\"^21.1.7\",\"@types/mocha\":\"^10.0.10\",\"@types/sinon\":\"^17.0.4\",\"chai\":\"^5.2.0\",\"jsdom\":\"^26.1.0\",\"mocha\":\"^11.4.0\",\"nyc\":\"^17.1.0\",\"parcel\":\"^2.15.1\",\"prettier\":\"3.5.3\",\"prettier-plugin-organize-imports\":\"^4.1.0\",\"proxyquire\":\"^2.1.3\",\"sinon\":\"^20.0.0\",\"ts-node\":\"^10.9.2\",\"tsconfig-paths\":\"^4.2.0\",\"typescript\":\"^5.8.3\"},\"dependencies\":{\"@lit/task\":\"^1.0.2\",\"fast-deep-equal\":\"^3.1.3\",\"lit\":\"^3.3.0\"}}");
+$b06602ab53bd58a3$exports = JSON.parse("{\"name\":\"pi-hole\",\"version\":\"0.15.0\",\"author\":\"Patrick Masters\",\"license\":\"ISC\",\"description\":\"UDPATE ME.\",\"source\":\"src/index.ts\",\"module\":\"dist/pi-hole-card.js\",\"targets\":{\"module\":{\"includeNodeModules\":true}},\"scripts\":{\"watch\":\"parcel watch\",\"build\":\"parcel build\",\"format\":\"prettier --write .\",\"test\":\"TS_NODE_PROJECT='./tsconfig.test.json' mocha\",\"test:coverage\":\"nyc npm run test\",\"test:watch\":\"TS_NODE_PROJECT='./tsconfig.test.json' mocha --watch\",\"update\":\"npx npm-check-updates -u && yarn install\"},\"devDependencies\":{\"@istanbuljs/nyc-config-typescript\":\"^1.0.2\",\"@open-wc/testing\":\"^4.0.0\",\"@parcel/transformer-inline-string\":\"^2.15.4\",\"@testing-library/dom\":\"^10.4.1\",\"@trivago/prettier-plugin-sort-imports\":\"^5.2.2\",\"@types/chai\":\"^5.2.2\",\"@types/jsdom\":\"^21.1.7\",\"@types/mocha\":\"^10.0.10\",\"@types/sinon\":\"^17.0.4\",\"chai\":\"^5.3.1\",\"jsdom\":\"^26.1.0\",\"mocha\":\"^11.7.1\",\"nyc\":\"^17.1.0\",\"parcel\":\"^2.15.4\",\"prettier\":\"3.6.2\",\"prettier-plugin-organize-imports\":\"^4.2.0\",\"proxyquire\":\"^2.1.3\",\"sinon\":\"^21.0.0\",\"ts-node\":\"^10.9.2\",\"tsconfig-paths\":\"^4.2.0\",\"typescript\":\"^5.9.2\"},\"dependencies\":{\"@lit/task\":\"^1.0.3\",\"fast-deep-equal\":\"^3.1.3\",\"lit\":\"^3.3.1\"}}");
 
 
 // Register the custom elements with the browser
 customElements.define('pi-hole', (0, $e4f1b26747081709$export$54063f5d55a7de84));
 customElements.define('pi-hole-editor', (0, $b642db848cc622aa$export$45a407047dba884a));
+customElements.define('pause-component', (0, $2e202dca4c1e443f$export$6bb1cdd247a38e3e));
 // Ensure the customCards array exists on the window object
 window.customCards = window.customCards || [];
 // Register the cards with Home Assistant's custom card registry
