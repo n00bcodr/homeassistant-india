@@ -6,7 +6,8 @@ import re
 from typing import Any
 
 import voluptuous as vol
-from custom_components.monitor_docker.helpers import DockerAPI, DockerContainerAPI
+
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.switch import ENTITY_ID_FORMAT, SwitchEntity
 from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
@@ -22,21 +23,32 @@ from .const import (
     ATTR_SERVER,
     CONF_CONTAINERS,
     CONF_CONTAINERS_EXCLUDE,
-    CONF_PREFIX,
-    CONF_RENAME,
-    CONF_RENAME_ENITITY,
-    CONF_SWITCHENABLED,
-    CONF_SWITCHNAME,
     CONFIG,
     CONTAINER,
     CONTAINER_INFO_STATE,
     DOMAIN,
     SERVICE_RESTART,
 )
+from .helpers import DockerAPI, DockerContainerAPI, DockerContainerEntity
+
 
 SERVICE_RESTART_SCHEMA = vol.Schema({ATTR_NAME: cv.string, ATTR_SERVER: cv.string})
 
 _LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Sensor set up for Hass.io config entry."""
+    await async_setup_platform(
+        hass=hass,
+        config=config_entry.data,
+        async_add_entities=async_add_entities,
+        discovery_info={"name": config_entry.data[CONF_NAME]},
+    )
 
 
 async def async_setup_platform(
@@ -82,30 +94,12 @@ async def async_setup_platform(
                 "Service restart failed, container '%s' is not configured", cname
             )
 
-    def find_rename(d: dict[str, str], item: str) -> str:
-        for k in d:
-            if re.match(k, item):
-                return d[k]
-
-        return item
-
     if discovery_info is None:
         return
 
     instance: str = discovery_info[CONF_NAME]
-    name: str = discovery_info[CONF_NAME]
-    api: DockerAPI = hass.data[DOMAIN][name][API]
-    config: ConfigType = hass.data[DOMAIN][name][CONFIG]
-
-    # Set or overrule prefix
-    prefix = name
-    if config[CONF_PREFIX]:
-        prefix = config[CONF_PREFIX]
-
-    # Don't create any switch if disabled
-    if config[CONF_SWITCHENABLED] == False:
-        _LOGGER.debug("[%s]: Switch(es) are disabled", instance)
-        return True
+    api: DockerAPI = hass.data[DOMAIN][instance][API]
+    config: ConfigType = hass.data[DOMAIN][instance][CONFIG]
 
     _LOGGER.debug("[%s]: Setting up switch(es)", instance)
 
@@ -126,30 +120,15 @@ async def async_setup_platform(
             includeContainer = False
 
         if includeContainer:
-            if (
-                config[CONF_SWITCHENABLED] == True
-                or cname in config[CONF_SWITCHENABLED]
-            ):
-                _LOGGER.debug("[%s] %s: Adding component Switch", instance, cname)
+            _LOGGER.debug("[%s] %s: Adding component Switch", instance, cname)
 
-                # Only force rename of entityid is requested, to not break backwards compatibility
-                alias_entityid = cname
-                if config[CONF_RENAME_ENITITY]:
-                    alias_entityid = find_rename(config[CONF_RENAME], cname)
-
-                switches.append(
-                    DockerContainerSwitch(
-                        api.get_container(cname),
-                        instance=instance,
-                        prefix=prefix,
-                        cname=cname,
-                        alias_entityid=alias_entityid,
-                        alias_name=find_rename(config[CONF_RENAME], cname),
-                        name_format=config[CONF_SWITCHNAME],
-                    )
+            switches.append(
+                DockerContainerSwitch(
+                    api.get_container(cname),
+                    instance=instance,
+                    cname=cname,
                 )
-            else:
-                _LOGGER.debug("[%s] %s: NOT Adding component Switch", instance, cname)
+            )
 
     if not switches:
         _LOGGER.info("[%s]: No containers set-up", instance)
@@ -167,37 +146,29 @@ async def async_setup_platform(
 
 
 #################################################################
-class DockerContainerSwitch(SwitchEntity):
+class DockerContainerSwitch(SwitchEntity, DockerContainerEntity):
     def __init__(
         self,
         container: DockerContainerAPI,
         instance: str,
-        prefix: str,
         cname: str,
-        alias_entityid: str,
-        alias_name: str,
-        name_format: str,
     ):
+        super().__init__(container, instance, cname)
+
         self._container = container
         self._instance = instance
-        self._prefix = prefix
         self._cname = cname
         self._state = False
-        self._entity_id: str = ENTITY_ID_FORMAT.format(
-            slugify(f"{self._prefix}_{alias_entityid}")
+
+        self._attr_unique_id: str = ENTITY_ID_FORMAT.format(
+            slugify(f"{self._instance}_{self._cname}")
         )
-        self._name = name_format.format(name=alias_name)
+        self._name = self._cname.capitalize()
+        self._attr_has_entity_name = True
+        self._attr_name = None
+
+        self.entity_id = f"switch.{self._instance}_{self._cname}"
         self._removed = False
-
-    @property
-    def entity_id(self) -> str:
-        """Return the entity id of the switch."""
-        return self._entity_id
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
 
     @property
     def should_poll(self) -> bool:

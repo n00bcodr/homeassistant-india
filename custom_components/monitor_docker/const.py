@@ -11,37 +11,23 @@ DOMAIN = "monitor_docker"
 API = "api"
 CONFIG = "config"
 CONTAINER = "container"
+VERSION = "1.20b3"
 
 CONF_CERTPATH = "certpath"
 CONF_CONTAINERS = "containers"
 CONF_CONTAINERS_EXCLUDE = "containers_exclude"
-CONF_MEMORYCHANGE = "memorychange"
-CONF_PRECISION_CPU = "precision_cpu"
-CONF_PRECISION_MEMORY_MB = "precision_memory_mb"
-CONF_PRECISION_MEMORY_PERCENTAGE = "precision_memory_percentage"
-CONF_PRECISION_NETWORK_KB = "precision_network_kb"
-CONF_PRECISION_NETWORK_MB = "precision_network_mb"
-CONF_PREFIX = "prefix"
-CONF_RENAME = "rename"
-CONF_RENAME_ENITITY = "rename_entity"
+CONF_MONITORED_CONTAINER_CONDITIONS = "monitored_container_conditions"
+CONF_MONITORED_DOCKER_CONDITIONS = "monitored_docker_conditions"
 CONF_RETRY = "retry"
-CONF_SENSORNAME = "sensorname"
-CONF_SWITCHENABLED = "switchenabled"
-CONF_SWITCHNAME = "switchname"
-CONF_BUTTONENABLED = "buttonenabled"
-CONF_BUTTONNAME = "buttonname"
 
 DEFAULT_NAME = "Docker"
 DEFAULT_RETRY = 60
-DEFAULT_SENSORNAME = "{name} {sensor}"
-DEFAULT_SWITCHNAME = "{name}"
-DEFAULT_BUTTONNAME = "{name} Restart"
+DEFAULT_SCAN_INTERVAL = 10
 
 COMPONENTS = ["sensor", "switch", "button"]
 
 SERVICE_RESTART = "restart"
 
-PRECISION = 2
 
 DOCKER_INFO_VERSION = "version"
 DOCKER_INFO_CONTAINER_RUNNING = "containers_running"
@@ -54,6 +40,13 @@ DOCKER_STATS_1CPU_PERCENTAGE = "containers_1cpu_percentage"
 DOCKER_STATS_MEMORY = "containers_memory"
 DOCKER_STATS_MEMORY_PERCENTAGE = "containers_memory_percentage"
 
+DOCKER_PRE_SELECTION = [
+    DOCKER_INFO_VERSION,
+    DOCKER_INFO_CONTAINER_RUNNING,
+    DOCKER_STATS_CPU_PERCENTAGE,
+    DOCKER_STATS_MEMORY,
+]
+
 CONTAINER_INFO_ALLINONE = "allinone"
 CONTAINER_INFO_STATE = "state"
 CONTAINER_INFO_HEALTH = "health"
@@ -61,6 +54,7 @@ CONTAINER_INFO_STATUS = "status"
 CONTAINER_INFO_NETWORK_AVAILABLE = "network_available"
 CONTAINER_INFO_UPTIME = "uptime"
 CONTAINER_INFO_IMAGE = "image"
+CONTAINER_INFO_IMAGE_HASH = "image_hash"
 CONTAINER_STATS_CPU_PERCENTAGE = "cpu_percentage"
 CONTAINER_STATS_1CPU_PERCENTAGE = "1cpu_percentage"
 CONTAINER_STATS_MEMORY = "memory"
@@ -69,6 +63,14 @@ CONTAINER_STATS_NETWORK_SPEED_UP = "network_speed_up"
 CONTAINER_STATS_NETWORK_SPEED_DOWN = "network_speed_down"
 CONTAINER_STATS_NETWORK_TOTAL_UP = "network_total_up"
 CONTAINER_STATS_NETWORK_TOTAL_DOWN = "network_total_down"
+
+CONTAINER_PRE_SELECTION = [
+    CONTAINER_INFO_STATUS,
+    CONTAINER_INFO_UPTIME,
+    CONTAINER_INFO_IMAGE,
+    CONTAINER_STATS_CPU_PERCENTAGE,
+    CONTAINER_STATS_MEMORY,
+]
 
 DOCKER_MONITOR_LIST = {
     DOCKER_INFO_VERSION: SensorEntityDescription(
@@ -80,26 +82,31 @@ DOCKER_MONITOR_LIST = {
         key=DOCKER_INFO_CONTAINER_RUNNING,
         name="Containers Running",
         icon="mdi:docker",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     DOCKER_INFO_CONTAINER_PAUSED: SensorEntityDescription(
         key=DOCKER_INFO_CONTAINER_PAUSED,
         name="Containers Paused",
         icon="mdi:docker",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     DOCKER_INFO_CONTAINER_STOPPED: SensorEntityDescription(
         key=DOCKER_INFO_CONTAINER_STOPPED,
         name="Containers Stopped",
         icon="mdi:docker",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     DOCKER_INFO_CONTAINER_TOTAL: SensorEntityDescription(
         key=DOCKER_INFO_CONTAINER_TOTAL,
         name="Containers Total",
         icon="mdi:docker",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
     DOCKER_STATS_CPU_PERCENTAGE: SensorEntityDescription(
         key=DOCKER_STATS_CPU_PERCENTAGE,
         name="CPU",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:chip",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -107,6 +114,7 @@ DOCKER_MONITOR_LIST = {
         key=DOCKER_STATS_1CPU_PERCENTAGE,
         name="1CPU",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:chip",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -114,6 +122,7 @@ DOCKER_MONITOR_LIST = {
         key=DOCKER_STATS_MEMORY,
         name="Memory",
         native_unit_of_measurement=UnitOfInformation.MEBIBYTES,
+        suggested_display_precision=2,
         icon="mdi:memory",
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -122,6 +131,7 @@ DOCKER_MONITOR_LIST = {
         key=DOCKER_STATS_MEMORY_PERCENTAGE,
         name="Memory (percent)",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:memory",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -129,6 +139,7 @@ DOCKER_MONITOR_LIST = {
         key=DOCKER_INFO_IMAGES,
         name="Images",
         icon="mdi:docker",
+        state_class=SensorStateClass.MEASUREMENT,
     ),
 }
 
@@ -159,10 +170,16 @@ CONTAINER_MONITOR_LIST = {
         name="Image",
         icon="mdi:information-outline",
     ),
+    CONTAINER_INFO_IMAGE_HASH: SensorEntityDescription(
+        key=CONTAINER_INFO_IMAGE_HASH,
+        name="Image Hash",
+        icon="mdi:pound-box-outline",
+    ),
     CONTAINER_STATS_CPU_PERCENTAGE: SensorEntityDescription(
         key=CONTAINER_STATS_CPU_PERCENTAGE,
         name="CPU",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:chip",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -170,6 +187,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_1CPU_PERCENTAGE,
         name="1CPU",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:chip",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -177,6 +195,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_MEMORY,
         name="Memory",
         native_unit_of_measurement=UnitOfInformation.MEBIBYTES,
+        suggested_display_precision=2,
         icon="mdi:memory",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -184,6 +203,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_MEMORY_PERCENTAGE,
         name="Memory (percent)",
         native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=2,
         icon="mdi:memory",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -191,6 +211,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_NETWORK_SPEED_UP,
         name="Network speed Up",
         native_unit_of_measurement=UnitOfDataRate.KIBIBYTES_PER_SECOND,
+        suggested_display_precision=2,
         icon="mdi:upload",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -198,6 +219,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_NETWORK_SPEED_DOWN,
         name="Network speed Down",
         native_unit_of_measurement=UnitOfDataRate.KIBIBYTES_PER_SECOND,
+        suggested_display_precision=2,
         icon="mdi:download",
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -205,6 +227,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_NETWORK_TOTAL_UP,
         name="Network total Up",
         native_unit_of_measurement=UnitOfInformation.MEBIBYTES,
+        suggested_display_precision=2,
         icon="mdi:upload",
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),
@@ -212,6 +235,7 @@ CONTAINER_MONITOR_LIST = {
         key=CONTAINER_STATS_NETWORK_TOTAL_DOWN,
         name="Network total Down",
         native_unit_of_measurement=UnitOfInformation.MEBIBYTES,
+        suggested_display_precision=2,
         icon="mdi:download",
         state_class=SensorStateClass.TOTAL_INCREASING,
     ),

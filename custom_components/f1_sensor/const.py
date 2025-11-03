@@ -11,7 +11,11 @@ CONSTRUCTOR_STANDINGS_URL = (
     "https://api.jolpi.ca/ergast/f1/current/constructorstandings.json"
 )
 LAST_RACE_RESULTS_URL = "https://api.jolpi.ca/ergast/f1/current/last/results.json"
-SEASON_RESULTS_URL = "https://api.jolpi.ca/ergast/f1/current/results.json?limit=100"
+# Base URL for season results; pagination will be handled by the coordinator
+SEASON_RESULTS_URL = "https://api.jolpi.ca/ergast/f1/current/results.json"
+
+# Sprint results across the current season
+SPRINT_RESULTS_URL = "https://api.jolpi.ca/ergast/f1/current/sprint.json"
 
 LIVETIMING_INDEX_URL = "https://livetiming.formula1.com/static/{year}/Index.json"
 

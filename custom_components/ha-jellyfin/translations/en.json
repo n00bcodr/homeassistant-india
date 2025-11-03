@@ -1,0 +1,170 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Checking for Jellyfin servers"
+            },
+            "select": {
+                "title": "Select Jellyfin server",
+                "description": "Multiple servers available, please select one:",
+                "data": {
+                    "server": "Server"
+                }
+            },
+            "manual": {
+                "title": "Configuration",
+                "data": {
+                    "url": "URL",
+                    "name": "Name",
+                    "api_key": "API Key"
+                },
+                "data_description": {
+                    "url": "URL where your Jellyfin server can be found",
+                    "name": "Use this instead of server name when creating entities",
+                    "api_key": "Your Jellyfin API key with administrative privileges"
+                }
+            },
+            "reauth": {
+                "title": "Reauthenticate",
+                "data": {
+                    "api_key": "API Key"
+                },
+                "data_description": {
+                    "api_key": "Your Jellyfin API key with administrative privileges"
+                }
+            }
+        },
+        "error": {
+            "bad_request": "Are you sure that this is a Jellyfin server?",
+            "cannot_connect": "Server unavailable",
+            "invalid_auth": "Invalid API key",
+            "unknown": "Unknown error",
+            "weak_auth": "The specified API key does not have enough rights",
+            "timeout": "Timeout while trying to connect to server",
+            "mismatch": "You are trying to connect to another server. Create new configuration for another server"
+        },
+        "abort": {
+            "already_configured": "Device is already configured"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Select options",
+                "menu_options": {
+                    "auth": "Configure authentication",
+                    "players": "Media Players options",
+                    "libraries": "Library sensors options",
+                    "events": "Events configuration",
+                    "add_sensor": "Add a sensor",
+                    "remove_sensor": "Remove a sensor",
+                    "advanced": "Advanced options"
+                }
+            },
+            "auth": {
+                "title": "Authentication",
+                "data": {
+                    "api_key": "API Key"
+                },
+                "data_description": {
+                    "api_key": "Your Jellyfin API key with administrative privileges"
+                }
+            },
+            "libraries": {
+                "title": "Library sensors options",
+                "data": {
+                    "upcoming_media": "Provide data for upcoming media card"
+                },
+                "data_description": {
+                    "upcoming_media": "Add specific attributes to library sensors in order to be used by Upcoming Media Card"
+                }
+            },
+            "players": {
+                "title": "Media Players options",
+                "data": {
+                    "ignore_web_players": "Ignore web players",
+                    "ignore_dlna_players": "Ignore DLNA players",
+                    "ignore_mobile_players": "Ignore mobile players",
+                    "ignore_app_players": "Ignore application players",
+                    "purge_players": "Auto purge media players"
+                },
+                "data_description": {
+                    "ignore_web_players": "Do not create media players for web sessions",
+                    "ignore_dlna_players": "Do not create media players for DLNA sessions",
+                    "ignore_mobile_players": "Do not create media players for mobile sessions",
+                    "ignore_app_players": "Do not create media players for known integrations",
+                    "purge_players": "Automatically remove unavailable media players"
+                }
+            },
+            "events": {
+                "title": "Event configuration",
+                "data": {
+                    "events_sessions": "Send events on session changes",
+                    "events_activity_log": "Send events for user activity",
+                    "events_tasks": "Send events for tasks",
+                    "events_other": "Send other events"
+                },
+                "data_description": {
+                    "events_sessions": "Send an event everytime a session changes, is added or is removed",
+                    "events_activity_log": "Send an event everytime a activity is performed on the server",
+                    "events_tasks": "Send an event every time a task is created, updated or finished",
+                    "events_other": "Send all other events"
+                }
+            },
+            "add_sensor": {
+                "title": "Add a sensor",
+                "data": {
+                    "type": "Media type",
+                    "library": "Library",
+                    "user": "User"
+                },
+                "data_description": {
+                    "type": "Media type to be monitored",
+                    "library": "Provide information only for the specified library",
+                    "user": "Provide information only for the selected user"
+                }
+            },
+            "remove_sensor": {
+                "title": "Remove a sensor",
+                "data": {
+                    "latest_remove": "Select a sensor to remove"
+                },
+                "data_description": {
+                    "latest_remove": "The selected sensor will be deleted. It cannot be recovered, but you can recreate it later"
+                }
+            },
+            "advanced": {
+                "title": "Advanced options",
+                "data": {
+                    "name": "Customize server name",
+                    "client": "Client name",
+                    "device_name": "Device name",
+                    "device_id": "Device identifier",
+                    "device_version": "Device version",
+                    "timeout": "Timeout"
+                },
+                "data_description": {
+                    "name": "Use this instead of server name when creating entities",
+                    "client": "Name of the client to be reported in Jellyfin server",
+                    "device_name": "Device name to be reported in Jellyfin server",
+                    "device_id": "Device name to be reported in Jellyfin server",
+                    "device_version": "Device version to be reported in Jellyfin server",
+                    "timeout": "How much time to wait (in seconds) to consider that your Jellyfin server is down"
+                }
+            }
+        },
+        "error": {
+            "bad_request": "Are you sure that this is a Jellyfin server?",
+            "cannot_connect": "Server unavailable",
+            "invalid_auth": "Invalid API key",
+            "unknown": "Unknown error",
+            "weak_auth": "The specified API key does not have enough rights",
+            "timeout": "Timeout while trying to connect to server",
+            "mismatch": "You are trying to connect to another server. Create new configuration for another server"
+        },
+        "abort": {
+            "no_sensors": "There are no sensors configured",
+            "sensor_already_configured": "This sensor is already configured"
+        }
+    }
+}

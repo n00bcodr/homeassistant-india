@@ -1,0 +1,20 @@
+{
+  "domain": "ha-jellyfin",
+  "name": "ha-jellyfin",
+  "codeowners": [
+    "@n00bcodr"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/n00bcodr/ha-jellyfin",
+  "homekit": {},
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/n00bcodr/ha-jellyfin/issues",
+  "loggers": [
+    "custom_components.ha-jellyfin"
+  ],
+  "requirements": [],
+  "ssdp": [],
+  "version": "0.0.3",
+  "zeroconf": []
+}

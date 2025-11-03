@@ -1,10 +1,12 @@
 {
   "domain": "monitor_docker",
   "name": "Monitor Docker",
-  "codeowners": ["@ualex73"],
-  "documentation": "https://github.com/ualex73/monitor_docker",
+  "codeowners": ["@Getslow6"],
+  "config_flow": true,
+  "documentation": "https://github.com/Getslow6/monitor_docker",
+  "integration_type": "hub",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/ualex73/monitor_docker/issues",
-  "requirements": ["aiodocker==0.22.0", "python-dateutil==2.9.0"],
-  "version": "1.18"
+  "issue_tracker": "https://github.com/Getslow6/monitor_docker/issues",
+  "requirements": ["aiodocker==0.24.0", "python-dateutil==2.9.0.post0"],
+  "version": "2.0b0"
 }
