@@ -198,18 +198,6 @@ views:
     - condition: user
       users:
       - 74f7e2ffd3594037b1a2fc4de82d9fea
-  - color: orange
-    content: '{{states.sensor.current_processing_date.state}}'
-    double_tap_action:
-      action: url
-      url_path: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
-    icon: mdi:passport
-    label: '{{states.sensor.last_update_date.state}}'
-    tap_action:
-      action: perform-action
-      perform_action: multiscrape.trigger_visa
-      target: {}
-    type: custom:mushroom-template-badge
   cards: []
   icon: mdi:ninja
   max_columns: 4

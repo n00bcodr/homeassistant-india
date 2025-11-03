@@ -40,7 +40,6 @@ shell_command: !include shell_command.yaml
 template: !include template.yaml
 command_line: !include command_line.yaml
 media_player: !include mediaplayer.yaml
-multiscrape: !include multiscrape.yaml
 wake_on_lan:
 tts:
   - platform: google_translate

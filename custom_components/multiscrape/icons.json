@@ -1,8 +1,0 @@
-{
-  "services": {
-    "reload": "mdi:reload",
-    "get_content": "mdi:content-copy",
-    "scrape": "mdi:web-sync",
-    "trigger": "mdi:web-refresh"
-  }
-}
