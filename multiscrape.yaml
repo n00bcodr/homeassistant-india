@@ -1,0 +1,15 @@
+- name: Visa
+  log_response: true
+  resource: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/current-processing-dates-for-employment-permits.html
+  scan_interval: 43200
+  sensor:
+    - unique_id: current_processing_date
+      name: Visa Current Processing Date
+      select: "article.content-body__sections__main table:first-of-type tbody td"
+      icon: mdi:passport
+
+    - unique_id: last_update_date
+      name: Visa Last Updated Date
+      select: "p:contains('As of')"
+      value_template: "{{ value.split('As of ')[1].split(',')[0] | replace('st', '') | replace('nd', '') | replace('rd', '') | replace('th', '') | trim }}"
+      icon: mdi:passport

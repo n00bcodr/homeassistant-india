@@ -15,7 +15,7 @@
       friendly_name: "Upstairs Power"
       unique_id: upstairs_power
       value_template: >-
-        {{ expand(['light.second_floor_stairway', 'light.second_floor_corner', 'switch.washing_machine_2_switch_1', 'switch.front_downlight', 'media_player.akashavani']) | selectattr('state', '==', 'unavailable') | list | count < 2 }}
+        {{ expand(['light.second_floor_stairway', 'light.second_floor_corner', 'switch.washing_machine_2_switch_1', 'media_player.akashavani']) | selectattr('state', '==', 'unavailable') | list | count < 2 }}
       icon_template: "{{ iif(is_state('binary_sensor.upstairs_power', 'off'), 'mdi:power-plug-off', 'mdi:power-plug') }}"
 
     # True if there's an update available for supervisor

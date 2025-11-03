@@ -28,6 +28,7 @@
           tag: sunset
           notification_icon: mdi:weather-sunset
           color: '#f5c905'
+          icon_url: /local/icons/sunset.png
       action: notify.phones
     - data:
         message: Turning on the front yard lights.
@@ -111,7 +112,7 @@
       data:
         notification_icon: mdi:water-pump
         color: blue
-        icon_url: /config/www/icons/drop.png
+        icon_url: /local/icons/drop.png
     action: notify.phones
   - data:
       title: "\U0001F4A7 Tank Full!"
@@ -195,7 +196,7 @@
     - data:
         message: Turning off front yard lights.
         title: "Good Night \U0001F4A4"
-        icon_url: /config/www/icons/bed.png
+        icon_url: /local/icons/bed.png
       action: notify.phones
     - repeat:
         count: 3
@@ -420,27 +421,20 @@
   alias: ⚙️Turn off Downstairs Geyser
   description: ''
   triggers:
-  - entity_id:
-    - sensor.downstairs_geyser_power
-    below: '5'
+  - entity_id: sensor.downstairs_geyser_power
+    below: 8
     for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-    attribute: power
+      seconds: 10
     trigger: numeric_state
   conditions:
   - condition: state
     entity_id: switch.downstairs_geyser
     state: 'on'
     for:
-      hours: 0
-      minutes: 2
-      seconds: 0
+      seconds: 20
   actions:
   - target:
       entity_id: switch.downstairs_geyser
-    data: {}
     action: switch.turn_off
   - data:
       title: Hot Water Ready!
@@ -528,7 +522,7 @@
       message: Washing Machine Turned Off
       data:
         notification_icon: mdi:washing-machine
-        icon_url: /config/www/icons/washing-machine.png
+        icon_url: /local/icons/washing-machine.png
     action: notify.phones
   - target:
       entity_id:
@@ -583,7 +577,7 @@
       message: Washing Machine Turned Off
       data:
         notification_icon: mdi:washing-machine
-        icon_url: /config/www/icons/washing-machine.png
+        icon_url: /local/icons/washing-machine.png
     action: notify.mobile_app_pixel
   - target:
       entity_id:
@@ -731,3 +725,122 @@
       time: 604800
       only_extensions: .jpg
   mode: single
+- &id001
+  id: system_notify_on_low_voltage
+  alias: 'System: Voltage Alerts'
+  description: Sends a notification if any voltage sensor drops below 200V or rises
+    above 250V
+  triggers:
+  - entity_id:
+    - sensor.downstairs_geyser_voltage
+    - sensor.rice_string_voltage
+    - sensor.washing_machine_1_voltage
+    - sensor.washing_machine_2_voltage
+    - sensor.workstation_voltage
+    below: 200
+    id: low
+    trigger: numeric_state
+  - entity_id:
+    - sensor.downstairs_geyser_voltage
+    - sensor.rice_string_voltage
+    - sensor.washing_machine_1_voltage
+    - sensor.washing_machine_2_voltage
+    - sensor.workstation_voltage
+    above: 300
+    id: high
+    trigger: numeric_state
+  actions:
+  - data:
+      title: '{% if trigger.id == ''low'' %}⚡ Voltage Low Alert{% elif trigger.id
+        == ''high'' %}⚡ Voltage High Alert{% endif %}
+
+        '
+      message: '{{ trigger.to_state.name }} is at {{ trigger.to_state.state }}{{ trigger.to_state.attributes.unit_of_measurement
+        }}
+
+        '
+    action: notify.mobile_app_pixel
+  mode: single
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
+- id: '1758454475206'
+  alias: F1 Track Light
+  triggers:
+  - entity_id:
+    - sensor.f1_session_status
+    - sensor.f1_track_status
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: sensor.f1_session_status
+          state: live
+        - condition: state
+          entity_id: sensor.f1_session_status
+          state: pre
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: sensor.f1_track_status
+            state: CLEAR
+          sequence:
+          - target:
+              entity_id: light.top_light
+            data:
+              color_name: green
+            action: light.turn_on
+        - conditions:
+          - condition: state
+            entity_id: sensor.f1_track_status
+            state: YELLOW
+          sequence:
+          - target:
+              entity_id: light.top_light
+            data:
+              color_name: yellow
+            action: light.turn_on
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: VSC
+            - condition: state
+              entity_id: sensor.f1_track_status
+              state: SC
+          sequence:
+          - target:
+              entity_id: light.top_light
+            data:
+              color_name: yellow
+              flash: short
+            action: light.turn_on
+        - conditions:
+          - condition: state
+            entity_id: sensor.f1_track_status
+            state: RED
+          sequence:
+          - target:
+              entity_id: light.top_light
+            data:
+              color_name: red
+            action: light.turn_on
+    - conditions:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.f1_session_status
+          state: live
+      sequence:
+      - target:
+          entity_id: light.top_light
+        action: light.turn_off
+  mode: restart

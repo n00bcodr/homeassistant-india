@@ -1,170 +1,80 @@
 ---
 button_card_templates:
-  blank_button:
-    aspect_ratio: 4/3
-    color_type: icon
+  app_launcher:
+    aspect_ratio: 21/9
+    entity_picture: "[[[ \n  const icon = variables.app_icon || variables.app_name.toLowerCase().replace(/\
+      \ /g, '');\n  return `/local/icons/${icon}.png`;\n]]]\n"
     hold_action:
       action: none
     layout: vertical
-    show_label: false
-    show_name: false
-    show_state: false
-    styles:
-      card:
-      - border-radius: 0px
-      - border: solid 0px var(--primary-color)
-      - box-shadow: none
-      - padding: 6px 6px
-      - margin: 0px 0px
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      icon:
-      - width: 28px
-      name:
-      - justify-self: middle
-      - align-self: end
-      - font-size: 14px
-      - padding: 0px 0px
-      - color: var(--secondary-text-color)
-    tap_action:
-      action: none
-  icon_button:
-    aspect_ratio: 4/3
-    color_type: card
-    hold_action:
-      action: none
-    layout: vertical
+    show_entity_picture: true
     show_label: false
     show_name: false
     show_state: false
     styles:
       card:
       - border-radius: 10px
-      - border: solid 1px var(--primary-color)
-      - box-shadow: none
-      - padding: 6px 6px
-      - margin: 0px 0px
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      icon:
-      - width: 28px
-      name:
-      - justify-self: middle
-      - align-self: end
-      - font-size: 14px
-      - padding: 0px 0px
-      - color: var(--secondary-text-color)
-    tap_action:
-      action: call-service
-  list_button:
-    aspect_ratio: 5/1
-    color_type: icon
-    layout: vertical
-    show_entity_picture: true
-    show_name: true
-    show_state: false
-    styles:
-      card:
-      - border-radius: 15px
-      - border: solid 0.1px var(--primary-color)
-      - box-shadow: none
-      - padding: 0px 0px
-      - margin: 0px 0px
-      - background-size: cover
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      name:
-      - justify-self: middle
-      - align-self: middle
-      - font-size: 20px
-      - padding: 0px 0px
-      - color: var(--secondary-text-color)
-    tap_action:
-      action: call-service
-  logo_button:
-    aspect_ratio: 21/9
-    color: rgb(255,255,255)
-    color_type: card
-    hold_action:
-      action: none
-    layout: vertical
-    show_label: false
-    show_name: false
-    show_state: false
-    styles:
-      card:
-      - border-radius: 5px
       - border: solid 0.5px var(--primary-color)
       - box-shadow: none
       - padding: 0px 0px
-      - margin: 0px 0px
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      icon:
-      - width: 50px
-      name:
-      - justify-self: middle
-      - align-self: end
-      - font-size: 14px
-      - padding: 0px 0px
-      - color: var(--secondary-text-color)
+      - margin: 0px
+      - background-color: '[[[ return variables.card_color || ''rgba(0, 0, 0, 0)'';
+          ]]]'
+      entity_picture:
+      - width: '[[[ return variables.icon_width || ''55%''; ]]]'
     tap_action:
       action: call-service
-  menu_button:
-    aspect_ratio: 4/3
-    color_type: icon
-    hold_action:
-      action: none
-    layout: vertical
-    show_label: false
-    show_name: false
-    show_state: false
-    styles:
-      card:
-      - border-radius: 10px
-      - border: solid 1px var(--primary-color)
-      - box-shadow: none
-      - padding: 6px 6px
-      - margin: 0px 0px
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      icon:
-      - width: 28px
-      name:
-      - justify-self: middle
-      - align-self: end
-      - font-size: 14px
-      - padding: 0px 0px
-      - color: var(--secondary-text-color)
-    tap_action:
-      action: call-service
+      service: media_player.play_media
+      service_data:
+        media_content_id: '[[[ return variables.media_id || variables.app_name; ]]]'
+        media_content_type: app
+      target:
+        entity_id: '[[[ return variables.target_player || ''media_player.sony_bravia_tv'';
+          ]]]'
 kiosk_mode:
   admin_settings:
-    ignore_entity_settings: true
-  entity_settings:
-  - entity:
-      input_boolean.kiosk_mode: 'on'
-    kiosk: true
+    hide_sidebar: false
+  hide_sidebar: '[[[ !user_is_admin ]]]'
+  kiosk: '[[[ is_state("input_boolean.kiosk_mode", "on") ]]]'
 views:
 - cards: []
+  dense_section_placement: true
   icon: mdi:home
   max_columns: 3
-  path: '0'
+  path: home
   sections:
   - cards:
     - cards:
-      - aspect_ratio: 1/1
+      - card_mod:
+          style:
+            .: "ha-card {\n  background: transparent !important;\n  border: 0px !important;\n\
+              \  align-items: center;\n}\nmushroom-badge-icon {\n  display: none;\n\
+              }\n"
+            mushroom-shape-avatar$: ".container {\n  --icon-size: 150px;\n    {% if\
+              \ is_state(config.entity, 'not_home') %}\n       filter: brightness(60%)\
+              \ grayscale(90%) blur(2px);\n    {%- else -%}\n    {%- endif %}\n}\n"
         entity: person.murthy
-        image: /local/images/murthy.jpg
-        name: Murthy
-        show_name: false
-        show_state: false
-        state_filter:
-          not_home: brightness(60%) grayscale(90%) blur(2px)
-        type: picture-entity
-      - aspect_ratio: 1/1
+        icon_type: entity-picture
+        primary_info: none
+        secondary_info: none
+        tap_action:
+          action: more-info
+        type: custom:mushroom-person-card
+      - card_mod:
+          style:
+            .: "ha-card {\n  background: transparent !important;\n  border: 0px !important;\n\
+              \  align-items: center;\n}\nmushroom-badge-icon {\n  display: none;\n\
+              }\n"
+            mushroom-shape-avatar$: ".container {\n  --icon-size: 150px;\n    {% if\
+              \ is_state(config.entity, 'not_home') %}\n       filter: brightness(60%)\
+              \ grayscale(90%) blur(2px);\n    {%- else -%}\n    {%- endif %}\n}\n"
         entity: person.kameswari
-        image: /local/images/kameswari.jpg
-        show_name: false
-        show_state: false
-        state_filter:
-          not_home: brightness(60%) grayscale(90%) blur(2px)
-        type: picture-entity
+        icon_type: entity-picture
+        primary_info: none
+        secondary_info: none
+        tap_action:
+          action: more-info
+        type: custom:mushroom-person-card
       type: horizontal-stack
     - cards:
       - card_mod:
@@ -176,7 +86,10 @@ views:
               \ 120px;\n  }\n"
         icon: mdi:cctv
         icon_color: blue-grey
-        type: custom:mushroom-template-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace-wallmount/camera
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style:
             .: "ha-card {\n  {% if is_state(config.entity, 'TankFull') %}\n  background:\
@@ -211,7 +124,7 @@ views:
         tap_action:
           action: navigate
           navigation_path: /lovelace-wallmount/motors
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style:
             .: ":host {\n  --mush-icon-size: 100px;\n}\n"
@@ -229,7 +142,7 @@ views:
           \ %}"
         tap_action:
           action: toggle
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       type: horizontal-stack
     - cards:
       - camera_view: live
@@ -242,60 +155,108 @@ views:
         show_state: false
         type: picture-entity
       type: horizontal-stack
-    - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.ireland_time'')
-        else ''grey'' }}'
-      badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.ireland_time'')
-        else ''mdi:weather-night'' }}'
+    - cards:
+      - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.ireland_time'')
+          else ''grey'' }}'
+        badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.ireland_time'')
+          else ''mdi:weather-night'' }}'
+        card_mod:
+          style:
+            .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
+              \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
+              \  --badge-size: 25px;\n}\n"
+            mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
+            mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
+        double_tap_action:
+          action: none
+        fill_container: true
+        hold_action:
+          action: none
+        icon: ''
+        layout: vertical
+        multiline_secondary: false
+        picture: /local/icons/ire.png
+        primary: '{{states.sensor.ireland_time.state}}'
+        tap_action:
+          action: none
+        type: custom:mushroom-legacy-template-card
+      - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.canada_time'')
+          else ''grey'' }}'
+        badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.canada_time'')
+          else ''mdi:weather-night'' }}'
+        card_mod:
+          style:
+            .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
+              \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
+              \  --badge-size: 25px;\n}\n"
+            mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
+            mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
+        double_tap_action:
+          action: none
+        fill_container: true
+        hold_action:
+          action: none
+        icon: ''
+        layout: vertical
+        multiline_secondary: false
+        picture: /local/icons/can.png
+        primary: '{{states.sensor.canada_time.state}}'
+        tap_action:
+          action: none
+        type: custom:mushroom-legacy-template-card
+      columns: 2
+      square: false
+      type: grid
+    - 12hr_format: true
+      calendar_modal: false
       card_mod:
-        style:
-          .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
-            \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
-            \  --badge-size: 25px;\n}\n"
-          mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
-          mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
-      double_tap_action:
-        action: none
-      fill_container: true
+        style: ".base-card {\n  background: black;\n}\n.compact-item-minimal {\n \
+          \ display: none !important;\n}\n.minimal-title {\n  display: none !important;\n\
+          }\n.moon-image {\n  filter: brightness(2.0);\n  }\n"
+      compact_mode: minimal
+      compact_view: true
+      default_card: base
+      entity: ''
+      font_customize:
+        header_font_color: ''
+        header_font_size: x-large
+        header_font_style: capitalize
+        hide_label: true
+        label_font_color: ''
+        label_font_size: auto
+        label_font_style: none
+      graph_config:
+        graph_type: default
+        show_current: true
+        show_highest: true
+        show_time: true
+        time_step_size: 30
+        x_ticks: false
+        y_ticks: false
+        y_ticks_position: left
+        y_ticks_step_size: 30
       grid_options:
-        columns: 6
-        rows: 3
-      hold_action:
-        action: none
-      icon: ''
-      layout: vertical
-      multiline_secondary: false
-      picture: /local/icons/ire.png
-      primary: '{{states.sensor.ireland_time.state}}'
-      tap_action:
-        action: none
-      type: custom:mushroom-template-card
-    - badge_color: '{{ ''deep-orange'' if ''AM'' in states(''sensor.canada_time'')
-        else ''grey'' }}'
-      badge_icon: '{{ ''mdi:weather-sunny'' if ''AM'' in states(''sensor.canada_time'')
-        else ''mdi:weather-night'' }}'
-      card_mod:
-        style:
-          .: "ha-card {\n  --card-primary-font-size: 30px;\n  background: transparent\
-            \ !important;\n}\nmushroom-badge-icon {\n  --badge-icon-size: 20px;\n\
-            \  --badge-size: 25px;\n}\n"
-          mushroom-shape-avatar$: ".container {\n  --icon-size: 55px;       \n}\n"
-          mushroom-state-info$: ".primary {\n  overflow: visible !important;\n}\n"
-      double_tap_action:
-        action: none
-      fill_container: true
-      grid_options:
-        columns: 6
-        rows: 3
-      hold_action:
-        action: none
-      icon: ''
-      layout: vertical
-      multiline_secondary: false
-      picture: /local/icons/can.png
-      primary: '{{states.sensor.canada_time.state}}'
-      tap_action:
-        action: none
-      type: custom:mushroom-template-card
+        columns: full
+        rows: auto
+      hide_buttons: true
+      hide_items: []
+      latitude: 16.973306645802232
+      location:
+        city: ''
+        country: India
+      longitude: 82.22683049220556
+      mile_unit: false
+      moon_position: right
+      number_decimals: 0
+      selected_language: en
+      show_background: false
+      southern_hemisphere: false
+      theme:
+        selected_theme: default
+      type: custom:lunar-phase-card
+      use_custom: false
+      use_default: true
+      use_entity: false
     type: grid
   - cards:
     - cards:
@@ -382,8 +343,8 @@ views:
     - card_mod:
         style:
           .: "ha-state-icon {\n  {% if is_state(config.entity, 'on') %}\n    color:\
-            \ white;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung;\n  {%else%}\n\
-            \    color: grey;\n    --card-mod-icon: hue:bulb-group-sultan-4-hung-off;\n\
+            \ white;\n    --card-mod-icon: cbi:bulb-group-sultan-4-hung;\n  {%else%}\n\
+            \    color: grey;\n    --card-mod-icon: cbi:bulb-group-sultan-4-hung-off;\n\
             \  {% endif %}\n}\nha-card {\n  height: 200px !important;\n  {% if is_state(config.entity,\
             \ 'on') %}\n    background: #2a5629 !important;\n  {%else%}\n     background:\
             \ disabled !important;\n  {% endif %}\n}\n:host {\n  --mush-icon-size:\
@@ -729,11 +690,13 @@ views:
       - qualifying
       - sprint
       - race
+      - sprint_qualifying
       date_locale: in
+      f1_font: true
       grid_options:
         columns: 12
         rows: 5
-      image_clickable: true
+      image_clickable: false
       show_flag: false
       show_raceinfo: false
       type: custom:formulaone-card
@@ -823,186 +786,74 @@ views:
             }\n"
           type: custom:android-tv-card
         - cards:
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/netflix.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 80%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Netflix
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/prime.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 80%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Prime Video
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Netflix
+              icon_width: 125%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/youtube.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 70%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Youtube
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Prime Video
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/hotstar.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 70%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: JioHotstar
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Youtube
+              card_color: white
+              icon_width: 80%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/aha.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 60%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Aha
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: JioHotstar
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/zee5.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 40%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Zee5
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Aha
+              card_color: white
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/etv.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 40%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Etv WIN
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Zee5
+              card_color: black
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/sonyliv.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 40%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Sony LIV
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Etv Win
+              card_color: rgb(197,8,8)
+              icon_width: 90%
+              media_id: com.etvwin.androidtv
+              target_player: media_player.sony_tv_remote
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/jellyfin.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 80%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Dune
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Sony LIV
+              icon_width: 130%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/fancode.svg
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Fancode
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Sun NXT
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/playstore.svg
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Play Store
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_icon: jellyfin
+              app_name: Dune
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/tailscale.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Tailscale
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Fancode
+              card_color: white
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
+            variables:
+              app_name: Tailscale
+              icon_width: 110%
           columns: 3
           square: false
           type: grid
@@ -1087,7 +938,6 @@ views:
         type: custom:vertical-stack-in-card
       type: custom:vertical-stack-in-card
     type: grid
-  title: home
   type: sections
 - badges: []
   cards:
@@ -1097,87 +947,86 @@ views:
     - entity: image.front_yard_camera_person
     fit_mode: cover
     tap_action:
-      action: more-info
+      action: navigate
+      navigation_path: /lovelace-wallmount/home
     type: picture-glance
   icon: mdi:cctv
+  path: camera
+  subview: false
   title: ''
   type: panel
 - cards: []
   icon: mdi:water-pump
   max_columns: 4
+  path: motors
   sections:
   - cards:
-    - cards:
-      - card_mod:
-          style:
-            mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
-              \ 150px;    \n  {% if is_state(config.entity, 'on') %}\n  border: 2px\
-              \ solid dodgerblue;\n  {% else %}\n  border: 2px solid grey;\n  {% endif\
-              \ %}\n}\n"
-            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
-              }\n"
-        entity: switch.upstairs_motor
-        fill_container: true
-        icon: '{% if is_state(config.entity, ''on'') %}
+    - card_mod:
+        style:
+          mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
+            \ 150px;        \n  border: 2px solid dodgerblue;\n}\n"
+          mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+            }\n"
+      entity: switch.downstairs_motor_switch_1
+      fill_container: true
+      grid_options:
+        columns: 6
+        rows: 4
+      icon: '{% if is_state(config.entity, ''on'') %}
 
-          mdi:water-pump
+        mdi:water-pump
 
-          {% else %}
+        {% else %}
 
-          mdi:water-pump-off
+        mdi:water-pump-off
 
-          {% endif %}'
-        icon_color: '{% if is_state(config.entity, ''on'') %}
+        {% endif %}'
+      icon_color: '{% if is_state(config.entity, ''on'') %}
 
-          blue
+        blue
 
-          {% else %}
+        {% else %}
 
-          grey
+        grey
 
-          {% endif %}'
-        layout: vertical
-        primary: Upstairs Motor
-        secondary: ''
-        type: custom:mushroom-template-card
-      - card_mod:
-          style:
-            mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
-              \ 150px;    \n  {% if is_state(config.entity, 'on') %}\n  border: 2px\
-              \ solid dodgerblue;\n  {% else %}\n  border: 2px solid grey;\n  {% endif\
-              \ %}\n}\n"
-            mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
-              }\n"
-        entity: switch.downstairs_motor_switch_1
-        fill_container: true
-        grid_options:
-          columns: 6
-          rows: 4
-        icon: '{% if is_state(config.entity, ''on'') %}
+        {% endif %}'
+      layout: vertical
+      primary: Downstairs Motor
+      secondary: ''
+      type: custom:mushroom-legacy-template-card
+    - card_mod:
+        style:
+          mushroom-shape-icon$: ".shape {\n  --icon-symbol-size: 100px;\n  --icon-size:\
+            \ 150px;        \n  border: 2px solid dodgerblue;\n}\n"
+          mushroom-state-info$: ".container {\n --card-primary-font-size: 20px;\n\
+            }\n"
+      entity: switch.upstairs_motor
+      fill_container: true
+      grid_options:
+        columns: 6
+        rows: 4
+      icon: '{% if is_state(config.entity, ''on'') %}
 
-          mdi:water-pump
+        mdi:water-pump
 
-          {% else %}
+        {% else %}
 
-          mdi:water-pump-off
+        mdi:water-pump-off
 
-          {% endif %}'
-        icon_color: '{% if is_state(config.entity, ''on'') %}
+        {% endif %}'
+      icon_color: '{% if is_state(config.entity, ''on'') %}
 
-          blue
+        blue
 
-          {% else %}
+        {% else %}
 
-          grey
+        grey
 
-          {% endif %}'
-        layout: vertical
-        primary: Downstairs Motor
-        secondary: ''
-        tap_action:
-          action: toggle
-        type: custom:mushroom-template-card
-      type: vertical-stack
+        {% endif %}'
+      layout: vertical
+      primary: Upstairs Motor
+      secondary: ''
+      type: custom:mushroom-legacy-template-card
     - card_mod:
         style:
           .: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n    background:\
@@ -1185,14 +1034,16 @@ views:
             \ repeat-x;\n    animation: bgScroll 1s linear infinite;\n  {% endif %}\n\
             }\n@keyframes bgScroll {\n  from {\n    background-position: 0 0;\n  }\n\
             \  to {\n    background-position: -100% 0%;\n  }\n}\n"
-          mushroom-state-info$: ".container {\n --card-primary-font-size: 40px;\n\
-            \ --card-primary-color: black;\n align-items: center;\n}\n.primary {\n\
-            \ overflow: visible !important;\n font-weight: bolder !important;\n}\n"
+          ha-tile-info$: ".primary {\n  font-size: 40px !important;\n  color: black\
+            \ !important;\n  font-weight: bolder !important;\n  overflow: visible\
+            \ !important;\n  white-space: normal !important;\n  text-align: center\
+            \ !important;\n}\n"
       entity: switch.sonoff_1000f38ea4
-      fill_container: true
+      features_position: bottom
       grid_options:
         columns: 12
         rows: 2
+      multiline_secondary: false
       primary: '{% if is_state(config.entity, ''on'') %}
 
         💧Tank Full
@@ -1201,6 +1052,7 @@ views:
       tap_action:
         action: none
       type: custom:mushroom-template-card
+      vertical: true
     type: grid
   - cards:
     - entities:
@@ -1209,5 +1061,6 @@ views:
       hours_to_show: 24
       type: logbook
     type: grid
+  subview: true
   title: Pump
   type: sections

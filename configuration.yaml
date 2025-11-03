@@ -12,15 +12,22 @@ homeassistant:
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-    - !secret trusted_ip
+    - !secret trusted_ip1
+    - !secret trusted_ip2
+
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /hacsfiles/custom-sidebar/custom-sidebar-yaml.js
+    - /local/card-mod.js
 
 delete:
 logger:
   default: critical
   logs:
-   homeassistant.custom_components.tplink_router: debug
-   homeassistant.components.http: warning
-
+    custom_components.mediabrowser: debug
+    # custom_components.hacs: debug
+    homeassistant.components.http: warning
 
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -33,7 +40,7 @@ shell_command: !include shell_command.yaml
 template: !include template.yaml
 command_line: !include command_line.yaml
 media_player: !include mediaplayer.yaml
-monitor_docker: !include monitor_docker.yaml
+multiscrape: !include multiscrape.yaml
 wake_on_lan:
 tts:
   - platform: google_translate
@@ -42,8 +49,7 @@ stream:
   ll_hls: true
   part_duration: 0.5
   segment_duration: 3
-frontend:
-  themes: !include_dir_merge_named themes
+
 
 
 recorder:
@@ -57,7 +63,6 @@ recorder:
       - sensor.sun*
       - sensor.moon*
       - sensor.count*
-      - sensor.f1_*
       - sensor.docker*
       - switch.docker*
       - button.docker*

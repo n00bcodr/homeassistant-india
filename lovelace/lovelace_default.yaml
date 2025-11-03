@@ -1,32 +1,36 @@
 ---
 button_card_templates:
-  ac_button:
-    aspect_ratio: 1/1
-    color_type: icon
+  app_launcher:
+    aspect_ratio: 21/9
+    entity_picture: "[[[ \n  const icon = variables.app_icon || variables.app_name.toLowerCase().replace(/\
+      \ /g, '');\n  return `/local/icons/${icon}.png`;\n]]]\n"
     hold_action:
       action: none
     layout: vertical
+    show_entity_picture: true
     show_label: false
-    show_name: true
+    show_name: false
     show_state: false
     styles:
       card:
       - border-radius: 10px
-      - border: solid 1px var(--primary-color)
+      - border: solid 0.5px var(--primary-color)
       - box-shadow: none
-      - padding: 0px 6px
-      - margin: 0px 0px
-      - --paper-card-background-color: rgba(0, 0, 0, 0)
-      icon:
-      - width: 5px
-      name:
-      - justify-self: middle
-      - align-self: middle
-      - font-size: 14px
       - padding: 0px 0px
-      - color: var(--secondary-text-color)
+      - margin: 0px
+      - background-color: '[[[ return variables.card_color || ''rgba(0, 0, 0, 0)'';
+          ]]]'
+      entity_picture:
+      - width: '[[[ return variables.icon_width || ''55%''; ]]]'
     tap_action:
       action: call-service
+      service: media_player.play_media
+      service_data:
+        media_content_id: '[[[ return variables.media_id || variables.app_name; ]]]'
+        media_content_type: app
+      target:
+        entity_id: '[[[ return variables.target_player || ''media_player.sony_bravia_tv'';
+          ]]]'
   blank_button:
     aspect_ratio: 4/3
     color_type: icon
@@ -112,12 +116,6 @@ button_card_templates:
       - width: 28px
     tap_action:
       action: call-service
-preload_cards:
-- markdown
-- gauge
-- picture-glance
-preload_rows:
-- divider
 title: ''
 views:
 - badges:
@@ -200,6 +198,18 @@ views:
     - condition: user
       users:
       - 74f7e2ffd3594037b1a2fc4de82d9fea
+  - color: orange
+    content: '{{states.sensor.current_processing_date.state}}'
+    double_tap_action:
+      action: url
+      url_path: https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/current-application-processing-dates/
+    icon: mdi:passport
+    label: '{{states.sensor.last_update_date.state}}'
+    tap_action:
+      action: perform-action
+      perform_action: multiscrape.trigger_visa
+      target: {}
+    type: custom:mushroom-template-badge
   cards: []
   icon: mdi:ninja
   max_columns: 4
@@ -220,37 +230,21 @@ views:
         action: toggle
       type: custom:mushroom-entity-card
     - card_mod:
-        style: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n     background:\
-          \ rgba(var(--rgb-purple), 0.2);\n  {%- else -%}\n  {%- endif %}\n}\n"
-      entity: switch.den_wall_fan
-      fill_container: false
-      grid_options:
-        columns: full
-        rows: 1
-      icon: mdi:fan
-      icon_color: purple
-      name: Wall Fan
+        style: "ha-card {\n  {% set r = state_attr(config.entity, 'rgb_color')[0]\
+          \ %}\n  {% set g = state_attr(config.entity, 'rgb_color')[1] %}\n  {% set\
+          \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
+          \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
+      collapsible_controls: true
+      entity: light.night_light
+      fill_container: true
+      layout: horizontal
+      name: Night Light
+      show_brightness_control: true
+      show_color_temp_control: true
       tap_action:
         action: toggle
-      type: custom:mushroom-entity-card
-    - card_mod:
-        style: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n     background:\
-          \ rgba(var(--rgb-green), 0.2);\n  {%- else -%}\n  {%- endif %}\n}\n"
-      entity: switch.front_downlight
-      icon: mdi:light-recessed
-      icon_color: green
-      tap_action:
-        action: toggle
-      type: custom:mushroom-entity-card
-    - card_mod:
-        style: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n     background:\
-          \ rgba(var(--rgb-green), 0.2);\n  {%- else -%}\n  {%- endif %}\n}\n"
-      entity: switch.rear_downlight
-      icon: mdi:light-recessed
-      icon_color: green
-      tap_action:
-        action: toggle
-      type: custom:mushroom-entity-card
+      type: custom:mushroom-light-card
+      use_light_color: true
     - card_mod:
         style: "ha-card {\n  {% if is_state(config.entity, 'on') %}\n     background:\
           \ rgba(var(--rgb-pink), 0.2);\n  {%- else -%}\n  {%- endif %}\n}\n"
@@ -283,19 +277,20 @@ views:
         \ 'unavailable') %}\n  mdi:exclamation-thick\n{% endif %}"
       card_mod:
         style: "ha-card {\n  {% if is_state(config.entity, 'Locked') %}\n    background:\
-          \ rgba(var(--rgb-yellow), 0.2);\n  {% elif is_state(config.entity, 'Unlocked')\
-          \ %}\n    background: rgba(var(--rgb-green), 0.2);\n  {% elif is_state(config.entity,\
-          \ 'unavailable') %}\n    background: rgba(var(--rgb-red), 0.2);\n  {% endif\
-          \ %}\n}\n"
+          \ rgba(255, 255, 0, 0.2);\n  {% elif is_state(config.entity, 'Unlocked')\
+          \ %}\n    background: rgba(0, 255, 0, 0.2);\n  {% elif is_state(config.entity,\
+          \ 'unavailable') %}\n    background: rgba(255, 0, 0, 0.2);\n  {% endif %}\n\
+          }\n"
+      color: "{% if is_state(config.entity, 'Locked') %}\n  yellow\n{% elif is_state(config.entity,\
+        \ 'Unlocked') %}\n  green\n{% elif is_state(config.entity, 'unavailable')\
+        \ %}\n  red\n{% endif %}"
       entity: sensor.desktop_sessionstate
+      features_position: bottom
       grid_options:
         columns: full
       icon: "{% if is_state(config.entity, 'Locked') %}\n  mdi:lock\n{% elif is_state(config.entity,\
         \ 'Unlocked') %}\n  mdi:lock-open\n{% elif is_state(config.entity, 'unavailable')\
         \ %}\n  mdi:power-plug-off-outline\n{% endif %}"
-      icon_color: "{% if is_state(config.entity, 'Locked') %}\n  yellow\n{% elif is_state(config.entity,\
-        \ 'Unlocked') %}\n  green\n{% elif is_state(config.entity, 'unavailable')\
-        \ %}\n  red\n{% endif %}"
       primary: "{% if is_state(config.entity, 'Locked') %}\n  Away\n{% elif is_state(config.entity,\
         \ 'Unlocked') %}\n  At Desk\n{% elif is_state(config.entity, 'unavailable')\
         \ %}\n  Turned off\n{% endif %} - at {{(as_timestamp(states.sensor.desktop_sessionstate.last_changed)\
@@ -314,8 +309,7 @@ views:
       show_temperature_control: true
       type: custom:mushroom-climate-card
     - card_mod:
-        style: ":host {\n  height: 200px !important;\n  border-style: dashed !important;\n\
-          \  border-width: 2px !important;\n}\n"
+        style: ":host {\n  height: 200px !important;\n}\n"
       cards:
       - badge_color: ''
         badge_icon: ''
@@ -351,15 +345,15 @@ views:
           \ 'on') %}\n{% if hacs_updates == 0 and addon_updates == 0 and other_updates\
           \ == 0 and not supervisor_update and not core_update %}\n  No updates\n\
           {% else %}\n  {% if hacs_updates != 0 %}\n    HACS Updates: {{ hacs_updates\
-          \ }}\n  {% endif %}\n\n  {% if addon_updates != 0 %}\n    Addon Updates:\
-          \ {{ addon_updates }}\n  {% endif %}\n\n  {% if other_updates != 0 %}\n\
-          \    Other Updates: {{ other_updates }}\n  {% endif %}\n\n  {% if supervisor_update\
-          \ %}\n    Supervisor Update Available!\n  {% endif %}\n\n  {% if core_update\
+          \ }}\n  {% endif %}\n  {% if addon_updates != 0 %}\n    Addon Updates: {{\
+          \ addon_updates }}\n  {% endif %}\n  {% if other_updates != 0 %}\n    Other\
+          \ Updates: {{ other_updates }}\n  {% endif %}\n  {% if supervisor_update\
+          \ %}\n    Supervisor Update Available!\n  {% endif %}\n  {% if core_update\
           \ %}\n    Core Update Available!\n  {% endif %}\n{% endif %}\n"
         tap_action:
           action: navigate
           navigation_path: /lovelace/updates
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style:
             .: "ha-card {\n  height: 0px !important;\n  margin-left: 75%;\n  top:\
@@ -376,7 +370,7 @@ views:
         secondary: null
         tap_action:
           action: more-info
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style:
             .: "ha-card {\n  height: 0px !important;\n  margin-left: 75%;\n  top:\
@@ -393,7 +387,7 @@ views:
         secondary: null
         tap_action:
           action: more-info
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style:
             .: "ha-card {\n  height: 0px !important;\n  margin-left: 75%;\n  top:\
@@ -410,12 +404,20 @@ views:
         secondary: null
         tap_action:
           action: more-info
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       type: custom:vertical-stack-in-card
       visibility:
-      - condition: state
-        entity: binary_sensor.hacs_updates
-        state: 'on'
+      - condition: or
+        conditions:
+        - condition: state
+          entity: binary_sensor.addon_updates
+          state: 'on'
+        - condition: state
+          entity: binary_sensor.updater_supervisor
+          state: 'on'
+        - condition: state
+          entity: binary_sensor.hacs_updates
+          state: 'on'
     type: grid
   - cards:
     - cameras:
@@ -615,7 +617,7 @@ views:
         layout: vertical
         primary: Downstairs Motor
         secondary: ''
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       conditions:
       - entity: switch.downstairs_motor_switch_1
         state: 'on'
@@ -653,7 +655,7 @@ views:
         layout: vertical
         primary: Upstairs Motor
         secondary: ''
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       conditions:
       - entity: switch.upstairs_motor
         state: 'on'
@@ -765,7 +767,7 @@ views:
           + " W"), ''Off'')}}'
         tap_action:
           action: toggle
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - card_mod:
           style: "ha-card {\n  background: rgba(var(--rgb-green), 0.2);\n}\n"
         collapsible_controls: false
@@ -815,7 +817,7 @@ views:
           power_state: true
           source: false
           volume: true
-        icon: si:sony
+        icon: cbi:sony
         info: short
         name: Sony TV
         sound_mode: full
@@ -896,188 +898,74 @@ views:
             }\n"
           type: custom:android-tv-card
         - cards:
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/netflix.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 125%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Netflix
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/prime.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Prime Video
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Netflix
+              icon_width: 125%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/youtube.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 80%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Youtube
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Prime Video
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/hotstar.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: JioHotstar
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Youtube
+              card_color: white
+              icon_width: 80%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/aha.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Aha
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: JioHotstar
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - color: black
-            entity: remote.sony_tv_remote
-            entity_picture: /local/icons/zee5.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Zee5
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Aha
+              card_color: white
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - color: rgb(197,8,8)
-            entity: remote.sony_tv_remote
-            entity_picture: /local/icons/etv.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 90%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Etv Win
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Zee5
+              card_color: black
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/sonyliv.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 130%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Sony LIV
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Etv Win
+              card_color: rgb(197,8,8)
+              icon_width: 90%
+              media_id: com.etvwin.androidtv
+              target_player: media_player.sony_tv_remote
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/sunnxt.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Sun NXT
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Sony LIV
+              icon_width: 130%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/jellyfin.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Dune
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Sun NXT
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/fancode.svg
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Fancode
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_icon: jellyfin
+              app_name: Dune
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
-          - entity: remote.sony_tv_remote
-            entity_picture: /local/icons/tailscale.png
-            show_entity_picture: true
-            styles:
-              entity_picture:
-              - width: 100%
-            tap_action:
-              service: media_player.play_media
-              service_data:
-                media_content_id: Tailscale
-                media_content_type: app
-              target:
-                entity_id: media_player.sony_bravia_tv
-            template: logo_button
+            variables:
+              app_name: Fancode
+              card_color: white
+              icon_width: 100%
+          - template: app_launcher
             type: custom:button-card
+            variables:
+              app_name: Tailscale
+              icon_width: 110%
           columns: 3
           square: false
           type: grid
@@ -1136,8 +1024,8 @@ views:
               \ 1150px)\") %}\n- - null\n  - circlepad\n  - - captions\n    - null\n\
               \    - audio_track\n    - null\n    - info\n- - null \n  {% else%}\n\
               \  - touchpad\n  - - captions\n    - null\n    - audio_track\n    -\
-              \ null\n    - info\n  {% endif %}       \n- - previous\n  - play_pause\n\
-              \  - next\n"
+              \ null\n    - info\n  {% endif %}       \n- - rewind\n  - previous\n\
+              \  - play_pause\n  - next\n  - fast_forward\n"
             styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
               }\n#row-1 {\n  justify-content: justify;\n}\n#row-2 {\n  justify-content:\
               \ justify;\n}\n#row-3 {\n  justify-content: justify;\n}\n#row-4 {\n\
@@ -1156,7 +1044,7 @@ views:
     - cards:
       - artwork: full-cover
         entity: media_player.oneplus_tv
-        icon: si:oneplus
+        icon: null
         sound_mode: full
         source: full
         type: custom:mini-media-player
@@ -1519,7 +1407,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.first_floor_light
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1530,7 +1417,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.second_floor_light
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1541,7 +1427,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.first_floor_stairway
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1552,7 +1437,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.second_floor_stairway
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1563,7 +1447,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.first_floor_corner
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1574,7 +1457,6 @@ views:
           \ b = state_attr(config.entity, 'rgb_color')[2] %}\n  background: rgba(\
           \ {{r}}, {{g}}, {{b}}, 0.2 );\n}\n"
       entity: light.second_floor_corner
-      icon: hue:bulb-classic-hung
       icon_color: accent
       secondary_info: none
       type: custom:mushroom-light-card
@@ -1613,7 +1495,7 @@ views:
   path: cameras
   sections:
   - cards:
-    - camera_image: camera.upstairs_hall_camera_hd_stream
+    - camera_image: camera.hall_camera
       camera_view: live
       entities: []
       fit_mode: cover
@@ -1676,6 +1558,75 @@ views:
   - user: e8d92e50b52649e28db11954533aca74
   - user: 250f4a4058df41a2b14309b64bf348cb
   - user: b1ee17e2f2da4a1f87c4636ac8668e50
+- dense_section_placement: true
+  icon: mdi:washing-machine
+  max_columns: 2
+  path: washing-machine
+  sections:
+  - cards:
+    - card_mod:
+        style: "ha-card {\n  {% if is_state('switch.washing_machine_1_switch_1', 'on')\
+          \ %}\n     --ha-card-background: rgba(200,10,10, 0.1) !important;\n  {%-\
+          \ else -%}\n  {%- endif %}\n}\n"
+      cards:
+      - entity: switch.washing_machine_1_switch_1
+        icon: mdi:washing-machine
+        icon_color: red
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      - aggregate_func: min
+        entities:
+        - color: green
+          entity: sensor.washing_machine_1_power
+          name: Power
+        - color: magenta
+          entity: sensor.washing_machine_1_current
+          name: Current
+        - color: Black
+          entity: sensor.washing_machine_1_voltage
+          name: Voltage
+        hours_to_show: 6
+        icon: mdi:washing-machine
+        line_width: 2
+        points_per_hour: 10
+        smoothing: false
+        type: custom:mini-graph-card
+        update_interval: 1
+      type: custom:vertical-stack-in-card
+    - card_mod:
+        style: "ha-card {\n  {% if is_state('switch.washing_machine_2_switch_1', 'on')\
+          \ %}\n     --ha-card-background: rgba(227, 240, 84, 0.1) !important;\n \
+          \ {%- else -%}\n  {%- endif %}\n}\n"
+      cards:
+      - entity: switch.washing_machine_2_switch_1
+        icon: mdi:washing-machine
+        icon_color: yellow
+        tap_action:
+          action: toggle
+        type: custom:mushroom-entity-card
+      - aggregate_func: min
+        entities:
+        - color: green
+          entity: sensor.washing_machine_2_power
+          name: Power
+        - color: magenta
+          entity: sensor.washing_machine_2_current
+          name: Current
+        - color: Black
+          entity: sensor.washing_machine_2_voltage
+          name: Voltage
+        hours_to_show: 6
+        icon: mdi:washing-machine
+        line_width: 2
+        points_per_hour: 10
+        smoothing: false
+        type: custom:mini-graph-card
+        update_interval: 1
+      type: custom:vertical-stack-in-card
+    type: grid
+  title: Washing Machine
+  type: sections
 - badges: []
   cards: []
   icon: mdi:town-hall
@@ -1749,38 +1700,6 @@ views:
         type: custom:collapsable-cards
       type: custom:vertical-stack-in-card
     type: grid
-  - cards:
-    - card_mod:
-        style: "ha-card {\n  {% if is_state('switch.washing_machine_2_switch_1', 'on')\
-          \ %}\n     --ha-card-background: rgba(227, 240, 84, 0.1) !important;\n \
-          \ {%- else -%}\n  {%- endif %}\n}\n"
-      cards:
-      - entity: switch.washing_machine_2_switch_1
-        icon: mdi:washing-machine
-        icon_color: yellow
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      - aggregate_func: min
-        entities:
-        - color: green
-          entity: sensor.washing_machine_2_power
-          name: Power
-        - color: magenta
-          entity: sensor.washing_machine_2_current
-          name: Current
-        - color: Black
-          entity: sensor.washing_machine_2_voltage
-          name: Voltage
-        hours_to_show: 6
-        icon: mdi:washing-machine
-        line_width: 2
-        points_per_hour: 10
-        smoothing: false
-        type: custom:mini-graph-card
-        update_interval: 1
-      type: custom:vertical-stack-in-card
-    type: grid
   title: Hall
   type: sections
 - badges: []
@@ -1847,12 +1766,13 @@ views:
               \  background-repeat: repeat-x;\n    animation: bgScroll 1s linear infinite;\n\
               \  {% endif %}\n}\n@keyframes bgScroll {\n  from {\n    background-position:\
               \ 0 0;\n  }\n  to {\n    background-position: -100% 0%;\n  }\n}\n"
-            mushroom-state-info$: ".container {\n --card-primary-font-size: 40px;\n\
-              \ --card-primary-color: black;\n align-items: center;\n}\n.primary {\n\
-              \ overflow: visible !important;\n font-weight: bolder !important;\n\
-              }\n"
+            ha-tile-info$: ".primary {\n  font-size: 40px !important;\n  color: black\
+              \ !important;\n  font-weight: bolder !important;\n  overflow: visible\
+              \ !important;\n  white-space: normal !important;\n  text-align: center\
+              \ !important;\n}\n"
         entity: switch.sonoff_1000f38ea4
-        fill_container: true
+        features_position: bottom
+        multiline_secondary: false
         primary: '{% if is_state(config.entity, ''on'') %}
 
           💧Tank Full
@@ -1861,6 +1781,7 @@ views:
         tap_action:
           action: none
         type: custom:mushroom-template-card
+        vertical: true
       conditions:
       - entity: switch.sonoff_1000f38ea4
         state: 'on'
@@ -1868,42 +1789,6 @@ views:
         columns: full
         rows: 2
       type: conditional
-    type: grid
-  - cards:
-    - heading: Washing Machine
-      heading_style: title
-      icon: mdi:washing-machine
-      type: heading
-    - card_mod:
-        style: "ha-card {\n  {% if is_state('switch.washing_machine_1_switch_1', 'on')\
-          \ %}\n     --ha-card-background: rgba(200,10,10, 0.1) !important;\n  {%-\
-          \ else -%}\n  {%- endif %}\n}\n"
-      cards:
-      - entity: switch.washing_machine_1_switch_1
-        icon: mdi:washing-machine
-        icon_color: red
-        tap_action:
-          action: toggle
-        type: custom:mushroom-entity-card
-      - aggregate_func: min
-        entities:
-        - color: green
-          entity: sensor.washing_machine_1_power
-          name: Power
-        - color: magenta
-          entity: sensor.washing_machine_1_current
-          name: Current
-        - color: Black
-          entity: sensor.washing_machine_1_voltage
-          name: Voltage
-        hours_to_show: 6
-        icon: mdi:washing-machine
-        line_width: 2
-        points_per_hour: 10
-        smoothing: false
-        type: custom:mini-graph-card
-        update_interval: 1
-      type: custom:vertical-stack-in-card
     type: grid
   - cards:
     - entities:
@@ -1914,11 +1799,12 @@ views:
       refresh_interval: 1
       title: History
       type: history-graph
-    - entities:
-      - switch.downstairs_motor_switch_1
-      - switch.upstairs_motor
-      - switch.sonoff_1000f38ea4
-      hours_to_show: 24
+    - hours_to_show: 48
+      target:
+        entity_id:
+        - switch.downstairs_motor_switch_1
+        - switch.upstairs_motor
+        - switch.sonoff_1000f38ea4
       type: logbook
     type: grid
     visibility:
@@ -2312,7 +2198,7 @@ views:
                     {{states.sensor.memory_free.state |round(1)}} GB'
                   tap_action:
                     action: more-info
-                  type: custom:mushroom-template-card
+                  type: custom:mushroom-legacy-template-card
                 - entity: sensor.disk_use_percent
                   icon_color: '#FF9101'
                   name: Disk
@@ -2399,23 +2285,26 @@ views:
         type: custom:mushroom-chips-card
       - cards:
         - card_mod:
-            style: "ha-state-icon {\n{% if is_state('switch.docker_speedtest_addon',\
+            style: "ha-tile-icon {\n{% if is_state('docker_addon_6b87c29e_speedtest_addon',\
               \ 'on') %}\n animation: move 2s infinite;\n{%- else -%}\n{%- endif %}\n\
               }\n@keyframes move {\n  0%, 100% { transform: translateY(0px); }\n \
               \ 20% { transform: translateY(1px); }\n  40% { transform: translateY(2px);\
               \ }\n  60% { transform: translateY(4px); }\n  80% { transform: translateY(7px);\
               \ }\n}\nha-card {\n  {% set speed = states(config.entity) | round %}\n\
-              \  {% if speed < 50 %}\n    background: rgba(var(--rgb-red), 0.2);\n\
-              \  {% elif 50 <= speed <= 100 %}\n    background: rgba(var(--rgb-yellow),\
-              \ 0.2);\n  {% else %}\n    background: rgba(var(--rgb-green), 0.2);\n\
-              \  {% endif %}\n}\n"
+              \  {% if speed < 50 %}\n    background: rgba(255, 0, 0, 0.2);\n  {%\
+              \ elif 50 <= speed <= 100 %}\n    background: rgba(255, 255, 0, 0.2);\n\
+              \  {% else %}\n    background: rgba(0, 255, 0, 0.2);\n  {% endif %}\n\
+              }\n"
+          color: "{% set speed = states(config.entity) | round %}\n{% if speed < 50\
+            \ %}\n  red\n{% elif 50 <= speed <= 100 %}\n  yellow\n{% else %}\n  green\n\
+            {% endif %}"
           entity: sensor.speedtest_download
+          features:
+          - type: trend-graph
+          features_position: bottom
           hold_action:
             action: more-info
           icon: mdi:download
-          icon_color: "{% set speed = states(config.entity) | round %}\n{% if speed\
-            \ < 50 %}\n  red\n{% elif 50 <= speed <= 100 %}\n  yellow\n{% else %}\n\
-            \  green\n{% endif %}"
           primary: '{{states.sensor.speedtest_download.state | round }} Mbps'
           secondary: Download Speed
           tap_action:
@@ -2426,23 +2315,26 @@ views:
             target: {}
           type: custom:mushroom-template-card
         - card_mod:
-            style: "ha-state-icon {\n{% if is_state('switch.docker_speedtest_addon',\
+            style: "ha-tile-icon {\n{% if is_state('docker_addon_6b87c29e_speedtest_addon',\
               \ 'on') %}\n animation: move 2s infinite;\n{%- else -%}\n{%- endif %}\n\
               }\n@keyframes move {\n  0%, 100% { transform: translateY(0px); }\n \
-              \ 20% { transform: translateY(-1px); }\n  40% { transform: translateY(-2px);\
-              \ }\n  60% { transform: translateY(-4px); }\n  80% { transform: translateY(-7px);\
+              \ 20% { transform: translateY(1px); }\n  40% { transform: translateY(2px);\
+              \ }\n  60% { transform: translateY(4px); }\n  80% { transform: translateY(7px);\
               \ }\n}\nha-card {\n  {% set speed = states(config.entity) | round %}\n\
-              \  {% if speed < 50 %}\n    background: rgba(var(--rgb-red), 0.2);\n\
-              \  {% elif 50 <= speed <= 100 %}\n    background: rgba(var(--rgb-yellow),\
-              \ 0.2);\n  {% else %}\n    background: rgba(var(--rgb-green), 0.2);\n\
-              \  {% endif %}\n}\n"
+              \  {% if speed < 50 %}\n    background: rgba(255, 0, 0, 0.2);\n  {%\
+              \ elif 50 <= speed <= 100 %}\n    background: rgba(255, 255, 0, 0.2);\n\
+              \  {% else %}\n    background: rgba(0, 255, 0, 0.2);\n  {% endif %}\n\
+              }\n"
+          color: "{% set speed = states('sensor.speedtest_upload') | round %}\n{%\
+            \ if speed < 50 %}\n  red\n{% elif 50 <= speed <= 100 %}\n  yellow\n{%\
+            \ else %}\n  green\n{% endif %}"
           entity: sensor.speedtest_upload
+          features:
+          - type: trend-graph
+          features_position: bottom
           hold_action:
             action: more-info
           icon: mdi:upload
-          icon_color: "{% set speed = states('sensor.speedtest_upload') | round %}\n\
-            {% if speed < 50 %}\n  red\n{% elif 50 <= speed <= 100 %}\n  yellow\n\
-            {% else %}\n  green\n{% endif %}"
           primary: '{{states.sensor.speedtest_upload.state | round }} Mbps'
           secondary: Upload Speed
           type: custom:mushroom-template-card
@@ -2476,7 +2368,7 @@ views:
           {{states.sensor.tp_link_router_total_wired_clients.state}} - Wired'
         tap_action:
           action: more-info
-        type: custom:mushroom-template-card
+        type: custom:mushroom-legacy-template-card
       - cards:
         - entity: binary_sensor.100_100_1_1
           type: custom:mushroom-entity-card
@@ -2543,24 +2435,24 @@ views:
         primary_info: state
         secondary_info: name
         type: custom:mushroom-entity-card
-      - double_tap_action:
+      - color: yellow
+        double_tap_action:
           action: url
           url_path: https://drive.google.com/drive/folders/1iDzbeGS-PLCnsDwG5i3dcOs1g-Ws4BjOhttps://drive.google.com/drive/folders/1iDzbeGS-PLCnsDwG5i3dcOs1g-Ws4BjO
         entity: sensor.backup_state
-        fill_container: false
+        features_position: bottom
         icon: mdi:google-drive
-        icon_color: yellow
         multiline_secondary: false
         primary: '{{states.sensor.backup_state.attributes.size_in_google_drive}}'
         secondary: Google Drive Backup Size
         type: custom:mushroom-template-card
-      - double_tap_action:
+      - color: blue
+        double_tap_action:
           action: url
           url_path: /hassio/backups
         entity: sensor.backup_state
-        fill_container: false
-        icon: si:homeassistant
-        icon_color: blue
+        features_position: bottom
+        icon: mdi:home-assistant
         multiline_secondary: false
         primary: '{{states.sensor.backup_state.attributes.size_in_home_assistant}}'
         secondary: Homeassistant Local Backup Size
@@ -2679,9 +2571,14 @@ views:
   - cards:
     - card_type: last_result
       f1_font: true
+      hide_racedatetimes: false
       hide_tracklayout: true
+      image_clickable: false
+      location_clickable: false
       show_carnumber: false
       show_flag: true
+      show_lastyears_result: false
+      show_raceinfo: false
       show_refresh: true
       show_team: true
       title: Last Race 🏁
@@ -2700,18 +2597,21 @@ views:
       - qualifying
       - sprint
       - race
+      - sprint_qualifying
       date_locale: in
       entity: sensor.f1_current_season
       f1_font: true
       grid_options:
         columns: 36
         rows: auto
-      image_clickable: true
+      hide_tracklayout: false
+      image_clickable: false
       next_race_delay: 2
+      only_show_date: false
       show_lastyears_result: true
       show_raceinfo: true
       show_refresh: true
-      show_weather: true
+      show_weather: false
       source: f1sensor
       title: Next Race 🏎️
       translations:
@@ -2733,12 +2633,14 @@ views:
     - card_type: driver_standings
       entity: sensor.f1_driver_standings
       f1_font: true
+      image_clickable: false
+      only_show_date: false
       show_refresh: true
       source: f1sensor
       standings:
-        show_flag: false
-        show_team: true
-        show_teamlogo: true
+        show_flag: true
+        show_team: false
+        show_teamlogo: false
       title: Driver Standings ䷕
       translations:
         points: Points
@@ -2746,11 +2648,19 @@ views:
     - card_type: constructor_standings
       entity: sensor.f1_constructor_standings
       f1_font: true
+      hide_racedatetimes: false
+      hide_tracklayout: false
+      image_clickable: false
+      location_clickable: false
+      only_show_date: false
+      show_carnumber: false
+      show_lastyears_result: false
+      show_raceinfo: false
       show_refresh: true
       source: f1sensor
       standings:
-        show_flag: true
-        show_team: true
+        show_flag: false
+        show_team: false
         show_teamlogo: true
       title: Constructor Standings ⚙️
       translations:
@@ -2768,14 +2678,29 @@ views:
       grid_options:
         columns: full
         rows: auto
+      hide_racedatetimes: false
+      hide_tracklayout: false
+      image_clickable: false
+      location_clickable: true
+      only_show_date: false
+      previous_race: hide
+      show_carnumber: false
+      show_lastyears_result: false
+      show_raceinfo: false
       source: f1sensor
       standings:
         show_flag: true
       title: Schedule 🗓️
       type: custom:formulaone-card
     - card_type: results
+      date_locale: in
       f1_font: true
+      hide_racedatetimes: false
       hide_tracklayout: true
+      image_clickable: false
+      only_show_date: false
+      show_carnumber: false
+      show_lastyears_result: false
       standings:
         show_flag: true
       title: Race Results 🥇
@@ -2918,481 +2843,624 @@ views:
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
 - cards: []
+  icon: mdi:racing-helmet
   max_columns: 4
-  path: test
+  path: f1
   sections:
   - cards:
-    - artwork: material
-      entity: media_player.sony_tv_cast
-      group: false
-      source: full
-      type: custom:mini-media-player
-    - artwork: material
-      entity: media_player.sony_tv
-      group: false
-      source: full
-      type: custom:mini-media-player
-    - artwork: material
-      entity: media_player.sony_tv_unified
-      group: false
-      source: full
-      type: custom:mini-media-player
-    - artwork: material
-      entity: media_player.sony_tv_remote
-      group: false
-      source: full
-      type: custom:mini-media-player
-    - artwork: material
-      entity: media_player.sony_bravia_tv
-      group: false
-      source: full
-      type: custom:mini-media-player
+    - title: 🏎️ Formula 1 Dashboard
+      type: custom:mushroom-title-card
+    - card_mod:
+        style: ":host {\n  {% set status = states('sensor.f1_track_status') %}\n \
+          \ {% if status == 'CLEAR' %}\n    --card-background-color: rgba(0, 200,\
+          \ 0, 0.3);   /* green */\n  {% elif status == 'YELLOW' %}\n    --card-background-color:\
+          \ rgba(255, 255, 0, 0.3); /* yellow */\n  {% elif status in ['VSC','SC']\
+          \ %}\n    --card-background-color: rgba(255, 200, 0, 0.3); /* amber */\n\
+          \  {% elif status == 'RED' %}\n    --card-background-color: rgba(255, 0,\
+          \ 0, 0.3);   /* red */\n  {% else %}\n    --card-background-color: rgba(128,\
+          \ 128, 128, 0.2); /* grey */\n  {% endif %}\n}\n"
+      entities:
+      - entity: sensor.f1_session_status
+        name: Session Status
+      - entity: sensor.f1_track_status
+        name: Track Status
+      - entity: binary_sensor.f1_safety_car
+        name: Safety Car
+      - entity: sensor.f1_race_lap_count
+        name: Race Lap
+      - entity: sensor.f1_track_weather
+        name: Track Temperature
+      - entity: sensor.f1_weather
+        name: Weather
+      title: 🔴 Live Session
+      type: entities
+      visibility:
+      - condition: and
+        conditions: []
+    - entities:
+      - entity: sensor.f1_driver_standings
+        name: Drivers
+      - entity: sensor.f1_constructor_standings
+        name: Constructors
+      title: 🏆 Standings
+      type: entities
+    - entities:
+      - entity: sensor.f1_last_race_results
+        name: Last Race
+      - entity: sensor.f1_season_results
+        name: Season Results
+      title: 📊 Results
+      type: entities
+    - entities:
+      - entity: binary_sensor.f1_race_week
+        name: Race Week
+      - entity: sensor.f1_next_race
+        name: Next Race
+      title: 📅 Race Calendar
+      type: entities
     type: grid
   - cards:
     - cards:
-      - subtitle: Network Status Overview
-        title: Orb Sensor Performance
+      - subtitle: 2025 Season • Round {{ state_attr('sensor.f1_driver_standings',
+          'round') }}
+        title: 🏎️ Formula 1 Dashboard
         type: custom:mushroom-title-card
-      - icon: mdi:speedometer
-        icon_color: '{% set score = states(''sensor.orb_sensor_score'') | int(0) %}
-          {% if score >= 90 %} green {% elif score >= 70 %} orange {% else %} red
-          {% endif %}
+      - card:
+          card_mod:
+            style: "ha-card {\n  background: linear-gradient(135deg, rgba(255,0,0,0.1)\
+              \ 0%, rgba(255,50,50,0.05) 100%);\n  animation: pulse 2s ease-in-out\
+              \ infinite;\n}\n@keyframes pulse {\n  0%, 100% { opacity: 1; }\n  50%\
+              \ { opacity: 0.85; }\n}\n"
+          icon: mdi:flag-checkered
+          icon_color: red
+          primary: '🔴 Race Week: {{ state_attr(''binary_sensor.f1_race_week'', ''next_race_name'')
+            }}'
+          secondary: '{{ state_attr(''binary_sensor.f1_race_week'', ''days_until_next_race'')
+            }} days until race'
+          type: custom:mushroom-template-card
+        conditions:
+        - condition: state
+          entity: binary_sensor.f1_race_week
+          state: 'on'
+        type: conditional
+      - card:
+          card_mod:
+            style: "ha-card {\n  {% set status = states('sensor.f1_track_status')\
+              \ %}\n  {% if status == 'CLEAR' %}\n    background: rgba(0, 200, 0,\
+              \ 0.15);\n  {% elif status == 'YELLOW' %}\n    background: rgba(255,\
+              \ 255, 0, 0.15);\n  {% elif status in ['VSC','SC'] %}\n    background:\
+              \ rgba(255, 165, 0, 0.15);\n  {% elif status == 'RED' %}\n    background:\
+              \ rgba(255, 0, 0, 0.15);\n  {% endif %}\n}\n"
+          icon: mdi:timer
+          icon_color: '{% set status = states(''sensor.f1_track_status'') %}
 
-          '
-        primary: 'Overall Score: {{ states(''sensor.orb_sensor_score'') }}%
+            {% if status == ''CLEAR'' %} green
 
-          '
-        secondary: '{% set reliability = states(''sensor.orb_sensor_reliability_score'')
-          %} {% set responsiveness = states(''sensor.orb_sensor_responsiveness_score'')
-          %} Reliability: {{ reliability }}% | Responsiveness: {{ responsiveness }}%
+            {% elif status == ''YELLOW'' %} yellow
 
-          '
+            {% elif status in [''VSC'',''SC''] %} orange
+
+            {% elif status == ''RED'' %} red
+
+            {% else %} grey
+
+            {% endif %}
+
+            '
+          primary: '{{ states(''sensor.f1_session_status'') | upper }}'
+          secondary: '{{ states(''sensor.f1_track_status'') }} • Lap {{ states(''sensor.f1_race_lap_count'')
+            }}/{{ state_attr(''sensor.f1_race_lap_count'', ''total_laps'') }}
+
+            '
+          tap_action:
+            action: more-info
+          type: custom:mushroom-template-card
+        conditions:
+        - condition: state
+          entity: sensor.f1_session_status
+          state_not: ended
+        type: conditional
+      - card:
+          entities:
+          - entities:
+            - entity: sensor.f1_track_status
+              name: Track Status
+            - entity: binary_sensor.f1_safety_car
+              name: Safety Car
+            - attribute: track_temperature
+              entity: sensor.f1_track_weather
+              name: Track Temp
+              suffix: °C
+              type: attribute
+            - attribute: air_temperature
+              entity: sensor.f1_track_weather
+              name: Air Temp
+              suffix: °C
+              type: attribute
+            - attribute: current_humidity
+              entity: sensor.f1_weather
+              name: Humidity
+              suffix: '%'
+              type: attribute
+            - attribute: current_wind_speed
+              entity: sensor.f1_weather
+              name: Wind Speed
+              suffix: ' m/s'
+              type: attribute
+            head:
+              label: 📊 Live Session Details
+              type: section
+            type: custom:fold-entity-row
+          type: entities
+        conditions:
+        - condition: state
+          entity: sensor.f1_session_status
+          state_not: ended
+        type: conditional
+      - icon: mdi:podium-gold
+        icon_color: amber
+        primary: 🏆 Driver Standings
+        secondary: '{{ states(''sensor.f1_driver_standings'') }} drivers • Season
+          {{ state_attr(''sensor.f1_driver_standings'', ''season'') }}'
         tap_action:
-          action: none
+          action: more-info
+          entity: sensor.f1_driver_standings
         type: custom:mushroom-template-card
-      - cards:
-        - icon: mdi:download
-          icon_color: blue
-          primary: '{{ (states(''sensor.orb_sensor_bandwidth_download'') | float(0)
-            / 1000) | round(2) }} Mbps'
-          secondary: Download
-          tap_action:
-            action: more-info
-            entity: sensor.orb_sensor_bandwidth_download
-          type: custom:mushroom-template-card
-        - icon: mdi:upload
-          icon_color: cyan
-          primary: '{{ (states(''sensor.orb_sensor_bandwidth_upload'') | float(0)
-            / 1000) | round(2) }} Mbps'
-          secondary: Upload
-          tap_action:
-            action: more-info
-            entity: sensor.orb_sensor_bandwidth_upload
-          type: custom:mushroom-template-card
-        type: horizontal-stack
-      - cards:
-        - icon: mdi:timelapse
-          icon_color: '{% set lag = states(''sensor.orb_sensor_lag'') | int(0) %}
-
-            {% if lag < 50 %} green
-
-            {% elif lag < 100 %} orange
-
-            {% else %} red
-
-            {% endif %}
-
-            '
-          primary: Lag
-          secondary: '{{ states(''sensor.orb_sensor_lag'') }} ms'
-          tap_action:
-            action: more-info
-            entity: sensor.orb_sensor_lag
-          type: custom:mushroom-template-card
-        - icon: mdi:connection
-          icon_color: '{% set ploss = states(''sensor.orb_sensor_packet_loss'') |
-            int(0) %}
-
-            {% if ploss == 0 %} green
-
-            {% elif ploss < 1 %} orange
-
-            {% else %} red
-
-            {% endif %}
-
-            '
-          primary: Packet Loss
-          secondary: '{{ states(''sensor.orb_sensor_packet_loss'') }} %'
-          tap_action:
-            action: more-info
-            entity: sensor.orb_sensor_packet_loss
-          type: custom:mushroom-template-card
-        type: horizontal-stack
-      - subtitle: Last 24 Hours
-        title: Score History
-        type: custom:mushroom-title-card
       - entities:
-        - entity: sensor.orb_sensor_score
-          name: Overall Score (%)
-        - entity: sensor.orb_sensor_reliability_score
-          name: Reliability Score (%)
-        - entity: sensor.orb_sensor_responsiveness_score
-          name: Responsiveness Score (%)
-        hours_to_show: 24
-        type: history-graph
-      - subtitle: Last 24 Hours
-        title: Latency & Loss History
-        type: custom:mushroom-title-card
+        - entities:
+          - icon: mdi:trophy
+            name: 🥇 {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[0].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[0].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[0].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[0].points
+              }} pts • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[0].wins
+              }} wins'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-outline
+            name: 🥈 {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[1].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[1].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[1].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[1].points
+              }} pts • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[1].wins
+              }} wins'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-variant
+            name: 🥉 {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[2].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[2].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[2].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[2].points
+              }} pts • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[2].wins
+              }} wins'
+            type: custom:template-entity-row
+          - name: 4️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[3].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[3].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[3].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[3].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 5️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[4].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[4].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[4].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[4].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 6️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[5].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[5].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[5].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[5].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 7️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[6].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[6].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[6].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[6].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 8️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[7].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[7].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[7].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[7].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 9️⃣ {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[8].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[8].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[8].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[8].points
+              }} pts'
+            type: custom:template-entity-row
+          - name: 🔟 {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[9].Driver.givenName
+              }} {{ state_attr('sensor.f1_driver_standings', 'driver_standings')[9].Driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[9].Constructors[0].name
+              }} • {{ state_attr(''sensor.f1_driver_standings'', ''driver_standings'')[9].points
+              }} pts'
+            type: custom:template-entity-row
+          - entity: sensor.f1_driver_standings
+            name: View Full Standings
+          head:
+            label: 🥇 Top 10 Drivers
+            type: section
+          type: custom:fold-entity-row
+        type: entities
+      - icon: mdi:factory
+        icon_color: red
+        primary: 🏭 Constructor Standings
+        secondary: '{{ states(''sensor.f1_constructor_standings'') }} teams competing'
+        tap_action:
+          action: more-info
+          entity: sensor.f1_constructor_standings
+        type: custom:mushroom-template-card
       - entities:
-        - entity: sensor.orb_sensor_lag
-          name: Lag (ms)
-        - entity: sensor.orb_sensor_packet_loss
-          name: Packet Loss (%)
-        hours_to_show: 24
-        type: history-graph
-      type: custom:vertical-stack-in-card
-    type: grid
-  - cards:
-    - artwork: full-cover
-      entity: media_player.sony_tv_unified
-      group: false
-      hide:
-        controls: true
-        power: true
-        power_state: true
-        source: false
-        volume: true
-      icon: si:sony
-      info: short
-      name: Sony TV
-      sound_mode: full
-      source: full
-      toggle_power: false
-      type: custom:mini-media-player
-      volume_stateless: false
-    - color: white
-      color_type: card
-      icon: mdi:television
-      label: TV Remote
-      layout: icon_label
-      show_label: true
-      styles:
-        card:
-        - height: 60px
-        label:
-        - color: black
-        - font-size: 20px
-        - font-weight: bold
-        - justify-self: start
-      type: custom:button-card
-    - custom_actions:
-      - icon: mdi:power
-        label: Power
-        name: power
-        styles: ":host {\n  --icon-color: crimson;\n  --label-color: crimson;\n  {%\
-          \ if is_state(config.entity, 'off') %}\n  --size: 50px;\n  {% endif %}\n\
-          }"
-        tap_action:
-          action: key
-          key: POWER
-        type: button
-      - icon: mdi:home
-        label: Home
-        name: home
-        styles: ":host {\n  --icon-color: dodgerblue;\n  --label-color: dodgerblue;\n\
-          \  {% if is_state(config.entity, 'off') %}\n  --size: 50px;\n  {% endif\
-          \ %}\n}"
-        tap_action:
-          action: key
-          key: HOME
-        type: button
-      - autofill_entity_id: true
-        haptics: false
-        label: '{{ (value * 100) | round(0, ''ceil'') if value is defined else ''''
+        - entities:
+          - icon: mdi:trophy
+            name: 🥇 {{ state_attr('sensor.f1_constructor_standings', 'constructor_standings')[0].Constructor.name
+              }}
+            secondary: '{{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[0].points
+              }} pts • {{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[0].wins
+              }} wins'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-outline
+            name: 🥈 {{ state_attr('sensor.f1_constructor_standings', 'constructor_standings')[1].Constructor.name
+              }}
+            secondary: '{{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[1].points
+              }} pts • {{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[1].wins
+              }} wins'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-variant
+            name: 🥉 {{ state_attr('sensor.f1_constructor_standings', 'constructor_standings')[2].Constructor.name
+              }}
+            secondary: '{{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[2].points
+              }} pts • {{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[2].wins
+              }} wins'
+            type: custom:template-entity-row
+          - name: 4️⃣ {{ state_attr('sensor.f1_constructor_standings', 'constructor_standings')[3].Constructor.name
+              }}
+            secondary: '{{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[3].points
+              }} pts • {{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[3].wins
+              }} wins'
+            type: custom:template-entity-row
+          - name: 5️⃣ {{ state_attr('sensor.f1_constructor_standings', 'constructor_standings')[4].Constructor.name
+              }}
+            secondary: '{{ state_attr(''sensor.f1_constructor_standings'', ''constructor_standings'')[4].points
+              }} pts'
+            type: custom:template-entity-row
+          - entity: sensor.f1_constructor_standings
+            name: View Full Standings
+          head:
+            label: 🏆 Top 5 Constructors
+            type: section
+          type: custom:fold-entity-row
+        type: entities
+      - icon: mdi:flag-checkered
+        icon_color: purple
+        primary: 🏁 Last Race Results
+        secondary: '{{ state_attr(''sensor.f1_last_race_results'', ''race_name'')
           }}'
-        name: slider
-        range:
-        - 0
-        - 1
-        step: 0.01
-        styles: ":host {\n  height: 20px;\n  border-radius: 20px;  \n  --color: #4285F4;\n\
-          \  --background-height: 15px;\n  --thumb-border-radius: 10px;\n}\n.icon\
-          \ {\n  display: none;\n}\n.label {\n  {% if not is_state(config.entity,\
-          \ 'on') %}\n  display: none;\n  {% endif %}\n  transform: var(--icon-transform);\n\
-          \  font-size: 14px;\n  color: var(--primary-text-color);\n}\n.tooltip {\n\
-          \  display: none;\n}"
         tap_action:
-          action: call-service
-          data:
-            is_volume_muted: true
-          service: media_player.volume_mute
-          target:
-            entity_id: media_player.sony_tv_remote
-        type: slider
-        value_attribute: volume_level
-        value_from_hass_delay: 10
-      custom_icons: []
-      keyboard_id: media_player.sony_tv
-      media_player_id: media_player.sony_tv
-      remote_id: remote.sony_tv_remote
-      rows:
-      - "- - power\n{% if is_state(config.entity, 'on') %}\n  - home\n- - volume_down\n\
-        \  - slider\n  - volume_up\n{% else %}\n{% endif %}\n"
-      styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
-        }\n"
-      type: custom:android-tv-card
-    - cards:
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/netflix.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 80%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Netflix
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/prime.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 80%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Prime Video
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/youtube.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 70%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Youtube
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/hotstar.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 70%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: JioHotstar
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/aha.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 60%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Aha
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/zee5.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 40%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Zee5
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/etv.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 40%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Etv WIN
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/jellyfin.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 80%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Dune
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/sonyliv.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 40%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Sony LIV
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/fancode.svg
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 100%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Fancode
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/playstore.svg
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 100%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Play Store
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      - entity: remote.sony_tv_remote
-        entity_picture: /local/icons/tailscale.png
-        show_entity_picture: true
-        styles:
-          entity_picture:
-          - width: 100%
-        tap_action:
-          service: media_player.play_media
-          service_data:
-            media_content_id: Tailscale
-            media_content_type: app
-          target:
-            entity_id: media_player.sony_bravia_tv
-        template: logo_button
-        type: custom:button-card
-      columns: 3
+          action: more-info
+          entity: sensor.f1_last_race_results
+        type: custom:mushroom-template-card
+      - entities:
+        - entities:
+          - icon: mdi:podium-gold
+            name: 🥇 {{ state_attr('sensor.f1_last_race_results', 'results')[0].driver.givenName
+              }} {{ state_attr('sensor.f1_last_race_results', 'results')[0].driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_last_race_results'', ''results'')[0].constructor.name
+              }} • {{ state_attr(''sensor.f1_last_race_results'', ''results'')[0].points
+              }} pts'
+            type: custom:template-entity-row
+          - icon: mdi:podium-silver
+            name: 🥈 {{ state_attr('sensor.f1_last_race_results', 'results')[1].driver.givenName
+              }} {{ state_attr('sensor.f1_last_race_results', 'results')[1].driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_last_race_results'', ''results'')[1].constructor.name
+              }} • {{ state_attr(''sensor.f1_last_race_results'', ''results'')[1].points
+              }} pts'
+            type: custom:template-entity-row
+          - icon: mdi:podium-bronze
+            name: 🥉 {{ state_attr('sensor.f1_last_race_results', 'results')[2].driver.givenName
+              }} {{ state_attr('sensor.f1_last_race_results', 'results')[2].driver.familyName
+              }}
+            secondary: '{{ state_attr(''sensor.f1_last_race_results'', ''results'')[2].constructor.name
+              }} • {{ state_attr(''sensor.f1_last_race_results'', ''results'')[2].points
+              }} pts'
+            type: custom:template-entity-row
+          - attribute: circuit_name
+            entity: sensor.f1_last_race_results
+            name: Circuit
+            type: attribute
+          - attribute: circuit_country
+            entity: sensor.f1_last_race_results
+            name: Location
+            type: attribute
+          - entity: sensor.f1_last_race_results
+            name: View Full Results
+          head:
+            label: 🏆 {{ state_attr('sensor.f1_last_race_results', 'race_name') }}
+              Podium
+            type: section
+          type: custom:fold-entity-row
+        type: entities
+      - icon: mdi:calendar-star
+        icon_color: "{% if is_state('binary_sensor.f1_race_week', 'on') %}\n  red\n\
+          {% else %}\n  blue\n{% endif %}\n"
+        primary: "{% if is_state('binary_sensor.f1_race_week', 'on') %}\n  \U0001F534\
+          \ Next Race: {{ state_attr('sensor.f1_next_race', 'race_name') }}\n{% else\
+          \ %}\n  \U0001F4C5 Upcoming: {{ state_attr('sensor.f1_next_race', 'race_name')\
+          \ }}\n{% endif %}\n"
+        secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''race_start''))
+          | timestamp_custom(''%B %d, %Y at %H:%M'')) }}'
+        type: custom:mushroom-template-card
+      - entities:
+        - entities:
+          - attribute: circuit_name
+            entity: sensor.f1_next_race
+            name: Circuit
+            type: attribute
+          - attribute: circuit_locality
+            entity: sensor.f1_next_race
+            name: Location
+            type: attribute
+          - icon: mdi:clock-outline
+            name: 🏁 FP1
+            secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''first_practice_start_local''))
+              | timestamp_custom(''%a %b %d, %H:%M'')) }}'
+            type: custom:template-entity-row
+          - icon: mdi:clock-outline
+            name: 🏁 FP2
+            secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''second_practice_start_local''))
+              | timestamp_custom(''%a %b %d, %H:%M'')) }}'
+            type: custom:template-entity-row
+          - icon: mdi:clock-outline
+            name: 🏁 FP3
+            secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''third_practice_start_local''))
+              | timestamp_custom(''%a %b %d, %H:%M'')) }}'
+            type: custom:template-entity-row
+          - icon: mdi:timer
+            name: ⏱️ Qualifying
+            secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''qualifying_start_local''))
+              | timestamp_custom(''%a %b %d, %H:%M'')) }}'
+            type: custom:template-entity-row
+          - icon: mdi:flag-checkered
+            name: 🏆 Race
+            secondary: '{{ (as_timestamp(state_attr(''sensor.f1_next_race'', ''race_start_local''))
+              | timestamp_custom(''%a %b %d, %H:%M'')) }}'
+            type: custom:template-entity-row
+          head:
+            label: 📍 Race Weekend Schedule
+            type: section
+          type: custom:fold-entity-row
+        type: entities
+      - icon: mdi:chart-line
+        icon_color: green
+        primary: 📊 2025 Season
+        secondary: Round {{ state_attr('sensor.f1_season_results', 'races') | length
+          }} of 24
+        type: custom:mushroom-template-card
+      - entities:
+        - entities:
+          - icon: mdi:trophy
+            name: '{{ state_attr(''sensor.f1_season_results'', ''races'')[-1].race_name
+              }}'
+            secondary: 'Winner: {{ state_attr(''sensor.f1_season_results'', ''races'')[-1].results[0].driver.givenName
+              }} {{ state_attr(''sensor.f1_season_results'', ''races'')[-1].results[0].driver.familyName
+              }}'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-outline
+            name: '{{ state_attr(''sensor.f1_season_results'', ''races'')[-2].race_name
+              }}'
+            secondary: 'Winner: {{ state_attr(''sensor.f1_season_results'', ''races'')[-2].results[0].driver.givenName
+              }} {{ state_attr(''sensor.f1_season_results'', ''races'')[-2].results[0].driver.familyName
+              }}'
+            type: custom:template-entity-row
+          - icon: mdi:trophy-variant
+            name: '{{ state_attr(''sensor.f1_season_results'', ''races'')[-3].race_name
+              }}'
+            secondary: 'Winner: {{ state_attr(''sensor.f1_season_results'', ''races'')[-3].results[0].driver.givenName
+              }} {{ state_attr(''sensor.f1_season_results'', ''races'')[-3].results[0].driver.familyName
+              }}'
+            type: custom:template-entity-row
+          - entity: sensor.f1_season_results
+            name: View All Season Results
+          head:
+            label: 🏆 Recent Race Winners
+            type: section
+          type: custom:fold-entity-row
+        type: entities
+      columns: 1
       square: false
       type: grid
-    - card:
-        custom_actions:
-        - down:
-            hold_action:
-              action: repeat
-            icon: mdi:chevron-down
-            tap_action:
-              action: key
-              key: down
-          icon: ok
-          left:
-            hold_action:
-              action: repeat
-            icon: mdi:chevron-left
-            tap_action:
-              action: key
-              key: left
-          name: circlepad
-          right:
-            hold_action:
-              action: repeat
-            icon: mdi:chevron-right
-            tap_action:
-              action: key
-              key: right
-          styles: ":host {\n width: 174px;\n  --icon-color: rgba(128,128,128,0.5);\n\
-            }\n.circlepad {\n  border: 1px solid #444;\n  background: radial-gradient(circle\
-            \ at top left, #202020 15%, #303030 100%);\n}\n\n#center {\n  background:\
-            \ radial-gradient(circle at top left, #303030 15%, #101010 100%);\n  border:\
-            \ 1px solid rgba(0, 0, 0, 0.5);\n}\n#center::part(icon) {\n  color: rgba(128,128,128,\
-            \ 0.8);\n  --size: 36px;\n}\n\n#left,\n#right {\n  width: 100%;\n}"
-          tap_action:
-            action: key
-            key: center
-          type: circlepad
-          up:
-            hold_action:
-              action: repeat
-            icon: mdi:chevron-up
-            tap_action:
-              action: key
-              key: up
-        custom_icons:
-        - name: ok
-          path: M7 7A2 2 0 005 9V15A2 2 0 007 17H9A2 2 0 0011 15V9A2 2 0 009 7H7M7
-            9H9V15H7V9ZM13 7V17H15V13.7L17 17H19L16 12 19 7H17L15 10.3V7H13Z
-        keyboard_id: media_player.sony_tv
-        media_player_id: media_player.sony_tv
-        remote_id: remote.sony_tv_remote
-        rows:
-        - "- - back\n  - keyboard\n  - settings\n- {% if match_media(\"(min-width:\
-          \ 1150px)\") %}\n- - null\n  - circlepad\n  - - captions\n    - null\n \
-          \   - audio_track\n    - null\n    - info\n- - null \n  {% else%}\n  - touchpad\n\
-          \  - - captions\n    - null\n    - audio_track\n    - null\n    - info\n\
-          \  {% endif %}       \n- - previous\n  - play_pause\n  - next\n"
-        styles: "remote-button {\n  --size: 30px;\n  color: var(--secondary-text-color);\n\
-          }\n#row-1 {\n  justify-content: justify;\n}\n#row-2 {\n  justify-content:\
-          \ justify;\n}\n#row-3 {\n  justify-content: justify;\n}\n#row-4 {\n  justify-content:\
-          \ justify;\n}\n#row-5 {\n  justify-content: justify;\n}\n"
-        type: custom:android-tv-card
-      conditions:
-      - condition: state
-        entity: remote.sony_tv_remote
-        state: 'on'
-      type: conditional
     type: grid
-  title: test
+  - cards:
+    - cards:
+      - subtitle: 2025 Season • Round 17
+        title: 🏎️ Formula 1 Dashboard
+        type: custom:mushroom-title-card
+      - card:
+          icon: mdi:flag-checkered
+          icon_color: red
+          primary: 🔴 Race Week Active
+          secondary: '{{ state_attr(''binary_sensor.f1_race_week'', ''next_race_name'')
+            }}'
+          type: custom:mushroom-template-card
+        conditions:
+        - condition: state
+          entity: binary_sensor.f1_race_week
+          state: 'on'
+        type: conditional
+      - card:
+          icon: mdi:timer
+          icon_color: '{% set status = states(''sensor.f1_track_status'') %}
+
+            {% if status == ''CLEAR'' %} green
+
+            {% elif status == ''YELLOW'' %} yellow
+
+            {% elif status in [''VSC'',''SC''] %} orange
+
+            {% elif status == ''RED'' %} red
+
+            {% else %} grey
+
+            {% endif %}
+
+            '
+          primary: '{{ states(''sensor.f1_session_status'') | upper }}'
+          secondary: '{{ states(''sensor.f1_track_status'') }} • Lap {{ states(''sensor.f1_race_lap_count'')
+            }}'
+          type: custom:mushroom-template-card
+        conditions:
+        - condition: state
+          entity: sensor.f1_session_status
+          state_not: ended
+        type: conditional
+      - icon: mdi:podium-gold
+        icon_color: amber
+        primary: 🏆 Driver Standings
+        secondary: 21 drivers • Season 2025
+        tap_action:
+          action: more-info
+          entity: sensor.f1_driver_standings
+        type: custom:mushroom-template-card
+      - entities:
+        - type: section
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-1-circle
+          name: 1st • Piastri • 324 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-2-circle
+          name: 2nd • Norris • 299 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-3-circle
+          name: 3rd • Verstappen • 255 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-4-circle
+          name: 4th • Russell • 212 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-5-circle
+          name: 5th • Leclerc • 165 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-6-circle
+          name: 6th • Hamilton • 121 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-7-circle
+          name: 7th • Antonelli • 78 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-8-circle
+          name: 8th • Albon • 70 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-9-circle
+          name: 9th • Hadjar • 39 pts
+        - entity: sensor.f1_driver_standings
+          icon: mdi:numeric-10-circle
+          name: 10th • Hülkenberg • 37 pts
+        show_header_toggle: false
+        title: Top 10 Drivers
+        type: entities
+      - icon: mdi:factory
+        icon_color: red
+        primary: 🏭 Constructor Standings
+        secondary: 10 teams competing
+        tap_action:
+          action: more-info
+          entity: sensor.f1_constructor_standings
+        type: custom:mushroom-template-card
+      - entities:
+        - type: section
+        - entity: sensor.f1_constructor_standings
+          icon: mdi:trophy
+          name: 1st • McLaren • 623 pts
+        - entity: sensor.f1_constructor_standings
+          icon: mdi:trophy-outline
+          name: 2nd • Mercedes • 290 pts
+        - entity: sensor.f1_constructor_standings
+          icon: mdi:trophy-variant
+          name: 3rd • Ferrari • 286 pts
+        - entity: sensor.f1_constructor_standings
+          icon: mdi:medal
+          name: 4th • Red Bull • 272 pts
+        - entity: sensor.f1_constructor_standings
+          icon: mdi:medal-outline
+          name: 5th • Williams • 101 pts
+        show_header_toggle: false
+        title: Top 5 Constructors
+        type: entities
+      - icon: mdi:flag-checkered
+        icon_color: purple
+        primary: 🏁 Last Race Results
+        secondary: Azerbaijan Grand Prix
+        tap_action:
+          action: more-info
+          entity: sensor.f1_last_race_results
+        type: custom:mushroom-template-card
+      - entities:
+        - type: section
+        - entity: sensor.f1_last_race_results
+          icon: mdi:podium-gold
+          name: 🥇 Verstappen • Red Bull
+        - entity: sensor.f1_last_race_results
+          icon: mdi:podium-silver
+          name: 🥈 Russell • Mercedes
+        - entity: sensor.f1_last_race_results
+          icon: mdi:podium-bronze
+          name: 🥉 Sainz • Williams
+        show_header_toggle: false
+        title: Podium
+        type: entities
+      - icon: mdi:calendar-star
+        icon_color: blue
+        primary: 📅 Upcoming Race
+        secondary: Singapore Grand Prix
+        tap_action:
+          action: more-info
+          entity: sensor.f1_next_race
+        type: custom:mushroom-template-card
+      - entities:
+        - type: section
+        - entity: sensor.f1_next_race
+          icon: mdi:map-marker
+          name: Marina Bay Street Circuit
+        - entity: sensor.f1_next_race
+          icon: mdi:clock-outline
+          name: FP1 • Oct 3, 17:30
+        - entity: sensor.f1_next_race
+          icon: mdi:clock-outline
+          name: FP2 • Oct 3, 21:00
+        - entity: sensor.f1_next_race
+          icon: mdi:clock-outline
+          name: FP3 • Oct 4, 17:30
+        - entity: sensor.f1_next_race
+          icon: mdi:timer
+          name: Qualifying • Oct 4, 21:00
+        - entity: sensor.f1_next_race
+          icon: mdi:flag-checkered
+          name: Race • Oct 5, 20:00
+        show_header_toggle: false
+        title: Race Weekend Schedule
+        type: entities
+      - icon: mdi:chart-line
+        icon_color: green
+        primary: 📊 2025 Season
+        secondary: Round 17 of 24
+        tap_action:
+          action: more-info
+          entity: sensor.f1_season_results
+        type: custom:mushroom-template-card
+      columns: 1
+      square: false
+      type: grid
+    type: grid
+  title: f1
   type: sections
   visible:
   - user: 74f7e2ffd3594037b1a2fc4de82d9fea
